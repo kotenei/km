@@ -1,10 +1,14 @@
 /*
  * 弹出提示模块
  * @date:2014-09-10
- * @email:kotenei@qq.com
+ * @author:kotenei(kotenei@qq.com)
  */
-define('widget/popTips', ['jquery'], function ($) {
+define('kotenei/popTips', ['jquery'], function ($) {
 
+    /**
+     * 弹出提示模块
+     * @return {Object} 
+     */
     var PopTips = (function () {
 
         var _instance;

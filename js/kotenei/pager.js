@@ -1,9 +1,15 @@
 /*
  * 分页模块
  * @date:2014-09-14
- * @email:kotenei@qq.com
+ * @author:kotenei(kotenei@qq.com)
  */
-define('widget/pager', ['jquery'], function ($) {
+define('kotenei/pager', ['jquery'], function ($) {
+
+    /**
+     * 分页模块
+     * @param {JQuery} $element - dom
+     * @param {Object} options - 参数设置
+     */
     var Pager = function ($element, options) {
         this.$element = $element;
         this.options = $.extend({}, {
@@ -16,6 +22,10 @@ define('widget/pager', ['jquery'], function ($) {
         this.template = '<div class="pager-box"></div>';
     }
 
+    /**
+     * 初始化
+     * @return {Void} 
+     */
     Pager.prototype.init = function () {
         if (this.totalCount === 0) { return; }
         var self = this;
@@ -30,6 +40,10 @@ define('widget/pager', ['jquery'], function ($) {
         });
     };
 
+    /**
+     * 创建分页HTML
+     * @return {String} 
+     */
     Pager.prototype.build = function () {
         var info = this.getInfo(),
             html = [], className;
@@ -51,6 +65,10 @@ define('widget/pager', ['jquery'], function ($) {
         return html.join('');
     };
 
+    /**
+     * 获取分页相关信息（起始页、结束页、总页等）
+     * @return {Object}
+     */
     Pager.prototype.getInfo = function () {
         var start, end, pre, next, allPage;
         //确定总页数
@@ -59,7 +77,6 @@ define('widget/pager', ['jquery'], function ($) {
         allPage = (allPage === 0 ? 1 : allPage);
 
         
-
         //确定起始和结束页码
         start = (this.curPage + 2) > allPage ? (allPage - 4) : (this.curPage - 2);
         end = this.curPage < 4 ? 5 : this.curPage + 2;
@@ -72,7 +89,6 @@ define('widget/pager', ['jquery'], function ($) {
         //确定前一页和下一页的数字
         pre = (this.curPage - 1) < 1 ? 1 : (this.curPage - 1);
         next = (this.curPage + 1) > allPage ? allPage : (this.curPage + 1);
-
 
 
         return {

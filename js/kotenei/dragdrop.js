@@ -1,10 +1,16 @@
-/*
+/**
  * 拖放模块
- * @date:2014-09-10
- * @email:kotenei@qq.com
+ * @date :2014-09-10
+ * @author kotenei (kotenei@qq.com)
  */
-define('widget/dragdrop', ['jquery'], function ($) {
+define('kotenei/dragdrop', ['jquery'], function ($) {
 
+    /**
+     * 拖放模块
+     * @constructor
+     * @alias kotenei/dragdrop
+     * @param {Object} options - 参数设置
+     */
     var DragDrop = function (options) {
 
         this.options = $.extend({}, {
@@ -35,6 +41,10 @@ define('widget/dragdrop', ['jquery'], function ($) {
         this.init();
     }
 
+    /**
+     * 初始化
+     * @return {Void} 
+     */
     DragDrop.prototype.init = function () {
         if (!this.$layer) { return; }
         if (this.$range) { this.$range.css("position", "relative"); }
@@ -43,7 +53,10 @@ define('widget/dragdrop', ['jquery'], function ($) {
         this.eventBind();
     };
 
-    //绑定事件
+    /**
+     * 绑定事件
+     * @return {Void} 
+     */
     DragDrop.prototype.eventBind = function () {
         var self = this;
         this.$handle.on('mousedown', function (e) {
@@ -56,7 +69,11 @@ define('widget/dragdrop', ['jquery'], function ($) {
         });
     };
 
-    //开始拖动
+    /**
+     * 开始拖动
+     * @param  {Object} e - 事件
+     * @return {Boolean}  
+     */
     DragDrop.prototype.start = function (e) {
         var self = this;
 
@@ -99,7 +116,11 @@ define('widget/dragdrop', ['jquery'], function ($) {
 
     };
 
-    //移动中
+    /**
+     * 移动中
+     * @param  {Object} e -事件
+     * @return {Void}   
+     */
     DragDrop.prototype.move = function (e) {
         var self = this;
         var mouseCoord = this.getMouseCoord(e);
@@ -136,7 +157,11 @@ define('widget/dragdrop', ['jquery'], function ($) {
 
     };
 
-    //停止拖动
+    /**
+     * 停止拖动
+     * @param  {Object} e -事件
+     * @return {Void}   
+     */
     DragDrop.prototype.stop = function (e) {
         this.isMoving = false;
 
@@ -149,7 +174,11 @@ define('widget/dragdrop', ['jquery'], function ($) {
         }
     };
 
-    //获取鼠标坐标
+    /**
+     * 获取鼠标坐标
+     * @param  {Object} e -事件
+     * @return {Object}  
+     */
     DragDrop.prototype.getMouseCoord = function (e) {
         return {
             x: e.pageX || e.clientX + document.body.scrollLeft - document.body.clientLeft,
@@ -157,7 +186,10 @@ define('widget/dragdrop', ['jquery'], function ($) {
         };
     };
 
-    //设置拖动层位置
+    /**
+     * 设置拖动层位置
+     * @param {Object} moveCoord - 鼠标坐标
+     */
     DragDrop.prototype.setPosition = function (moveCoord) {
         if (this.options.direction === 'h') {
             this.$layer.css('left', moveCoord.x);

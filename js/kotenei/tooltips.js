@@ -1,9 +1,9 @@
 ﻿/*
  * 消息提示模块
  * @date:2014-09-05
- * @email:kotenei@qq.com
+ * @author:kotenei(kotenei@qq.com)
  */
-define('widget/tooltips', ['jquery'], function ($) {
+define('kotenei/tooltips', ['jquery'], function ($) {
 
     function Tooltips($element, options) {
         this.$element = $element;

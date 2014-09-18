@@ -1,45 +1,57 @@
 ﻿/*
  * 文本占位符模块
  * @date:2014-08-20
- * @email:kotenei@qq.com
+ * @author:kotenei(kotenei@qq.com)
  */
-define('widget/placeholder', ['jquery'], function ($) {
+define('kotenei/placeholder', ['jquery'], function($) {
 
-    function Placeholder($elm) {
+    /**
+     * 文本占位符模块
+     * @param {JQuery} $elm - dom
+     */
+    var Placeholder = function($elm) {
         this.$elm = $elm;
         this.type = 'placeholder';
         this.init();
     }
 
-    Placeholder.prototype.init = function () {
+    /**
+     * 初始化
+     * @return {Void}
+     */
+    Placeholder.prototype.init = function() {
         var text = $.trim(this.$elm.attr("placeholder"));
         this.timer = this.$elm.attr("data-timer");
         if (this.timer) {
             this.timer = JSON.stringify(this.timer);
         }
-  
+
         this.$placeholder = $('<div/>')
-                            .addClass("placeholder")
-                            .text(text)
-                            .insertAfter(this.$elm).hide();
+            .addClass("placeholder")
+            .text(text)
+            .insertAfter(this.$elm).hide();
 
         this.$elm.parent().css("position", "relative");
         this.setPosition();
         this.eventBind();
     };
 
-    Placeholder.prototype.eventBind = function () {
+    /**
+     * 事件绑定
+     * @return {Void}
+     */
+    Placeholder.prototype.eventBind = function() {
         var self = this;
 
         if (this.timer) {
-            setInterval(function () {
+            setInterval(function() {
                 self.setPosition();
             }, this.timer.delay);
         }
 
-        this.$elm.on('focus.' + this.type, function () {
+        this.$elm.on('focus.' + this.type, function() {
             self.$placeholder.hide();
-        }).on('blur.' + this.type, function () {
+        }).on('blur.' + this.type, function() {
             var value = $.trim(self.$elm.val());
             if (value.length === 0 || value === self.text) {
                 self.$elm.val("");
@@ -49,13 +61,17 @@ define('widget/placeholder', ['jquery'], function ($) {
             }
         });
 
-        this.$placeholder.on('focus.' + this.type, function () {
+        this.$placeholder.on('focus.' + this.type, function() {
             self.$elm.focus();
         });
 
     };
 
-    Placeholder.prototype.display = function () {
+    /**
+     * 显示或隐藏
+     * @return {Void}
+     */
+    Placeholder.prototype.display = function() {
         var value = $.trim(this.$elm.val());
         if (value.length === 0 || value === $.trim(this.$elm.attr("placeholder"))) {
             this.$placeholder.show();
@@ -64,17 +80,20 @@ define('widget/placeholder', ['jquery'], function ($) {
         }
     };
 
-    Placeholder.prototype.setPosition = function () {
+    /**
+     * 定位
+     */
+    Placeholder.prototype.setPosition = function() {
         var self = this;
-        setTimeout(function () {
+        setTimeout(function() {
             var css = {
                 left: self.$elm[0].offsetLeft,
                 top: self.$elm[0].offsetTop,
                 height: self.$elm.outerHeight(),
-                width:self.$elm.outerWidth(),
+                width: self.$elm.outerWidth(),
                 position: 'absolute',
                 paddingLeft: '10px',
-                paddingRight:'10px',
+                paddingRight: '10px',
                 paddingTop: 0,
                 margin: 0,
                 lineHeight: self.$elm.outerHeight() + 'px',
@@ -89,9 +108,14 @@ define('widget/placeholder', ['jquery'], function ($) {
             self.display();
         }, 50);
     };
-
+    
+    /**
+     * 全局初始化
+     * @param  {JQuery} $elms - dom
+     * @return {Void}    
+     */
     function init($elms) {
-        $elms.each(function () {
+        $elms.each(function() {
             var $elm = $(this);
             var placeholder = $elm.data('placeholder');
             if (placeholder === undefined) {
@@ -107,7 +131,7 @@ define('widget/placeholder', ['jquery'], function ($) {
         });
     }
 
-    return function ($elms) {
+    return function($elms) {
         if ("placeholder" in document.createElement("input")) {
             return;
         }

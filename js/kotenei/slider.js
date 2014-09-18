@@ -1,9 +1,9 @@
 /*
  * 滑块模块
  * @date:2014-09-15
- * @email:kotenei@qq.com
+ * @author:kotenei(kotenei@qq.com)
  */
-define('widget/slider', ['jquery', 'widget/dragdrop'], function ($, DragDrop) {
+define('kotenei/slider', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
 
     var Slider = function ($element, options) {
         this.$element = $element;

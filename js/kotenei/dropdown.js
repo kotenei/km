@@ -2,7 +2,7 @@
  * 下拉框
  * @author vfasky (vfasky@gmail.com)
  */
-define('widget/dropdown', ['jquery'], function($){
+define('kotenei/dropdown', ['jquery'], function($){
     var $body = $('body');
     var $win  = $(document);
 
@@ -11,7 +11,7 @@ define('widget/dropdown', ['jquery'], function($){
     /**
      * 下拉框
      * @constructor
-     * @alias widget/dropdown
+     * @alias kotenei/dropdown
      * @param {jQuery} $el - dom
      * @param {Object} setting - 参数设置
      * @param {Number} setting.width - 宽度

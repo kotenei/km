@@ -1,9 +1,9 @@
 /*
  * 开关模块
  * @date:2014-09-14
- * @email:kotenei@qq.com
+ * @author:kotenei(kotenei@qq.com)
  */
-define('widget/switch', ['jquery'], function ($) {
+define('kotenei/switch', ['jquery'], function ($) {
 
     var Switch = function ($element, options) {
         this.$element = $element;

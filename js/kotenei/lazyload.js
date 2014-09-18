@@ -1,10 +1,15 @@
 ﻿/*
  * 图片延迟加载模块
  * @date:2014-09-01
- * @email:kotenei@qq.com
+ * @author:kotenei(kotenei@qq.com)
  */
-define('widget/lazyload', ['jquery'], function ($) {
+define('kotenei/lazyload', ['jquery'], function ($) {
 
+/**
+ * 图片延迟加载模块
+ * @param {JQuery} $elements -dom
+ * @param {Object} options  - 参数设置
+ */
     function LazyLoad($elements, options) {
         this.$elements = $elements;
         this.options = $.extend({}, {
@@ -16,6 +21,10 @@ define('widget/lazyload', ['jquery'], function ($) {
         this.init();
     };
 
+    /**
+     * 初始化
+     * @return {Void} 
+     */
     LazyLoad.prototype.init = function () {
         var self = this;
         this.$elements.each(function () {
@@ -37,10 +46,18 @@ define('widget/lazyload', ['jquery'], function ($) {
         this.load();
     };
 
+    /**
+     * 事件绑定
+     * @return {Void}
+     */
     LazyLoad.prototype.eventBind = function () {
         this.options.$container.on('scroll.lazyload', $.proxy(this.load, this));
     };
 
+    /**
+     * 可视范围加载
+     * @return {Void} 
+     */
     LazyLoad.prototype.load = function () {
         var self = this;
         var position = this.getPosition();
@@ -66,6 +83,13 @@ define('widget/lazyload', ['jquery'], function ($) {
         });
     };
 
+    /**
+     * 图片加载
+     * @param  {JQuery}   $img   - dom
+     * @param  {String}   src     - 图片地址
+     * @param  {Function} callback - 回调函数
+     * @return {Void}   
+     */
     LazyLoad.prototype.imgLoad = function ($img, src, callback) {
         var img = new Image();
         img.onload = function () {
@@ -78,6 +102,10 @@ define('widget/lazyload', ['jquery'], function ($) {
         img.src = src;
     };
 
+    /**
+     * 获取可视区范围
+     * @return {Object} 
+     */
     LazyLoad.prototype.getPosition = function () {
         var position = {};
         var $container = this.options.$container;
@@ -93,6 +121,11 @@ define('widget/lazyload', ['jquery'], function ($) {
         return position;
     };
 
+    /**
+     * 加载后执行回调函数
+     * @param  {JQuery}   $elm - dom
+     * @return {Function}    
+     */
     LazyLoad.prototype.callback = function ($elm) {
         if ($.isFunction(this.options.callback)) {
             this.options.callback($elm);

@@ -1,9 +1,9 @@
 ﻿/*
- * 字符限制
+ * 字符限制模块
  * @date:2014-09-8
- * @email:kotenei@qq.com
+ * @author:kotenei(kotenei@qq.com)
  */
-define('widget/wordLimit', ['jquery'], function ($) {
+define('kotenei/wordLimit', ['jquery'], function ($) {
     var WordLimit = function ($element, options) {
         this.$element = $element;
         this.options = $.extend({}, {

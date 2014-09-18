@@ -1,9 +1,9 @@
 ﻿/*
  * validate扩展  使用tooltips显示错误
  * @date:2014-09-06
- * @email:kotenei@qq.com
+ * @author:kotenei(kotenei@qq.com)
  */
-define('widget/validate.tooltips', ['jquery', 'widget/validate', 'widget/tooltips'], function ($, Validate, Tooltips) {
+define('kotenei/validate.tooltips', ['jquery', 'kotenei/validate', 'kotenei/tooltips'], function ($, Validate, Tooltips) {
 
 	//获取元素错误提示定位
 	Validate.prototype.getTipsPlacement = function (element) {

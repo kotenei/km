@@ -1,9 +1,9 @@
 /*
  * 窗体模块
  * @date:2014-09-17
- * @email:kotenei@qq.com
+ * @author:kotenei(kotenei@qq.com)
  */
-define('widget/window', ['jquery', 'widget/dragdrop', 'widget/popTips'], function ($, DragDrop, popTips) {
+define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips'], function ($, DragDrop, popTips) {
 
     var Window = function (options) {
         this.options = $.extend({}, {

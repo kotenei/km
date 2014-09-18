@@ -1,9 +1,9 @@
 ﻿/*
  * 表单验证模块 用法和jqeury.validate一样 轻量级
  * @date:2014-09-04
- * @email:kotenei@qq.com
+ * @author:kotenei(kotenei@qq.com)
  */
-define('widget/validate', ['jquery'], function ($) {
+define('kotenei/validate', ['jquery'], function ($) {
 
 
     function Validate($form, options) {
