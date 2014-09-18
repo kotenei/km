@@ -8,8 +8,3 @@
 ```
 
 
-```js
-require(['widget/lazyload'], function (lazyload) {
-    lazyload();
-});
-```
