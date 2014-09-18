@@ -1,0 +1,1 @@
+start node_modules\.bin\jsdoc -c jsdoc.json

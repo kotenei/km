@@ -1,0 +1,14 @@
+{
+    "tags": {
+        "allowUnknownTags": true
+    },
+    "source": {
+        "include": ["./js/widget/", "README.md"]
+    },
+    "plugins": [],
+    "templates": {
+    },
+    "opts": {
+        "destination": "./doc/"
+    }
+}
