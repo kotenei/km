@@ -5,7 +5,11 @@
  */
 define('kotenei/validate.tooltips', ['jquery', 'kotenei/validate', 'kotenei/tooltips'], function ($, Validate, Tooltips) {
 
-	//获取元素错误提示定位
+	/**
+	 * 获取元素错误提示定位
+	 * @param  {object} element - dom
+	 * @return {String}       
+	 */
 	Validate.prototype.getTipsPlacement = function (element) {
 		var name = element.name, placement = "right";
 		if (!this.tipsPlacement) {
@@ -19,7 +23,12 @@ define('kotenei/validate.tooltips', ['jquery', 'kotenei/validate', 'kotenei/tool
 		return placement;
 	};
 
-	//显示tips错误
+	/**
+	 * 显示tips错误
+	 * @param  {JQuery} $element - dom
+	 * @param  {String} message - 错误信息
+	 * @return {Void}        
+	 */
 	Validate.prototype.showError = function ($element, message) {
 		if (this.checkable($element[0])) {
 			$element = this.validFields.data[$element[0].name];
@@ -41,7 +50,11 @@ define('kotenei/validate.tooltips', ['jquery', 'kotenei/validate', 'kotenei/tool
 		$element.addClass(this.options.errorClass);
 	};
 
-	//隐藏tips错误
+	/**
+	 * 隐藏tips错误
+	 * @param  {JQuery} $element -dom
+	 * @return {Void}  
+	 */
 	Validate.prototype.hideError = function ($element) {
 		if (this.checkable($element[0])) {
 			$element = this.validFields.data[$element[0].name];

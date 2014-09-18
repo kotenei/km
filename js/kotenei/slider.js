@@ -5,6 +5,11 @@
  */
 define('kotenei/slider', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
 
+    /**
+     * 滑块模块
+     * @param {JQuery} $element - dom
+     * @param {Object} options  - 参数设置
+     */
     var Slider = function ($element, options) {
         this.$element = $element;
         this.options = $.extend({}, {
@@ -25,6 +30,10 @@ define('kotenei/slider', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) 
         this.init();
     };
 
+    /**
+     * 初始化
+     * @return {Void} 
+     */
     Slider.prototype.init = function () {
         var self = this;
         this.$slider = $(this.template).appendTo(this.$element);
@@ -50,6 +59,10 @@ define('kotenei/slider', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) 
         this.setValue(this.options.value);
     };
 
+    /**
+     * 事件绑定
+     * @return {Void}
+     */
     Slider.prototype.eventBind = function () {
         if (!this.allowElement()) { return; }
 
@@ -73,6 +86,10 @@ define('kotenei/slider', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) 
         }
     };
 
+    /**
+     * 是否是允许绑定的元素
+     * @return {Boolean} 
+     */
     Slider.prototype.allowElement = function () {
         if (this.$bindElement.length === 0) { return false; }
         var type = this.$bindElement[0].type;
@@ -84,6 +101,11 @@ define('kotenei/slider', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) 
         return true;
     };
 
+    /**
+     * 获取过滤后的值
+     * @param  {Number} value -输入的值
+     * @return {Number}    
+     */
     Slider.prototype.getFilterValue = function (value) {
         if (!value) { value = this.min; }
         if (isNaN(value)) { value = this.min; }
@@ -92,6 +114,10 @@ define('kotenei/slider', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) 
         return value;
     };
 
+    /**
+     * 设置值
+     * @param {Number} value- 设置的值
+     */
     Slider.prototype.setValue = function (value) {
         if (value > this.max) { value = this.max; }
         if (value < this.min) { value = this.min; }
@@ -100,6 +126,10 @@ define('kotenei/slider', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) 
         this.setElementValue(value)
     };
 
+    /**
+     * 设置绑定元素值
+     * @param {Number} value - 要设置的值
+     */
     Slider.prototype.setElementValue = function (value) {
         if (!this.allowElement()) { return; }
         var type = this.$bindElement[0].type;
@@ -110,6 +140,11 @@ define('kotenei/slider', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) 
         }
     };
 
+    /**
+     * 获取滑动时的值
+     * @param  {Object} moveCoord - 滑动时坐标
+     * @return {Number}    
+     */
     Slider.prototype.getMoveValue = function (moveCoord) {
         var percent = (moveCoord.x / (this.sliderWidth - this.handleWidth) * 100);
         var val = Math.round((percent / 100 * this.diff) / this.step) * this.step + this.min;
@@ -117,6 +152,10 @@ define('kotenei/slider', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) 
         return val;
     };
 
+    /**
+     * 设置百分比
+     * @param {Number} percent 
+     */
     Slider.prototype.setPercent = function (percent) {
         this.$sliderSelection.width(percent + "%");
         this.$sliderHandle.css("left", percent + "%");

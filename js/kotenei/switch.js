@@ -5,6 +5,11 @@
  */
 define('kotenei/switch', ['jquery'], function ($) {
 
+    /**
+     * 开关模块
+     * @param {JQuery} $element - dom
+     * @param {Object} options - 参数设置
+     */
     var Switch = function ($element, options) {
         this.$element = $element;
         this.options = $.extend({}, {
@@ -20,6 +25,10 @@ define('kotenei/switch', ['jquery'], function ($) {
         this.init();
     };
 
+    /**
+     * 初始化
+     * @return {Void}
+     */
     Switch.prototype.init = function () {
         if (this.$element[0].type !== 'checkbox') { return; }      
         this.$switch = $(this.template).append(this.build()).insertAfter(this.$element);
@@ -33,7 +42,10 @@ define('kotenei/switch', ['jquery'], function ($) {
         this.$switch.on('click', $.proxy(this.toggle, this));
     };
 
-
+    /**
+     * 构造元素HTML
+     * @return {String}
+     */
     Switch.prototype.build = function () {
         var html = [], values = this.options.values;
         html.push('<div class="switch-scroller">');
@@ -44,6 +56,10 @@ define('kotenei/switch', ['jquery'], function ($) {
         return html.join('');
     };
 
+    /**
+     * 切换操作
+     * @return {Void}
+     */
     Switch.prototype.toggle = function () {
         if (this.disabled) { return; }
         if (this.checked) {
@@ -56,18 +72,30 @@ define('kotenei/switch', ['jquery'], function ($) {
         this.options.callback.onclick(this.get());
     };
 
+    /**
+     * 开操作
+     * @return {Void}
+     */
     Switch.prototype.on = function () {
         if (this.disabled) { return;}
         this.$element.prop('checked', true);
         this.$switchScroller.stop().animate({ left: 0 }, 300);
     };
 
+    /**
+     * 关操作
+     * @return {Void} 
+     */
     Switch.prototype.off = function () {
         if (this.disabled) { return; }
         this.$element.prop('checked', false);
         this.$switchScroller.stop().animate({ left: -this.moveLeft }, 300);
     };
 
+    /**
+     * 获取当前状态值
+     * @return {String}
+     */
     Switch.prototype.get = function () {
         var values = this.options.values;
         if (this.checked) {
@@ -77,6 +105,10 @@ define('kotenei/switch', ['jquery'], function ($) {
         }
     };
 
+    /**
+     * 销毁
+     * @return {Void}
+     */
     Switch.prototype.destroy = function () {
         this.$switch.off('click');
         this.$element.show();
