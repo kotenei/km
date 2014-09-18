@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../css/widget.css" />
+    <script type="text/javascript" src="../js/vendor/require/require.js"></script>
+    <script type="text/javascript" src="../js/main.js"></script>
+    <style type="text/css">
+        a { display:inline-block;padding:2px 5px;margin:0 2px;}
+    </style>
+</head>
+<body>
+    <div style="margin-left:400px;margin-top:300px;">
+        <a href="###" class="aaa" data-module="tooltips" data-tipClass="" data-content="左则显示" data-placement="left">左</a>
+        <a href="###" data-module="tooltips" data-tipClass="warning" data-content="上则显示" data-placement="top">上</a>
+        <a href="###" data-module="tooltips" data-tipClass="success" data-content="右则显示" data-placement="right">右</a>
+        <a href="###" data-module="tooltips" data-tipClass="danger" data-content="下则显示" data-placement="bottom">下</a>
+        <a href="###" id="custom">自定义</a>
+    </div>
+    <script type="text/javascript">
+        require(['widget/tooltips'], function (Tooltips) {
+            //全局
+            Tooltips.Global();
+
+            var $custom = $("#custom");
+            var tooltips = new Tooltips($custom, {
+                tipClass: 'info',
+                placement: 'right',
+                content:'<h3>自定义内容</h3>',
+                trigger: 'click'
+            });
+
+            
+        });
+    </script>
+</body>
+</html>

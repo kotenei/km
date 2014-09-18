@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../css/widget.css" />
+    <script type="text/javascript" src="../js/vendor/require/require.js"></script>
+    <script type="text/javascript" src="../js/main.js"></script>
+    <style type="text/css">
+        a { display: inline-block; padding: 2px 5px; margin: 0 2px; }
+    </style>
+</head>
+<body>
+    <div style="margin-left: 400px; margin-top: 100px;">
+        <p>您还可以输入：<span id="feedback1">140</span> 字符</p>
+        <textarea rows="4" cols="50" data-module="wordlimit" data-feedback="#feedback1" maxlength="140"></textarea>
+    </div>
+    <div style="margin-left: 400px; margin-top: 20px;">
+        <p>您还可以输入：<span id="feedback2">20</span> 字符 (自定义)</p>
+        <textarea rows="4" cols="50"  id="custom"></textarea>
+    </div>
+    <script type="text/javascript">
+        require(['widget/wordLimit'], function (WordLimit) {
+            //全局
+            WordLimit.Global();
+
+            //自定义
+            var wordlimit = new WordLimit($("#custom"), {
+                feedback: '#feedback2',
+                maxLength:20
+            });
+        });
+    </script>
+</body>
+</html>

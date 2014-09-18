@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../css/widget.css" />
+    <script type="text/javascript" src="../js/vendor/require/require.js"></script>
+    <script type="text/javascript" src="../js/main.js"></script>
+    <style type="text/css">
+    </style>
+</head>
+<body>
+    <select name="test" style="width: 120px; height: 40px;">
+        <option value="0">demo 0</option>
+        <option value="1">demo 1</option>
+        <option value="2">demo 2</option>
+        <option value="3">demo 3</option>
+    </select>
+    
+    <script type="text/javascript">
+        require(['widget/dropdown'], function (Dropdown) {
+            new Dropdown($('select'));
+        });
+    </script>
+</body>
+</html>

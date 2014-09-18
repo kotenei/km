@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../css/widget.css" />
+    <script type="text/javascript" src="../js/vendor/require/require.js"></script>
+    <script type="text/javascript" src="../js/main.js"></script>
+    <style type="text/css">
+    </style>
+</head>
+<body>
+    <div style="width:300px;margin:0 auto;margin-top:100px;"> 
+    	<input type="checkbox" value="1" checked="checked" />  
+        <p><button id="btnDestory">destory</button></p> 
+        <p id="console"></p>
+    </div>
+
+    
+    
+    <script type="text/javascript">
+        require(['widget/switch'], function (Switch) {
+            var $console = $("#console");
+			var chkSwitch=new Switch($("input"),{
+				values:{
+					on:{text:'是',value:'yes'},
+					off:{text:'否',value:'no'}
+				},
+				callback:{
+					onclick:function(value){
+					    $console.html('值：' + value + '<br/>');
+					}	
+				}
+			});
+
+			$("#btnDestory").click(function () {
+			    chkSwitch.destroy();
+			})
+        })
+    </script>
+</body>
+</html>

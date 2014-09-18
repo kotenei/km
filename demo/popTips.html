@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../css/vendor/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="../css/widget.css" />
+    <script type="text/javascript" src="../js/vendor/require/require.js"></script>
+    <script type="text/javascript" src="../js/main.js"></script>
+    <style type="text/css">
+    </style>
+</head>
+<body>
+
+    <button type="button" id="btnSuccess">成功</button>
+
+    <button type="button" id="btnError">出错</button>
+
+    <button type="button" id="btnWarning">警告</button>
+
+    <script type="text/javascript">
+        require(['widget/popTips'], function (popTips) {
+            $("#btnSuccess").click(function () {
+                popTips.success("成功！", function () {
+                    alert("回调函数");
+                });
+            });
+            $("#btnError").click(function () {
+                popTips.error("失败！", 1500);
+            });
+            $("#btnWarning").click(function () {
+                popTips.warning("警告！", 1500, function () {
+                    alert("回调函数");
+                });
+            });
+        });
+    </script>
+</body>
+</html>

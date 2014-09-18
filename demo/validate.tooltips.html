@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../css/widget.css" />
+    <script type="text/javascript" src="../js/vendor/require/require.js"></script>
+    <script type="text/javascript" src="../js/main.js"></script>
+    <style type="text/css">
+        table td { line-height:30px;}
+    </style>
+</head>
+<body>
+    <form id="form">
+        <table>
+            <tr>
+                <td>用户名：</td>
+                <td>
+                    <input type="text" name="userName" placeholder="请输入用户名" /></td>
+            </tr>
+            <tr>
+                <td>密码：</td>
+                <td>
+                    <input type="password" name="password" id="password" placeholder="请输入密码" /></td>
+            </tr>
+            <tr>
+                <td>确认密码：</td>
+                <td>
+                    <input type="password" name="rePwd" placeholder="请输入确认密码" /></td>
+            </tr>
+            <tr>
+                <td>电子邮箱：</td>
+                <td>
+                    <input type="text" name="email" placeholder="请输入电子邮箱" /></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><input type="submit" value="提交" /></td>
+            </tr>
+        </table>
+    </form>
+    <script type="text/javascript">
+        require(['widget/placeholder', 'widget/validate.tooltips'], function ( placeholder, Validate) {
+
+            var validate = new Validate($("#form"), {
+                rules: {
+                    'userName': { required: true },
+                    'password': { required: true },
+                    'rePwd': { required: true, equalTo: '#password' },
+                    'email': { required: true, email: true }
+                },
+                messages: {
+                    'userName': { required: '请输入用户名' },
+                    'password': { required: '请输入密码' },
+                    'rePwd': { required: '请输入确认密码', equalTo: '密码与确认密码不一致' },
+                    'email': { required: '请输入电子邮箱', email: '邮箱格式错误' }
+                }
+            });
+
+           
+            placeholder();
+        });
+    </script>
+</body>
+</html>

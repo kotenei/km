@@ -1,0 +1,73 @@
+@dropbox-border: 2px solid #f1f1f1;
+@dropbox-hover-border: 2px solid #cee4f1;
+.widget-dropbox{
+    display: inline-block;
+    position: absolute;
+    border: @dropbox-border;
+    cursor: pointer;
+    background: #fff;
+    overflow: hidden;
+
+    &:hover{
+        border: @dropbox-hover-border;
+
+        .ic{
+            border-left: @dropbox-hover-border;
+        }
+    }
+
+    .label{
+        position: absolute;
+        top: 0;
+        left: 0;
+        text-align: center;
+        color: #9a9a9a;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-weight: bold;
+    }
+
+    .ic{
+        position: absolute;
+        top: 0;
+        right: 0;
+        border-left: @dropbox-border;
+        text-align: center;
+        color: #f1f1f1;
+    }
+}
+
+.widget-dropbox-hover{
+    border: @dropbox-hover-border;
+
+    .ic{
+        border-left: @dropbox-hover-border;
+    }
+}
+
+.widget-dropbox-drop{
+    
+    position: absolute;
+    z-index: 100;
+    border: @dropbox-hover-border;
+    background: #fff;
+
+    ul{
+        margin: 0;
+        padding: 0;
+    }
+
+    li{
+        margin: 0;
+        padding: 6px;
+        list-style: none;
+        cursor: pointer;
+        word-break:break-all;
+
+        &:hover{
+            background: #f9f9f9;
+        }
+    }
+}
+

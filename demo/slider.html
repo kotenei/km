@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../css/widget.css" />
+    <script type="text/javascript" src="../js/vendor/require/require.js"></script>
+    <script type="text/javascript" src="../js/main.js"></script>
+    <style type="text/css">
+    </style>
+</head>
+<body>
+    <div id="slider1" style="margin: 0 auto; text-align: center;">
+        <p>
+            <input type="text" id="txtBindElement" /></p>
+    </div>
+
+    <div id="slider2" style="margin: 0 auto; text-align: center;">
+        <p>
+            <select id="selBindElement">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+            </select>
+        </p>
+    </div>
+
+
+
+    <script type="text/javascript">
+        require(['widget/slider'], function (Slider) {
+            var slider1 = new Slider($("#slider1"), {
+                min: 1,
+                step: 1,
+                max: 10,
+                value: 5,
+                $bindElement: $("#txtBindElement"),
+                callback: {
+                    slide: function (value) {
+                        //回调函数
+                    }
+                }
+            });
+
+
+            var slider1 = new Slider($("#slider2"), {
+                min: 1,
+                step: 1,
+                max: 10,
+                value:7,
+                $bindElement: $("#selBindElement"),
+                callback: {
+                    slide: function (value) {
+                        //回调函数
+                    }
+                }
+            });
+
+
+        })
+    </script>
+</body>
+</html>

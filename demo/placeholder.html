@@ -1,0 +1,35 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../css/widget.css" />
+    <script type="text/javascript" src="../js/vendor/require/require.js"></script>
+    <script type="text/javascript" src="../js/main.js"></script>
+</head>
+<body>
+    <table>
+        <tr>
+            <td>文本框：</td>
+            <td>
+                <input type="text" placeholder="普通文本框" /></td>
+        </tr>
+        <tr>
+            <td>密码框：</td>
+            <td>
+                <input type="password" placeholder="请输入密码" /></td>
+        </tr>
+        <tr>
+            <td>文本域：</td>
+            <td>
+                <textarea rows="4" cols="50" placeholder="测试测试"></textarea></td>
+        </tr>
+    </table>
+    <script type="text/javascript">
+        require(['widget/placeholder'], function (placeholder) {
+            placeholder();
+        });
+    </script>
+</body>
+</html>

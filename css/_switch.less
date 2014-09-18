@@ -1,0 +1,44 @@
+.switch {
+    overflow:hidden;
+    width:75px;
+    height:30px;
+    position:relative;
+    cursor:pointer;
+    border-radius:4px;
+    font-family:'Microsoft YaHei';
+    vertical-align:middle;
+    display:inline-block;
+}
+.switch.disabled {
+    opacity:0.5;
+    cursor:default;
+    filter:alpha(opacity=50);
+}
+.switch-scroller {
+    overflow:hidden;
+    zoom:1;
+    position:absolute;
+    width:125px;
+}
+.switch-scroller span {
+    display:inline-block;
+    float:left;
+    width:50px;
+    height:30px;
+    line-height:30px;
+    text-align:center;
+    font-weight:bold;
+}
+.switch-scroller span.switch-middle {
+    width:25px;
+    background:none;
+    background:#e4e4e4;
+}
+.switch-left {
+    background:#04A5E6;
+    color:white;
+}
+.switch-right {
+    background:#bcbcbc;
+    color:white;
+}
