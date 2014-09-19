@@ -5,6 +5,10 @@
  */
 define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips'], function ($, DragDrop, popTips) {
 
+    /**
+     * 窗体模块
+     * @param {Object} options - 参数
+     */
     var Window = function (options) {
         this.options = $.extend({}, {
             url: null,
@@ -38,6 +42,10 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips'], func
         this.init();
     };
 
+    /**
+     * 初始化
+     * @return {Void} 
+     */
     Window.prototype.init = function () {
         this.build();
         this.setTitle(this.options.title);
@@ -45,6 +53,10 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips'], func
         this.eventBind();
     };
 
+    /**
+     * 事件绑定
+     * @return {Void}
+     */
     Window.prototype.eventBind = function () {
         var self = this;
         this.$window.on('resize.window', function () {
@@ -64,21 +76,39 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips'], func
         });
     };
 
+    /**
+     * 设置事件回调
+     * @param  {String}   type  - 事件名
+     * @param  {Function} callback - 回调方法
+     * @return {Void}           
+     */
     Window.prototype.on = function (type, callback) {
         if (this._event.hasOwnProperty(type)) {
             this._event[type] = callback || $.noop;
         }
     };
 
+    /**
+     * 设置标题
+     * @param {String} title - 标题 
+     */
     Window.prototype.setTitle = function (title) {
         this.$header.find('.window-title').text(title);
     };
 
+    /**
+     * 设置内容
+     * @param {String} content - 内容
+     */
     Window.prototype.setContent = function (content) {
         content = content || this.options.content;
         this.$container.html(content);
     };
 
+    /**
+     * 远程取内容
+     * @return {Object} 
+     */
     Window.prototype.remote = function () {
         if (typeof this.options.url !== 'string' || this.options.content != null) { return; }
         var self = this;
@@ -91,6 +121,10 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips'], func
         return dtd.promise();
     };
 
+    /**
+     * 打开窗体
+     * @return {Void}
+     */
     Window.prototype.open = function () {
         var self = this;
         $.when(
@@ -100,9 +134,19 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips'], func
             if (self.options.backdrop) { self.$backdrop.show(); }
             self.layout();
             self._event.open(self.$win);
+
+            var z=zIndex.get();
+            self.$win.css('zIndex',z);
+            self.$backdrop.css('zIndex',--z);
+
         });
     };
 
+    /**
+     * 关闭窗体
+     * @param  {Boolean} enforce - 是否强制关闭
+     * @return {Void}  
+     */
     Window.prototype.close = function (enforce) {
         if (enforce) {
             this.hide()
@@ -114,11 +158,23 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips'], func
         }
     };
 
+    /**
+     * 隐藏窗体方法
+     * @return {Void}
+     */
     Window.prototype.hide = function () {
         this.$win.hide();
         this.$backdrop.hide();
+        zIndex.pop();
     };
 
+
+
+
+    /**
+     * 设置窗体高度
+     * @return {Void}
+     */
     Window.prototype.layout = function () {
         //屏幕高度
         var screenHeight = this.$window.height();
@@ -163,6 +219,10 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips'], func
         });
     };
 
+    /**
+     * 创建窗体
+     * @return {Void} 
+     */
     Window.prototype.build = function () {
         this.$win = $(this.template).css({
             width: this.options.width,
@@ -176,24 +236,40 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips'], func
         this.$backdrop.appendTo(document.body);
     };
 
+    /**
+     * 提示对话框
+     * @param  {String} title  - 标题
+     * @param  {String} content - 内容
+     * @param  {Function} onOk   -  确定回调函数
+     * @return {Void}   
+     */
     Window.alert = function (title, content, onOk) {
         if ($.isFunction(content)) {
             onOk = content;
             content = title;
-            title = "确认提示";
+            title = "提示";
         }
-        var win = window.winAlert;
+        /*var win = window.winAlert;
         if (!win) {
             win = new Window({ width: 400, backdropClose: false });
             win.$win.find(".window-cancel").hide();
             window.winAlert = win;
-        }
+        }*/
+        var win = new Window({ width: 400, backdropClose: false });
         win.setTitle(title);
         win.setContent(content);
         win.on('ok', onOk || $.noop);
         win.open();
     };
 
+    /**
+     * 确认对话框
+     * @param  {String} title  - 标题
+     * @param  {String} content - 内容
+     * @param  {Function} onOk  - 确定回调函数
+     * @param  {Function} onClose - 关闭回调函数
+     * @return {Void}    
+     */
     Window.confirm = function (title, content, onOk, onClose) {
         if ($.isFunction(content)) {
             onClose = onOk;
@@ -201,11 +277,12 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips'], func
             content = title;
             title = "确认提示";
         }
-        var win = window.winConfirm;
+        /*var win = window.winConfirm;
         if (!win) {
             win = new Window({ width: 400, backdropClose: false });
             window.winConfirm = win;
-        }
+        }*/
+        var win =new Window({ width: 400, backdropClose: false });
         win.setTitle(title);
         win.setContent(content);
         win.on('ok', onOk || $.noop);
@@ -213,6 +290,10 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips'], func
         win.open();
     };
 
+    /**
+     * 窗体堆叠顺序设置
+     * @return {Object}
+     */
     var zIndex = (function () {
         var zIndex = [];
 

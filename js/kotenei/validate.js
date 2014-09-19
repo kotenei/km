@@ -5,7 +5,11 @@
  */
 define('kotenei/validate', ['jquery'], function ($) {
 
-
+    /**
+     * 表单验证模块
+     * @param {JQuery} $form - dom
+     * @param {Object} options - 参数
+     */
     function Validate($form, options) {
         this.$form = $form;
         this.options = $.extend({}, Validate.DEFAULTS, options);
@@ -14,7 +18,10 @@ define('kotenei/validate', ['jquery'], function ($) {
         this.init();
     }
 
-    //默认参数
+    /**
+     * 默认参数
+     * @type {Object}
+     */
     Validate.DEFAULTS = {
         errorClass: 'error',
         errorElement: 'label',
@@ -25,7 +32,10 @@ define('kotenei/validate', ['jquery'], function ($) {
         errorPlacement: null
     }
 
-    //初始化
+    /**
+     * 初始化
+     * @return {Void} 
+     */
     Validate.prototype.init = function () {
         this.getValidFields();
         if (this.validFields.count === 0) {
@@ -34,7 +44,10 @@ define('kotenei/validate', ['jquery'], function ($) {
         this.eventBind();
     };
 
-    //获取验证的元素
+    /**
+     * 获取验证的元素
+     * @return {Void} 
+     */
     Validate.prototype.getValidFields = function () {
         this.validFields = { data: {}, count: 0 };
         var self = this;
@@ -53,7 +66,10 @@ define('kotenei/validate', ['jquery'], function ($) {
         });
     };
 
-    //事件绑定
+    /**
+     * 事件绑定
+     * @return {Void} 
+     */
     Validate.prototype.eventBind = function () {
         var self = this;
         this.$form.on('submit', function (e) {
@@ -70,7 +86,11 @@ define('kotenei/validate', ['jquery'], function ($) {
         });
     };
 
-    //验证
+    /**
+     * 验证
+     * @param  {Object} e - 事件
+     * @return {Boolean}   
+     */
     Validate.prototype.validate = function (e) {
 
         var element = e.target,
@@ -103,7 +123,10 @@ define('kotenei/validate', ['jquery'], function ($) {
         return true;
     };
 
-    //表单提交时验证
+    /**
+     * 表单提交时验证
+     * @return {Boolean} 
+     */
     Validate.prototype.validateFrom = function () {
         var self = this, pass = true;
 
@@ -117,12 +140,21 @@ define('kotenei/validate', ['jquery'], function ($) {
         return this.validateFrom();
     };
 
-    //验证元素类别是不是单选或者复选框
+    /**
+     * 判断元素类别是不是单选或者复选框
+     * @param  {Object} element - dom
+     * @return {Boolean}        
+     */
     Validate.prototype.checkable = function (element) {
         return (/radio|checkbox/i).test(element.type);
     };
 
-    //处理错误
+    /**
+     * 处理错误
+     * @param  {Object} element - dom
+     * @param  {Object} rule  - 验证规则
+     * @return {Void}        
+     */
     Validate.prototype.formatAndAdd = function (element, rule) {
         var $element = $(element);
         var message = this.defaultMessage(element, rule.method);
@@ -130,7 +162,12 @@ define('kotenei/validate', ['jquery'], function ($) {
         this.showError($element, message);
     };
 
-    //显示错误
+    /**
+     * 显示错误
+     * @param  {JQuery} $element - dom
+     * @param  {String} message - 错误信息
+     * @return {Void}         
+     */
     Validate.prototype.showError = function ($element, message) {
         if (this.checkable($element[0])) {
             $element = this.validFields.data[$element[0].name];
@@ -149,7 +186,11 @@ define('kotenei/validate', ['jquery'], function ($) {
         }
     };
 
-    //隐藏错误
+    /**
+     * 隐藏错误
+     * @param  {JQuery} $element - dom
+     * @return {Void}        
+     */
     Validate.prototype.hideError = function ($element) {
         if (this.checkable($element[0])) {
             $element = this.validFields.data[$element[0].name];
@@ -163,7 +204,12 @@ define('kotenei/validate', ['jquery'], function ($) {
         $error.hide();
     };
 
-    //获取默认提示
+    /**
+     * 获取默认提示
+     * @param  {Object} element - dom
+     * @param  {String} method  验证规则
+     * @return {String}         
+     */
     Validate.prototype.defaultMessage = function (element, method) {
 
         if (!this.messages[element.name]) {
@@ -178,7 +224,12 @@ define('kotenei/validate', ['jquery'], function ($) {
         return this.messages[element.name][method];
     };
 
-    //格式化提示
+    /**
+     * 获取格式化错误提示
+     * @param  {String} message - 错误提示
+     * @param  {Object} params - 格式化参数
+     * @return {String}        
+     */
     Validate.prototype.format = function (message, params) {
         if (message.indexOf('{0}') != -1) {
             if (params.constructor !== Array) {
@@ -193,7 +244,10 @@ define('kotenei/validate', ['jquery'], function ($) {
         return message;
     };
 
-    //默认错误提示信息
+    /**
+     * 默认错误提示信息
+     * @type {Object}
+     */
     Validate.prototype.errorMessages = {
         required: '该字段不能为空',
         email: '电子邮箱格式错误',
@@ -215,7 +269,10 @@ define('kotenei/validate', ['jquery'], function ($) {
     };
 
 
-    //验证的规则
+    /**
+     * 验证的规则
+     * @type {Object}
+     */
     Validate.prototype.methods = {
         required: function (value, $element) {
             if ($element[0].nodeName.toLowerCase() === "select") {   
@@ -313,7 +370,11 @@ define('kotenei/validate', ['jquery'], function ($) {
         }
     };
 
-    //记录之前的远程验证信息
+    /**
+     * 记录之前的远程验证信息
+     * @param  {Object} element - dom
+     * @return {Object}       
+     */
     Validate.prototype.previousValue = function (element) {
         return $.data(element, "previousValue") || $.data(element, "previousValue", {
             old: null,
@@ -322,13 +383,21 @@ define('kotenei/validate', ['jquery'], function ($) {
         });
     }
 
-    //可选方法，验证时值非必填
+    /**
+     * 可选方法，验证时值非必填
+     * @param  {JQuery} $element - dom
+     * @return {Boolean}        
+     */
     Validate.prototype.optional = function ($element) {
         var val = this.elementValue($element);
         return !this.methods.required.call(this, val, $element);
     };
 
-    //取元素值
+    /**
+     * 取元素值
+     * @param  {JQuery} $element - dom
+     * @return {String}      
+     */
     Validate.prototype.elementValue = function ($element) {
         var type = $element.attr("type"),
             val = $element.val();
@@ -343,7 +412,12 @@ define('kotenei/validate', ['jquery'], function ($) {
         return val;
     };
 
-    //获取选中项元素的长度
+    /**
+     * 获取选中项元素的长度
+     * @param  {String} value  - 元素值
+     * @param  {Object} element - dom
+     * @return  {Number}         
+     */
     Validate.prototype.getLength = function (value, element) {
         switch (element.nodeName.toLowerCase()) {
             case "select":

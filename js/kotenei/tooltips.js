@@ -5,6 +5,11 @@
  */
 define('kotenei/tooltips', ['jquery'], function ($) {
 
+    /**
+     * 消息提示模块
+     * @param {JQuery} $element - dom
+     * @param {Object} options - 参数
+     */
     function Tooltips($element, options) {
         this.$element = $element;
         this.options = $.extend({}, {
@@ -19,6 +24,10 @@ define('kotenei/tooltips', ['jquery'], function ($) {
         this.init();
     };
 
+    /**
+     * 初始化
+     * @return {Void}
+     */
     Tooltips.prototype.init = function () {
         this.$tips = $('<div class="tooltips"><div class="tooltips-arrow"></div><div class="tooltips-title"></div><div class="tooltips-inner"></div></div>');
         this.$tips.addClass(this.options.placement).addClass(this.options.tipClass);
@@ -52,7 +61,10 @@ define('kotenei/tooltips', ['jquery'], function ($) {
         $tips.find('.tooltips-title').text(title);
     };*/
 
-    //设置内容
+    /**
+     * 设置内容
+     * @param {String} content - 内容
+     */
     Tooltips.prototype.setContent = function (content) {
         content = $.trim(content || this.options.content);
         if (content.length === 0) {
@@ -62,13 +74,18 @@ define('kotenei/tooltips', ['jquery'], function ($) {
         $tips.find('.tooltips-inner').html(content);
     };
 
-    //定位
+    /**
+     * 定位
+     */
     Tooltips.prototype.setPosition = function () {
         var pos = this.getOffset();
         this.$tips.css(pos);
     };
 
-    //获取偏移值
+    /**
+     * 获取定位偏移值
+     * @return {Object} 
+     */
     Tooltips.prototype.getOffset = function () {
         var placement = this.options.placement;
         var container = this.options.container;
@@ -92,7 +109,10 @@ define('kotenei/tooltips', ['jquery'], function ($) {
         }
     };
 
-    //显示
+    /**
+     * 显示tips
+     * @return {Void}
+     */
     Tooltips.prototype.show = function () {
         if ($.trim(this.options.content).length === 0) {
             this.hide();
@@ -103,13 +123,19 @@ define('kotenei/tooltips', ['jquery'], function ($) {
         this.$tips.show().addClass('in');
     };
 
-    //隐藏
+    /**
+     * 隐藏tips
+     * @return {Void}
+     */
     Tooltips.prototype.hide = function () {
         this.isShow = false;
         this.$tips.hide().removeClass('in');
     };
 
-    //切换
+    /**
+     * 切换
+     * @return {Void}
+     */
     Tooltips.prototype.toggle = function () {
         if (this.isShow) {
             this.hide();
@@ -118,7 +144,10 @@ define('kotenei/tooltips', ['jquery'], function ($) {
         }
     };
 
-    //全局tooltips
+    /**
+     * 全局tooltips
+     * @param {JQuery} $elements - dom
+     */
     Tooltips.Global = function ($elements) {
         var $elements = $elements || $('[data-module="tooltips"]');
         $elements.each(function () {
@@ -137,12 +166,19 @@ define('kotenei/tooltips', ['jquery'], function ($) {
         });
     };
 
-    //从缓存获取对象
+    /**
+     * 从缓存获取对象
+     * @param {JQuery} $element - dom
+     */
     Tooltips.Get = function ($element) {
         return $element.data("tooltips");
     };
 
-    //设置缓存
+    /**
+     * 设置缓存
+     * @param {JQuery} $element - dom
+     * @param {Object} tooltips - 缓存对象
+     */
     Tooltips.Set = function ($element, tooltips) {
         $element.data("tooltips", tooltips);
     }

@@ -9,7 +9,10 @@
     <script type="text/javascript" src="../js/main.js"></script>
 </head>
 <body>
-
+    
+    <button type="button" id="btnAlert">Alert</button>
+    <button type="button" id="btnConfirm">Confirm</button>
+    <button type="button" id="btnCustom">Custom</button>
 
     <script type="text/javascript">
         require(['kotenei/window'], function (Window) {
@@ -28,7 +31,24 @@
                 alert('close');
             })
 
-            win.open();     
+             
+             $("#btnAlert").click(function  () {
+                 Window.alert('警告提示',function  () {
+                     alert('回调');
+                 })
+             })
+
+            $("#btnConfirm").click(function  () {
+                 Window.confirm('您确认要XXXX吗？',function  () {
+                     alert('确认');
+                 },function(){
+                    alert('取消');
+                 });
+             });
+
+            $("#btnCustom").click(function(){
+                win.open();
+            });
 
         })
     </script>
