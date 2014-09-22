@@ -70,7 +70,7 @@ define('kotenei/dropdown', ['jquery'], function($){
         this.$label = $('<div class="label"/>').css({
             width: this.setting.width - this.setting.height,
             height: this.setting.height,
-            lineHeight: String(this.setting.height) + 'px'
+            lineHeight: String(this.setting.height - 4) + 'px'
         }).appendTo(this.$el);
 
         //右侧icon

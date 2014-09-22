@@ -279,7 +279,7 @@ define('kotenei/dropdown', ['jquery'], function($){
         this.$label = $('<div class="label"/>').css({
             width: this.setting.width - this.setting.height,
             height: this.setting.height,
-            lineHeight: String(this.setting.height) + 'px'
+            lineHeight: String(this.setting.height - 4) + 'px'
         }).appendTo(this.$el);
 
         //右侧icon
@@ -1190,6 +1190,11 @@ define('kotenei/switch', ['jquery'], function ($) {
  */
 define('kotenei/tooltips', ['jquery'], function ($) {
 
+    /**
+     * 消息提示模块
+     * @param {JQuery} $element - dom
+     * @param {Object} options - 参数
+     */
     function Tooltips($element, options) {
         this.$element = $element;
         this.options = $.extend({}, {
@@ -1204,6 +1209,10 @@ define('kotenei/tooltips', ['jquery'], function ($) {
         this.init();
     };
 
+    /**
+     * 初始化
+     * @return {Void}
+     */
     Tooltips.prototype.init = function () {
         this.$tips = $('<div class="tooltips"><div class="tooltips-arrow"></div><div class="tooltips-title"></div><div class="tooltips-inner"></div></div>');
         this.$tips.addClass(this.options.placement).addClass(this.options.tipClass);
@@ -1237,7 +1246,10 @@ define('kotenei/tooltips', ['jquery'], function ($) {
         $tips.find('.tooltips-title').text(title);
     };*/
 
-    //设置内容
+    /**
+     * 设置内容
+     * @param {String} content - 内容
+     */
     Tooltips.prototype.setContent = function (content) {
         content = $.trim(content || this.options.content);
         if (content.length === 0) {
@@ -1247,13 +1259,18 @@ define('kotenei/tooltips', ['jquery'], function ($) {
         $tips.find('.tooltips-inner').html(content);
     };
 
-    //定位
+    /**
+     * 定位
+     */
     Tooltips.prototype.setPosition = function () {
         var pos = this.getOffset();
         this.$tips.css(pos);
     };
 
-    //获取偏移值
+    /**
+     * 获取定位偏移值
+     * @return {Object} 
+     */
     Tooltips.prototype.getOffset = function () {
         var placement = this.options.placement;
         var container = this.options.container;
@@ -1277,7 +1294,10 @@ define('kotenei/tooltips', ['jquery'], function ($) {
         }
     };
 
-    //显示
+    /**
+     * 显示tips
+     * @return {Void}
+     */
     Tooltips.prototype.show = function () {
         if ($.trim(this.options.content).length === 0) {
             this.hide();
@@ -1288,13 +1308,19 @@ define('kotenei/tooltips', ['jquery'], function ($) {
         this.$tips.show().addClass('in');
     };
 
-    //隐藏
+    /**
+     * 隐藏tips
+     * @return {Void}
+     */
     Tooltips.prototype.hide = function () {
         this.isShow = false;
         this.$tips.hide().removeClass('in');
     };
 
-    //切换
+    /**
+     * 切换
+     * @return {Void}
+     */
     Tooltips.prototype.toggle = function () {
         if (this.isShow) {
             this.hide();
@@ -1303,7 +1329,10 @@ define('kotenei/tooltips', ['jquery'], function ($) {
         }
     };
 
-    //全局tooltips
+    /**
+     * 全局tooltips
+     * @param {JQuery} $elements - dom
+     */
     Tooltips.Global = function ($elements) {
         var $elements = $elements || $('[data-module="tooltips"]');
         $elements.each(function () {
@@ -1322,12 +1351,19 @@ define('kotenei/tooltips', ['jquery'], function ($) {
         });
     };
 
-    //从缓存获取对象
+    /**
+     * 从缓存获取对象
+     * @param {JQuery} $element - dom
+     */
     Tooltips.Get = function ($element) {
         return $element.data("tooltips");
     };
 
-    //设置缓存
+    /**
+     * 设置缓存
+     * @param {JQuery} $element - dom
+     * @param {Object} tooltips - 缓存对象
+     */
     Tooltips.Set = function ($element, tooltips) {
         $element.data("tooltips", tooltips);
     }
@@ -1341,7 +1377,11 @@ define('kotenei/tooltips', ['jquery'], function ($) {
  */
 define('kotenei/validate', ['jquery'], function ($) {
 
-
+    /**
+     * 表单验证模块
+     * @param {JQuery} $form - dom
+     * @param {Object} options - 参数
+     */
     function Validate($form, options) {
         this.$form = $form;
         this.options = $.extend({}, Validate.DEFAULTS, options);
@@ -1350,7 +1390,10 @@ define('kotenei/validate', ['jquery'], function ($) {
         this.init();
     }
 
-    //默认参数
+    /**
+     * 默认参数
+     * @type {Object}
+     */
     Validate.DEFAULTS = {
         errorClass: 'error',
         errorElement: 'label',
@@ -1361,7 +1404,10 @@ define('kotenei/validate', ['jquery'], function ($) {
         errorPlacement: null
     }
 
-    //初始化
+    /**
+     * 初始化
+     * @return {Void} 
+     */
     Validate.prototype.init = function () {
         this.getValidFields();
         if (this.validFields.count === 0) {
@@ -1370,7 +1416,10 @@ define('kotenei/validate', ['jquery'], function ($) {
         this.eventBind();
     };
 
-    //获取验证的元素
+    /**
+     * 获取验证的元素
+     * @return {Void} 
+     */
     Validate.prototype.getValidFields = function () {
         this.validFields = { data: {}, count: 0 };
         var self = this;
@@ -1389,7 +1438,10 @@ define('kotenei/validate', ['jquery'], function ($) {
         });
     };
 
-    //事件绑定
+    /**
+     * 事件绑定
+     * @return {Void} 
+     */
     Validate.prototype.eventBind = function () {
         var self = this;
         this.$form.on('submit', function (e) {
@@ -1406,7 +1458,11 @@ define('kotenei/validate', ['jquery'], function ($) {
         });
     };
 
-    //验证
+    /**
+     * 验证
+     * @param  {Object} e - 事件
+     * @return {Boolean}   
+     */
     Validate.prototype.validate = function (e) {
 
         var element = e.target,
@@ -1439,7 +1495,10 @@ define('kotenei/validate', ['jquery'], function ($) {
         return true;
     };
 
-    //表单提交时验证
+    /**
+     * 表单提交时验证
+     * @return {Boolean} 
+     */
     Validate.prototype.validateFrom = function () {
         var self = this, pass = true;
 
@@ -1453,12 +1512,21 @@ define('kotenei/validate', ['jquery'], function ($) {
         return this.validateFrom();
     };
 
-    //验证元素类别是不是单选或者复选框
+    /**
+     * 判断元素类别是不是单选或者复选框
+     * @param  {Object} element - dom
+     * @return {Boolean}        
+     */
     Validate.prototype.checkable = function (element) {
         return (/radio|checkbox/i).test(element.type);
     };
 
-    //处理错误
+    /**
+     * 处理错误
+     * @param  {Object} element - dom
+     * @param  {Object} rule  - 验证规则
+     * @return {Void}        
+     */
     Validate.prototype.formatAndAdd = function (element, rule) {
         var $element = $(element);
         var message = this.defaultMessage(element, rule.method);
@@ -1466,7 +1534,12 @@ define('kotenei/validate', ['jquery'], function ($) {
         this.showError($element, message);
     };
 
-    //显示错误
+    /**
+     * 显示错误
+     * @param  {JQuery} $element - dom
+     * @param  {String} message - 错误信息
+     * @return {Void}         
+     */
     Validate.prototype.showError = function ($element, message) {
         if (this.checkable($element[0])) {
             $element = this.validFields.data[$element[0].name];
@@ -1485,7 +1558,11 @@ define('kotenei/validate', ['jquery'], function ($) {
         }
     };
 
-    //隐藏错误
+    /**
+     * 隐藏错误
+     * @param  {JQuery} $element - dom
+     * @return {Void}        
+     */
     Validate.prototype.hideError = function ($element) {
         if (this.checkable($element[0])) {
             $element = this.validFields.data[$element[0].name];
@@ -1499,7 +1576,12 @@ define('kotenei/validate', ['jquery'], function ($) {
         $error.hide();
     };
 
-    //获取默认提示
+    /**
+     * 获取默认提示
+     * @param  {Object} element - dom
+     * @param  {String} method  验证规则
+     * @return {String}         
+     */
     Validate.prototype.defaultMessage = function (element, method) {
 
         if (!this.messages[element.name]) {
@@ -1514,7 +1596,12 @@ define('kotenei/validate', ['jquery'], function ($) {
         return this.messages[element.name][method];
     };
 
-    //格式化提示
+    /**
+     * 获取格式化错误提示
+     * @param  {String} message - 错误提示
+     * @param  {Object} params - 格式化参数
+     * @return {String}        
+     */
     Validate.prototype.format = function (message, params) {
         if (message.indexOf('{0}') != -1) {
             if (params.constructor !== Array) {
@@ -1529,7 +1616,10 @@ define('kotenei/validate', ['jquery'], function ($) {
         return message;
     };
 
-    //默认错误提示信息
+    /**
+     * 默认错误提示信息
+     * @type {Object}
+     */
     Validate.prototype.errorMessages = {
         required: '该字段不能为空',
         email: '电子邮箱格式错误',
@@ -1551,7 +1641,10 @@ define('kotenei/validate', ['jquery'], function ($) {
     };
 
 
-    //验证的规则
+    /**
+     * 验证的规则
+     * @type {Object}
+     */
     Validate.prototype.methods = {
         required: function (value, $element) {
             if ($element[0].nodeName.toLowerCase() === "select") {   
@@ -1649,7 +1742,11 @@ define('kotenei/validate', ['jquery'], function ($) {
         }
     };
 
-    //记录之前的远程验证信息
+    /**
+     * 记录之前的远程验证信息
+     * @param  {Object} element - dom
+     * @return {Object}       
+     */
     Validate.prototype.previousValue = function (element) {
         return $.data(element, "previousValue") || $.data(element, "previousValue", {
             old: null,
@@ -1658,13 +1755,21 @@ define('kotenei/validate', ['jquery'], function ($) {
         });
     }
 
-    //可选方法，验证时值非必填
+    /**
+     * 可选方法，验证时值非必填
+     * @param  {JQuery} $element - dom
+     * @return {Boolean}        
+     */
     Validate.prototype.optional = function ($element) {
         var val = this.elementValue($element);
         return !this.methods.required.call(this, val, $element);
     };
 
-    //取元素值
+    /**
+     * 取元素值
+     * @param  {JQuery} $element - dom
+     * @return {String}      
+     */
     Validate.prototype.elementValue = function ($element) {
         var type = $element.attr("type"),
             val = $element.val();
@@ -1679,7 +1784,12 @@ define('kotenei/validate', ['jquery'], function ($) {
         return val;
     };
 
-    //获取选中项元素的长度
+    /**
+     * 获取选中项元素的长度
+     * @param  {String} value  - 元素值
+     * @param  {Object} element - dom
+     * @return  {Number}         
+     */
     Validate.prototype.getLength = function (value, element) {
         switch (element.nodeName.toLowerCase()) {
             case "select":
@@ -1773,6 +1883,10 @@ define('kotenei/validate_tooltips', ['jquery', 'kotenei/validate', 'kotenei/tool
  */
 define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips'], function ($, DragDrop, popTips) {
 
+    /**
+     * 窗体模块
+     * @param {Object} options - 参数
+     */
     var Window = function (options) {
         this.options = $.extend({}, {
             url: null,
@@ -1806,6 +1920,10 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips'], func
         this.init();
     };
 
+    /**
+     * 初始化
+     * @return {Void} 
+     */
     Window.prototype.init = function () {
         this.build();
         this.setTitle(this.options.title);
@@ -1813,6 +1931,10 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips'], func
         this.eventBind();
     };
 
+    /**
+     * 事件绑定
+     * @return {Void}
+     */
     Window.prototype.eventBind = function () {
         var self = this;
         this.$window.on('resize.window', function () {
@@ -1832,21 +1954,39 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips'], func
         });
     };
 
+    /**
+     * 设置事件回调
+     * @param  {String}   type  - 事件名
+     * @param  {Function} callback - 回调方法
+     * @return {Void}           
+     */
     Window.prototype.on = function (type, callback) {
         if (this._event.hasOwnProperty(type)) {
             this._event[type] = callback || $.noop;
         }
     };
 
+    /**
+     * 设置标题
+     * @param {String} title - 标题 
+     */
     Window.prototype.setTitle = function (title) {
         this.$header.find('.window-title').text(title);
     };
 
+    /**
+     * 设置内容
+     * @param {String} content - 内容
+     */
     Window.prototype.setContent = function (content) {
         content = content || this.options.content;
         this.$container.html(content);
     };
 
+    /**
+     * 远程取内容
+     * @return {Object} 
+     */
     Window.prototype.remote = function () {
         if (typeof this.options.url !== 'string' || this.options.content != null) { return; }
         var self = this;
@@ -1859,6 +1999,10 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips'], func
         return dtd.promise();
     };
 
+    /**
+     * 打开窗体
+     * @return {Void}
+     */
     Window.prototype.open = function () {
         var self = this;
         $.when(
@@ -1868,9 +2012,19 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips'], func
             if (self.options.backdrop) { self.$backdrop.show(); }
             self.layout();
             self._event.open(self.$win);
+
+            var z=zIndex.get();
+            self.$win.css('zIndex',z);
+            self.$backdrop.css('zIndex',--z);
+
         });
     };
 
+    /**
+     * 关闭窗体
+     * @param  {Boolean} enforce - 是否强制关闭
+     * @return {Void}  
+     */
     Window.prototype.close = function (enforce) {
         if (enforce) {
             this.hide()
@@ -1882,11 +2036,23 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips'], func
         }
     };
 
+    /**
+     * 隐藏窗体方法
+     * @return {Void}
+     */
     Window.prototype.hide = function () {
         this.$win.hide();
         this.$backdrop.hide();
+        zIndex.pop();
     };
 
+
+
+
+    /**
+     * 设置窗体高度
+     * @return {Void}
+     */
     Window.prototype.layout = function () {
         //屏幕高度
         var screenHeight = this.$window.height();
@@ -1931,6 +2097,10 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips'], func
         });
     };
 
+    /**
+     * 创建窗体
+     * @return {Void} 
+     */
     Window.prototype.build = function () {
         this.$win = $(this.template).css({
             width: this.options.width,
@@ -1944,24 +2114,40 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips'], func
         this.$backdrop.appendTo(document.body);
     };
 
+    /**
+     * 提示对话框
+     * @param  {String} title  - 标题
+     * @param  {String} content - 内容
+     * @param  {Function} onOk   -  确定回调函数
+     * @return {Void}   
+     */
     Window.alert = function (title, content, onOk) {
         if ($.isFunction(content)) {
             onOk = content;
             content = title;
-            title = "确认提示";
+            title = "提示";
         }
-        var win = window.winAlert;
+        /*var win = window.winAlert;
         if (!win) {
             win = new Window({ width: 400, backdropClose: false });
             win.$win.find(".window-cancel").hide();
             window.winAlert = win;
-        }
+        }*/
+        var win = new Window({ width: 400, backdropClose: false });
         win.setTitle(title);
         win.setContent(content);
         win.on('ok', onOk || $.noop);
         win.open();
     };
 
+    /**
+     * 确认对话框
+     * @param  {String} title  - 标题
+     * @param  {String} content - 内容
+     * @param  {Function} onOk  - 确定回调函数
+     * @param  {Function} onClose - 关闭回调函数
+     * @return {Void}    
+     */
     Window.confirm = function (title, content, onOk, onClose) {
         if ($.isFunction(content)) {
             onClose = onOk;
@@ -1969,11 +2155,12 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips'], func
             content = title;
             title = "确认提示";
         }
-        var win = window.winConfirm;
+        /*var win = window.winConfirm;
         if (!win) {
             win = new Window({ width: 400, backdropClose: false });
             window.winConfirm = win;
-        }
+        }*/
+        var win =new Window({ width: 400, backdropClose: false });
         win.setTitle(title);
         win.setContent(content);
         win.on('ok', onOk || $.noop);
@@ -1981,6 +2168,10 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips'], func
         win.open();
     };
 
+    /**
+     * 窗体堆叠顺序设置
+     * @return {Object}
+     */
     var zIndex = (function () {
         var zIndex = [];
 
