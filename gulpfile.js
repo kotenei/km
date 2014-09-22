@@ -9,7 +9,7 @@ var rename = require('gulp-rename');
 var through2 = require('through2');
 
 var configPath = path.join(__dirname, 'build.config');
-var config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+var config     = JSON.parse(fs.readFileSync(configPath, 'utf8'));
 
 //将所有 kotenei 合成一份定义
 var build = function(){
@@ -82,7 +82,7 @@ gulp.task('scripts', function(){
     .pipe(gulp.dest('./dist'));
 });
 
-gulp.task('default', function() {
+gulp.task('watch', function(){
     gulp.watch([
         './style/*.less',
     ], ['less']);
@@ -91,3 +91,5 @@ gulp.task('default', function() {
         './js/kotenei/*.js',
     ], ['scripts']);
 });
+
+gulp.task('default', ['less', 'scripts', 'watch']);

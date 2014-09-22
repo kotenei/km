@@ -3,7 +3,7 @@
  * @date:2014-09-06
  * @author:kotenei(kotenei@qq.com)
  */
-define('kotenei/validate_tooltips', ['jquery', 'kotenei/validate', 'kotenei/tooltips'], function ($, Validate, Tooltips) {
+define('kotenei/validateTooltips', ['jquery', 'kotenei/validate', 'kotenei/tooltips'], function ($, Validate, Tooltips) {
 
 	/**
 	 * 获取元素错误提示定位

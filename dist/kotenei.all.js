@@ -1981,7 +1981,7 @@ define('kotenei/validate', ['jquery'], function ($) {
  * @date:2014-09-06
  * @author:kotenei(kotenei@qq.com)
  */
-define('kotenei/validate_tooltips', ['jquery', 'kotenei/validate', 'kotenei/tooltips'], function ($, Validate, Tooltips) {
+define('kotenei/validateTooltips', ['jquery', 'kotenei/validate', 'kotenei/tooltips'], function ($, Validate, Tooltips) {
 
 	/**
 	 * 获取元素错误提示定位
@@ -2462,7 +2462,7 @@ define('kotenei/wordLimit', ['jquery'], function ($) {
     return WordLimit;
 });
 ;
-define("kotenei", ["kotenei/dragdrop", "kotenei/dropdown", "kotenei/lazyload", "kotenei/pager", "kotenei/placeholder", "kotenei/popTips", "kotenei/router", "kotenei/slider", "kotenei/switch", "kotenei/tooltips", "kotenei/validate", "kotenei/validate_tooltips", "kotenei/window", "kotenei/wordLimit"], function(_dragdrop, _dropdown, _lazyload, _pager, _placeholder, _popTips, _router, _slider, _switch, _tooltips, _validate, _validate_tooltips, _window, _wordLimit){
+define("kotenei", ["kotenei/dragdrop", "kotenei/dropdown", "kotenei/lazyload", "kotenei/pager", "kotenei/placeholder", "kotenei/popTips", "kotenei/router", "kotenei/slider", "kotenei/switch", "kotenei/tooltips", "kotenei/validate", "kotenei/validateTooltips", "kotenei/window", "kotenei/wordLimit"], function(_dragdrop, _dropdown, _lazyload, _pager, _placeholder, _popTips, _router, _slider, _switch, _tooltips, _validate, _validateTooltips, _window, _wordLimit){
     return {
         "Dragdrop" : _dragdrop,
         "Dropdown" : _dropdown,
@@ -2475,7 +2475,7 @@ define("kotenei", ["kotenei/dragdrop", "kotenei/dropdown", "kotenei/lazyload", "
         "Switch" : _switch,
         "Tooltips" : _tooltips,
         "Validate" : _validate,
-        "Validate_tooltips" : _validate_tooltips,
+        "ValidateTooltips" : _validateTooltips,
         "Window" : _window,
         "WordLimit" : _wordLimit
     };
