@@ -4,9 +4,9 @@
 <head>
     <meta charset="utf-8" />
     <title></title>
-    <link rel="stylesheet" type="text/css" href="../css/widget.css" />
-    <script type="text/javascript" src="../js/vendor/require/require.js"></script>
-    <script type="text/javascript" src="../js/main.js"></script>
+    <link rel="stylesheet" type="text/css" href="../dist/css/kotenei.css" />
+    <script type="text/javascript" src="./vendor/require/require.js"></script>
+    <script type="text/javascript" src="./main.js"></script>
     <style type="text/css">
         table td { line-height:30px;}
     </style>
@@ -41,8 +41,9 @@
         </table>
     </form>
     <script type="text/javascript">
-        require(['kotenei/placeholder', 'kotenei/validate'], function ( placeholder, Validate) {
-
+        require(['kotenei'], function (kotenei) {
+            var placeholder = kotenei.placeholder;
+            var Validate    = kotenei.Validate;
             var validate = new Validate($("#form"), {
                 rules: {
                     'userName': { required: true },

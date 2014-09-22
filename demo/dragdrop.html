@@ -4,9 +4,9 @@
 <head>
     <meta charset="utf-8" />
     <title></title>
-    <link rel="stylesheet" type="text/css" href="../css/widget.css" />
-    <script type="text/javascript" src="../js/vendor/require/require.js"></script>
-    <script type="text/javascript" src="../js/main.js"></script>
+    <link rel="stylesheet" type="text/css" href="../dist/css/kotenei.css" />
+    <script type="text/javascript" src="./vendor/require/require.js"></script>
+    <script type="text/javascript" src="./main.js"></script>
     <style type="text/css">
     </style>
 </head>
@@ -20,13 +20,13 @@
     </div>
 
     <script type="text/javascript">
-        require(['kotenei/dragdrop'], function (DragDrop) {
-            var dragDrop = new DragDrop({
+        require(['kotenei'], function (kotenei) {
+            var dragDrop = new kotenei.Dragdrop({
                 direction: '', // h:水平  v:垂直,
                 $layer: $("#dragdrop"),
                 $range: $("#range")
             });
-        })
+        });
     </script>
 </body>
 </html>

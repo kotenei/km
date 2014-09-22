@@ -4,9 +4,9 @@
 <head>
     <meta charset="utf-8" />
     <title></title>
-    <link rel="stylesheet" type="text/css" href="../css/widget.css" />
-    <script type="text/javascript" src="../js/vendor/require/require.js"></script>
-    <script type="text/javascript" src="../js/main.js"></script>
+    <link rel="stylesheet" type="text/css" href="../dist/css/kotenei.css" />
+    <script type="text/javascript" src="./vendor/require/require.js"></script>
+    <script type="text/javascript" src="./main.js"></script>
     <style>
         p { background: #ebebeb; width: 400px; height: 300px;margin:0 auto; margin-bottom: 50px; }
         p img { width: 400px; height: 300px; }
@@ -52,8 +52,8 @@
 
 
     <script type="text/javascript">
-        require(['kotenei/lazyload'], function (lazyload) {
-            lazyload();
+        require(['kotenei'], function (kotenei) {
+            kotenei.lazyload();
         });
     </script>
 </body>

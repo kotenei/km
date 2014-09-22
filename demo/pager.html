@@ -4,9 +4,9 @@
 <head>
     <meta charset="utf-8" />
     <title></title>
-    <link rel="stylesheet" type="text/css" href="../css/widget.css" />
-    <script type="text/javascript" src="../js/vendor/require/require.js"></script>
-    <script type="text/javascript" src="../js/main.js"></script>
+    <link rel="stylesheet" type="text/css" href="../dist/css/kotenei.css" />
+    <script type="text/javascript" src="./vendor/require/require.js"></script>
+    <script type="text/javascript" src="./main.js"></script>
     <style type="text/css">
     </style>
 </head>
@@ -17,8 +17,8 @@
     </div>
 
     <script type="text/javascript">
-        require(['kotenei/pager'], function (Pager) {
-            var pager = new Pager($("#container"), {
+        require(['kotenei'], function (kotenei) {
+            var pager = new kotenei.Pager($("#container"), {
                 onclick: function (page) {
                     alert("当前页：" + page);
                 }
@@ -27,7 +27,7 @@
             pager.totalCount = 100;
             pager.pageSize = 10;
             pager.init();
-        })
+        });
     </script>
 </body>
 </html>

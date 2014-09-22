@@ -4,9 +4,9 @@
 <head>
     <meta charset="utf-8" />
     <title></title>
-    <link rel="stylesheet" type="text/css" href="../css/widget.css" />
-    <script type="text/javascript" src="../js/vendor/require/require.js"></script>
-    <script type="text/javascript" src="../js/main.js"></script>
+    <link rel="stylesheet" type="text/css" href="../dist/css/kotenei.css" />
+    <script type="text/javascript" src="./vendor/require/require.js"></script>
+    <script type="text/javascript" src="./main.js"></script>
     <style type="text/css">
         a { display:inline-block;padding:2px 5px;margin:0 2px;}
     </style>
@@ -20,8 +20,9 @@
         <a href="###" id="custom">自定义</a>
     </div>
     <script type="text/javascript">
-        require(['kotenei/tooltips'], function (Tooltips) {
+        require(['kotenei'], function (kotenei) {
             //全局
+            var Tooltips = kotenei.Tooltips;
             Tooltips.Global();
 
             var $custom = $("#custom");

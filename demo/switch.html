@@ -4,9 +4,9 @@
 <head>
     <meta charset="utf-8" />
     <title></title>
-    <link rel="stylesheet" type="text/css" href="../css/widget.css" />
-    <script type="text/javascript" src="../js/vendor/require/require.js"></script>
-    <script type="text/javascript" src="../js/main.js"></script>
+    <link rel="stylesheet" type="text/css" href="../dist/css/kotenei.css" />
+    <script type="text/javascript" src="./vendor/require/require.js"></script>
+    <script type="text/javascript" src="./main.js"></script>
     <style type="text/css">
     </style>
 </head>
@@ -20,7 +20,8 @@
     
     
     <script type="text/javascript">
-        require(['kotenei/switch'], function (Switch) {
+        require(['kotenei'], function (kotenei) {
+            var Switch = kotenei.Switch;
             var $console = $("#console");
 			var chkSwitch=new Switch($("input"),{
 				values:{
@@ -36,8 +37,8 @@
 
 			$("#btnDestory").click(function () {
 			    chkSwitch.destroy();
-			})
-        })
+			});
+        });
     </script>
 </body>
 </html>

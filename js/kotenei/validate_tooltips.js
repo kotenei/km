@@ -3,7 +3,7 @@
  * @date:2014-09-06
  * @author:kotenei(kotenei@qq.com)
  */
-define('kotenei/validate.tooltips', ['jquery', 'kotenei/validate', 'kotenei/tooltips'], function ($, Validate, Tooltips) {
+define('kotenei/validate_tooltips', ['jquery', 'kotenei/validate', 'kotenei/tooltips'], function ($, Validate, Tooltips) {
 
 	/**
 	 * 获取元素错误提示定位
@@ -18,7 +18,7 @@ define('kotenei/validate.tooltips', ['jquery', 'kotenei/validate', 'kotenei/tool
 		if (!this.tipsPlacement[name]) {
 			this.tipsPlacement[name] = placement;
 		} else {
-			placement = this.tipsPlacement[name]
+			placement = this.tipsPlacement[name];
 		}
 		return placement;
 	};

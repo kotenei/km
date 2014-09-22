@@ -4,9 +4,9 @@
 <head>
     <meta charset="utf-8" />
     <title></title>
-    <link rel="stylesheet" type="text/css" href="../css/style.css" />
-    <script type="text/javascript" src="../js/vendor/require/require.js"></script>
-    <script type="text/javascript" src="../js/main.js"></script>
+    <link rel="stylesheet" type="text/css" href="../dist/css/kotenei.css" />
+    <script type="text/javascript" src="./vendor/require/require.js"></script>
+    <script type="text/javascript" src="./main.js"></script>
 </head>
 <body>
     
@@ -15,8 +15,8 @@
     <button type="button" id="btnCustom">Custom</button>
 
     <script type="text/javascript">
-        require(['kotenei/window'], function (Window) {
-            var win = new Window({
+        require(['kotenei'], function (kotenei) {
+            var win = new kotenei.Window({
                 width: 600,
                 height:500,
                 title: '弹窗标题',
@@ -29,7 +29,7 @@
 
             win.on('close',function(){
                 alert('close');
-            })
+            });
 
              
              $("#btnAlert").click(function  () {
@@ -50,7 +50,7 @@
                 win.open();
             });
 
-        })
+        });
     </script>
 </body>
 </html>

@@ -4,10 +4,10 @@
 <head>
     <meta charset="utf-8" />
     <title></title>
-    <link rel="stylesheet" type="text/css" href="../css/vendor/font-awesome/css/font-awesome.min.css" />
-    <link rel="stylesheet" type="text/css" href="../css/widget.css" />
-    <script type="text/javascript" src="../js/vendor/require/require.js"></script>
-    <script type="text/javascript" src="../js/main.js"></script>
+    <link rel="stylesheet" type="text/css" href="../style/vendor/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="../dist/css/kotenei.css" />
+    <script type="text/javascript" src="./vendor/require/require.js"></script>
+    <script type="text/javascript" src="./main.js"></script>
     <style type="text/css">
     </style>
 </head>
@@ -20,7 +20,8 @@
     <button type="button" id="btnWarning">警告</button>
 
     <script type="text/javascript">
-        require(['kotenei/popTips'], function (popTips) {
+        require(['kotenei'], function (kotenei) {
+            var popTips = kotenei.popTips;
             $("#btnSuccess").click(function () {
                 popTips.success("成功！", function () {
                     alert("回调函数");
