@@ -431,6 +431,77 @@ define('kotenei/dropdown', ['jquery'], function($){
 
     return Dropdown;
 });
+/**
+ * 日历下拉框 
+ * @module kotenei/dropdownDatepicker 
+ * @author vfasky (vfasky@gmail.com)
+ */
+define('kotenei/dropdownDatepicker', 
+['jquery', 'kotenei/dropdown', 'kotenei/util', 'foundation-datepicker'],
+function($, Dropdown, util){
+
+    $.fn.fdatepicker.dates['zh-CN'] = {
+        days: ["日", "一", "二", "三", "四", "五", "六", "日"],
+        daysShort: ["日", "一", "二", "三", "四", "五", "六", "日"],
+        daysMin: ["日", "一", "二", "三", "四", "五", "六", "日"],
+        months: ["1 月", "2 月", "3 月", "4 月", "5 月", "6 月", "7 月", "8 月", "9 月", "10 月", "11 月", "12 月"],
+        monthsShort: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
+        today: "今天"
+    };
+
+    var Datepicker = function($el, setting){
+        Dropdown.call(this, $el, setting);
+    };
+
+    Datepicker.prototype = util.createProto(Dropdown.prototype);
+
+    Datepicker.prototype.buildDrop = function(){
+        if(this.$drop){
+            return;
+        }
+        var self = this;
+        self.$drop = $('<div class="widget-dropbox-drop"/>').css({
+            width: 242,
+            height: 252
+        }).hide();
+
+        self.$el.fdatepicker($.extend({
+            format: 'yyyy-mm-dd',
+            language: 'zh-CN'
+        }, self.setting)).on('changeDate', function(val){
+            var date = self.datepicker.getFormattedDate();
+            self.setVal(date);
+            self.setLabel(date);
+        });
+        self.datepicker = self.$el.data('datepicker');
+        self.datepicker.picker.appendTo(self.$drop);
+        self.$drop.appendTo($('body'));
+        self.syncPosition(); 
+        self.sync();
+    };
+
+    Datepicker.prototype.watch = function(){
+        var self = this;
+        this.$el.on('click', function(){
+            self.showDrop();
+        });
+    };
+
+    Datepicker.prototype.sync = function(){
+        var date = this.getVal();
+        if(date){
+            this.$el.data('date', date);
+            this.datepicker.update();
+            this.setLabel(date);
+        }
+        else{
+            var placeholder = this.$soure.attr('placeholder') || '选择日期';
+            this.setLabel(placeholder);
+        }
+    };
+
+    return Datepicker;
+});
 /*
  * 图片延迟加载模块
  * @date:2014-09-01
@@ -895,6 +966,177 @@ define('kotenei/popTips', ['jquery'], function ($) {
     return PopTips.getInstance();
 });
 
+/**
+ * 路由
+ * @date :2014-09-21
+ * @author kotenei(kotenei@qq.com)
+ */
+(function (window) {
+
+    /**
+     * 事件处理
+     * @type {Object}
+     */
+    var eventHelper = {
+        addEventListener: function (element, type, handle) {
+            if (element.addEventListener) {
+                element.addEventListener(type, handle, false);
+            } else if (element.attachEvent) {
+                element.attachEvent("on" + type, handle);
+            } else {
+                element["on" + type] = handle;
+            }
+        },
+        removeEventListener: function (element, type, handle) {
+            if (element.removeEventListener) {
+                element.removeEventListener(type, handler, false);
+            } else if (element.detachEvent) {
+                element.detachEvent("on" + type, handler);
+            } else {
+                element["on" + type] = null;
+            }
+        },
+        proxy: function (fn, thisObject) {
+            var proxy = function () {
+                return fn.apply(thisObject || this, arguments)
+            }
+            return proxy
+        }
+    };
+
+    /**
+     * 路由
+     */
+    var Router = function () {
+        this._routes = [];
+    };
+
+    /**
+     * 初始化
+     * @return {Void}
+     */
+    Router.prototype.init = function () {
+        var self = this;
+        eventHelper.addEventListener(window, 'hashchange', eventHelper.proxy(self.listener, this));
+        this.listener();
+    };
+
+
+    /**
+     * 监听hash变化
+     * @return {Void}
+     */
+    Router.prototype.listener = function () {
+        var path = location.hash.slice(1);
+        var route = this.getRoute(path);
+        var values;
+
+        if (!route) {
+            location.replace('#/');
+            return;
+        }
+        values = this.getValues(path, route);     
+        route.handle.apply(route, values);
+    };
+
+    /**
+     * 设置路由
+     * @param  {String} routeUrl  - 路由地址
+     * @param  {String} templateUrl - 模板地址
+     * @param  {Object} constraints - 正则约束
+     * @return {Object}     
+     */
+    Router.prototype.map = function (routeUrl, constraints, callback) {
+        var reg, pattern, result, params = [];
+        pattern = routeUrl.replace(/\//g, '\\/');
+
+        if (typeof constraints === 'function') {
+            callback = constraints;
+            constraints = null;
+        }
+
+        if (constraints) {
+            for (var k in constraints) {
+                reg = new RegExp('\\{' + k + '\\}', 'g');
+                pattern = pattern.replace(reg, '(' + constraints[k].replace(/\^/, '').replace(/\$/, '') + ')');
+                params.push(k);
+            }
+        }
+
+        //(?<={)[^}]+(?=}) js不支持零宽断言-_-b
+        reg = new RegExp('{([^}]+)}', 'g');
+        result;
+        while ((result = reg.exec(pattern)) != null) {
+            params.push(result[1]);
+            reg.lastIndex;
+        }
+
+        pattern = '^' + pattern.replace(/{[^}]+}/gi, '(.+)') + '$';
+
+        this._routes.push({
+            routeUrl: routeUrl,
+            pattern: pattern,
+            params: params,
+            handle: callback || function () { }
+        });
+
+        return this;
+    };
+
+    /**
+     * 获取参数值
+     * @param  {String} path  - 路径
+     * @param  {Object} route - 路由相关信息
+     * @return {Array}  
+     */
+    Router.prototype.getValues = function (path, route) {
+        var route, values = [];
+
+        if (path.length === 0) {
+            return values;
+        }
+
+        route = route || this.getRoute(path);
+
+        if (route != null) {
+            var matches = path.match(route.pattern);
+            if (matches.length != 0) {
+                for (var i = 1; i < matches.length; i++) {
+                    values.push(matches[i]);
+                }
+            }
+        }
+        return values;
+    };
+
+    /**
+     * 获取匹配路由
+     * @param  {String} path - 路径
+     * @return {Object}     
+     */
+    Router.prototype.getRoute = function (path) {
+        for (var i = 0; i < this._routes.length; i++) {
+            if (new RegExp(this._routes[i].pattern).test(path)) {
+                return this._routes[i];
+                break;
+            }
+        }
+        return null;
+    };
+
+    /**
+     * 注册一个AMD模块
+     * 
+     */
+    if (typeof window.define === "function" && define.amd) {
+        define("kotenei/router", [], function () {
+            return Router;
+        });
+    } else {
+        window.Router = Router;
+    }
+
+})(window);
 /*
  * 滑块模块
  * @date:2014-09-15
@@ -1369,6 +1611,26 @@ define('kotenei/tooltips', ['jquery'], function ($) {
     }
 
     return Tooltips;
+});
+/**
+ * 
+ * @module kotenei/util 
+ * @author vfasky (vfasky@gmail.com)
+ */
+define('kotenei/util', function(){
+    var exports = {};
+
+    var Ctor = function () {};
+    exports.createProto = Object.__proto__ ? function(proto) {
+        return {
+            __proto__: proto
+        };
+    } : function(proto) {
+        Ctor.prototype = proto;
+        return new Ctor();
+    };
+
+    return exports;
 });
 /*
  * 表单验证模块 用法和jqeury.validate一样 轻量级
@@ -2291,17 +2553,20 @@ define('kotenei/wordLimit', ['jquery'], function ($) {
     return WordLimit;
 });
 ;
-define("kotenei", ["kotenei/dragdrop", "kotenei/dropdown", "kotenei/lazyload", "kotenei/pager", "kotenei/placeholder", "kotenei/popTips", "kotenei/slider", "kotenei/switch", "kotenei/tooltips", "kotenei/validate", "kotenei/validateTooltips", "kotenei/window", "kotenei/wordLimit"], function(_dragdrop, _dropdown, _lazyload, _pager, _placeholder, _popTips, _slider, _switch, _tooltips, _validate, _validateTooltips, _window, _wordLimit){
+define("kotenei", ["kotenei/dragdrop", "kotenei/dropdown", "kotenei/dropdownDatepicker", "kotenei/lazyload", "kotenei/pager", "kotenei/placeholder", "kotenei/popTips", "kotenei/router", "kotenei/slider", "kotenei/switch", "kotenei/tooltips", "kotenei/util", "kotenei/validate", "kotenei/validateTooltips", "kotenei/window", "kotenei/wordLimit"], function(_dragdrop, _dropdown, _dropdownDatepicker, _lazyload, _pager, _placeholder, _popTips, _router, _slider, _switch, _tooltips, _util, _validate, _validateTooltips, _window, _wordLimit){
     return {
         "Dragdrop" : _dragdrop,
         "Dropdown" : _dropdown,
+        "DropdownDatepicker" : _dropdownDatepicker,
         "lazyload" : _lazyload,
         "Pager" : _pager,
         "placeholder" : _placeholder,
         "popTips" : _popTips,
+        "Router" : _router,
         "Slider" : _slider,
         "Switch" : _switch,
         "Tooltips" : _tooltips,
+        "Util" : _util,
         "Validate" : _validate,
         "ValidateTooltips" : _validateTooltips,
         "Window" : _window,
