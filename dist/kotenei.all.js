@@ -2071,14 +2071,27 @@ define('kotenei/validate', ['jquery'], function ($) {
  * @date:2014-09-06
  * @author:kotenei(kotenei@qq.com)
  */
-define('kotenei/validateTooltips', ['jquery', 'kotenei/validate', 'kotenei/tooltips'], function ($, Validate, Tooltips) {
+define('kotenei/validateTooltips', ['jquery', 'kotenei/validate', 'kotenei/tooltips', 'kotenei/util'], function ($, Validate, Tooltips,util) {
+
+
+    /**
+     * Tooltips表单验证
+     * @param {JQuery} $form - dom
+     * @param {Object} options - 参数
+     */
+    var ValidateTooltips = function ($form,options) {
+        Validate.call(this, $form, options);
+    };
+
+    ValidateTooltips.prototype = util.createProto(Validate.prototype);
+
 
 	/**
 	 * 获取元素错误提示定位
 	 * @param  {object} element - dom
 	 * @return {String}       
 	 */
-	Validate.prototype.getTipsPlacement = function (element) {
+    ValidateTooltips.prototype.getTipsPlacement = function (element) {
 		var name = element.name, placement = "right";
 		if (!this.tipsPlacement) {
 			this.tipsPlacement = this.options.tipsPlacement || {};
@@ -2097,7 +2110,7 @@ define('kotenei/validateTooltips', ['jquery', 'kotenei/validate', 'kotenei/toolt
 	 * @param  {String} message - 错误信息
 	 * @return {Void}        
 	 */
-	Validate.prototype.showError = function ($element, message) {
+    ValidateTooltips.prototype.showError = function ($element, message) {
 		if (this.checkable($element[0])) {
 			$element = this.validFields.data[$element[0].name];
 		}
@@ -2123,7 +2136,7 @@ define('kotenei/validateTooltips', ['jquery', 'kotenei/validate', 'kotenei/toolt
 	 * @param  {JQuery} $element -dom
 	 * @return {Void}  
 	 */
-	Validate.prototype.hideError = function ($element) {
+    ValidateTooltips.prototype.hideError = function ($element) {
 		if (this.checkable($element[0])) {
 			$element = this.validFields.data[$element[0].name];
 		}
@@ -2135,7 +2148,7 @@ define('kotenei/validateTooltips', ['jquery', 'kotenei/validate', 'kotenei/toolt
 		
 	};
 
-	return Validate;
+    return ValidateTooltips;
 });
 /*
  * 窗体模块
