@@ -2408,6 +2408,7 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips'], func
             window.winAlert = win;
         }*/
         var win = new Window({ width: 400, backdropClose: false });
+        win.$win.find(".window-cancel").hide();
         win.setTitle(title);
         win.setContent(content);
         win.on('ok', onOk || $.noop);
