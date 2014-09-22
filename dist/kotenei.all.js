@@ -2291,7 +2291,7 @@ define('kotenei/wordLimit', ['jquery'], function ($) {
     return WordLimit;
 });
 ;
-define("kotenei", ["kotenei/dragdrop", "kotenei/dropdown", "kotenei/lazyload", "kotenei/pager", "kotenei/placeholder", "kotenei/popTips", "kotenei/slider", "kotenei/switch", "kotenei/tooltips", "kotenei/validate", "kotenei/validate_tooltips", "kotenei/window", "kotenei/wordLimit"], function(_dragdrop, _dropdown, _lazyload, _pager, _placeholder, _popTips, _slider, _switch, _tooltips, _validate, _validate_tooltips, _window, _wordLimit){
+define("kotenei", ["kotenei/dragdrop", "kotenei/dropdown", "kotenei/lazyload", "kotenei/pager", "kotenei/placeholder", "kotenei/popTips", "kotenei/slider", "kotenei/switch", "kotenei/tooltips", "kotenei/validate", "kotenei/validateTooltips", "kotenei/window", "kotenei/wordLimit"], function(_dragdrop, _dropdown, _lazyload, _pager, _placeholder, _popTips, _slider, _switch, _tooltips, _validate, _validateTooltips, _window, _wordLimit){
     return {
         "Dragdrop" : _dragdrop,
         "Dropdown" : _dropdown,
@@ -2303,7 +2303,7 @@ define("kotenei", ["kotenei/dragdrop", "kotenei/dropdown", "kotenei/lazyload", "
         "Switch" : _switch,
         "Tooltips" : _tooltips,
         "Validate" : _validate,
-        "Validate_tooltips" : _validate_tooltips,
+        "ValidateTooltips" : _validateTooltips,
         "Window" : _window,
         "WordLimit" : _wordLimit
     };
