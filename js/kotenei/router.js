@@ -150,7 +150,6 @@
         for (var i = 0; i < this._routes.length; i++) {
             if (new RegExp(this._routes[i].pattern).test(path)) {
                 return this._routes[i];
-                break;
             }
         }
         return null;
