@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../dist/css/kotenei.css" />
+    <script type="text/javascript" src="./vendor/require/require.js"></script>
+    <script type="text/javascript" src="./main.js"></script>
+    <style type="text/css">
+    </style>
+</head>
+<body>
+
+    <input type="text" id="txtAutoComplete" />
+
+    <script type="text/javascript">
+        require(['kotenei'], function (kotenei) {
+            var AutoComplete = kotenei.AutoComplete;
+            var autoComplete = new AutoComplete($("#txtAutoComplete"), {
+                data: ["Aberdeen", "Ada", "Adamsville", "Addyston", "Adelphi", "Adena", "Adrian", "Akron", "Albany", "Alexandria", "Alger", "Alledonia", "Alliance", "Alpha", "Alvada", "Alvordton", "Amanda", "Amelia", "Amesville", "Amherst", "Amlin", "Amsden", "Amsterdam", "Andover", "Anna", "Ansonia", "Antwerp", "Apple Creek", "Arcadia", "Arcanum", "Archbold", "Arlington", "Ashland", "Ashley", "Ashtabula", "Ashville",
+	"Athens", "Attica", "Atwater", "Augusta", "Aurora", "Austinburg", "Ava", "Avon", "Avon Lake", "Bainbridge", "Bakersville", "Baltic", "Baltimore", "Bannock", "Barberton", "Barlow", "Barnesville", "Bartlett", "Barton", "Bascom", "Batavia", "Bath", "Bay Village", "Beach City", "Beachwood", "Beallsville", "Beaver", "Beaverdam", "Bedford", "Bellaire", "Bellbrook", "Belle Center", "Belle Valley", "Bellefontaine", "Bellevue", "Bellville", "Belmont", "Belmore", "Beloit", "Belpre", "Benton Ridge", "Bentonville", "Berea", "Bergholz", "Berkey", "Berlin", "Berlin Center", "Berlin Heights", "Bethel", "Bethesda", "Bettsville", "Beverly", "Bidwell", "Big Prairie", "Birmingham", "Blacklick", "Bladensburg", "Blaine", "Blakeslee", "Blanchester", "Blissfield", "Bloomdale", "Bloomingburg", "Bloomingdale", "Bloomville", "Blue Creek", "Blue Rock", "Bluffton", "Bolivar", "Botkins", "Bourneville", "Bowerston", "Bowersville", "Bowling Green", "Bradford"]
+            });
+        });
+    </script>
+</body>
+</html>
