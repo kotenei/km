@@ -1494,6 +1494,7 @@ define('kotenei/switch', ['jquery'], function ($) {
  */
 define('kotenei/tooltips', ['jquery'], function ($) {
 
+
     /**
      * 消息提示模块
      * @param {JQuery} $element - dom
@@ -1508,8 +1509,14 @@ define('kotenei/tooltips', ['jquery'], function ($) {
             tipClass: '',
             placement: 'right',
             trigger: 'hover click',
-            container: document.body
+            container: $(document.body),
+            scrollContainer: null
         }, options);
+        this.tpl = '<div class="tooltips">' +
+                       '<div class="tooltips-arrow"></div>' +
+                       '<div class="tooltips-title"></div>' +
+                       '<div class="tooltips-inner"></div>' +
+                   '</div>';
         this.init();
     };
 
@@ -1518,8 +1525,10 @@ define('kotenei/tooltips', ['jquery'], function ($) {
      * @return {Void}
      */
     Tooltips.prototype.init = function () {
-        this.$tips = $('<div class="tooltips"><div class="tooltips-arrow"></div><div class="tooltips-title"></div><div class="tooltips-inner"></div></div>');
+        var self = this;
+        this.$tips = $(this.tpl);
         this.$tips.addClass(this.options.placement).addClass(this.options.tipClass);
+        this.$container = $(this.options.container);
         //this.setTitle();
         this.setContent();
         this.isShow = false;
@@ -1536,7 +1545,22 @@ define('kotenei/tooltips', ['jquery'], function ($) {
             }
         }
 
-        this.options.container ? this.$tips.appendTo(this.options.container) : this.$tips.insertAfter(this.$element);
+        if (this.$container[0].nodeName !== 'BODY') {
+            this.$container.css('position', 'relative')
+        }
+
+        this.$container.append(this.$tips);
+
+        if (this.options.scrollContainer) {
+            $(this.options.scrollContainer).on('scroll.tooltips', function () {
+                console.log("")
+            });
+        }
+
+        $(window).on('resize.tooltips', function () {
+            self.setPosition();
+        });
+
         this.hide();
     };
 
@@ -1549,6 +1573,7 @@ define('kotenei/tooltips', ['jquery'], function ($) {
         var $tips = this.$tips;
         $tips.find('.tooltips-title').text(title);
     };*/
+
 
     /**
      * 设置内容
@@ -1567,7 +1592,7 @@ define('kotenei/tooltips', ['jquery'], function ($) {
      * 定位
      */
     Tooltips.prototype.setPosition = function () {
-        var pos = this.getOffset();
+        var pos = this.getPosition();
         this.$tips.css(pos);
     };
 
@@ -1575,28 +1600,36 @@ define('kotenei/tooltips', ['jquery'], function ($) {
      * 获取定位偏移值
      * @return {Object} 
      */
-    Tooltips.prototype.getOffset = function () {
+    Tooltips.prototype.getPosition = function () {
         var placement = this.options.placement;
         var container = this.options.container;
         var $element = this.$element;
+        var $parent = $element.parent();
         var $tips = this.$tips;
-        var offset = $element.offset();
         var ew = $element.outerWidth();
         var eh = $element.outerHeight();
         var tw = $tips.outerWidth();
         var th = $tips.outerHeight();
+        var position = { left: 0, top: 0 };
+        var parent = $element[0];
+
+        do {
+            position.left += parent.offsetLeft - parent.scrollLeft;
+            position.top += parent.offsetTop - parent.scrollTop;
+        } while ((parent = parent.offsetParent) && parent != this.$container[0]);
 
         switch (placement) {
             case 'left':
-                return { top: offset.top + eh / 2 - th / 2, left: offset.left - tw };
+                return { top: position.top + eh / 2 - th / 2, left: position.left - tw };
             case 'top':
-                return { top: offset.top - th, left: offset.left + ew / 2 - tw / 2 };
+                return { top: position.top - th, left: position.left + ew / 2 - tw / 2 };
             case 'right':
-                return { top: offset.top + eh / 2 - th / 2, left: offset.left + ew };
+                return { top: position.top + eh / 2 - th / 2, left: position.left + ew };
             case 'bottom':
-                return { top: offset.top + eh, left: offset.left + ew / 2 - tw / 2 };
+                return { top: position.top + eh, left: position.left + ew / 2 - tw / 2 };
         }
     };
+
 
     /**
      * 显示tips
@@ -1610,6 +1643,7 @@ define('kotenei/tooltips', ['jquery'], function ($) {
         this.isShow = true;
         this.setPosition();
         this.$tips.show().addClass('in');
+        this.setPosition();
     };
 
     /**
@@ -2134,7 +2168,7 @@ define('kotenei/validate', ['jquery'], function ($) {
  * @date:2014-09-06
  * @author:kotenei(kotenei@qq.com)
  */
-define('kotenei/validateTooltips', ['jquery', 'kotenei/validate', 'kotenei/tooltips', 'kotenei/util'], function ($, Validate, Tooltips,util) {
+define('kotenei/validateTooltips', ['jquery', 'kotenei/validate', 'kotenei/tooltips', 'kotenei/util'], function ($, Validate, Tooltips, util) {
 
 
     /**
@@ -2142,74 +2176,76 @@ define('kotenei/validateTooltips', ['jquery', 'kotenei/validate', 'kotenei/toolt
      * @param {JQuery} $form - dom
      * @param {Object} options - 参数
      */
-    var ValidateTooltips = function ($form,options) {
+    var ValidateTooltips = function ($form, options) {
         Validate.call(this, $form, options);
     };
 
     ValidateTooltips.prototype = util.createProto(Validate.prototype);
 
 
-	/**
+    /**
 	 * 获取元素错误提示定位
 	 * @param  {object} element - dom
 	 * @return {String}       
 	 */
     ValidateTooltips.prototype.getTipsPlacement = function (element) {
-		var name = element.name, placement = "right";
-		if (!this.tipsPlacement) {
-			this.tipsPlacement = this.options.tipsPlacement || {};
-		}
-		if (!this.tipsPlacement[name]) {
-			this.tipsPlacement[name] = placement;
-		} else {
-			placement = this.tipsPlacement[name];
-		}
-		return placement;
-	};
+        var name = element.name, placement = "right";
+        if (!this.tipsPlacement) {
+            this.tipsPlacement = this.options.tipsPlacement || {};
+        }
+        if (!this.tipsPlacement[name]) {
+            this.tipsPlacement[name] = placement;
+        } else {
+            placement = this.tipsPlacement[name];
+        }
+        return placement;
+    };
 
-	/**
+    /**
 	 * 显示tips错误
 	 * @param  {JQuery} $element - dom
 	 * @param  {String} message - 错误信息
 	 * @return {Void}        
 	 */
     ValidateTooltips.prototype.showError = function ($element, message) {
-		if (this.checkable($element[0])) {
-			$element = this.validFields.data[$element[0].name];
-		}
-		var placement = this.getTipsPlacement($element[0]);
-		var tooltips = Tooltips.Get($element);
-		if (!tooltips) {
-			tooltips = new Tooltips($element, {
-				content: message,
-				tipClass: 'danger',
-				trigger: 'manual',
-                placement:placement
-			});
-			Tooltips.Set($element, tooltips);
-		} else {
-			tooltips.setContent(message);
-		}
-		tooltips.show();
-		$element.addClass(this.options.errorClass);
-	};
+        if (this.checkable($element[0])) {
+            $element = this.validFields.data[$element[0].name];
+        }
+        var placement = this.getTipsPlacement($element[0]);
+        var tooltips = Tooltips.Get($element);
+        if (!tooltips) {
+            tooltips = new Tooltips($element, {
+                content: message,
+                tipClass: 'danger',
+                trigger: 'manual',
+                placement: placement,
+                container: this.options.container || document.body,
+                scrollContainer: this.options.scrollContainer 
+            });
+            Tooltips.Set($element, tooltips);
+        } else {
+            tooltips.setContent(message);
+        }
+        tooltips.show();
+        $element.addClass(this.options.errorClass);
+    };
 
-	/**
+    /**
 	 * 隐藏tips错误
 	 * @param  {JQuery} $element -dom
 	 * @return {Void}  
 	 */
     ValidateTooltips.prototype.hideError = function ($element) {
-		if (this.checkable($element[0])) {
-			$element = this.validFields.data[$element[0].name];
-		}
-		var tooltips = Tooltips.Get($element);
-		if (tooltips) {
-			tooltips.hide();
-		}
-		$element.removeClass(this.options.errorClass);
-		
-	};
+        if (this.checkable($element[0])) {
+            $element = this.validFields.data[$element[0].name];
+        }
+        var tooltips = Tooltips.Get($element);
+        if (tooltips) {
+            tooltips.hide();
+        }
+        $element.removeClass(this.options.errorClass);
+
+    };
 
     return ValidateTooltips;
 });

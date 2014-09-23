@@ -5,6 +5,7 @@
  */
 define('kotenei/tooltips', ['jquery'], function ($) {
 
+
     /**
      * 消息提示模块
      * @param {JQuery} $element - dom
@@ -19,8 +20,14 @@ define('kotenei/tooltips', ['jquery'], function ($) {
             tipClass: '',
             placement: 'right',
             trigger: 'hover click',
-            container: document.body
+            container: $(document.body),
+            scrollContainer: null
         }, options);
+        this.tpl = '<div class="tooltips">' +
+                       '<div class="tooltips-arrow"></div>' +
+                       '<div class="tooltips-title"></div>' +
+                       '<div class="tooltips-inner"></div>' +
+                   '</div>';
         this.init();
     };
 
@@ -29,8 +36,10 @@ define('kotenei/tooltips', ['jquery'], function ($) {
      * @return {Void}
      */
     Tooltips.prototype.init = function () {
-        this.$tips = $('<div class="tooltips"><div class="tooltips-arrow"></div><div class="tooltips-title"></div><div class="tooltips-inner"></div></div>');
+        var self = this;
+        this.$tips = $(this.tpl);
         this.$tips.addClass(this.options.placement).addClass(this.options.tipClass);
+        this.$container = $(this.options.container);
         //this.setTitle();
         this.setContent();
         this.isShow = false;
@@ -47,7 +56,22 @@ define('kotenei/tooltips', ['jquery'], function ($) {
             }
         }
 
-        this.options.container ? this.$tips.appendTo(this.options.container) : this.$tips.insertAfter(this.$element);
+        if (this.$container[0].nodeName !== 'BODY') {
+            this.$container.css('position', 'relative')
+        }
+
+        this.$container.append(this.$tips);
+
+        if (this.options.scrollContainer) {
+            $(this.options.scrollContainer).on('scroll.tooltips', function () {
+                console.log("")
+            });
+        }
+
+        $(window).on('resize.tooltips', function () {
+            self.setPosition();
+        });
+
         this.hide();
     };
 
@@ -60,6 +84,7 @@ define('kotenei/tooltips', ['jquery'], function ($) {
         var $tips = this.$tips;
         $tips.find('.tooltips-title').text(title);
     };*/
+
 
     /**
      * 设置内容
@@ -78,7 +103,7 @@ define('kotenei/tooltips', ['jquery'], function ($) {
      * 定位
      */
     Tooltips.prototype.setPosition = function () {
-        var pos = this.getOffset();
+        var pos = this.getPosition();
         this.$tips.css(pos);
     };
 
@@ -86,28 +111,36 @@ define('kotenei/tooltips', ['jquery'], function ($) {
      * 获取定位偏移值
      * @return {Object} 
      */
-    Tooltips.prototype.getOffset = function () {
+    Tooltips.prototype.getPosition = function () {
         var placement = this.options.placement;
         var container = this.options.container;
         var $element = this.$element;
+        var $parent = $element.parent();
         var $tips = this.$tips;
-        var offset = $element.offset();
         var ew = $element.outerWidth();
         var eh = $element.outerHeight();
         var tw = $tips.outerWidth();
         var th = $tips.outerHeight();
+        var position = { left: 0, top: 0 };
+        var parent = $element[0];
+
+        do {
+            position.left += parent.offsetLeft - parent.scrollLeft;
+            position.top += parent.offsetTop - parent.scrollTop;
+        } while ((parent = parent.offsetParent) && parent != this.$container[0]);
 
         switch (placement) {
             case 'left':
-                return { top: offset.top + eh / 2 - th / 2, left: offset.left - tw };
+                return { top: position.top + eh / 2 - th / 2, left: position.left - tw };
             case 'top':
-                return { top: offset.top - th, left: offset.left + ew / 2 - tw / 2 };
+                return { top: position.top - th, left: position.left + ew / 2 - tw / 2 };
             case 'right':
-                return { top: offset.top + eh / 2 - th / 2, left: offset.left + ew };
+                return { top: position.top + eh / 2 - th / 2, left: position.left + ew };
             case 'bottom':
-                return { top: offset.top + eh, left: offset.left + ew / 2 - tw / 2 };
+                return { top: position.top + eh, left: position.left + ew / 2 - tw / 2 };
         }
     };
+
 
     /**
      * 显示tips
@@ -121,6 +154,7 @@ define('kotenei/tooltips', ['jquery'], function ($) {
         this.isShow = true;
         this.setPosition();
         this.$tips.show().addClass('in');
+        this.setPosition();
     };
 
     /**
