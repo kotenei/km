@@ -5,16 +5,19 @@
  */
 define('kotenei/autoComplete', ['jquery'], function ($) {
 
-    if (!Array.indexOf) {
-        Array.prototype.indexOf = function (obj) {
-            for (var i = 0; i < this.length; i++) {
-                if (this[i] == obj) {
-                    return i;
-                }
-            }
-            return -1;
-        }
-    }
+
+    var KEY = {
+        UP: 38,
+        DOWN: 40,
+        DEL: 46,
+        TAB: 9,
+        ENTER: 13,
+        ESC: 27,
+        COMMA: 188,
+        PAGEUP: 33,
+        PAGEDOWN: 34,
+        BACKSPACE: 8
+    };
 
     var AutoComplete = function ($element, options) {
         this.$element = $element;
@@ -22,9 +25,10 @@ define('kotenei/autoComplete', ['jquery'], function ($) {
             remote: null,
             zIndex: 1000,
             data: [],
-            formatItem: function (item) { return item[0]; }
+            max: 10,
+            formatItem: function (item) { return item; }
         }, options);
-        this.tpl = '<div class="k-autoAutoComplete"></div>'
+        this.tpl = '<div class="k-autocomplete"></div>'
         this.init();
     }
 
@@ -32,40 +36,76 @@ define('kotenei/autoComplete', ['jquery'], function ($) {
         var self = this;
         this.$list = $(this.tpl).hide().appendTo(document.body);
         this.data = this.options.data || [];
-        this.$element.on('keyup', function () {
+        this.$element.on('keyup', function (e) {
             var $this = $(this),
                 val = $.trim($this.val());
             self.search(val);
+
+            switch (e.keyCode) {
+                case KEY.UP:
+                    e.preventDefault();
+                    break;
+                case KEY.DOWN:
+                    break;
+                case KEY.ENTER:
+                    break;
+                case KEY.TAB:
+                    break;
+                default:
+                    break;
+            }
+        });
+
+        this.$list.on('click', 'li', function () {
+            var text = $(this).text();
+            self.$element.val(text);
+        });
+
+        $(document).on('click.autocomplete', function () {
+            self.hide();
         });
     };
 
     AutoComplete.prototype.search = function (value) {
-        if (!value || value.length === 0) { return; }
+
         if (this.options.remote) {
 
         } else {
+            var data = this.getData(value);
+            this.build(data);
             this.show();
         }
     };
 
-    AutoComplete.prototype.remove = function () {
-
+    AutoComplete.prototype.getData = function (value) {
+        var data = [];
+        if (value.length === 0) { return data; }
+        for (var i = 0, formatted; i < this.data.length; i++) {
+            formatted = this.options.formatItem(this.options.data[i]);
+            if (formatted.toLowerCase().indexOf(value) == 0) {
+                data.push(formatted);
+            }
+        }
+        return data;
     };
 
+
     AutoComplete.prototype.build = function (data) {
-        if (data.length === 0) {
-            return;
-        }
+        this.$list.find('ul').remove();
+        if (data.length === 0) { return; }
         var html = '<ul>';
-        for (var i = 0, formatted; i < data.length; i++) {
-            formatted = this.options.formatItem(data[i]);
-            html += '<li>' + formatted + '</li>';
+        for (var i = 0; i < data.length; i++) {
+            html += '<li>' + data[i] + '</li>';
+            if (i === this.options.max - 1) {
+                break;
+            }
         }
         html += '</ul>';
-        return html;
+        this.$list.append(html);
     };
 
     AutoComplete.prototype.show = function () {
+        if (this.$list.find("ul").length === 0) { this.hide(); return; }
         this.$list.show().css({
             left: this.$element.position().left,
             top: this.$element.outerHeight() + this.$element.position().top,
