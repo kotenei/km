@@ -10,12 +10,12 @@ define('kotenei/autoComplete', ['jquery'], function ($) {
      * @type {Object}
      */
     var KEY = {
-        LEFT:37,
+        LEFT: 37,
         UP: 38,
-        RIGHT:39,
+        RIGHT: 39,
         DOWN: 40,
         TAB: 9,
-        ENTER: 13    
+        ENTER: 13
     };
 
     /**
@@ -26,10 +26,11 @@ define('kotenei/autoComplete', ['jquery'], function ($) {
     var AutoComplete = function ($element, options) {
         this.$element = $element;
         this.options = $.extend({}, {
-            remote: null,
+            url: null,
             zIndex: 1000,
             data: [],
             max: 10,
+            hightLight: true,
             formatItem: function (item) { return item; }
         }, options);
         this.tpl = '<div class="k-autocomplete"></div>';
@@ -58,7 +59,6 @@ define('kotenei/autoComplete', ['jquery'], function ($) {
                 self.search(val);
                 self.active = 0;
             }
-
 
             switch (e.keyCode) {
                 case KEY.UP:
@@ -95,12 +95,25 @@ define('kotenei/autoComplete', ['jquery'], function ($) {
      * @return {Void}       
      */
     AutoComplete.prototype.search = function (value) {
-
-        if (this.options.remote) {
-
+        var self = this;
+        if (this.options.url) {
+            $.ajax({
+                mode: "abort",
+                type: 'GET',
+                url: this.options.url,
+                data: { keyword: value, rnd: Math.random() }
+            }).done(function (ret) {
+                if (ret && ret instanceof Array) {
+                    var data;
+                    self.data = ret;
+                    data = self.getData(value);
+                    self.build(value, data);
+                    self.show();
+                }
+            });
         } else {
             var data = this.getData(value);
-            this.build(data);
+            this.build(value, data);
             this.show();
         }
     };
@@ -114,7 +127,7 @@ define('kotenei/autoComplete', ['jquery'], function ($) {
         var data = [], flag = 0;
         if (value.length === 0) { return data; }
         for (var i = 0, formatted; i < this.data.length; i++) {
-            formatted = this.options.formatItem(this.options.data[i]);
+            formatted = this.options.formatItem(this.data[i]);
             if (formatted.toLowerCase().indexOf(value.toLowerCase()) == 0) {
                 data.push(formatted);
                 if (flag === (this.options.max - 1)) {
@@ -131,18 +144,29 @@ define('kotenei/autoComplete', ['jquery'], function ($) {
      * @param  {Array} data - 数据
      * @return {Void}    
      */
-    AutoComplete.prototype.build = function (data) {
+    AutoComplete.prototype.build = function (value, data) {
         this.$listBox.find('ul').remove();
         this.$listItem = null;
         if (data.length === 0) { return; }
         var html = '<ul>';
         for (var i = 0; i < data.length; i++) {
-            html += '<li class="' + (i == 0 ? "active" : "") + '">' + data[i] + '</li>';
+            html += '<li class="' + (i == 0 ? "active" : "") + '">' + this.hightLight(value, data[i]) + '</li>';
         }
         html += '</ul>';
         this.$listBox.append(html);
         this.$list = this.$listBox.find('ul');
         this.$listItem = this.$listBox.find('li');
+    };
+
+
+    AutoComplete.prototype.hightLight = function (char, str) {
+        if (this.options.hightLight) {
+            var reg = new RegExp('('+char+')', 'ig');
+            str = str.replace(reg, '<strong>$1</strong>');
+            return str;
+        } else {
+            return str;
+        }
     };
 
     /**

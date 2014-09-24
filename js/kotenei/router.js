@@ -61,14 +61,20 @@
     Router.prototype.listener = function () {
         var path = location.hash.slice(1);
         var route = this.getRoute(path);
-        var values;
+        var values, ret = {};
 
         if (!route) {
             location.replace('#/');
             return;
         }
-        values = this.getValues(path, route);     
-        route.handle.apply(route, values);
+
+        values = this.getValues(path, route);
+
+        for (var i = 0; i < route.params.length; i++) {
+            ret[route.params[i]] = values[i];
+        }
+
+        route.handle(ret);
     };
 
     /**

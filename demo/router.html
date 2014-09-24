@@ -28,7 +28,7 @@
             var index = function () { log.innerHTML = 'index'; },
             author = function () { log.innerHTML = 'author'; },
             books = function () { log.innerHTML = 'books'; },
-            views = function (id) { log.innerHTML = "id="+id; };
+            views = function (params) { log.innerHTML = "id="+params.id; };
 
             var router = new Router()
             .map('/', index)
