@@ -2574,6 +2574,62 @@ define('kotenei/validateTooltips', ['jquery', 'kotenei/validate', 'kotenei/toolt
 
     return ValidateTooltips;
 });
+/**
+ * 瀑布流模块
+ * @date :2014-09-24
+ * @author kotenei (kotenei@qq.com)
+ */
+define('kotenei/waterfall', ['jquery', 'kotenei/infiniteScroll', 'kotenei/popTips'], function ($, InfiniteScroll, popTips) {
+
+    var Waterfall = function ($element, options) {
+        this.$element = $element;
+        this.options = $.extend({}, {
+            width: 200,
+            nodeTag: 'li',
+            resize: false,
+            url: null,
+            callback: $.noop
+        }, options);
+        this.loading = false;
+        this.notMore = false;
+    };
+
+    Waterfall.prototype.init = function () {
+        var self = this;
+        this.infiniteScroll = new InfiniteScroll({
+            $watchElement: self.$element,
+            callback: function () {
+                self.remote();
+            }
+        });
+    };
+
+    Waterfall.prototype.remote = function () {
+        if (this.notMore) { return false; }
+        if (this.loading) { return; }
+        var self = this;
+        $.get(this.options.url, {
+            rnd: Math.random()
+        }).done(function (ret) {
+            if (!ret || ret.length === 0) {
+                self.notMore = true;
+                return false;
+            }
+        }).fail(function () {
+            popTips.error('网络错误！');
+        }).always(function () {
+            self.loading = false;
+        });
+    };
+
+    Waterfall.prototype.resize = function () { };
+
+    Waterfall.prototype.arrangement = function () { };
+
+    return Waterfall;
+
+});
+
 /*
  * 窗体模块
  * @date:2014-09-17
@@ -2990,7 +3046,7 @@ define('kotenei/wordLimit', ['jquery'], function ($) {
     return WordLimit;
 });
 ;
-define("kotenei", ["kotenei/autoComplete", "kotenei/dragdrop", "kotenei/dropdown", "kotenei/dropdownDatepicker", "kotenei/infiniteScroll", "kotenei/lazyload", "kotenei/loading", "kotenei/pager", "kotenei/placeholder", "kotenei/popTips", "kotenei/router", "kotenei/slider", "kotenei/switch", "kotenei/tooltips", "kotenei/util", "kotenei/validate", "kotenei/validateTooltips", "kotenei/window", "kotenei/wordLimit"], function(_autoComplete, _dragdrop, _dropdown, _dropdownDatepicker, _infiniteScroll, _lazyload, _loading, _pager, _placeholder, _popTips, _router, _slider, _switch, _tooltips, _util, _validate, _validateTooltips, _window, _wordLimit){
+define("kotenei", ["kotenei/autoComplete", "kotenei/dragdrop", "kotenei/dropdown", "kotenei/dropdownDatepicker", "kotenei/infiniteScroll", "kotenei/lazyload", "kotenei/loading", "kotenei/pager", "kotenei/placeholder", "kotenei/popTips", "kotenei/router", "kotenei/slider", "kotenei/switch", "kotenei/tooltips", "kotenei/util", "kotenei/validate", "kotenei/validateTooltips", "kotenei/waterfall", "kotenei/window", "kotenei/wordLimit"], function(_autoComplete, _dragdrop, _dropdown, _dropdownDatepicker, _infiniteScroll, _lazyload, _loading, _pager, _placeholder, _popTips, _router, _slider, _switch, _tooltips, _util, _validate, _validateTooltips, _waterfall, _window, _wordLimit){
     return {
         "AutoComplete" : _autoComplete,
         "Dragdrop" : _dragdrop,
@@ -3009,6 +3065,7 @@ define("kotenei", ["kotenei/autoComplete", "kotenei/dragdrop", "kotenei/dropdown
         "Util" : _util,
         "Validate" : _validate,
         "ValidateTooltips" : _validateTooltips,
+        "Waterfall" : _waterfall,
         "Window" : _window,
         "WordLimit" : _wordLimit
     };
