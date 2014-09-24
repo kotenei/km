@@ -720,7 +720,7 @@
   overflow: hidden;
   cursor: pointer;
 }
-.k-autocomplete > ul > li:hover {
+.k-autocomplete > ul > li:hover,
+.k-autocomplete > ul > li.active {
   background-color: #eee;
-  color: white;
 }
