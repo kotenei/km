@@ -30,7 +30,7 @@ define('kotenei/autoComplete', ['jquery'], function ($) {
             zIndex: 1000,
             data: [],
             max: 10,
-            hightLight: true,
+            hightLight: false,
             formatItem: function (item) { return item; }
         }, options);
         this.tpl = '<div class="k-autocomplete"></div>';
@@ -158,7 +158,12 @@ define('kotenei/autoComplete', ['jquery'], function ($) {
         this.$listItem = this.$listBox.find('li');
     };
 
-
+    /**
+     * 高亮显示
+     * @param  {String} char - 匹配字符
+     * @param  {String} str  -  需要高亮的字符串
+     * @return {String}      
+     */
     AutoComplete.prototype.hightLight = function (char, str) {
         if (this.options.hightLight) {
             var reg = new RegExp('('+char+')', 'ig');
