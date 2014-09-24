@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../dist/css/kotenei.css" />
+    <script type="text/javascript" src="./vendor/require/require.js"></script>
+    <script type="text/javascript" src="./main.js"></script>
+    <style type="text/css">
+        ul { width:800px;overflow:hidden;zoom:1;margin:0 auto;}
+        ul > li { width:200px;height:200px;float:left;display:inline;text-align:center;background:#cccccc;color:white;font-size:70px;margin:5px;line-height:200px;}
+    </style>
+</head>
+<body>
+
+    <ul id="list">
+    </ul>
+
+
+    <script type="text/javascript">
+
+        require(['kotenei'], function (kotenei) {
+
+            var arr = [];
+            var $watch = $("#list");
+            var InfiniteScroll = kotenei.InfiniteScroll;
+
+            var infiniteScroll = new InfiniteScroll({
+                $watchElement: $watch,
+                callback: function () {
+                    var last = arr.length > 0 ? arr[arr.length - 1] : 0;
+                    var html = [];
+                    for (var i = 1; i <= 10; i++) {
+                        arr.push(last + i);
+                        html.push('<li>' + (last + i) + '</li>');
+                    }
+                    $watch.append(html.join(''));
+                }
+            });
+        });
+    </script>
+</body>
+</html>
