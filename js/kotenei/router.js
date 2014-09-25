@@ -59,7 +59,13 @@
      * @return {Void}
      */
     Router.prototype.listener = function () {
-        var path = location.hash.slice(1);
+        var paths = location.hash.slice(1).split('?');
+        var path = paths[0], params;
+
+        if (paths[1]) {
+            params = this.getUrlParams(paths[1]);
+        }
+
         var route = this.getRoute(path);
         var values, ret = {};
 
@@ -74,7 +80,24 @@
             ret[route.params[i]] = values[i];
         }
 
-        route.handle(ret);
+        params = $.extend({}, ret, params);
+        route.handle(params);
+    };
+
+
+    /**
+     * 取URL参数  param1=value1&param2=value2
+     * @param  {String} str  - 带参数的字符串    
+     */
+    Router.prototype.getUrlParams = function (str) {
+        var params = {};
+        if (!str) { return params; }
+        var arrStr = str.split('&');
+        for (var i = 0, arrParams; i < arrStr.length; i++) {
+            arrParams = arrStr[i].split('=');
+            params[arrParams[0]] = arrParams[1];
+        }
+        return params;
     };
 
     /**

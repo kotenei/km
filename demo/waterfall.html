@@ -8,14 +8,70 @@
     <script type="text/javascript" src="./vendor/require/require.js"></script>
     <script type="text/javascript" src="./main.js"></script>
     <style type="text/css">
+        ul
+        {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        ul li
+        {
+            position: absolute;
+        }
+
+        img
+        {
+            display:block;
+        }
     </style>
 </head>
 <body>
 
+    <ul id="list">
+    </ul>
+
     <script type="text/javascript">
-    
+        var arr = [];
+
+        var num = random(1, 30);
+
+        for (var i = 0; i < 30; i++) {
+            arr[i] = 'http://www.bluesdream.com/case/jquery/ublue-jquery-waterfall/images/img' + (i + 1) + '.jpg';
+        }
+
+        arr.sort(function () {
+            return 0.5 - Math.random();
+        })
+
+        function random(min, max) {
+            return Math.floor(min + Math.random() * (max - min));
+        }
+
         require(['kotenei'], function (kotenei) {
             var Waterfall = kotenei.Waterfall;
+            var waterfall = new Waterfall($("#list"), {
+                url: 'asdfasdfasdf',
+                loaded: function ($element, data) {
+                    var html = [];
+                    var self = this;
+                    var tmpCount = 0;
+                    var maxLen = data.length;
+                    for (var i = 0; i < maxLen; i++) {
+                        var $img = $('<img />');
+                        (function ($img, src) {
+                            self.imgLoad($img, src, function (size) {
+                                tmpCount++;
+                                html.push('<li style="width:' + size.width + ',height:' + size.height + ';"><img src="' + src + '"  /></li>');
+                                if (tmpCount >= maxLen) {
+                                    $element.append(html.join(''));
+                                    self.arrangement();
+                                }
+                            });
+                        })($img, data[i]);
+                    }
+                }
+            });
         });
     </script>
 </body>

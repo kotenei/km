@@ -41,11 +41,14 @@ define('kotenei/infiniteScroll', ['jquery'], function ($) {
         var canScroll = remaining <= scrollElmHeight * this.options.scrollDistance;
         if (canScroll) {
             if (this.options.callback() === false) {
-                this.$scrollElement.off('scroll.infiniteScroll');
+                this.destroy();
             }
         }
     };
 
+    InfiniteScroll.prototype.destroy = function () {
+        this.$scrollElement.off('scroll.infiniteScroll');
+    };
 
     return InfiniteScroll;
 });
