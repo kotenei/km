@@ -2611,10 +2611,11 @@ define('kotenei/waterfall', ['jquery', 'kotenei/infiniteScroll', 'kotenei/popTip
         this.$element = $element;
         this.options = $.extend({}, {
             width: 200,
+            margin:10,
             nodeTag: 'li',
             resize: false,
             url: null,
-            callback: $.noop
+            loaded:$.noop
         }, options);
 
         this.$window = $(window);
@@ -2644,12 +2645,12 @@ define('kotenei/waterfall', ['jquery', 'kotenei/infiniteScroll', 'kotenei/popTip
     Waterfall.prototype.arrangement = function () {
         this.nodes = this.$element.children(this.options.nodeTag);
         this.arrHeight = [];
-        var n = this.$document.width() / this.node_w | 0;
+        var n = this.$element.width() / this.node_w | 0;
         var len = 0;
-
         for (var i = 0, node_h, $node; i < this.nodes.length; i++) {
             $node = this.nodes.eq(i);
             node_h = $node.outerHeight();
+            
             //n表示一行有多少个节点，i<n表示第一行开始
             if (i < n) {
                 this.arrHeight[i] = node_h;         //记录每个节点的高度
@@ -2665,8 +2666,10 @@ define('kotenei/waterfall', ['jquery', 'kotenei/infiniteScroll', 'kotenei/popTip
 
     Waterfall.prototype.set = function ($node, node_h) {
         var min_h = Math.min.apply(null, this.arrHeight);
+
         var index = this.getMinHeightIndex(min_h);
-        index = index = -1 ? 0 : index;
+        index = index == -1 ? 0 : index;
+
         this.arrHeight[index] += (node_h + this.options.margin);  //更新最小值的那个高度，形成新的高度值、
         $node.css({
             top: min_h + this.options.margin,
@@ -2675,8 +2678,10 @@ define('kotenei/waterfall', ['jquery', 'kotenei/infiniteScroll', 'kotenei/popTip
     };
 
     Waterfall.prototype.getMinHeightIndex = function (min_h) {
+
         if (Array.indexOf) {
-            return this.arrHeight.indexOf(min_h);
+            var index = this.arrHeight.indexOf(min_h);
+            return index;
         } else {
             for (var i = 0; i < this.arrHeight; i++) {
                 if (this.arrHeight[i] === min_h) {
