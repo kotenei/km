@@ -2629,13 +2629,14 @@ define('kotenei/waterfall', ['jquery', 'kotenei/infiniteScroll', 'kotenei/popTip
     Waterfall.prototype.init = function () {
         var self = this;
         this.infiniteScroll = new InfiniteScroll({
-            $watchElement: self.$element,
+            $watchElement:this.$element,
             callback: function () {
                 self.remote();
             }
         });
 
         if (this.options.resize) {
+            this.$element.css('position', 'static');
             this.$window.on('resize.waterfall', $.proxy(this.arrangement, this));
         }
 
@@ -2645,7 +2646,8 @@ define('kotenei/waterfall', ['jquery', 'kotenei/infiniteScroll', 'kotenei/popTip
     Waterfall.prototype.arrangement = function () {
         this.nodes = this.$element.children(this.options.nodeTag);
         this.arrHeight = [];
-        var n = this.$element.width() / this.node_w | 0;
+        var n = this.options.resize ? (this.$document.width() / this.node_w | 0) : (this.$element.width() / this.node_w | 0);
+        //var n = this.$element.width() / this.node_w | 0;
         var len = 0;
         for (var i = 0, node_h, $node; i < this.nodes.length; i++) {
             $node = this.nodes.eq(i);
@@ -2662,6 +2664,7 @@ define('kotenei/waterfall', ['jquery', 'kotenei/infiniteScroll', 'kotenei/popTip
                 this.set($node, node_h);
             }
         }
+        this.adpHeight();
     };
 
     Waterfall.prototype.set = function ($node, node_h) {
@@ -2755,7 +2758,9 @@ define('kotenei/waterfall', ['jquery', 'kotenei/infiniteScroll', 'kotenei/popTip
         return Math.max.apply(null, this.arrHeight);
     };
 
-    
+    Waterfall.prototype.adpHeight = function () {
+        this.$element.height(this.getMaxHeight());
+    }
 
     return Waterfall;
 
