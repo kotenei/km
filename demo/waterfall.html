@@ -13,9 +13,9 @@
             list-style: none;
             margin: 0;
             padding: 0;
-            margin:0 auto;
-            width:860px;
-            position:relative;
+            margin: 0 auto;
+            width: 860px;
+            position: relative;
         }
 
         ul li
@@ -25,7 +25,7 @@
 
         img
         {
-            display:block;
+            display: block;
         }
     </style>
 </head>
@@ -37,23 +37,18 @@
     <script type="text/javascript">
         var arr = [];
 
-        var num = random(1, 30);
 
-        for (var i = 0; i < num; i++) {
-            arr[i] = 'http://www.bluesdream.com/case/jquery/ublue-jquery-waterfall/images/img' + (i + 1) + '.jpg';
+        for (var i = 10, j = 0; i < 20; i++, j++) {
+            arr[j] = 'http://www.bluesdream.com/case/jquery/ublue-jquery-waterfall/images/img' + (i + 1) + '.jpg';
         }
 
-        arr.sort(function () {
-            return 0.5 - Math.random();
-        })
 
-        function random(min, max) {
-            return Math.floor(min + Math.random() * (max - min));
-        }
+
 
         require(['kotenei'], function (kotenei) {
             var Waterfall = kotenei.Waterfall;
-            var waterfall = new Waterfall($("#list"), {
+            var $list = $("#list");
+            var waterfall = new Waterfall($list, {
                 url: 'asdfasdfasdf',
                 loaded: function ($element, data) {
                     var html = [];
@@ -69,6 +64,7 @@
                                 if (tmpCount >= maxLen) {
                                     $element.append(html.join(''));
                                     self.arrangement();
+                                    $element.height(self.getMaxHeight());
                                 }
                             });
                         })($img, data[i]);

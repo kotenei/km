@@ -63,7 +63,7 @@ define('kotenei/waterfall', ['jquery', 'kotenei/infiniteScroll', 'kotenei/popTip
     };
 
     Waterfall.prototype.set = function ($node, node_h) {
-        var min_h = Math.min.apply(null, this.arrHeight);
+        var min_h = this.getMinHeight();
 
         var index = this.getMinHeightIndex(min_h);
         index = index == -1 ? 0 : index;
@@ -143,7 +143,17 @@ define('kotenei/waterfall', ['jquery', 'kotenei/infiniteScroll', 'kotenei/popTip
             width: this.options.width,
             height: height
         };
+    };
+
+    Waterfall.prototype.getMinHeight = function () {
+        return Math.min.apply(null, this.arrHeight);
     }
+
+    Waterfall.prototype.getMaxHeight = function () {
+        return Math.max.apply(null, this.arrHeight);
+    };
+
+    
 
     return Waterfall;
 

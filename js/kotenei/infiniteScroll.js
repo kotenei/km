@@ -14,7 +14,7 @@ define('kotenei/infiniteScroll', ['jquery'], function ($) {
         this.options = $.extend({}, {
             $scrollElement: $(window),
             $watchElement: null,
-            scrollDistance: 0,
+            scrollDistance:0.3,
             callback: $.noop
         }, options);
         this.$scrollElement = this.options.$scrollElement;
