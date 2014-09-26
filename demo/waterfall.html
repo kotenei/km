@@ -61,8 +61,9 @@
                                 tmpCount++;
                                 html.push('<li style="width:' + size.width + ',height:' + size.height + ';"><img src="' + src + '"  /></li>');
                                 if (tmpCount >= maxLen) {
-                                    $list.append(html.join(''));
-                                    self.arrangement();
+                                    var $lis = $(html.join(''));
+                                    $list.append($lis);
+                                    self.loadedArrangement($lis);
                                 }
                             });
                         })($img, data[i]);

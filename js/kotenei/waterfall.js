@@ -5,6 +5,11 @@
  */
 define('kotenei/waterfall', ['jquery', 'kotenei/infiniteScroll', 'kotenei/popTips'], function ($, InfiniteScroll, popTips) {
 
+    /**
+     * 瀑布流模块
+     * @param {JQuery} $element - dom
+     * @param {Object} options - 参数
+     */
     var Waterfall = function ($element, options) {
         this.$element = $element;
         this.options = $.extend({}, {
@@ -20,12 +25,19 @@ define('kotenei/waterfall', ['jquery', 'kotenei/infiniteScroll', 'kotenei/popTip
         this.$document = $(document);
         this.node_w = this.options.width + this.options.margin;
         this.loading = false;
-        this.notMore = false;
+        this.noMore = false;
         this.init();
     };
 
+    /**
+     * 初始化
+     * @return {Void}
+     */
     Waterfall.prototype.init = function () {
         var self = this;
+      
+        this.arrangementInit();
+
         this.infiniteScroll = new InfiniteScroll({
             $watchElement:this.$element,
             callback: function () {
@@ -35,15 +47,17 @@ define('kotenei/waterfall', ['jquery', 'kotenei/infiniteScroll', 'kotenei/popTip
 
         if (this.options.resize) {
             this.$element.css('position', 'static');
-            this.$window.on('resize.waterfall', $.proxy(this.arrangement, this));
-        }
-
-        this.arrangement();
+            this.$window.on('resize.waterfall', $.proxy(this.arrangementInit, this));
+        }      
     };
 
-    Waterfall.prototype.arrangement = function () {
-        this.nodes = this.$element.children(this.options.nodeTag);
+    /**
+     * 排列初始化
+     * @return {Void}
+     */
+    Waterfall.prototype.arrangementInit = function () {
         this.arrHeight = [];
+        this.nodes = this.$element.children(this.options.nodeTag);
         var n = this.options.resize ? (this.$document.width() / this.node_w | 0) : (this.$element.width() / this.node_w | 0);
         //var n = this.$element.width() / this.node_w | 0;
         var len = 0;
@@ -65,6 +79,11 @@ define('kotenei/waterfall', ['jquery', 'kotenei/infiniteScroll', 'kotenei/popTip
         this.adpHeight();
     };
 
+    /**
+     * 设置节点排列
+     * @param {JQuery} $node  - dom
+     * @param {Number} node_h - 高度
+     */
     Waterfall.prototype.set = function ($node, node_h) {
         var min_h = this.getMinHeight();
 
@@ -78,6 +97,11 @@ define('kotenei/waterfall', ['jquery', 'kotenei/infiniteScroll', 'kotenei/popTip
         });
     };
 
+    /**
+     * 获取最小高度的索引
+     * @param  {Number} min_h - 最小高度
+     * @return {Number}      
+     */
     Waterfall.prototype.getMinHeightIndex = function (min_h) {
 
         if (Array.indexOf) {
@@ -92,34 +116,55 @@ define('kotenei/waterfall', ['jquery', 'kotenei/infiniteScroll', 'kotenei/popTip
         }
     };
 
+    /**
+     * 远程取数据
+     * @return {Void} 
+     */
     Waterfall.prototype.remote = function () {
-        if (this.notMore) { return false; }
+        if (this.noMore) { return false; }
         if (this.loading) { return; }
         var self = this;
         this.loading = true;
-        setTimeout(function () {
-            self.options.loaded.call(self, self.$element, arr);
+        $.get(this.options.url, {
+            rnd: Math.random()
+        }).done(function (ret) {
+            if (!ret || ret.length === 0) {
+                self.noMore = true;
+                return false;
+            }
+            self.options.loaded.call(self, self.$element, ret);
             self.loading = false;
-        }, 500);
+        }).fail(function () {
+            popTips.error('网络错误！');
+            self.loading = false;
+        })
+    };
 
-        //$.get(this.options.url, {
-        //    rnd: Math.random()
-        //}).done(function (ret) {
-        //    if (!ret || ret.length === 0) {
-        //        self.notMore = true;
-        //        return false;
-        //    }
-        //}).fail(function () {
-        //    popTips.error('网络错误！');
-        //}).always(function () {
-        //    self.loading = false;
-        //});
+    /**
+     * 加载完数据后排列
+     * @param  {JQuery} $lis - dom
+     * @return {Void}
+     */
+    Waterfall.prototype.loadedArrangement = function ($lis) {
+        var self = this;
+        $lis.each(function () {
+            var $this = $(this),
+                node_h = $this.outerHeight();
+            self.set($this, node_h);
+        })
     };
 
     Waterfall.prototype.stop = function () {
         this.infiniteScroll.destory();
     };
 
+    /**
+     * 图片加载
+     * @param  {JQuery}   $img - dom
+     * @param  {String}   src - 图片路径
+     * @param  {Function} callback [description]
+     * @return {Void}
+     **/
     Waterfall.prototype.imgLoad = function ($img, src, callback) {
         var img = new Image();
         var self = this;
@@ -133,6 +178,12 @@ define('kotenei/waterfall', ['jquery', 'kotenei/infiniteScroll', 'kotenei/popTip
         img.src = src;
     };
 
+    /**
+     * 获取缩放图片尺寸
+     * @param  {Number} width - 宽度
+     * @param  {Number} height- 高度
+     * @return {Object}     
+     */
     Waterfall.prototype.zoom = function (width, height) {
         var ratio;
         if (width > height || width == height) {
@@ -148,14 +199,26 @@ define('kotenei/waterfall', ['jquery', 'kotenei/infiniteScroll', 'kotenei/popTip
         };
     };
 
+    /**
+     * 获取最小高度
+     * @return {Number}
+     */
     Waterfall.prototype.getMinHeight = function () {
         return Math.min.apply(null, this.arrHeight);
     }
 
+    /**
+     * 获取最大高度
+     * @return {Number} 
+     */
     Waterfall.prototype.getMaxHeight = function () {
         return Math.max.apply(null, this.arrHeight);
     };
 
+    /**
+     * 设置容器高度
+     * @return {Void}
+     */
     Waterfall.prototype.adpHeight = function () {
         this.$element.height(this.getMaxHeight());
     }
