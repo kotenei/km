@@ -2616,11 +2616,11 @@ define('kotenei/waterfall', ['jquery', 'kotenei/infiniteScroll', 'kotenei/popTip
         this.$element = $element;
         this.options = $.extend({}, {
             width: 200,
-            margin:10,
+            margin: 10,
             nodeTag: 'li',
             resize: false,
             url: null,
-            loaded:$.noop
+            loaded: $.noop
         }, options);
 
         this.$window = $(window);
@@ -2637,20 +2637,26 @@ define('kotenei/waterfall', ['jquery', 'kotenei/infiniteScroll', 'kotenei/popTip
      */
     Waterfall.prototype.init = function () {
         var self = this;
-      
+
         this.arrangementInit();
 
         this.infiniteScroll = new InfiniteScroll({
-            $watchElement:this.$element,
+            $watchElement: this.$element,
             callback: function () {
-                self.remote();
+                if (self.options.url) {
+                    self.remote();
+                    return;
+                }
+                if (self.options.data && self.options.data.length > 0) {
+                    self.options.loaded.call(self, self.$element, self.options.data);
+                }
             }
         });
 
         if (this.options.resize) {
             this.$element.css('position', 'static');
             this.$window.on('resize.waterfall', $.proxy(this.arrangementInit, this));
-        }      
+        }
     };
 
     /**
@@ -2666,7 +2672,7 @@ define('kotenei/waterfall', ['jquery', 'kotenei/infiniteScroll', 'kotenei/popTip
         for (var i = 0, node_h, $node; i < this.nodes.length; i++) {
             $node = this.nodes.eq(i);
             node_h = $node.outerHeight();
-            
+
             //n表示一行有多少个节点，i<n表示第一行开始
             if (i < n) {
                 this.arrHeight[i] = node_h;         //记录每个节点的高度
@@ -2748,12 +2754,17 @@ define('kotenei/waterfall', ['jquery', 'kotenei/infiniteScroll', 'kotenei/popTip
      * @return {Void}
      */
     Waterfall.prototype.loadedArrangement = function ($lis) {
+        if (this.arrHeight.length === -0) {
+            this.arrangementInit();
+            return;
+        }
         var self = this;
         $lis.each(function () {
             var $this = $(this),
                 node_h = $this.outerHeight();
             self.set($this, node_h);
-        })
+        });
+        this.adpHeight();
     };
 
     Waterfall.prototype.stop = function () {
