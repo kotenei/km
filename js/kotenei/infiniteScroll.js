@@ -46,6 +46,10 @@ define('kotenei/infiniteScroll', ['jquery'], function ($) {
         }
     };
 
+    /**
+     * 销毁
+     * @return {Void}       
+     */
     InfiniteScroll.prototype.destroy = function () {
         this.$scrollElement.off('scroll.infiniteScroll');
     };

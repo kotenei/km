@@ -895,6 +895,10 @@ define('kotenei/infiniteScroll', ['jquery'], function ($) {
         }
     };
 
+    /**
+     * 销毁
+     * @return {Void}       
+     */
     InfiniteScroll.prototype.destroy = function () {
         this.$scrollElement.off('scroll.infiniteScroll');
     };
@@ -2720,6 +2724,7 @@ define('kotenei/waterfall', ['jquery', 'kotenei/infiniteScroll', 'kotenei/popTip
 
         this.infiniteScroll = new InfiniteScroll({
             $watchElement: this.$element,
+            scrollDistance: 0,
             callback: function () {
                 if (self.options.url) {
                     self.remote();
@@ -2745,7 +2750,6 @@ define('kotenei/waterfall', ['jquery', 'kotenei/infiniteScroll', 'kotenei/popTip
         this.arrHeight = [];
         this.nodes = this.$element.children(this.options.nodeTag);
         var n = this.options.resize ? (this.$document.width() / this.node_w | 0) : (this.$element.width() / this.node_w | 0);
-        //var n = this.$element.width() / this.node_w | 0;
         var len = 0;
         for (var i = 0, node_h, $node; i < this.nodes.length; i++) {
             $node = this.nodes.eq(i);
@@ -2764,6 +2768,31 @@ define('kotenei/waterfall', ['jquery', 'kotenei/infiniteScroll', 'kotenei/popTip
         }
         this.adpHeight();
     };
+
+    /**
+     * 排列
+     * @param  {JQuery} $items - dom
+     * @return {Void}
+     */
+    Waterfall.prototype.arrangement = function ($items) {
+        var self = this;
+        if (this.arrHeight.length === 0) {
+            this.arrangementInit();
+            return;
+        }
+
+        if (!$items || $items.length === 0) {
+            return;
+        }
+
+        $items.each(function () {
+            var $this = $(this),
+                node_h = $this.outerHeight();
+            self.set($this, node_h);
+        });
+        this.adpHeight();
+    };
+
 
     /**
      * 设置节点排列
@@ -2807,7 +2836,7 @@ define('kotenei/waterfall', ['jquery', 'kotenei/infiniteScroll', 'kotenei/popTip
      * @return {Void} 
      */
     Waterfall.prototype.remote = function () {
-        if (this.noMore) { return false; }
+        if (this.noMore) { return; }
         if (this.loading) { return; }
         var self = this;
         this.loading = true;
@@ -2826,26 +2855,12 @@ define('kotenei/waterfall', ['jquery', 'kotenei/infiniteScroll', 'kotenei/popTip
         })
     };
 
-    /**
-     * 加载完数据后排列
-     * @param  {JQuery} $lis - dom
-     * @return {Void}
-     */
-    Waterfall.prototype.loadedArrangement = function ($lis) {
-        if (this.arrHeight.length === -0) {
-            this.arrangementInit();
-            return;
-        }
-        var self = this;
-        $lis.each(function () {
-            var $this = $(this),
-                node_h = $this.outerHeight();
-            self.set($this, node_h);
-        });
-        this.adpHeight();
-    };
 
-    Waterfall.prototype.stop = function () {
+    /**
+     * 销毁
+     * @return {Void} 
+     */
+    Waterfall.prototype.destory = function () {
         this.infiniteScroll.destory();
     };
 
