@@ -5,6 +5,7 @@ var fs     = require('fs');
 var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
+var minifyCSS = require('gulp-minify-css');
 
 var through2 = require('through2');
 
@@ -67,7 +68,10 @@ gulp.task('less', function () {
     .pipe(less({
       paths: [path.join(__dirname, 'style')]
     }))
-    .pipe(gulp.dest('./dist/css'));
+    .pipe(gulp.dest('./dist/css'))
+    .pipe(minifyCSS())
+    .pipe(rename('kotenei.min.css'))
+    .pipe(gulp.dest('./dist/css'))
 });
 
 gulp.task('scripts', function(){
