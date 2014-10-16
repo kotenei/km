@@ -144,8 +144,9 @@ define('kotenei/autoComplete', ['jquery'], function ($) {
         if (value.length === 0) { return data; }
         for (var i = 0, formatted; i < this.data.length; i++) {
             formatted = this.options.formatItem(this.data[i]);
-            if (formatted.toLowerCase().indexOf(value.toLowerCase()) == 0) {
+            if (formatted.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
                 data.push(formatted);
+
                 if (flag === (this.options.max - 1)) {
                     break;
                 }
