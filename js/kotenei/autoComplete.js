@@ -34,7 +34,10 @@ define('kotenei/autoComplete', ['jquery'], function ($) {
             height: null,
             isBottom: true,
             hightLight: false,
-            formatItem: function (item) { return item; }
+            formatItem: function (item) { return item; },
+            callback: {
+                setValue: null
+            }
         }, options);
         this.tpl = '<div class="k-autocomplete"></div>';
         this.active = 0;
@@ -85,6 +88,10 @@ define('kotenei/autoComplete', ['jquery'], function ($) {
         this.$listBox.on('click', 'li', function () {
             var text = $(this).text();
             self.$element.val(text);
+            if ($.isFunction(self.options.callback.setValue)) {
+                var item = self.getItem(text);
+                self.options.callback.setValue(item);
+            }
         });
 
 
@@ -140,13 +147,14 @@ define('kotenei/autoComplete', ['jquery'], function ($) {
      * @return {Array}     
      */
     AutoComplete.prototype.getData = function (value) {
+        this.cacheData = [];
         var data = [], flag = 0;
         if (value.length === 0) { return data; }
         for (var i = 0, formatted; i < this.data.length; i++) {
             formatted = this.options.formatItem(this.data[i]);
             if (formatted.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+                this.cacheData.push(this.data[i]);
                 data.push(formatted);
-
                 if (flag === (this.options.max - 1)) {
                     break;
                 }
@@ -198,7 +206,7 @@ define('kotenei/autoComplete', ['jquery'], function ($) {
     AutoComplete.prototype.show = function () {
         if (!this.hasItem()) { this.hide(); return; }
         this.setCss();
-        this.$listBox.show(); 
+        this.$listBox.show();
     };
 
 
@@ -224,7 +232,7 @@ define('kotenei/autoComplete', ['jquery'], function ($) {
      * @return {Void}
      */
     AutoComplete.prototype.setCss = function () {
-        this.$list.css('max-height', this.options.height||"auto");
+        this.$list.css('max-height', this.options.height || "auto");
         var css = this.getCss();
         this.$listBox.css(css);
     }
@@ -300,9 +308,27 @@ define('kotenei/autoComplete', ['jquery'], function ($) {
      */
     AutoComplete.prototype.select = function () {
         var $item = this.$listBox.find('li.active');
-        this.$element.val($item.text());
+        var text = $item.text();
+        this.$element.val(text);
         this.hide();
+        if ($.isFunction(this.options.callback.setValue)) {
+            var item = this.getItem(text);
+            this.options.callback.setValue(item);
+        }
     };
+
+    //根据值获取数据项
+    AutoComplete.prototype.getItem = function (value) {
+        var data = this.cacheData;
+        if (!data || data.length === 0) { return; }
+        for (var i = 0, formatted; i < data.length; i++) {
+            formatted = this.options.formatItem(data[i]);
+            if (value === formatted) {
+                return data[i];
+            }
+        }
+        return null;
+    }
 
     return AutoComplete;
 

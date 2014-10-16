@@ -224,7 +224,12 @@
         require(['kotenei'], function (kotenei) {
             var AutoComplete = kotenei.AutoComplete;
             var autoComplete = new AutoComplete($("#txtAutoComplete"), {
-                data: data
+                data: data,
+                callback: {
+                    setValue: function (item) {
+                        console.log(item)
+                    }
+                }
             });
         });
 
