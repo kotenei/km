@@ -196,8 +196,8 @@ define('kotenei/autoComplete', ['jquery'], function ($) {
      */
     AutoComplete.prototype.show = function () {
         if (!this.hasItem()) { this.hide(); return; }
-        this.setCss()
-        this.$listBox.show();
+        this.setCss();
+        this.$listBox.show(); 
     };
 
 
@@ -223,7 +223,7 @@ define('kotenei/autoComplete', ['jquery'], function ($) {
      * @return {Void}
      */
     AutoComplete.prototype.setCss = function () {
-        this.$list.css('height', this.options.height || "auto");
+        this.$list.css('max-height', this.options.height||"auto");
         var css = this.getCss();
         this.$listBox.css(css);
     }
