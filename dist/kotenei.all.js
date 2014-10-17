@@ -87,7 +87,7 @@ define('kotenei/autoComplete', ['jquery'], function ($) {
 
         this.$listBox.on('click', 'li', function () {
             var text = $(this).text();
-            self.$element.val(text);
+            self.$element.val(text).focus();
             if ($.isFunction(self.options.callback.setValue)) {
                 var item = self.getItem(text);
                 self.options.callback.setValue(item);
