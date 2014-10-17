@@ -28,15 +28,15 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips'], func
         };
 
         this.loading = false;
-        this.template = '<div class="window">' +
-                            '<h4 class="window-header"><span class="window-title"></span><span class="window-close">×</span></h4>' +
-                            '<div class="window-container"></div>' +
-                            '<div class="window-footer">' +
-                                '<button type="button" class="btn btn-primary window-ok">确定</button>' +
-                                '<button type="button" class="btn btn-default window-cancel">取消</button>' +
+        this.template = '<div class="k-window">' +
+                            '<h4 class="k-window-header"><span class="k-window-title"></span><span class="k-window-close">×</span></h4>' +
+                            '<div class="k-window-container"></div>' +
+                            '<div class="k-window-footer">' +
+                                '<button type="button" class="btn btn-primary k-window-ok">确定</button>' +
+                                '<button type="button" class="btn btn-default k-window-cancel">取消</button>' +
                             '</div>' +
                         '</div>';
-        this.backdrop = '<div class="window-backdrop"></div>';
+        this.backdrop = '<div class="k-window-backdrop"></div>';
         this.$document = $(document);
         this.$window = $(window)
         this.init();
@@ -67,9 +67,9 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips'], func
                 self.close();
             }
         });
-        this.$win.on('click', '.window-cancel,.window-close', function () {
+        this.$win.on('click', '.k-window-cancel,.k-window-close', function () {
             self.close();
-        }).on('click', '.window-ok', function () {
+        }).on('click', '.k-window-ok', function () {
             if (self._event.ok.call(self) !== false) {
                 self.hide();
             }
@@ -93,7 +93,7 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips'], func
      * @param {String} title - 标题 
      */
     Window.prototype.setTitle = function (title) {
-        this.$header.find('.window-title').text(title);
+        this.$header.find('.k-window-title').text(title);
     };
 
     /**
@@ -229,9 +229,9 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips'], func
             height: this.options.height
         });
         this.$backdrop = $(this.backdrop);
-        this.$header = this.$win.find('.window-header');
-        this.$container = this.$win.find('.window-container');
-        this.$footer = this.$win.find('.window-footer');
+        this.$header = this.$win.find('.k-window-header');
+        this.$container = this.$win.find('.k-window-container');
+        this.$footer = this.$win.find('.k-window-footer');
         this.$win.appendTo(document.body);
         this.$backdrop.appendTo(document.body);
     };
@@ -256,7 +256,7 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips'], func
             window.winAlert = win;
         }*/
         var win = new Window({ width: 400, backdropClose: false });
-        win.$win.find(".window-cancel").hide();
+        win.$win.find(".k-window-cancel").hide();
         win.setTitle(title);
         win.setContent(content);
         win.on('ok', onOk || $.noop);

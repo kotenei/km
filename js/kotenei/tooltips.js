@@ -23,10 +23,10 @@ define('kotenei/tooltips', ['jquery'], function ($) {
             container: $(document.body),
             scrollContainer: null
         }, options);
-        this.tpl = '<div class="tooltips">' +
-                       '<div class="tooltips-arrow"></div>' +
-                       '<div class="tooltips-title"></div>' +
-                       '<div class="tooltips-inner"></div>' +
+        this.tpl = '<div class="k-tooltips">' +
+                       '<div class="k-tooltips-arrow"></div>' +
+                       '<div class="k-tooltips-title"></div>' +
+                       '<div class="k-tooltips-inner"></div>' +
                    '</div>';
         this.init();
     };
@@ -96,7 +96,7 @@ define('kotenei/tooltips', ['jquery'], function ($) {
             content = this.$element.attr('data-content') || "";
         }
         var $tips = this.$tips;
-        $tips.find('.tooltips-inner').html(content);
+        $tips.find('.k-tooltips-inner').html(content);
     };
 
     /**

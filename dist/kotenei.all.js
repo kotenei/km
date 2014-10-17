@@ -1192,7 +1192,7 @@ define('kotenei/pager', ['jquery'], function ($) {
     var Pager = function ($element, options) {
         this.$element = $element;
         this.options = $.extend({}, {
-            className: 'pagination',
+            className: 'k-pagination',
             onclick: $.noop
         }, options);
         this.curPage = 1;
@@ -1464,13 +1464,13 @@ define('kotenei/popTips', ['jquery'], function ($) {
                 var html = [];
                 switch (status) {
                     case "success":
-                        html.push('<div class="pop-tips success"><span class="fa fa-check"></span>&nbsp;<span>' + content + '</span></div>');
+                        html.push('<div class="k-pop-tips success"><span class="fa fa-check"></span>&nbsp;<span>' + content + '</span></div>');
                         break;
                     case "error":
-                        html.push('<div class="pop-tips error"><span class="fa fa-close"></span>&nbsp;<span>' + content + '</span></div>');
+                        html.push('<div class="k-pop-tips error"><span class="fa fa-close"></span>&nbsp;<span>' + content + '</span></div>');
                         break;
                     case "warning":
-                        html.push('<div class="pop-tips warning"><span class="fa fa-exclamation"></span>&nbsp;<span>' + content + '</span></div>');
+                        html.push('<div class="k-pop-tips warning"><span class="fa fa-exclamation"></span>&nbsp;<span>' + content + '</span></div>');
                         break;
                 }
                 return html.join('');
@@ -1725,7 +1725,7 @@ define('kotenei/slider', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) 
                 slide: $.noop
             }
         }, options);
-        this.template = '<div class="slider"><div class="slider-selection"></div><div class="slider-handle"></div></div>';
+        this.template = '<div class="k-slider"><div class="k-slider-selection"></div><div class="k-slider-handle"></div></div>';
         this.min = this.options.min;
         this.max = this.options.max;
         this.step = this.options.step;
@@ -1740,14 +1740,14 @@ define('kotenei/slider', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) 
     Slider.prototype.init = function () {
         var self = this;
         this.$slider = $(this.template).appendTo(this.$element);
-        this.$sliderSelection = this.$slider.find("div.slider-selection");
-        this.$sliderHandle = this.$slider.find("div.slider-handle");
+        this.$sliderSelection = this.$slider.find("div.k-slider-selection");
+        this.$sliderHandle = this.$slider.find("div.k-slider-handle");
         this.handleWidth = this.$sliderHandle.width();
         this.sliderWidth = this.$slider.outerWidth();
         this.$bindElement = this.options.$bindElement;
         this.dragdrop = new DragDrop({
             $range: this.$slider,
-            $layer: this.$slider.find(".slider-handle"),
+            $layer: this.$slider.find(".k-slider-handle"),
             direction: 'h',
             callback: {
                 move: function (moveCoord) {
@@ -1891,7 +1891,7 @@ define('kotenei/switch', ['jquery'], function ($) {
                 onclick: $.noop
             }
         }, options);
-        this.template = '<div class="switch"></div>';
+        this.template = '<div class="k-switch"></div>';
         this.init();
     };
 
@@ -1902,11 +1902,11 @@ define('kotenei/switch', ['jquery'], function ($) {
     Switch.prototype.init = function () {
         if (this.$element[0].type !== 'checkbox') { return; }      
         this.$switch = $(this.template).append(this.build()).insertAfter(this.$element);
-        this.$switchScroller = this.$switch.find('.switch-scroller');
+        this.$switchScroller = this.$switch.find('.k-switch-scroller');
         this.$element.hide();
         this.checked = this.$element.attr('checked') === 'checked';
         this.disabled = this.$element.attr('disabled') === 'disabled';
-        this.moveLeft = this.$switch.find('.switch-left').width();
+        this.moveLeft = this.$switch.find('.k-switch-left').width();
         if (this.checked) { this.on(); } else { this.off(); }
         if (this.disabled) { this.$switch.addClass("disabled"); }
         this.$switch.on('click', $.proxy(this.toggle, this));
@@ -1918,10 +1918,10 @@ define('kotenei/switch', ['jquery'], function ($) {
      */
     Switch.prototype.build = function () {
         var html = [], values = this.options.values;
-        html.push('<div class="switch-scroller">');
-        html.push('<span class="switch-left" >' + values['on'].text + '</span>');
-        html.push('<span class="switch-middle"></span>');
-        html.push('<span class="switch-right">' + values['off'].text + '</span>');
+        html.push('<div class="k-switch-scroller">');
+        html.push('<span class="k-switch-left" >' + values['on'].text + '</span>');
+        html.push('<span class="k-switch-middle"></span>');
+        html.push('<span class="k-switch-right">' + values['off'].text + '</span>');
         html.push('</div>');
         return html.join('');
     };
@@ -2014,10 +2014,10 @@ define('kotenei/tooltips', ['jquery'], function ($) {
             container: $(document.body),
             scrollContainer: null
         }, options);
-        this.tpl = '<div class="tooltips">' +
-                       '<div class="tooltips-arrow"></div>' +
-                       '<div class="tooltips-title"></div>' +
-                       '<div class="tooltips-inner"></div>' +
+        this.tpl = '<div class="k-tooltips">' +
+                       '<div class="k-tooltips-arrow"></div>' +
+                       '<div class="k-tooltips-title"></div>' +
+                       '<div class="k-tooltips-inner"></div>' +
                    '</div>';
         this.init();
     };
@@ -2087,7 +2087,7 @@ define('kotenei/tooltips', ['jquery'], function ($) {
             content = this.$element.attr('data-content') || "";
         }
         var $tips = this.$tips;
-        $tips.find('.tooltips-inner').html(content);
+        $tips.find('.k-tooltips-inner').html(content);
     };
 
     /**
@@ -3071,15 +3071,15 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips'], func
         };
 
         this.loading = false;
-        this.template = '<div class="window">' +
-                            '<h4 class="window-header"><span class="window-title"></span><span class="window-close">×</span></h4>' +
-                            '<div class="window-container"></div>' +
-                            '<div class="window-footer">' +
-                                '<button type="button" class="btn btn-primary window-ok">确定</button>' +
-                                '<button type="button" class="btn btn-default window-cancel">取消</button>' +
+        this.template = '<div class="k-window">' +
+                            '<h4 class="k-window-header"><span class="k-window-title"></span><span class="k-window-close">×</span></h4>' +
+                            '<div class="k-window-container"></div>' +
+                            '<div class="k-window-footer">' +
+                                '<button type="button" class="btn btn-primary k-window-ok">确定</button>' +
+                                '<button type="button" class="btn btn-default k-window-cancel">取消</button>' +
                             '</div>' +
                         '</div>';
-        this.backdrop = '<div class="window-backdrop"></div>';
+        this.backdrop = '<div class="k-window-backdrop"></div>';
         this.$document = $(document);
         this.$window = $(window)
         this.init();
@@ -3110,9 +3110,9 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips'], func
                 self.close();
             }
         });
-        this.$win.on('click', '.window-cancel,.window-close', function () {
+        this.$win.on('click', '.k-window-cancel,.k-window-close', function () {
             self.close();
-        }).on('click', '.window-ok', function () {
+        }).on('click', '.k-window-ok', function () {
             if (self._event.ok.call(self) !== false) {
                 self.hide();
             }
@@ -3136,7 +3136,7 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips'], func
      * @param {String} title - 标题 
      */
     Window.prototype.setTitle = function (title) {
-        this.$header.find('.window-title').text(title);
+        this.$header.find('.k-window-title').text(title);
     };
 
     /**
@@ -3272,9 +3272,9 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips'], func
             height: this.options.height
         });
         this.$backdrop = $(this.backdrop);
-        this.$header = this.$win.find('.window-header');
-        this.$container = this.$win.find('.window-container');
-        this.$footer = this.$win.find('.window-footer');
+        this.$header = this.$win.find('.k-window-header');
+        this.$container = this.$win.find('.k-window-container');
+        this.$footer = this.$win.find('.k-window-footer');
         this.$win.appendTo(document.body);
         this.$backdrop.appendTo(document.body);
     };
@@ -3299,7 +3299,7 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips'], func
             window.winAlert = win;
         }*/
         var win = new Window({ width: 400, backdropClose: false });
-        win.$win.find(".window-cancel").hide();
+        win.$win.find(".k-window-cancel").hide();
         win.setTitle(title);
         win.setContent(content);
         win.on('ok', onOk || $.noop);

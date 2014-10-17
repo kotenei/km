@@ -22,7 +22,7 @@ define('kotenei/slider', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) 
                 slide: $.noop
             }
         }, options);
-        this.template = '<div class="slider"><div class="slider-selection"></div><div class="slider-handle"></div></div>';
+        this.template = '<div class="k-slider"><div class="k-slider-selection"></div><div class="k-slider-handle"></div></div>';
         this.min = this.options.min;
         this.max = this.options.max;
         this.step = this.options.step;
@@ -37,14 +37,14 @@ define('kotenei/slider', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) 
     Slider.prototype.init = function () {
         var self = this;
         this.$slider = $(this.template).appendTo(this.$element);
-        this.$sliderSelection = this.$slider.find("div.slider-selection");
-        this.$sliderHandle = this.$slider.find("div.slider-handle");
+        this.$sliderSelection = this.$slider.find("div.k-slider-selection");
+        this.$sliderHandle = this.$slider.find("div.k-slider-handle");
         this.handleWidth = this.$sliderHandle.width();
         this.sliderWidth = this.$slider.outerWidth();
         this.$bindElement = this.options.$bindElement;
         this.dragdrop = new DragDrop({
             $range: this.$slider,
-            $layer: this.$slider.find(".slider-handle"),
+            $layer: this.$slider.find(".k-slider-handle"),
             direction: 'h',
             callback: {
                 move: function (moveCoord) {

@@ -13,7 +13,7 @@ define('kotenei/pager', ['jquery'], function ($) {
     var Pager = function ($element, options) {
         this.$element = $element;
         this.options = $.extend({}, {
-            className: 'pagination',
+            className: 'k-pagination',
             onclick: $.noop
         }, options);
         this.curPage = 1;

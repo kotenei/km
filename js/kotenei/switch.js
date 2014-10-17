@@ -21,7 +21,7 @@ define('kotenei/switch', ['jquery'], function ($) {
                 onclick: $.noop
             }
         }, options);
-        this.template = '<div class="switch"></div>';
+        this.template = '<div class="k-switch"></div>';
         this.init();
     };
 
@@ -32,11 +32,11 @@ define('kotenei/switch', ['jquery'], function ($) {
     Switch.prototype.init = function () {
         if (this.$element[0].type !== 'checkbox') { return; }      
         this.$switch = $(this.template).append(this.build()).insertAfter(this.$element);
-        this.$switchScroller = this.$switch.find('.switch-scroller');
+        this.$switchScroller = this.$switch.find('.k-switch-scroller');
         this.$element.hide();
         this.checked = this.$element.attr('checked') === 'checked';
         this.disabled = this.$element.attr('disabled') === 'disabled';
-        this.moveLeft = this.$switch.find('.switch-left').width();
+        this.moveLeft = this.$switch.find('.k-switch-left').width();
         if (this.checked) { this.on(); } else { this.off(); }
         if (this.disabled) { this.$switch.addClass("disabled"); }
         this.$switch.on('click', $.proxy(this.toggle, this));
@@ -48,10 +48,10 @@ define('kotenei/switch', ['jquery'], function ($) {
      */
     Switch.prototype.build = function () {
         var html = [], values = this.options.values;
-        html.push('<div class="switch-scroller">');
-        html.push('<span class="switch-left" >' + values['on'].text + '</span>');
-        html.push('<span class="switch-middle"></span>');
-        html.push('<span class="switch-right">' + values['off'].text + '</span>');
+        html.push('<div class="k-switch-scroller">');
+        html.push('<span class="k-switch-left" >' + values['on'].text + '</span>');
+        html.push('<span class="k-switch-middle"></span>');
+        html.push('<span class="k-switch-right">' + values['off'].text + '</span>');
         html.push('</div>');
         return html.join('');
     };

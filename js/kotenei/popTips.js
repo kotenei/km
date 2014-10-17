@@ -43,13 +43,13 @@ define('kotenei/popTips', ['jquery'], function ($) {
                 var html = [];
                 switch (status) {
                     case "success":
-                        html.push('<div class="pop-tips success"><span class="fa fa-check"></span>&nbsp;<span>' + content + '</span></div>');
+                        html.push('<div class="k-pop-tips success"><span class="fa fa-check"></span>&nbsp;<span>' + content + '</span></div>');
                         break;
                     case "error":
-                        html.push('<div class="pop-tips error"><span class="fa fa-close"></span>&nbsp;<span>' + content + '</span></div>');
+                        html.push('<div class="k-pop-tips error"><span class="fa fa-close"></span>&nbsp;<span>' + content + '</span></div>');
                         break;
                     case "warning":
-                        html.push('<div class="pop-tips warning"><span class="fa fa-exclamation"></span>&nbsp;<span>' + content + '</span></div>');
+                        html.push('<div class="k-pop-tips warning"><span class="fa fa-exclamation"></span>&nbsp;<span>' + content + '</span></div>');
                         break;
                 }
                 return html.join('');
