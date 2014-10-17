@@ -8,7 +8,10 @@
     <script type="text/javascript" src="./vendor/require/require.js"></script>
     <script type="text/javascript" src="./main.js"></script>
     <style type="text/css">
-        table td { line-height:30px;}
+        table td
+        {
+            line-height: 30px;
+        }
     </style>
 </head>
 <body>
@@ -36,14 +39,15 @@
             </tr>
             <tr>
                 <td></td>
-                <td><input type="submit" value="提交" /></td>
+                <td>
+                    <input type="submit" value="提交" /></td>
             </tr>
         </table>
     </form>
     <script type="text/javascript">
         require(['kotenei'], function (kotenei) {
             var placeholder = kotenei.placeholder;
-            var Validate    = kotenei.Validate;
+            var Validate = kotenei.Validate;
             var validate = new Validate($("#form"), {
                 rules: {
                     'userName': { required: true },
@@ -59,7 +63,6 @@
                 }
             });
 
-           
             placeholder();
         });
     </script>

@@ -245,6 +245,18 @@ define('kotenei/validate', ['jquery'], function ($) {
     };
 
     /**
+     * 添加自定义验证规则
+     * @param  {String} name - 验证名称
+     * @param  {Function} name - 验证方法
+     * @param  {String} name - 验证出错提示
+     * @return {String}  
+     */
+    Validate.prototype.addMethod = function (name, method, message) {
+        this.methods[name] = method;
+        this.errorMessages[name] = message !== undefined ? message : this.errorMessages[name];
+    }
+
+    /**
      * 默认错误提示信息
      * @type {Object}
      */
@@ -275,7 +287,7 @@ define('kotenei/validate', ['jquery'], function ($) {
      */
     Validate.prototype.methods = {
         required: function (value, $element) {
-            if ($element[0].nodeName.toLowerCase() === "select") {   
+            if ($element[0].nodeName.toLowerCase() === "select") {
                 var val = $.trim($element.val());
                 return val && val.length > 0;
             }
