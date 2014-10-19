@@ -29,7 +29,7 @@ define('kotenei/popTips', ['jquery'], function ($) {
                 if ($tips) { $tips.stop().remove(); }
 
                 $tips = $(getHtml(status, content))
-                        .appendTo(document.body);
+                        .appendTo(document.body).hide();
 
                 $tips.css({ marginLeft: -($tips.width() / 2), marginTop: -($tips.height() / 2) }).fadeIn('fase', function () {
                     tm = setTimeout(function () {

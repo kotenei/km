@@ -42,9 +42,8 @@ define('kotenei/loading', ['jquery', 'spin'], function ($, Spinner) {
 
     Loading.prototype.hide = function () {
         var self = this;
-        this.$loading.fadeOut('fast',function () {
-            self.spinner.stop();
-        });
+        this.$loading.hide();
+        this.spinner.stop();
     };
 
     Loading.show = function () {
