@@ -12,10 +12,21 @@ define('kotenei/clipZoom', ['jquery', 'kotenei/dragdrop'], function ($,DragDrop)
             selectorWidth: 120,
             selectorHeight:100
         }, options);
+        
+        this.$selector = $element.find('.selector');
+        this.$clipZoomBox = $element.find('.k-clipZoom-Box');
+        this.init();
     };
 
     //初始化
     ClipZoom.prototype.init = function () {
+        var self = this;
+
+        this.selectorDnd = new DragDrop({
+            $layer: this.$selector,
+            $range:this.$clipZoomBox,
+            resizable:true
+        });
 
     }
 

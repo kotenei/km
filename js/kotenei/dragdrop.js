@@ -18,6 +18,7 @@ define('kotenei/dragdrop', ['jquery'], function ($) {
             $handle: null,
             $range: null,
             direction: '',// h:水平  v:垂直
+            resizable: false,
             callback: {
                 start: $.noop,
                 move: $.noop,
@@ -31,12 +32,17 @@ define('kotenei/dragdrop', ['jquery'], function ($) {
         this.$window = $(window);
         this.$document = $(document);
 
+        //是否设置大小
+        this.isResize = false;
+
         //是否移动中
         this.moving = false;
         //鼠标相对拖动层偏移值
         this.offset = { x: 0, y: 0 };
         //原来坐标
         this.originalCoord = { x: 0, y: 0 };
+        //调整尺寸参数
+        this.resizeParams = { left: 0, top: 0, width: 0, height: 0, type: 'bottomRight' };
 
         this.init();
     }
@@ -50,6 +56,18 @@ define('kotenei/dragdrop', ['jquery'], function ($) {
         if (this.$range) { this.$range.css("position", "relative"); }
         this.$handle = this.$handle || this.$layer;
         this.$layer.css({ cursor: "move", position: 'absolute' });
+
+        if (this.options.resizable) {
+            this.$layer.append('<span class="k-resizable k-resizable-topLeft" data-type="topLeft"></span>');
+            this.$layer.append('<span class="k-resizable k-resizable-topCenter" data-type="topCenter"></span>');
+            this.$layer.append('<span class="k-resizable k-resizable-topRight" data-type="topRight"></span>');
+            this.$layer.append('<span class="k-resizable k-resizable-leftCenter" data-type="leftCenter"></span>');
+            this.$layer.append('<span class="k-resizable k-resizable-rightCenter" data-type="rightCenter"></span>');
+            this.$layer.append('<span class="k-resizable k-resizable-bottomLeft" data-type="bottomLeft"></span>');
+            this.$layer.append('<span class="k-resizable k-resizable-bottomCenter" data-type="bottomCenter"></span>');
+            this.$layer.append('<span class="k-resizable k-resizable-bottomRight" data-type="bottomRight"></span>');
+        }
+
         this.eventBind();
     };
 
@@ -59,14 +77,21 @@ define('kotenei/dragdrop', ['jquery'], function ($) {
      */
     DragDrop.prototype.eventBind = function () {
         var self = this;
+
         this.$handle.on('mousedown', function (e) {
             e.stopPropagation();
             e.preventDefault();
             self.start(e);
-
             //禁止文档选择事件
             document.onselectstart = function () { return false };
-        });
+        }).on('mousedown', '.k-resizable', function () {
+            self.isResize = true;
+            self.resizeParams.type = $(this).attr("data-type");
+            self.resizeParams.left = parseInt(self.$layer.position().left);
+            self.resizeParams.top = parseInt(self.$layer.position().top);
+            self.resizeParams.width = parseInt(self.$layer.outerWidth());
+            self.resizeParams.height = parseInt(self.$layer.outerHeight());
+        })
     };
 
     /**
@@ -80,7 +105,12 @@ define('kotenei/dragdrop', ['jquery'], function ($) {
         //给文档绑定事件
         this.$document.on('mousemove', function (e) {
             if (self.isMoving) {
-                self.move(e);
+                if (self.isResize) {
+                    self.resize(e);
+                }
+                else {
+                    self.move(e);
+                }
             }
         }).on('mouseup', function (e) {
             self.stop(e);
@@ -92,8 +122,6 @@ define('kotenei/dragdrop', ['jquery'], function ($) {
         var mouseCoord = this.getMouseCoord(e);
 
         //记录鼠标在拖动层的坐标位置
-
-
         this.offset.x = mouseCoord.x - this.$layer.position().left;
         this.offset.y = mouseCoord.y - this.$layer.position().top;
         //记录鼠标点击后的坐标
@@ -158,12 +186,79 @@ define('kotenei/dragdrop', ['jquery'], function ($) {
     };
 
     /**
+     * 调整中
+     * @param  {Object} e -事件
+     * @return {Void}   
+     */
+    DragDrop.prototype.resize = function (e) {
+        var org
+        var mouseCoord = this.getMouseCoord(e);
+        var moveCoord = {
+            x: mouseCoord.x - this.offset.x,
+            y: mouseCoord.y - this.offset.y
+        };
+        var $layer = this.$layer;
+        var resizeParams = this.resizeParams;
+        var pos = { left: 0, top: 0, };
+
+        switch (this.resizeParams.type) {
+            case "topLeft":
+                pos.left = resizeParams.left + mouseCoord.x;
+                pos.top = resizeParams.top + mouseCoord.y;
+                pos.width = resizeParams.width + this.offset.x - mouseCoord.x;
+                pos.height = resizeParams.height + this.offset.x - mouseCoord.x;
+                break;
+            case "leftCenter":
+                pos.top = resizeParams.top;
+                pos.left = moveCoord.x;
+                pos.width = resizeParams.width + (this.originalCoord.x - mouseCoord.x);
+                pos.height = resizeParams.height;
+                break;
+            case "rightCenter":
+                pos.top = resizeParams.top;
+                pos.left = resizeParams.left;
+                pos.width = resizeParams.width - (this.originalCoord.x - mouseCoord.x);
+                pos.height = resizeParams.height;
+                break;
+            case "topCenter":
+                pos.top = moveCoord.y;
+                pos.left = resizeParams.left;
+                pos.width = resizeParams.width;
+                pos.height = resizeParams.height + (this.originalCoord.y - mouseCoord.y);
+                break;
+            case "bottomCenter":
+                pos.top = resizeParams.top;
+                pos.left = resizeParams.left;
+                pos.width = resizeParams.width;
+                pos.height = resizeParams.height - (this.originalCoord.y - mouseCoord.y);       
+                break;
+            default:
+                break;
+        }
+
+        
+
+        if (pos.width < resizeParams.width) {
+            pos.width = resizeParams.width;
+            pos.left = resizeParams.left;
+        }
+
+        if (pos.height < resizeParams.height) {
+            pos.height = resizeParams.height;
+            pos.top = resizeParams.top;
+        }
+
+        this.$layer.css(pos);
+    };
+
+    /**
      * 停止拖动
      * @param  {Object} e -事件
      * @return {Void}   
      */
     DragDrop.prototype.stop = function (e) {
         this.isMoving = false;
+        this.isResize = false;
 
         if (this.$handle[0].releaseCapture) {
             this.$handle[0].releaseCapture();
