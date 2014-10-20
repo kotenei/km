@@ -1,9 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
     <title></title>
+    <link rel="stylesheet" type="text/css" href="../style/vendor/font-awesome/css/font-awesome.min.css" />
     <link rel="stylesheet" type="text/css" href="../dist/css/kotenei.css" />
     <script type="text/javascript" src="./vendor/require/require.js"></script>
     <script type="text/javascript" src="./main.js"></script>
@@ -11,10 +12,49 @@
     </style>
 </head>
 <body>
+
+    <!--裁剪html-->
+    <div class="k-clipZoom">
+        <!--左则选取区-->
+        <div class="k-clipZoom-left">
+            <div class="k-clipZoom-Box">
+                <div class="container">
+                </div>
+                <div class="selector">
+                    <span class="k-resizable k-resizable-topLeft"></span>
+                    <span class="k-resizable k-resizable-topCenter"></span>
+                    <span class="k-resizable k-resizable-topRight"></span>
+                    <span class="k-resizable k-resizable-leftCenter"></span>
+                    <span class="k-resizable k-resizable-rightCenter"></span>
+                    <span class="k-resizable k-resizable-bottomLeft"></span>
+                    <span class="k-resizable k-resizable-bottomCenter"></span>
+                    <span class="k-resizable k-resizable-bottomRight"></span>
+                </div>
+                <span class="zoom" role="plus"><i class="fa fa-plus"></i></span>
+                <span class="zoom zoomMinus" role="minus"><i class="fa fa-minus"></i></span>
+            </div>
+            <div class="button-box">
+                <button class="btn btn-primary" role="clip">裁剪</button>
+                <button class="btn btn-primary" role="center">居中</button>
+                <button class="btn btn-primary" role="reset">重置</button>
+            </div>
+        </div>
+        <!--右则预览区-->
+        <div class="k-clipZoom-right">
+            <div class="view-box"></div>
+            <div class="clip-box"></div>
+        </div>
+    </div>
+
+
     <script type="text/javascript">
         require(['kotenei'], function (kotenei) {
             var ClipZoom = kotenei.ClipZoom;
-            
+
+            var cz = new ClipZoom($("div.k-clipZoom"), {
+
+            });
+
         });
     </script>
 </body>

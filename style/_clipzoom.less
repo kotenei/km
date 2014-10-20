@@ -1,0 +1,134 @@
+.k-resizable
+{
+    width: 8px;
+    height: 8px;
+    position: absolute;
+    display: block;
+    background: rgba(0,0,0,0);
+    border: 1px solid black;
+}
+
+.k-resizable-topLeft
+{
+    left: -4px;
+    top: -4px;
+    cursor: se-resize;
+}
+
+.k-resizable-topCenter
+{
+    left: 50%;
+    margin-left: -4px;
+    top: -4px;
+    cursor: n-resize;
+}
+
+.k-resizable-topRight
+{
+    right: -4px;
+    top: -4px;
+    cursor: ne-resize;
+}
+
+.k-resizable-leftCenter
+{
+    top: 50%;
+    margin-top: -4px;
+    left: -4px;
+    cursor: ew-resize;
+}
+
+.k-resizable-rightCenter
+{
+    top: 50%;
+    margin-top: -4px;
+    right: -4px;
+    cursor: ew-resize;
+}
+
+.k-resizable-bottomLeft
+{
+    left: -4px;
+    bottom: -4px;
+    cursor: ne-resize;
+}
+
+.k-resizable-bottomCenter
+{
+    left: 50%;
+    margin-left: -4px;
+    bottom: -4px;
+    cursor: n-resize;
+}
+
+.k-resizable-bottomRight
+{
+    right: -4px;
+    bottom: -4px;
+    cursor: se-resize;
+}
+
+.k-clipZoom
+{
+    overflow: hidden;
+    zoom: 1;
+    width: 800px;
+}
+
+.k-clipZoom-Box
+{
+    width: 450px;
+    height: 350px;
+    margin-bottom: 10px;
+    position: relative;
+    border: 1px solid #cccccc;
+    background: #E8F3F7;
+
+    .zoom
+    {
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
+        border: 1px solid #454545;
+        color: #454545;
+        background: white;
+        display: block;
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    .zoomMinus
+    {
+        top: 50px;
+    }
+
+    .selector
+    {
+        left: 10px;
+        top: 10px;
+        border: 1px dashed black;
+        width: 140px;
+        height: 90px;
+        position: absolute;
+        z-index: 10;
+        background: #FFFFFF;
+        opacity: 0.4;
+        filter: alpha(opacity=40);
+        cursor: move;
+    }
+}
+
+.k-clipZoom-left
+{
+    float: left;
+    display: inline;
+}
+
+.k-clipZoom-right
+{
+    float: right;
+    display: inline;
+}
