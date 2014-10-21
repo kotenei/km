@@ -32,10 +32,13 @@ define('kotenei/dragdrop', ['jquery'], function ($) {
         this.$window = $(window);
         this.$document = $(document);
 
+        //拖放层的高度和宽度
         this.lw = this.$layer.outerWidth();
         this.lh = this.$layer.outerHeight();
-        this.ratio = (this.lw >= this.lh ? this.lw / this.lh : this.lh / this.lw).toFixed(2);
 
+        //调整大小的临时尺寸
+        this.tmpRzWidth = 0;
+        this.tmpRzHeight = 0;
 
         //是否设置大小
         this.isResize = false;
@@ -96,6 +99,7 @@ define('kotenei/dragdrop', ['jquery'], function ($) {
             self.resizeParams.top = parseInt(self.$layer.position().top);
             self.resizeParams.width = parseInt(self.$layer.outerWidth());
             self.resizeParams.height = parseInt(self.$layer.outerHeight());
+            self.resizeParams.ratio = self.resizeParams.width >= self.resizeParams.height ? self.resizeParams.width / self.resizeParams.height : self.resizeParams.height / self.resizeParams.width
         })
     };
 
@@ -205,40 +209,72 @@ define('kotenei/dragdrop', ['jquery'], function ($) {
         var $layer = this.$layer;
         var resizeParams = this.resizeParams;
         var css = { left: 0, top: 0, width: 0, height: 0 };
+        var rightBoundary, bottomBoundary;
+        var rw, rh;
+        var $range = this.$range;
 
-
-        if (moveCoord.x<=0) {
-            moveCoord.x = 0;
+        if ($range) {
+            rw = $range.width();
+            rh = $range.height();
+        } else {
+            rw = this.$window.width() + this.$document.scrollLeft();
+            rh = this.$window.height() + this.$document.scrollTop();
         }
 
-        if (moveCoord.y<=0) {
-            moveCoord.y=0;
-        }
 
         switch (this.resizeParams.type) {
             case "topLeft":
-                css.width = resizeParams.width + (this.originalCoord.x - mouseCoord.x);
-                css.height = resizeParams.height + (this.originalCoord.y - mouseCoord.y);
+                css.width = resizeParams.width + (resizeParams.left - moveCoord.x);
                 css.width = css.width < this.lw ? this.lw : css.width;
-                css.height = css.height < this.lh ? this.lh : css.height;
-                css = this.scale(css);
+                css.height = this.getScaleHeight(css.width);
                 css.top = resizeParams.top - (css.height - resizeParams.height);
                 css.left = resizeParams.left - (css.width - resizeParams.width);
+
+                if (css.left < 0) {
+                    css.left = 0;
+                    css.width = resizeParams.width + resizeParams.left;
+                    css.height = this.getScaleHeight(css.width);
+                    css.top = resizeParams.top - (css.height - resizeParams.height);
+                }
+
+                if (css.top < 0) {
+                    css.top = 0;
+                    css.height = resizeParams.height + resizeParams.top;
+                    css.width = this.getScaleWidth(css.height);
+                    css.left = resizeParams.left - (css.width - resizeParams.width);
+                }
+
                 break;
             case "topRight":
                 css.left = resizeParams.left;
                 css.width = resizeParams.width - (this.originalCoord.x - mouseCoord.x);
-                css.height = resizeParams.height + (this.originalCoord.y - mouseCoord.y);
                 css.width = css.width < this.lw ? this.lw : css.width;
-                css.height = css.height < this.lh ? this.lh : css.height;
-                css = this.scale(css);
+                css.height = this.getScaleHeight(css.width);
+
+                if ((css.width + css.left) >= rw) {
+                    css.width = rw - resizeParams.left;
+                    css.height = this.getScaleHeight(css.width);
+                }
+
                 css.top = resizeParams.top - (css.height - resizeParams.height);
+
+                if (css.top < 0) {
+                    css.top = 0;
+                    css.height = resizeParams.height + resizeParams.top;
+                    css.width = this.getScaleWidth(css.height);
+                }
+
                 break;
             case "leftCenter":
                 css.top = resizeParams.top;
-                css.left = moveCoord.x;
-                css.width = resizeParams.width + (this.originalCoord.x - mouseCoord.x);
                 css.height = resizeParams.height;
+                if (moveCoord.x <= 0) {
+                    css.left = 0;
+                    css.width = resizeParams.width + resizeParams.left;
+                } else {
+                    css.left = moveCoord.x;
+                    css.width = resizeParams.width + (this.originalCoord.x - mouseCoord.x);
+                }
                 if (css.width <= this.lw) {
                     css.width = this.lw;
                     css.left = resizeParams.left + (resizeParams.width - css.width);
@@ -247,8 +283,11 @@ define('kotenei/dragdrop', ['jquery'], function ($) {
             case "rightCenter":
                 css.top = resizeParams.top;
                 css.left = resizeParams.left;
-                css.width = resizeParams.width - (this.originalCoord.x - mouseCoord.x);
                 css.height = resizeParams.height;
+                css.width = resizeParams.width - (this.originalCoord.x - mouseCoord.x);
+                if ((css.width + css.left) >= rw) {
+                    css.width = rw - resizeParams.left;
+                }
                 if (css.width <= this.lw) {
                     css.width = this.lw;
                 }
@@ -258,6 +297,10 @@ define('kotenei/dragdrop', ['jquery'], function ($) {
                 css.left = resizeParams.left;
                 css.width = resizeParams.width;
                 css.height = resizeParams.height + (this.originalCoord.y - mouseCoord.y);
+                if (moveCoord.y < 0) {
+                    css.top = 0;
+                    css.height = resizeParams.height + resizeParams.top;
+                }
                 if (css.height <= this.lh) {
                     css.height = this.lh;
                     css.top = resizeParams.top + (resizeParams.height - css.height);
@@ -268,6 +311,9 @@ define('kotenei/dragdrop', ['jquery'], function ($) {
                 css.left = resizeParams.left;
                 css.width = resizeParams.width;
                 css.height = resizeParams.height - (this.originalCoord.y - mouseCoord.y);
+                if (css.height + css.top >= rh) {
+                    css.height = rh - resizeParams.top;
+                }
                 if (css.height <= this.lh) {
                     css.height = this.lh;
                 }
@@ -275,45 +321,78 @@ define('kotenei/dragdrop', ['jquery'], function ($) {
             case "bottomLeft":
                 css.top = resizeParams.top;
                 css.width = resizeParams.width + (this.originalCoord.x - mouseCoord.x);
-                css.height = resizeParams.height - (this.originalCoord.y - mouseCoord.y);
                 css.width = css.width < this.lw ? this.lw : css.width;
-                css.height = css.height < this.lh ? this.lh : css.height;
-                css = this.scale(css);
+                css.height = this.getScaleHeight(css.width);
                 css.left = resizeParams.left - (css.width - resizeParams.width);
+
+                if (css.left <= 0) {
+                    css.left = 0;
+                    css.width = resizeParams.width + resizeParams.left;
+                    css.height = this.getScaleHeight(css.width);
+                }
+
+                if (css.height + css.top >= rh) {
+                    css.height = rh - css.top;
+                    css.width = this.getScaleWidth(css.height);
+                    css.left = resizeParams.left - (css.width - resizeParams.width);
+                }
+
                 break;
             case "bottomRight":
                 css.top = resizeParams.top;
                 css.left = resizeParams.left;
                 css.width = resizeParams.width - (this.originalCoord.x - mouseCoord.x);
-                css.height = resizeParams.height - (this.originalCoord.y - mouseCoord.y);
                 css.width = css.width < this.lw ? this.lw : css.width;
-                css.height = css.height < this.lh ? this.lh : css.height;
-                css = this.scale(css);
+                css.height = this.getScaleHeight(css.width);
+
+                if ((css.width + css.left) >= rw) {
+                    css.width = rw - resizeParams.left;
+                    css.height = this.getScaleHeight(css.width);
+                }
+
+                if (css.top + css.height >= rh) {
+                    css.height = rh - css.top;
+                    css.width = this.getScaleWidth(css.height);
+                }
+
                 break;
             default:
                 break;
         }
 
-        
-
         this.$layer.css(css);
     };
 
+    /**
+     * 根据高度按比例获取宽度
+     * @param  {Number} height - 高度
+     * @param  {Number} ratio - 比例
+     * @return {Number}   
+     */
+    DragDrop.prototype.getScaleWidth = function (height, ratio) {
+        ratio = ratio || this.resizeParams.ratio;
+        if (this.resizeParams.width >= this.resizeParams.height) {
+            return height * ratio;
+        } else {
+            return height / ratio;
+        }
+    };
 
     /**
-     * 设置比例
-     * @param  {Object} css - css参数
-     * @return {Void}   
+     * 根据宽度按比例获取高度
+     * @param  {Number} width - 宽度
+     * @param  {Number} ratio - 比例
+     * @return {Number}   
      */
-    DragDrop.prototype.scale = function (css) {
-        var ratio;
-        if (this.lw >= this.lh) {
-            css.height = css.width / this.ratio;
+    DragDrop.prototype.getScaleHeight = function (width, ratio) {
+        ratio = ratio || this.resizeParams.ratio;
+        if (this.resizeParams.width >= this.resizeParams.height) {
+            return width / ratio;
         } else {
-            css.height = css.width * this.ratio;
+            return width * ratio;
         }
-        return css;
     }
+
 
     /**
      * 停止拖动
@@ -323,6 +402,8 @@ define('kotenei/dragdrop', ['jquery'], function ($) {
     DragDrop.prototype.stop = function (e) {
         this.isMoving = false;
         this.isResize = false;
+        this.tmpRzWidth = 0;
+        this.tmpRzHeight = 0;
 
         if (this.$handle[0].releaseCapture) {
             this.$handle[0].releaseCapture();
