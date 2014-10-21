@@ -787,6 +787,10 @@
   position: relative;
   border: 1px solid #cccccc;
   background: #E8F3F7;
+  overflow: hidden;
+}
+.k-clipZoom-Box .container {
+  border: 1px dashed black;
 }
 .k-clipZoom-Box .zoom {
   width: 30px;
@@ -806,8 +810,8 @@
   top: 50px;
 }
 .k-clipZoom-Box .selector {
-  left: 10px;
-  top: 10px;
+  left: 0;
+  top: 0;
   border: 1px dashed black;
   width: 140px;
   height: 90px;
@@ -821,6 +825,12 @@
 .k-clipZoom-left {
   float: left;
   display: inline;
+}
+.k-clipZoom-left .view-box {
+  border: 1px solid #cccccc;
+  background: #E8F3F7;
+  overflow: hidden;
+  position: relative;
 }
 .k-clipZoom-right {
   float: right;

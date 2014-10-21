@@ -13,6 +13,12 @@
     position: relative;
     border: 1px solid #cccccc;
     background: #E8F3F7;
+    overflow: hidden;
+
+    .container
+    {
+        border: 1px dashed black;
+    }
 
     .zoom
     {
@@ -37,8 +43,8 @@
 
     .selector
     {
-        left: 10px;
-        top: 10px;
+        left: 0;
+        top: 0;
         border: 1px dashed black;
         width: 140px;
         height: 90px;
@@ -55,10 +61,20 @@
 {
     float: left;
     display: inline;
+
+    .view-box
+    {
+        border: 1px solid #cccccc;
+        background: #E8F3F7;
+        overflow: hidden;
+        position:relative;
+    }
 }
 
 .k-clipZoom-right
 {
     float: right;
     display: inline;
+
+    
 }

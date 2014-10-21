@@ -19,11 +19,14 @@ define('kotenei/dragdrop', ['jquery'], function ($) {
             $range: null,
             direction: '',      // h:水平  v:垂直
             resizable: false,   //是否可拖放
-            scale:false,        //是否按比例缩放
+            scale: false,        //是否按比例缩放
+            boundary: false,     //是否可移出边界
+            minWidth: 100,
             callback: {
                 start: $.noop,
                 move: $.noop,
-                stop: $.noop
+                stop: $.noop,
+                resize:$.noop
             }
         }, options);
 
@@ -33,13 +36,8 @@ define('kotenei/dragdrop', ['jquery'], function ($) {
         this.$window = $(window);
         this.$document = $(document);
 
-        //拖放层的高度和宽度
-        this.lw = this.$layer.outerWidth();
-        this.lh = this.$layer.outerHeight();
-
         //是否设置大小
         this.isResize = false;
-
         //是否移动中
         this.moving = false;
         //鼠标相对拖动层偏移值
@@ -77,8 +75,32 @@ define('kotenei/dragdrop', ['jquery'], function ($) {
 
         }
 
+        this.setMinSize();
+
         this.eventBind();
     };
+
+    /**
+    * 设置最小尺寸
+    * @return {Void} 
+    */
+    DragDrop.prototype.setMinSize = function () {
+
+        var w = this.$layer.outerWidth(),
+            h = this.$layer.outerHeight(),
+            ratio;
+
+        this.minWidth = this.options.minWidth || w;
+
+        if (w >= h) {
+            ratio = w / h;
+            this.minHeight = this.minWidth / ratio;
+        } else {
+            ratio = h / w;
+            this.minHeight = this.minWidth * ratio;
+        }
+
+    }
 
     /**
      * 绑定事件
@@ -174,10 +196,13 @@ define('kotenei/dragdrop', ['jquery'], function ($) {
             rightBoundary = $range.width() - this.$layer.outerWidth(true);
             bottomBoundary = $range.height() - this.$layer.outerHeight(true);
 
-            if (moveCoord.x < 0) { moveCoord.x = 0; }
-            if (moveCoord.y < 0) { moveCoord.y = 0; }
-            if (moveCoord.x > rightBoundary) { moveCoord.x = rightBoundary; }
-            if (moveCoord.y > bottomBoundary) { moveCoord.y = bottomBoundary; }
+            if (!this.options.boundary) {
+                if (moveCoord.x < 0) { moveCoord.x = 0; }
+                if (moveCoord.y < 0) { moveCoord.y = 0; }
+                if (moveCoord.x > rightBoundary) { moveCoord.x = rightBoundary; }
+                if (moveCoord.y > bottomBoundary) { moveCoord.y = bottomBoundary; }
+            }
+
         } else {
             //窗体内移动
             rightBoundary = this.$window.width() - this.$layer.outerWidth() + this.$document.scrollLeft();
@@ -226,7 +251,7 @@ define('kotenei/dragdrop', ['jquery'], function ($) {
         switch (this.resizeParams.type) {
             case "topLeft":
                 css.width = resizeParams.width + (resizeParams.left - moveCoord.x);
-                css.width = css.width < this.lw ? this.lw : css.width;
+                css.width = css.width < this.minWidth ? this.minWidth : css.width;
                 css.height = this.getScaleHeight(css.width);
                 css.top = resizeParams.top - (css.height - resizeParams.height);
                 css.left = resizeParams.left - (css.width - resizeParams.width);
@@ -249,7 +274,7 @@ define('kotenei/dragdrop', ['jquery'], function ($) {
             case "topRight":
                 css.left = resizeParams.left;
                 css.width = resizeParams.width - (this.originalCoord.x - mouseCoord.x);
-                css.width = css.width < this.lw ? this.lw : css.width;
+                css.width = css.width < this.minWidth ? this.minWidth : css.width;
                 css.height = this.getScaleHeight(css.width);
 
                 if ((css.width + css.left) >= rw) {
@@ -276,8 +301,8 @@ define('kotenei/dragdrop', ['jquery'], function ($) {
                     css.left = moveCoord.x;
                     css.width = resizeParams.width + (this.originalCoord.x - mouseCoord.x);
                 }
-                if (css.width <= this.lw) {
-                    css.width = this.lw;
+                if (css.width <= this.minWidth) {
+                    css.width = this.minWidth;
                     css.left = resizeParams.left + (resizeParams.width - css.width);
                 }
                 break;
@@ -289,8 +314,8 @@ define('kotenei/dragdrop', ['jquery'], function ($) {
                 if ((css.width + css.left) >= rw) {
                     css.width = rw - resizeParams.left;
                 }
-                if (css.width <= this.lw) {
-                    css.width = this.lw;
+                if (css.width <= this.minWidth) {
+                    css.width = this.minWidth;
                 }
                 break;
             case "topCenter":
@@ -302,8 +327,8 @@ define('kotenei/dragdrop', ['jquery'], function ($) {
                     css.top = 0;
                     css.height = resizeParams.height + resizeParams.top;
                 }
-                if (css.height <= this.lh) {
-                    css.height = this.lh;
+                if (css.height <= this.minHeight) {
+                    css.height = this.minHeight;
                     css.top = resizeParams.top + (resizeParams.height - css.height);
                 }
                 break;
@@ -315,14 +340,14 @@ define('kotenei/dragdrop', ['jquery'], function ($) {
                 if (css.height + css.top >= rh) {
                     css.height = rh - resizeParams.top;
                 }
-                if (css.height <= this.lh) {
-                    css.height = this.lh;
+                if (css.height <= this.minHeight) {
+                    css.height = this.minHeight;
                 }
                 break;
             case "bottomLeft":
                 css.top = resizeParams.top;
                 css.width = resizeParams.width + (this.originalCoord.x - mouseCoord.x);
-                css.width = css.width < this.lw ? this.lw : css.width;
+                css.width = css.width < this.minWidth ? this.minWidth : css.width;
                 css.height = this.getScaleHeight(css.width);
                 css.left = resizeParams.left - (css.width - resizeParams.width);
 
@@ -343,7 +368,7 @@ define('kotenei/dragdrop', ['jquery'], function ($) {
                 css.top = resizeParams.top;
                 css.left = resizeParams.left;
                 css.width = resizeParams.width - (this.originalCoord.x - mouseCoord.x);
-                css.width = css.width < this.lw ? this.lw : css.width;
+                css.width = css.width < this.minWidth ? this.minWidth : css.width;
                 css.height = this.getScaleHeight(css.width);
 
                 if ((css.width + css.left) >= rw) {
@@ -362,6 +387,10 @@ define('kotenei/dragdrop', ['jquery'], function ($) {
         }
 
         this.$layer.css(css);
+
+        if ($.isFunction(this.options.callback.resize)) {
+            this.options.callback.resize(css);
+        }
     };
 
     /**
