@@ -17,8 +17,9 @@ define('kotenei/dragdrop', ['jquery'], function ($) {
             $layer: null,
             $handle: null,
             $range: null,
-            direction: '',// h:水平  v:垂直
-            resizable: false,
+            direction: '',      // h:水平  v:垂直
+            resizable: false,   //是否可拖放
+            scale:false,        //是否按比例缩放
             callback: {
                 start: $.noop,
                 move: $.noop,
@@ -35,10 +36,6 @@ define('kotenei/dragdrop', ['jquery'], function ($) {
         //拖放层的高度和宽度
         this.lw = this.$layer.outerWidth();
         this.lh = this.$layer.outerHeight();
-
-        //调整大小的临时尺寸
-        this.tmpRzWidth = 0;
-        this.tmpRzHeight = 0;
 
         //是否设置大小
         this.isResize = false;
@@ -67,13 +64,17 @@ define('kotenei/dragdrop', ['jquery'], function ($) {
 
         if (this.options.resizable) {
             this.$layer.append('<span class="k-resizable k-resizable-topLeft" data-type="topLeft"></span>');
-            this.$layer.append('<span class="k-resizable k-resizable-topCenter" data-type="topCenter"></span>');
             this.$layer.append('<span class="k-resizable k-resizable-topRight" data-type="topRight"></span>');
-            this.$layer.append('<span class="k-resizable k-resizable-leftCenter" data-type="leftCenter"></span>');
-            this.$layer.append('<span class="k-resizable k-resizable-rightCenter" data-type="rightCenter"></span>');
             this.$layer.append('<span class="k-resizable k-resizable-bottomLeft" data-type="bottomLeft"></span>');
-            this.$layer.append('<span class="k-resizable k-resizable-bottomCenter" data-type="bottomCenter"></span>');
             this.$layer.append('<span class="k-resizable k-resizable-bottomRight" data-type="bottomRight"></span>');
+
+            if (!this.options.scale) {
+                this.$layer.append('<span class="k-resizable k-resizable-topCenter" data-type="topCenter"></span>');
+                this.$layer.append('<span class="k-resizable k-resizable-leftCenter" data-type="leftCenter"></span>');
+                this.$layer.append('<span class="k-resizable k-resizable-rightCenter" data-type="rightCenter"></span>');
+                this.$layer.append('<span class="k-resizable k-resizable-bottomCenter" data-type="bottomCenter"></span>');
+            }
+
         }
 
         this.eventBind();
@@ -402,8 +403,6 @@ define('kotenei/dragdrop', ['jquery'], function ($) {
     DragDrop.prototype.stop = function (e) {
         this.isMoving = false;
         this.isResize = false;
-        this.tmpRzWidth = 0;
-        this.tmpRzHeight = 0;
 
         if (this.$handle[0].releaseCapture) {
             this.$handle[0].releaseCapture();
