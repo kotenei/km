@@ -599,6 +599,7 @@ define('kotenei/clipZoom', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop
      */
     ClipZoom.prototype.getSize = function (width, height, zoomWidth) {
         var ratio;
+
         if (width >= height) {
             ratio = width / height;
             height = zoomWidth / ratio;
@@ -606,7 +607,46 @@ define('kotenei/clipZoom', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop
             ratio = height / width;
             height = zoomWidth * ratio;
         }
-        return { width: zoomWidth, height: height };
+        return { width: parseInt(zoomWidth), height: parseInt(height) };
+    };
+
+    /**
+     * 缩放
+     * @return {Void}   
+     */
+    ClipZoom.prototype.zoom = function (isPlus) {
+        var ow = this.$container.width(),
+            oh = this.$container.height(),
+            nw;
+
+        
+        if (isPlus) {
+            nw = ow / 0.8;
+        } else {
+            nw = ow * 0.8;
+        }
+
+        //console.log(nw)
+
+
+        var size = this.getSize(ow, oh, nw);
+
+        this.$container.css({
+            width: size.width,
+            height: size.height
+        });
+
+        this.$mainImg.css({
+            width: size.width - 2,
+            height: size.height - 2
+        });
+
+        this.$viewImg.css({
+            width: size.width - 2,
+            height: size.height - 2
+        });
+
+        this.setPreview();
     };
 
     /**
@@ -651,13 +691,13 @@ define('kotenei/clipZoom', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop
         }
 
         this.$mainImg.css({
-            width: size.width,
-            height: size.height
+            width: size.width - 2,
+            height: size.height - 2
         });
 
         this.$viewImg.css({
-            width: size.width,
-            height: size.height
+            width: size.width - 2,
+            height: size.height - 2
         });
 
         this.$container.css({
@@ -683,50 +723,15 @@ define('kotenei/clipZoom', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop
     ClipZoom.prototype.reset = function () {
         this.$container.css(this.resetSize);
         this.$mainImg.css({
-            width: this.resetSize.width,
-            height: this.resetSize.height
+            width: this.resetSize.width - 2,
+            height: this.resetSize.height - 2
         });
         this.$viewImg.css({
-            width: this.resetSize.width,
-            height: this.resetSize.height
+            width: this.resetSize.width - 2,
+            height: this.resetSize.height - 2
         });
         this.setPreview();
-    };
-
-    /**
-     * 缩放
-     * @return {Void}   
-     */
-    ClipZoom.prototype.zoom = function (isPlus) {
-        var ow = this.$container.width(),
-            oh=this.$container.height(), 
-            nw;
-
-        if (isPlus) {
-            nw = ow / 0.8;
-        } else {
-            nw = ow * 0.8;
-        }
-
-        var size = this.getSize(ow, oh, nw);
-
-        this.$container.css({
-            width: size.width,
-            height: size.height
-        });
-
-        this.$mainImg.css({
-            width: size.width,
-            height: size.height
-        });
-
-        this.$viewImg.css({
-            width: size.width,
-            height: size.height
-        });
-
-        this.setPreview();
-    };
+    }; 
 
     /**
      * 设置右则预览

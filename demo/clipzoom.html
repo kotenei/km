@@ -14,12 +14,12 @@
 <body>
 
     <!--裁剪html-->
-    <div class="k-clipZoom" style="margin:0 auto;margin-top:30px;">
+    <div class="k-clipZoom" style="margin: 0 auto; margin-top: 30px;">
         <!--左则选取区-->
         <div class="k-clipZoom-left">
             <div class="k-clipZoom-Box">
                 <div class="container">
-                    <img src="" />
+                    <img />
                 </div>
                 <div class="selector">
                 </div>
@@ -33,11 +33,13 @@
             </div>
         </div>
         <!--右则预览区-->
-        <div class="k-clipZoom-left" style="margin-left:10px;">
+        <div class="k-clipZoom-left" style="margin-left: 10px;">
             <div class="view-box">
                 <img />
             </div>
-            <div class="clip-box"></div>
+            <div class="result-box">
+                <img />
+            </div>
         </div>
     </div>
 
@@ -47,7 +49,12 @@
             var ClipZoom = kotenei.ClipZoom;
 
             var cz = new ClipZoom($("div.k-clipZoom"), {
-                imgUrl: '../images/1.jpg'
+                imgUrl: '../images/1.jpg',
+                callback: {
+                    clip: function (clipData) {
+                        console.log(clipData);
+                    }
+                }
             });
 
         });
