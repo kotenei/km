@@ -20,16 +20,20 @@ define('kotenei/clipZoom', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop
             width: 400,
             height: 300,
             selectorWidth: 120,
-            selectorHeight: 100
+            selectorHeight: 100,
+            callback: {
+                clip: null
+            }
         }, options);
 
         this.$selector = $element.find('.selector');
         this.$clipZoomBox = $element.find('.k-clipZoom-Box').width(this.options.width).height(this.options.height);
         this.$container = this.$clipZoomBox.find('.container');
-        this.$bigImg = this.$container.find('img');
+        this.$mainImg = this.$container.find('img');
         this.$viewBox = $element.find(".view-box");
         this.$viewImg = this.$viewBox.find("img");
-
+        this.$resultBox = $element.find('.result-box');
+        this.$resultImg = this.$resultBox.find('img');
         this.init();
     };
 
@@ -62,8 +66,34 @@ define('kotenei/clipZoom', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop
 
         //图片加载
         this.imgLoad();
+
+        this.eventBind();
     };
 
+    /**
+     * 绑定事件
+     * @return {Void}   
+     */
+    ClipZoom.prototype.eventBind = function () {
+        var self = this;
+
+        this.$element.on('click', '[role="clip"]', function () {
+            //裁剪
+            self.clip();
+        }).on('click', '[role="center"]', function () {
+            //居中
+            self.center();
+        }).on('click', '[role="reset"]', function () {
+            //重置
+            self.reset();
+        }).on('click', '[role="plus"]', function () {
+            //放大
+            self.zoom(true);
+        }).on('click', '[role="minus"]', function () {
+            //缩小
+            self.zoom(false);
+        });
+    };
 
     /**
      * 设置图片尺寸
@@ -72,7 +102,7 @@ define('kotenei/clipZoom', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop
      * @return {Void}   
      */
     ClipZoom.prototype.setImgSize = function (width, height) {
-        this.$bigImg.width(width - 2).height(height - 2);
+        this.$mainImg.width(width - 2).height(height - 2);
     };
 
     /**
@@ -101,7 +131,7 @@ define('kotenei/clipZoom', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop
             });
 
             //设置大图
-            self.$bigImg.attr('src', self.options.imgUrl).css({
+            self.$mainImg.attr('src', self.options.imgUrl).css({
                 width: size.width - 2,
                 height: size.height - 2
             });
@@ -165,17 +195,124 @@ define('kotenei/clipZoom', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop
         return { width: zoomWidth, height: height };
     };
 
-    //裁剪
-    ClipZoom.prototype.clip = function () { };
+    /**
+     * 裁剪
+     * @return {Void}   
+     */
+    ClipZoom.prototype.clip = function () {
+        var clipData = {
+            imgSource: this.options.imgUrl,
+            imgWidth: this.$viewImg.width(),
+            imgHeight: this.$viewImg.height(),
+            imgX: Math.abs(this.$viewImg[0].style.marginLeft.replace("px", "")) - this.$viewImg.position().left,
+            imgY: Math.abs(this.$viewImg[0].style.marginTop.replace("px", "")) - this.$viewImg.position().top,
+            selectorX: this.$selector.position().left,
+            selectorY: this.$selector.position().top,
+            cutterWidth: this.options.selectorWidth,
+            cutterHeight: this.options.selectorHeight
+        };
 
-    //居中
-    ClipZoom.prototype.center = function () { };
+        if ($.isFunction(this.options.callback.clip)) {
+            this.options.callback.clip(clipData);
+        }
+    };
 
-    //重置
-    ClipZoom.prototype.reset = function () { };
+    /**
+     * 居中
+     * @return {Void}   
+     */
+    ClipZoom.prototype.center = function () {
+        var imgWidth = this.$mainImg.width(),
+            imgHeight = this.$mainImg.height(),
+            selectorWidth = this.$selector.width(),
+            selectorHeight = this.$selector.height(),
+            containerWidth = this.options.width,
+            containerHeight = this.options.height;
 
-    //缩放
-    ClipZoom.prototype.zoom = function () { };
+        var size = this.getSize(imgWidth, imgHeight, selectorWidth);
+
+        if (size.height < selectorHeight) {
+            size.width = imgWidth / imgHeight * selectorHeight;
+            size.height = selectorHeight;
+        }
+
+        this.$mainImg.css({
+            width: size.width,
+            height: size.height
+        });
+
+        this.$viewImg.css({
+            width: size.width,
+            height: size.height
+        });
+
+        this.$container.css({
+            width: size.width,
+            height: size.height,
+            top: (containerHeight - size.height) / 2,
+            left: (containerWidth - size.width) / 2
+        });
+
+        this.$selector.css({
+            top: (containerHeight - selectorHeight) / 2,
+            left: (containerWidth - selectorWidth) / 2
+        });
+
+        this.setPreview();
+
+    };
+
+    /**
+     * 重置
+     * @return {Void}   
+     */
+    ClipZoom.prototype.reset = function () {
+        this.$container.css(this.resetSize);
+        this.$mainImg.css({
+            width: this.resetSize.width,
+            height: this.resetSize.height
+        });
+        this.$viewImg.css({
+            width: this.resetSize.width,
+            height: this.resetSize.height
+        });
+        this.setPreview();
+    };
+
+    /**
+     * 缩放
+     * @return {Void}   
+     */
+    ClipZoom.prototype.zoom = function (isPlus) {
+        var ow = this.$container.width(),
+            oh=this.$container.height(), 
+            nw;
+
+        if (isPlus) {
+            nw = ow / 0.8;
+        } else {
+            nw = ow * 0.8;
+        }
+
+        var size = this.getSize(ow, oh, nw);
+
+        this.$container.css({
+            width: size.width,
+            height: size.height
+        });
+
+        this.$mainImg.css({
+            width: size.width,
+            height: size.height
+        });
+
+        this.$viewImg.css({
+            width: size.width,
+            height: size.height
+        });
+
+        this.setPreview();
+    };
 
     /**
      * 设置右则预览
@@ -184,7 +321,7 @@ define('kotenei/clipZoom', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop
     ClipZoom.prototype.setPreview = function () {
         var self = this;
         var options = this.options;
-        var clipInfo = this.getClipInfo();
+        var clipInfo = this.getPreviewInfo();
         var xsize = options.selectorWidth;
         var ysize = options.selectorHeight;
         var boundx = clipInfo.viewPortWidth;
@@ -205,15 +342,14 @@ define('kotenei/clipZoom', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop
     };
 
     /**
-     * 获取裁剪相关信息
+     * 获取设置预览的相关信息
      * @return {Object}   
      */
-    ClipZoom.prototype.getClipInfo = function () {
+    ClipZoom.prototype.getPreviewInfo = function () {
         var options = this.options;
         return {
-            imgUrl: options.imgUrl,
-            imgWidth: this.$bigImg.width(),
-            imgHeight: this.$bigImg.height(),
+            imgWidth: this.$mainImg.width(),
+            imgHeight: this.$mainImg.height(),
             imgX: this.$container.position().left,
             imgY: this.$container.position().top,
             selectorWidth: this.$selector.width(),
@@ -221,9 +357,7 @@ define('kotenei/clipZoom', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop
             selectorX: this.$selector.position().left,
             selectorY: this.$selector.position().top,
             viewPortWidth: options.width,
-            viewPortHeight: options.height,
-            x2: this.$selector.position().left + this.$selector.outerWidth(),
-            y2: this.$selector.position().top + this.$selector.outerHeight()
+            viewPortHeight: options.height
         };
     };
 
