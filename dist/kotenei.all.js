@@ -419,6 +419,13 @@ define('kotenei/cache', [], function () {
  */
 define('kotenei/clipZoom', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
 
+    /**
+     * 图片剪裁模块
+     * @constructor
+     * @alias kotenei/clipZoom
+     * @param {JQuery} $element - dom
+     * @param {Object} options - 参数设置
+     */
     var ClipZoom = function ($element, options) {
         this.$element = $element;
         this.options = $.extend({}, {
@@ -440,7 +447,10 @@ define('kotenei/clipZoom', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop
         this.init();
     };
 
-    //初始化
+    /**
+     * 初始化
+     * @return {Void}   
+     */
     ClipZoom.prototype.init = function () {
         var self = this;
 
@@ -453,19 +463,36 @@ define('kotenei/clipZoom', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop
             $layer: this.$selector,
             $range: this.$clipZoomBox,
             resizable: true,
-            scale: this.options.scale
+            scale: this.options.scale,
+            callback: {
+                resize: function () {
+                    self.setPreview();
+                },
+                move: function () {
+                    self.setPreview();
+                }
+            }
         });
 
         //图片加载
         this.imgLoad();
-    }
-
-    //设置图片尺寸
-    ClipZoom.prototype.setImgSize = function (width, height) {
-        this.$bigImg.width(width-2).height(height-2);
     };
 
-    //图片加载
+
+    /**
+     * 设置图片尺寸
+     * @param  {Number} width - 宽度
+     * @param  {Number} height - 高度
+     * @return {Void}   
+     */
+    ClipZoom.prototype.setImgSize = function (width, height) {
+        this.$bigImg.width(width - 2).height(height - 2);
+    };
+
+    /**
+     * 图片加载
+     * @return {Void}   
+     */
     ClipZoom.prototype.imgLoad = function () {
 
         var self = this;
@@ -489,8 +516,8 @@ define('kotenei/clipZoom', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop
 
             //设置大图
             self.$bigImg.attr('src', self.options.imgUrl).css({
-                width: size.width-2,
-                height: size.height-2
+                width: size.width - 2,
+                height: size.height - 2
             });
 
             //设置预览图
@@ -517,6 +544,10 @@ define('kotenei/clipZoom', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop
                 callback: {
                     resize: function (css) {
                         self.setImgSize(css.width, css.height);
+                        self.setPreview();
+                    },
+                    move: function () {
+                        self.setPreview();
                     }
                 }
             });
@@ -529,7 +560,13 @@ define('kotenei/clipZoom', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop
         img.src = this.options.imgUrl;
     };
 
-
+    /**
+     * 获取缩放尺寸
+     * @param  {Number} width - 宽度
+     * @param  {Number} height - 高度
+     * @param  {Number} zoomWidth - 缩放宽度
+     * @return {Object}   
+     */
     ClipZoom.prototype.getSize = function (width, height, zoomWidth) {
         var ratio;
         if (width >= height) {
@@ -554,15 +591,54 @@ define('kotenei/clipZoom', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop
     //缩放
     ClipZoom.prototype.zoom = function () { };
 
-    //设置预览
+    /**
+     * 设置右则预览
+     * @return {Void}   
+     */
     ClipZoom.prototype.setPreview = function () {
         var self = this;
+        var options = this.options;
+        var clipInfo = this.getClipInfo();
+        var xsize = options.selectorWidth;
+        var ysize = options.selectorHeight;
+        var boundx = clipInfo.viewPortWidth;
+        var boundy = clipInfo.viewPortHeight;
 
-        var xsize = this.options.selectorWidth;
-        var ysize = this.options.selectorHeight;
-        //var boundx = data.viewPortWidth;
-        //var boundy = data.viewPortHeight;
+        if (clipInfo.selectorWidth > 0) {
+            var rx = xsize / clipInfo.selectorWidth;
+            var ry = ysize / clipInfo.selectorHeight;
+            this.$viewImg.css({
+                width: Math.round(rx * clipInfo.imgWidth),
+                height: Math.round(ry * clipInfo.imgHeight),
+                left: Math.round(rx * clipInfo.imgX),
+                top: Math.round(ry * clipInfo.imgY),
+                marginLeft: -(Math.round(rx * clipInfo.selectorX)),
+                marginTop: -(Math.round(ry * clipInfo.selectorY))
+            });
+        }
+    };
 
+    /**
+     * 获取裁剪相关信息
+     * @return {Object}   
+     */
+    ClipZoom.prototype.getClipInfo = function () {
+        var options = this.options;
+        return {
+            imgUrl: options.imgUrl,
+            imgWidth: this.$bigImg.width(),
+            imgHeight: this.$bigImg.height(),
+            imgX: this.$container.position().left,
+            imgY: this.$container.position().top,
+            selectorWidth: this.$selector.width(),
+            selectorHeight: this.$selector.height(),
+            selectorX: this.$selector.position().left,
+            selectorY: this.$selector.position().top,
+            viewPortWidth: options.width,
+            viewPortHeight: options.height,
+            x2: this.$selector.position().left + this.$selector.outerWidth(),
+            y2: this.$selector.position().top + this.$selector.outerHeight()
+        };
     };
 
     return ClipZoom;

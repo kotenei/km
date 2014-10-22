@@ -832,6 +832,9 @@
   overflow: hidden;
   position: relative;
 }
+.k-clipZoom-left .view-box img {
+  position: absolute;
+}
 .k-clipZoom-right {
   float: right;
   display: inline;
