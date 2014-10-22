@@ -840,3 +840,25 @@
   float: right;
   display: inline;
 }
+.k-tree {
+  font-family: Verdana, Arial, Helvetica, AppleGothic, sans-serif;
+  font-size: 12px;
+  list-style: none;
+}
+.k-tree li span {
+  line-height: 16px;
+  margin-right: 2px;
+}
+.k-tree li > a {
+  color: #333;
+  height: 17px;
+  padding: 1px 3px 0 0;
+  vertical-align: top;
+  text-decoration: none;
+}
+.k-tree li > a:hover {
+  text-decoration: underline;
+}
+.k-tree ul {
+  list-style: none;
+}

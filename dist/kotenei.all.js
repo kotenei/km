@@ -2816,6 +2816,56 @@ define('kotenei/tooltips', ['jquery'], function ($) {
 
     return Tooltips;
 });
+/*
+ * 树型模块
+ * @date:2014-10-22
+ * @author:kotenei(kotenei@qq.com)
+ */
+define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
+
+    /**
+     * 默认参数
+     */
+    var DEFAULTS = {
+        nodes: [],
+        check: {
+            enable: false,                          // 是否启用
+            chkType: 'checkbox',                    // 单选框还是复选框，默认复选
+            chkBoxType: { Y: "ps", N: "ps" }        // Y：选中时对父与子级的关联关系，N：取消选中时对父与子级的关联关系，p:父级,s:子级
+        },
+        callback: {
+            beforeCheck: null,
+            beforeClick: null,
+            beforeRename: null,
+            beforeExpand: null,
+            beforeRemove: null,
+
+            onCheck: null,
+            onClick: null,
+            onRename: null,
+            onExpand: null,
+            onRemove: null
+        }
+    };
+
+    var Tree = function ($element, options) {
+        this.$element = $element;
+        this.options = $.extend({}, DEFAULTS, options);
+    };
+
+    Tree.prototype.init = function () { };
+
+    Tree.prototype.eventBind = function () { };
+
+    Tree.prototype.method = {
+        add: function () { },
+        edit: function () { },
+        remove: function () { }
+    };
+
+    return Tree;
+});
+
 /**
  * 
  * @module kotenei/util 
@@ -4063,7 +4113,7 @@ define('kotenei/wordLimit', ['jquery'], function ($) {
     return WordLimit;
 });
 ;
-define("kotenei", ["kotenei/autoComplete", "kotenei/cache", "kotenei/clipZoom", "kotenei/dragdrop", "kotenei/dropdown", "kotenei/dropdownDatepicker", "kotenei/infiniteScroll", "kotenei/lazyload", "kotenei/loading", "kotenei/pager", "kotenei/placeholder", "kotenei/popTips", "kotenei/router", "kotenei/slider", "kotenei/switch", "kotenei/tooltips", "kotenei/util", "kotenei/validate", "kotenei/validateTooltips", "kotenei/waterfall", "kotenei/window", "kotenei/wordLimit"], function(_autoComplete, _cache, _clipZoom, _dragdrop, _dropdown, _dropdownDatepicker, _infiniteScroll, _lazyload, _loading, _pager, _placeholder, _popTips, _router, _slider, _switch, _tooltips, _util, _validate, _validateTooltips, _waterfall, _window, _wordLimit){
+define("kotenei", ["kotenei/autoComplete", "kotenei/cache", "kotenei/clipZoom", "kotenei/dragdrop", "kotenei/dropdown", "kotenei/dropdownDatepicker", "kotenei/infiniteScroll", "kotenei/lazyload", "kotenei/loading", "kotenei/pager", "kotenei/placeholder", "kotenei/popTips", "kotenei/router", "kotenei/slider", "kotenei/switch", "kotenei/tooltips", "kotenei/tree", "kotenei/util", "kotenei/validate", "kotenei/validateTooltips", "kotenei/waterfall", "kotenei/window", "kotenei/wordLimit"], function(_autoComplete, _cache, _clipZoom, _dragdrop, _dropdown, _dropdownDatepicker, _infiniteScroll, _lazyload, _loading, _pager, _placeholder, _popTips, _router, _slider, _switch, _tooltips, _tree, _util, _validate, _validateTooltips, _waterfall, _window, _wordLimit){
     return {
         "AutoComplete" : _autoComplete,
         "cache" : _cache,
@@ -4081,6 +4131,7 @@ define("kotenei", ["kotenei/autoComplete", "kotenei/cache", "kotenei/clipZoom", 
         "Slider" : _slider,
         "Switch" : _switch,
         "Tooltips" : _tooltips,
+        "Tree" : _tree,
         "Util" : _util,
         "Validate" : _validate,
         "ValidateTooltips" : _validateTooltips,
