@@ -805,6 +805,7 @@
   top: 10px;
   text-align: center;
   cursor: pointer;
+  z-index: 11;
 }
 .k-clipZoom-Box .zoomMinus {
   top: 50px;
