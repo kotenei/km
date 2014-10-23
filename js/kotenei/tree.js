@@ -33,11 +33,35 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
     var Tree = function ($element, options) {
         this.$element = $element;
         this.options = $.extend({}, DEFAULTS, options);
+
+        this.init();
     };
 
-    Tree.prototype.init = function () { };
+    Tree.prototype.init = function () {
 
-    Tree.prototype.eventBind = function () { };
+
+        this.eventBind();
+
+    };
+
+    Tree.prototype.eventBind = function () {
+
+        this.$element.on('click', '.switch', function () {
+            var $this = $(this),
+                $children = $this.parent().children('ul'),
+                $icon = $this.next().children('span').first();
+                className = this.className;
+            $children.slideToggle('fast');
+
+            if (className.indexOf('close') !== -1) {
+                className = className.replace('close', 'open');
+            } else {
+                className = className.replace('open', 'close');
+            }
+            this.className = className;
+        });
+
+    };
 
     Tree.prototype.method = {
         add: function () { },
