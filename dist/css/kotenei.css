@@ -843,21 +843,143 @@
 .k-tree {
   font-family: Verdana, Arial, Helvetica, AppleGothic, sans-serif;
   font-size: 12px;
-  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.k-tree li {
+  line-height: 14px;
+  list-style: outside none none;
+  margin: 0;
+  outline: 0 none;
+  padding: 0;
+  text-align: left;
+  white-space: nowrap;
+}
+.k-tree li a {
+  background-color: transparent;
+  color: #333;
+  cursor: pointer;
+  display: inline-block;
+  height: 17px;
+  margin: 0;
+  padding: 1px 3px 0 0;
+  text-decoration: none;
+  vertical-align: top;
+}
+.k-tree li a:hover {
+  text-decoration: underline;
+}
+.k-tree li a.selected {
+  background-color: #ffe6b0;
+  border: 1px solid #ffb951;
+  color: black;
+  height: 19px;
+  opacity: 0.8;
+  padding-top: 0;
 }
 .k-tree li span {
   line-height: 16px;
   margin-right: 2px;
 }
-.k-tree li > a {
-  color: #333;
-  height: 17px;
-  padding: 1px 3px 0 0;
-  vertical-align: top;
-  text-decoration: none;
+.k-tree li span.icon {
+  line-height: 0;
+  margin: 0;
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  vertical-align: middle;
+  border: 0 none;
+  cursor: pointer;
+  outline: none;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-image: url("../../images/tree/tree.png");
 }
-.k-tree li > a:hover {
-  text-decoration: underline;
+.k-tree li span.icon.switch {
+  height: 18px;
+  width: 18px;
+}
+.k-tree li span.icon.switch.center_docu {
+  background-position: -56px -18px;
+}
+.k-tree li span.icon.switch.bottom_docu {
+  background-position: -56px -36px;
+}
+.k-tree li span.icon.root_open {
+  background-position: -92px 0;
+}
+.k-tree li span.icon.root_close {
+  background-position: -74px 0;
+}
+.k-tree li span.icon.center_open {
+  background-position: -74px -18px;
+}
+.k-tree li span.icon.center_close {
+  background-position: -74px -18px;
+}
+.k-tree li span.icon.bottom_open {
+  background-position: -92px -36px;
+}
+.k-tree li span.icon.bottom_close {
+  background-position: -74px -36px;
+}
+.k-tree li span.icon.ico_open {
+  background-position: -110px -16px;
+  margin-right: 2px;
+  vertical-align: top;
+}
+.k-tree li span.icon.ico_close {
+  background-position: -110px 0;
+  margin-right: 2px;
+  vertical-align: top;
+}
+.k-tree li span.icon.ico_docu {
+  background-position: -110px -32px;
+  margin-right: 2px;
+  vertical-align: top;
+}
+.k-tree li span.icon.edit {
+  background-position: -110px -48px;
+  margin-right: 2px;
+  vertical-align: top;
+}
+.k-tree li span.icon.remove {
+  background-position: -110px -64px;
+  margin-right: 2px;
+  vertical-align: top;
+}
+.k-tree li span.icon.chk {
+  cursor: auto;
+  height: 13px;
+  margin: 0 3px 0 0;
+  width: 13px;
+  cursor: pointer;
+}
+.k-tree li span.icon.chk.checkbox_false_full {
+  background-position: 0 0;
+}
+.k-tree li span.icon.chk.checkbox_true_full {
+  background-position: -14px 0;
+}
+.k-tree li span.icon.chk.checkbox_false_part {
+  background-position: 0 -28px;
+}
+.k-tree li span.icon.chk.radio_false_full {
+  background-position: -28px 0;
+}
+.k-tree li span.icon.chk.radio_true_full {
+  background-position: -42px 0;
+}
+.k-tree li span.icon.chk.radio_false_part {
+  background-position: -28px -28px;
+}
+.k-tree li ul {
+  margin: 0;
+  padding: 0 0 0 18px;
+}
+.k-tree li ul.line {
+  background: url("../../images/tree/line_conn.gif") repeat-y;
 }
 .k-tree ul {
   list-style: none;

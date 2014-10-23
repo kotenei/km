@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -16,11 +16,36 @@
 
         <ul class="k-tree">
             <li>
-                <span></span>
-                <span></span>
-                <a href="javascript:void(0);">
-                    <span></span>
-                    <span>asdfasdf</span>
+                <span class="icon switch root_open"></span><a href="javascript:void(0);">
+                    <span class="icon ico_open"></span>
+                    
+                    <span>父节点</span>
+                </a>
+                <ul class="line">
+                    <li>
+                        <span class="icon switch center_docu"></span><a href="javascript:void(0);" class="selected">
+                            <span class="icon ico_docu"></span>
+                            <span>子节点</span><span class="icon edit"></span><span class="icon remove"></span>
+                        </a>
+                    </li>
+                    <li>
+                        <span class="icon switch bottom_docu"></span><a href="javascript:void(0);">
+                            <span class="icon ico_docu"></span>
+                            <span>子节点</span><span class="icon edit"></span><span class="icon remove"></span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <span class="icon switch center_close"></span><a href="javascript:void(0);">
+                    <span class="icon ico_close"></span>
+                    <span>父节点</span>
+                </a>
+            </li>
+            <li>
+                <span class="icon switch bottom_close"></span><a href="javascript:void(0);">
+                    <span class="icon ico_close"></span>
+                    <span>父节点</span>
                 </a>
             </li>
         </ul>
