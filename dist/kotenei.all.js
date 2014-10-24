@@ -2830,6 +2830,12 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
      */
     var DEFAULTS = {
         data: [],
+        edit: {
+            enable: false,
+            showAddBtn: false,
+            showEditBtn: false,
+            showRemvoeBtn: false
+        },
         check: {
             enable: false,                          // 是否启用
             chkType: 'checkbox',                    // 单选框还是复选框，默认复选
@@ -2881,13 +2887,39 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
             return '';
         },
         getIconHtml: function (node) {
-            return '';
+
+        },
+        getChkHtml: function (node, options) {
+            if (!options.check.enable || node.noCheck) {
+                return '';
+            }
+            return '<span class="' +_consts.className.ICON+ ' chk ' + options.check.chkType + '_' + String(node.checked === true) + '_' + (node.chkDisabled ? 'part' : 'full') + '"></span>';
+
+        },
+        getOperateHtml: function (node, options) {
+            var str = [];
+
+            if (!options.edit.enable) {
+                return '';
+            }
+
+            if (options.edit.showAddBtn) {
+                str.push('<span class="' + _consts.className.ICON + ' add"></span>');
+            }
+            if (options.edit.showEditBtn) {
+                str.push('<span class="' + _consts.className.ICON + ' edit"></span>');
+            }
+            if (options.edit.showRemoveBtn) {
+                str.push('<span class="' + _consts.className.ICON + ' remove"></span>');
+            }
+
+            return str.join('');
         }
     };
 
     var Tree = function ($element, options) {
         this.$element = $element;
-        this.options = $.extend({}, DEFAULTS, options);
+        this.options = $.extend(true, DEFAULTS, options);
         this.nodes = {};
         this.prefix = 'node';
         this.init();
@@ -2948,9 +2980,11 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
             if (node) {
                 html.push('<li>');
                 html.push(view.getLineHtml(node));
+                html.push(view.getChkHtml(node, this.options));
                 html.push('<a href="javascript:void(0);">');
                 html.push(view.getIconHtml(node));
                 html.push('<span>' + node.text + '</span>');
+                html.push(view.getOperateHtml(node, this.options));
                 html.push('</a>');
                 this.createNode(node.nodes, html);
                 html.push('</li>');
