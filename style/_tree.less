@@ -32,6 +32,13 @@
             &:hover
             {
                 text-decoration: underline;
+
+                span.add,
+                span.edit,
+                span.remove
+                {
+                    display:inline-block;
+                }
             }
 
             &.selected
@@ -42,6 +49,13 @@
                 height: 19px;
                 opacity: 0.8;
                 padding-top: 0;
+
+                span.add,
+                span.edit,
+                span.remove
+                {
+                    display:inline-block;
+                }
             }
         }
 
@@ -135,11 +149,21 @@
                 vertical-align: top;
             }
 
+            &.add
+            {
+                background-position: -144px 0;
+                margin-left: 2px;
+                margin-right: -1px;
+                vertical-align: top;
+                display: none;
+            }
+
             &.edit
             {
                 background-position: -110px -48px;
                 margin-right: 2px;
                 vertical-align: top;
+                display: none;
             }
 
             &.remove
@@ -147,6 +171,7 @@
                 background-position: -110px -64px;
                 margin-right: 2px;
                 vertical-align: top;
+                display: none;
             }
 
             &.chk

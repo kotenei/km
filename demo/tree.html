@@ -56,7 +56,7 @@
 
         var nodes = [
             {
-                nodeId: 1, parentId: 0, rootId: 0, text: '父节点', value: 123, isParent: true, open: true, nodes:
+                nodeId: 1, parentId: 0, rootId: 0, text: '父节点', value: 123, isParent: true, open: true, chkDisabled: true, nodes:
                 [
                     { nodeId: 2, parentId: 1, rootId: 1, text: '子节点', value: 456 },
                     { nodeId: 3, parentId: 1, rootId: 1, text: '子节点', value: 789 }
@@ -70,7 +70,16 @@
         require(['kotenei'], function (kotenei) {
             var Tree = kotenei.Tree;
             var tree = new Tree($("#tree"), {
-                data: nodes
+                data: nodes,
+                check: {
+                    enable:true
+                },
+                edit: {
+                    enable: true,
+                    showAddBtn: true,
+                    showEditBtn: true,
+                    showRemoveBtn: true
+                }
             });
         });
     </script>

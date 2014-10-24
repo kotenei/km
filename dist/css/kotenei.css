@@ -869,6 +869,11 @@
 .k-tree li a:hover {
   text-decoration: underline;
 }
+.k-tree li a:hover span.add,
+.k-tree li a:hover span.edit,
+.k-tree li a:hover span.remove {
+  display: inline-block;
+}
 .k-tree li a.selected {
   background-color: #ffe6b0;
   border: 1px solid #ffb951;
@@ -876,6 +881,11 @@
   height: 19px;
   opacity: 0.8;
   padding-top: 0;
+}
+.k-tree li a.selected span.add,
+.k-tree li a.selected span.edit,
+.k-tree li a.selected span.remove {
+  display: inline-block;
 }
 .k-tree li span {
   line-height: 16px;
@@ -939,15 +949,24 @@
   margin-right: 2px;
   vertical-align: top;
 }
+.k-tree li span.icon.add {
+  background-position: -144px 0;
+  margin-left: 2px;
+  margin-right: -1px;
+  vertical-align: top;
+  display: none;
+}
 .k-tree li span.icon.edit {
   background-position: -110px -48px;
   margin-right: 2px;
   vertical-align: top;
+  display: none;
 }
 .k-tree li span.icon.remove {
   background-position: -110px -64px;
   margin-right: 2px;
   vertical-align: top;
+  display: none;
 }
 .k-tree li span.icon.chk {
   cursor: auto;
