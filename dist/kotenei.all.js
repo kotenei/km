@@ -2852,72 +2852,129 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
 
     var _consts = {
         className: {
-            icon: 'icon',
-            switch: 'switch'
+            ICON: 'icon',
+            SWITCH: 'switch'
         },
         floder: {
-            open: 'open',
-            close: 'close',
-            docu: 'docu'
+            OPEN: 'open',
+            CLOSE: 'close',
+            DOCU: 'docu'
+        },
+        line: {
+            ROOT: 'root',
+            CENTER: 'center',
+            BOTTOM: 'bottom'
         },
         node: {
-            curSelected: 'selected'
+            SELECTED: 'selected'
         }
     };
 
     var utils = {
+        isArray: function (data) {
+            return data instanceof Array;
+        }
+    };
 
+    var view = {
+        getLineHtml: function (node) {
+            return '';
+        },
+        getIconHtml: function (node) {
+            return '';
+        }
     };
 
     var Tree = function ($element, options) {
         this.$element = $element;
         this.options = $.extend({}, DEFAULTS, options);
         this.nodes = {};
+        this.prefix = 'node';
         this.init();
     };
 
     Tree.prototype.init = function () {
         this.initNodes(this.options.data);
+        this.createTree();
         this.eventBind();
-
     };
 
     Tree.prototype.initNodes = function (data) {
-        if (!(data instanceof Array) || data.length === 0) {
+        if (!utils.isArray(data) || data.length === 0) {
             return;
         }
-        for (var i = 0; i < data.length; i++) {
-            this.nodes["node" + data[i].nodeId] = data[i];
-            this.initNodes(data[i].nodes);
+
+        for (var i = 0, node; i < data.length; i++) {
+            node = data[i];
+
+            if (node.parentId === 0 && i === 0) {
+                node.isFirst = true;
+            }
+
+            if ((i + 1) === data.length) {
+                node.isLast = true;
+            }
+
+            this.nodes[this.prefix + node.nodeId] = node;
+            this.initNodes(node.nodes);
         }
-    }
-
-
+    };
 
     Tree.prototype.eventBind = function () {
 
-        this.$element.on('click', _consts.className.switch, function () {
-            //expand
-            var $this = $(this),
-                $children = $this.parent().children('ul'),
-                $icon = $this.next().children('span').first();
-            className = this.className;
-            $children.slideToggle('fast');
+        this.$element.on('click', _consts.className.SWITCH, function () {
 
-            if (className.indexOf('close') !== -1) {
-                className = className.replace('close', 'open');
-            } else {
-                className = className.replace('open', 'close');
-            }
-            this.className = className;
         });
 
     };
 
-    Tree.prototype.method = {
-        add: function () { },
-        edit: function () { },
-        remove: function () { }
+    Tree.prototype.createTree = function () {
+        var html = [], $elm;
+        this.createNode(this.options.data, html);
+        $elm = $(html.join('')).addClass('k-tree');
+        this.$element.append($elm);
+    };
+
+    Tree.prototype.createNode = function (data, html) {
+
+        if (!utils.isArray(data) || data.length === 0 || !utils.isArray(html)) {
+            return;
+        }
+
+        html.push('<ul>');
+
+        for (var i = 0, node; i < data.length; i++) {
+            node = this.getNode(data[i].nodeId);
+            if (node) {
+                html.push('<li>');
+                html.push(view.getLineHtml(node));
+                html.push('<a href="javascript:void(0);">');
+                html.push(view.getIconHtml(node));
+                html.push('<span>' + node.text + '</span>');
+                html.push('</a>');
+                this.createNode(node.nodes, html);
+                html.push('</li>');
+            }
+        }
+
+        html.push('</ul>');
+    };
+
+    Tree.prototype.addNode = function (node) {
+        this.initNodes([node]);
+    };
+
+    Tree.prototype.removeNode = function (node) {
+        delete this.nodes[this.prefix + node.id];
+    };
+
+    Tree.prototype.getNode = function (id) {
+        return this.nodes[this.prefix + id];
+    };
+
+    Tree.prototype.hasNode = function (id) {
+        var node = this.getNode(id);
+        return node !== null && node !== undefined;
     };
 
     return Tree;
