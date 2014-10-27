@@ -192,9 +192,9 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
                 node = self.getNode(id);
             if ($this.hasClass('checkbox_false_part')) { return; }
 
-            var nodes = self.getPCNodes(node);
+            var nodes = self.getParentChildNodes(node);
 
-            console.log(nodes)
+            self.check(nodes,true);
 
         }).on('click', 'a', function () {
             //选择
@@ -273,7 +273,7 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
     };
 
     //获取父节点
-    Tree.prototype.getPCNodes = function (node) {
+    Tree.prototype.getParentChildNodes = function (node) {
         var parentNode = this.nodes[this.prefix + node.parentId];
         var nodes = [];
 
@@ -285,6 +285,16 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
         this.getChildNodes(node, nodes);
 
         return nodes;
+    };
+
+    Tree.prototype.check = function (nodes, checked) {
+        for (var i = 0, node,$elm; i < nodes.length; i++) {
+            node = nodes[i];
+            $elm = this.$element.find('#chk_' + nodes.nodeId);
+            if (!node.chkDisabled) {
+               
+            }
+        }
     };
 
     //获取子节点
