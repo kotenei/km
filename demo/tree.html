@@ -13,8 +13,8 @@
 <body>
 
     <div id="tree">
-
     </div>
+
 
     <script type="text/javascript">
 
@@ -22,12 +22,22 @@
             {
                 nodeId: 1, parentId: 0, rootId: 0, text: '父节点', value: 123, isParent: true, open: true, chkDisabled: true, nodes:
                 [
-                    { nodeId: 2, parentId: 1, rootId: 1, text: '子节点', value: 456 },
-                    { nodeId: 3, parentId: 1, rootId: 1, text: '子节点', value: 789 }
+                    {
+                        nodeId: 2, parentId: 1, rootId: 1, text: '父节点', value: 456, nodes: [
+                            { nodeId: 5, parentId: 2, rootId: 1, text: '子节点', value: 456 },
+                            { nodeId: 6, parentId: 2, rootId: 1, text: '子节点', value: 789 }
+                        ]
+                    },
+                    {
+                        nodeId: 3, parentId: 1, rootId: 1, text: '子节点', value: 456
+                    }
                 ]
             },
             {
-                nodeId: 4, parentId: 0, rootId: 0, text: "父节点", value: 5486
+                nodeId: 4, parentId: 0, rootId: 0, text: "父节点", value: 5486, nodes: [
+                    { nodeId: 7, parentId: 4, rootId: 4, text: '子节点', value: 456 },
+                    { nodeId: 8, parentId: 4, rootId: 4, text: '子节点', value: 789 }
+                ]
             }
         ];
 
@@ -36,7 +46,7 @@
             var tree = new Tree($("#tree"), {
                 data: nodes,
                 check: {
-                    enable:true
+                    enable: true
                 },
                 edit: {
                     enable: true,
