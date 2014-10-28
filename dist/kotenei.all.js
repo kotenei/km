@@ -2839,7 +2839,7 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
         check: {
             enable: false,                          // 是否启用
             chkType: 'checkbox',                    // 单选框还是复选框，默认复选
-            chkBoxType: { Y: "ps", N: "ps" }        // Y：选中时对父与子级的关联关系，N：取消选中时对父与子级的关联关系，p:父级,s:子级
+            chkBoxType: { Y: "s", N: "ps" }        // Y：选中时对父与子级的关联关系，N：取消选中时对父与子级的关联关系，p:父级,s:子级
         },
         callback: {
             beforeCheck: null,
@@ -2943,7 +2943,7 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
 
             return str.join('');
         },
-        replaceClass: function (element) {
+        replaceSwitchClass: function (element) {
             var className = element.className;
             if (className.indexOf(_consts.floder.OPEN) !== -1) {
                 className = className.replace(new RegExp(_consts.floder.OPEN, 'ig'), _consts.floder.CLOSE);
@@ -2951,6 +2951,9 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
                 className = className.replace(new RegExp(_consts.floder.CLOSE, 'ig'), _consts.floder.OPEN);
             }
             element.className = className;
+        },
+        replaceChkClass: function (element, checked) {
+            element.className = element.className.replace(new RegExp(checked ? 'false' : 'true'), checked ? 'true' : 'false');
         }
     };
 
@@ -2962,12 +2965,14 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
         this.init();
     };
 
+    //初始化
     Tree.prototype.init = function () {
         this.initNodes(this.options.data);
         this.createTree();
         this.eventBind();
     };
 
+    //初始化节点
     Tree.prototype.initNodes = function (data) {
         if (!utils.isArray(data) || data.length === 0) {
             return;
@@ -2990,11 +2995,12 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
         }
     };
 
+    //事件绑定
     Tree.prototype.eventBind = function () {
         var self = this;
 
         this.$element.on('click', "." + _consts.className.SWITCH, function () {
-            //展开/收缩
+            //展开或收缩
             var $this = $(this),
                 id = $this.attr('nId'),
                 $children = self.$element.find('#ul_' + id),
@@ -3002,17 +3008,20 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
 
             if ($children.length === 0) { return; }
             $children.slideToggle('fast');
-            view.replaceClass(this);
-            view.replaceClass($icon[0]);
+            view.replaceSwitchClass(this);
+            view.replaceSwitchClass($icon[0]);
         }).on('click', '.chk', function () {
+            //复选或单选
             var $this = $(this),
                 id = $this.attr('nId'),
-                node = self.getNode(id);
-            if ($this.hasClass('checkbox_false_part')) { return; }
+                node = self.getNode(id),
+                className = this.className,
+                checked;
 
-            var nodes = self.getPCNodes(node);
-
-            console.log(nodes)
+            if (node.chkDisabled) { return; }
+            node.checked = className.indexOf('true') === -1;
+            view.replaceChkClass(this, node.checked);
+            self.check(node);
 
         }).on('click', 'a', function () {
             //选择
@@ -3032,6 +3041,7 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
         });
     };
 
+    //创建树
     Tree.prototype.createTree = function () {
         var html = [], $elm;
         this.createNode(this.options.data, html);
@@ -3039,6 +3049,7 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
         this.$element.append($elm);
     };
 
+    //创建节点
     Tree.prototype.createNode = function (data, html, parent) {
 
         var node, line = 'line';
@@ -3082,16 +3093,98 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
         html.push('</ul>');
     };
 
+    //添加节点
     Tree.prototype.addNode = function (node, parent) {
         this.initNodes([node]);
     };
 
+    //移除节点
     Tree.prototype.removeNode = function (node) {
         delete this.nodes[this.prefix + node.id];
     };
 
+    //复选或单选操作
+    Tree.prototype.check = function (node) {
+        var parentNodes = this.getParentNodes(node),
+            childNodes = this.getChildNodes(node),
+            parentNode = this.getNode(node.parentId),
+            options = this.options;
+
+        if (node.checked) {
+
+            switch (options.check.chkBoxType.Y.toLowerCase()) {
+                case "p":
+                    this.checkAction(parentNodes, node.checked);
+                    break;
+                case "s":
+                    this.checkAction(childNodes, node.checked);
+                    break;
+                default:
+                    this.checkAction(parentNodes, node.checked);
+                    this.checkAction(childNodes, node.checked);
+                    break;
+            }
+
+        } else {
+
+            switch (options.check.chkBoxType.N.toLowerCase()) {
+                case "p":
+                    uncheckParent.call(this, parentNode, node.checked);
+                    break;
+                case "s":
+                    this.checkAction(childNodes, node.checked);
+                    break;
+                default:
+                    uncheckParent.call(this, parentNode, node.checked);
+                    this.checkAction(childNodes, node.checked);
+                    break;
+            }
+        }
+
+        //取消选择父节点
+        function uncheckParent(parentNode, checked) {
+            var unchecked = true;
+            while (parentNode && utils.isArray(parentNode.nodes)) {
+                for (var i = 0, siblingNode; i < parentNode.nodes.length; i++) {
+                    siblingNode = parentNode.nodes[i];
+                    if (siblingNode.checked) {
+                        unchecked = false;
+                        break;
+                    }
+                }
+                if (unchecked) {
+                    this.checkAction([parentNode], checked);
+                    unchecked = true;
+                    parentNode = this.getNode(parentNode.parentId);
+                } else {
+                    return;
+                }
+            }
+        }
+    }
+
+    //复选或单选关联节点操作
+    Tree.prototype.checkAction = function (nodes, checked) {
+        for (var i = 0, node, elm; i < nodes.length; i++) {
+            node = nodes[i];
+            node.checked = checked;
+            elm = document.getElementById('chk_' + node.nodeId);
+            if (node.chkDisabled) {
+                continue;
+            }
+            view.replaceChkClass(elm, checked);
+        }
+    };
+
+    //获取父子节点
+    Tree.prototype.getParentChildNodes = function (node) {
+        var nodes = this.getParentNodes(node);
+        this.getChildNodes(node, nodes);
+        return nodes;
+    };
+
     //获取父节点
-    Tree.prototype.getPCNodes = function (node) {
+    Tree.prototype.getParentNodes = function (node) {
         var parentNode = this.nodes[this.prefix + node.parentId];
         var nodes = [];
 
@@ -3100,15 +3193,18 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
             parentNode = this.nodes[this.prefix + parentNode.parentId];
         }
 
-        this.getChildNodes(node, nodes);
-
         return nodes;
     };
 
     //获取子节点
     Tree.prototype.getChildNodes = function (node, nodes) {
+
+        if (!nodes) {
+            nodes = [];
+        }
+
         if (!utils.isArray(node.nodes)) {
-            return;
+            return nodes;
         }
 
         for (var i = 0; i < node.nodes.length; i++) {
@@ -3116,19 +3212,23 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
             this.getChildNodes(node.nodes[i], nodes);
         }
 
+        return nodes;
     };
 
-    Tree.prototype.getSelected = function () {
+    //获取选择的节点
+    Tree.prototype.getSelectedNode = function () {
         var $selected = this.$element.find('a.selected');
         if ($selected.length === 0) { return null; }
         var id = $selected.attr('nId');
         return this.getNode(id);
     };
 
+    //根据ID获取节点
     Tree.prototype.getNode = function (id) {
         return this.nodes[this.prefix + id];
     };
 
+    //判断是否有子节点
     Tree.prototype.hasChildren = function (node) {
         if (node && utils.isArray(node.nodes) && node.nodes.length > 0) {
             return true;
