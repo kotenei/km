@@ -70,6 +70,14 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
     var utils = {
         isArray: function (data) {
             return data instanceof Array;
+        },
+        getIndex: function (node, nodes) {
+            for (var i = 0; i < nodes.length; i++) {
+                if (node.nodeId === nodes[i].nodeId) {
+                    return i;
+                }
+            }
+            return -1;
         }
     };
 
@@ -385,15 +393,37 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
 
         if (!node) { return; }
 
-        if (!utils.isArray(node.nodes)) {
-            return;
-        } 
+        var parentNode = this.getNode(node.parentId);
+        var childNodes = this.getChildNodes(node);
+        var $current = this.$tree.find('#li_' + node.nodeId);
+        var $prev = $current.prev();
+        var prevNode = this.getNode($prev.attr('nId'));
 
-        for (var i = 0; i < node.nodes.length; i++) {
-            this.removeNode(node.nodes[i]);
-            delete this.nodes[this.prefix + node.nodes[i].nodeId];
+
+        //删除当前节点下所有子节点
+        for (var i = 0; i < childNodes.length; i++) {
+            this.$tree.find('#li_' + childNodes[i].nodeId).remove();
+            delete this.nodes[this.prefix + childNodes[i].nodeId];
         }
 
+        //有父节点，表明当前删除节点是子节点
+        if (parentNode) {
+            var index = utils.getIndex(node, parentNode.nodes);
+            if (index >= 0) {
+                parentNode.nodes.splice(index, 1);
+            }
+        } 
+
+        if ($prev.length > 0) {
+            if (node.isLast) {
+                prevNode.isLast = true;
+            } else {
+
+            }
+
+        }
+
+        $current.remove();
         delete this.nodes[this.prefix + node.nodeId];
     };
 
@@ -533,7 +563,7 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
      * @return {Object}
      */
     Tree.prototype.getSelectedNode = function () {
-        var $selected = this.$element.find('a.selected');
+        var $selected = this.$tree.find('a.selected');
         if ($selected.length === 0) { return null; }
         var id = $selected.attr('nId');
         return this.getNode(id);

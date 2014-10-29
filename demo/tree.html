@@ -62,10 +62,10 @@
             $("#btnAdd").click(function () {
                 tree.addNodes(null,
                     {
-                        nodeId: 9, parentId: 0, rootId: 0, text: "新节点", value: '123456',
+                        nodeId: 9, parentId: 5, rootId: 0, text: "新节点", value: '123456',
                         nodes: [
-                            { nodeId: 10, parentId: 9, rootId: 9, text: '新子节点', value: 456 },
-                            { nodeId: 11, parentId: 9, rootId: 9, text: '新子节点', value: 456 }
+                            { nodeId: 10, parentId: 9, rootId: 0, text: '新子节点', value: 456 },
+                            { nodeId: 11, parentId: 9, rootId: 0, text: '新子节点', value: 456 }
                         ]
                     }
                 );
@@ -74,7 +74,6 @@
             $('#btnRemove').click(function () {
                 var selectedNode = tree.getSelectedNode();
                 tree.removeNode(selectedNode);
-                console.log(tree.nodes)
             });
         });
     </script>
