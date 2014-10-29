@@ -2842,13 +2842,15 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
         },
         callback: {
             beforeCheck: null,
-            beforeClick: null,
+            beforeSelect: null,
+            beforeAdd: null,
             beforeRename: null,
             beforeExpand: null,
             beforeRemove: null,
 
             onCheck: null,
-            onClick: null,
+            onSelect: null,
+            onAdd: null,
             onRename: null,
             onExpand: null,
             onRemove: null
@@ -2965,7 +2967,8 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
         },
         replaceChkClass: function (element, checked) {
             element.className = element.className.replace(new RegExp(checked ? 'false' : 'true'), checked ? 'true' : 'false');
-        }
+        },
+
     };
 
     /**
@@ -3004,7 +3007,7 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
         for (var i = 0, node; i < data.length; i++) {
             node = data[i];
 
-            if (node.parentId === 0 && i === 0) {
+            if (node.parentId === 0 && i === 0 && (i + 1) < data.length) {
                 node.isFirst = true;
             }
 
@@ -3083,20 +3086,22 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
      * @return {Void}
      */
     Tree.prototype.createTree = function () {
-        var html = [], $elm;
+        var html = [];
+        html.push('<ul class="k-tree">');
         this.createNode(this.options.data, html);
-        $elm = $(html.join('')).addClass('k-tree');
-        this.$element.append($elm);
+        html.push('</ul>');
+        this.$tree = $(html.join(''))
+        this.$element.append(this.$tree);
     };
 
     /**
      * 创建节点
      * @param  {Array} data - 数组节点
      * @param  {Array} html - 字符串数组
-     * @param  {Object} parent - 父节点
+     * @param  {Object} parentNode - 父节点
      * @return {Void}
      */
-    Tree.prototype.createNode = function (data, html, parent) {
+    Tree.prototype.createNode = function (data, html, parentNode) {
 
         var node, line = 'line';
 
@@ -3104,26 +3109,24 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
             return;
         }
 
-        if (parent) {
+        if (parentNode) {
 
-            if (parent.isLast) {
+            if (parentNode.isLast) {
                 line = '';
             }
 
-            if (!parent.open) {
-                html.push('<ul id="ul_' + parent.nodeId + '" style="display:none;" class="' + line + '" >');
+            if (!parentNode.open) {
+                html.push('<ul id="ul_' + parentNode.nodeId + '" style="display:none;" class="' + line + '" >');
             } else {
-                html.push('<ul id="ul_' + parent.nodeId + '" class="' + line + '">');
+                html.push('<ul id="ul_' + parentNode.nodeId + '" class="' + line + '">');
             }
 
-        } else {
-            html.push('<ul>');
         }
 
         for (var i = 0, node; i < data.length; i++) {
             node = this.getNode(data[i].nodeId);
             if (node) {
-                html.push('<li id="li_' + node.nodeId + '">');
+                html.push('<li id="li_' + node.nodeId + '" nId="' + node.nodeId + '">');
                 html.push(view.getLineHtml(node));
                 html.push(view.getChkHtml(node, this.options));
                 html.push('<a href="javascript:void(0);" id="a_' + node.nodeId + '" nId="' + node.nodeId + '">');
@@ -3136,17 +3139,59 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
             }
         }
 
-        html.push('</ul>');
+        if (parentNode) {
+            html.push('</ul>');
+        }
+
     };
 
     /**
      * 添加节点
-     * @param  {Object} node - 节点
-     * @param  {Object} parent - 父节点
+     * @param  {Object} parentNode - 父节点
+     * @param  {Object|Array} newNodes - 新节点
      * @return {Void}
      */
-    Tree.prototype.addNode = function (node, parent) {
-        this.initNodes([node]);
+    Tree.prototype.addNodes = function (parentNode, newNodes) {
+
+        var nodeHtml = [], parentNode;
+
+        if (!utils.isArray(newNodes)) {
+            newNodes = [newNodes];
+        }
+
+        parentNode = parentNode || this.getNode(newNodes[0].parentId);
+
+        this.initNodes(newNodes);
+        this.createNode(newNodes, nodeHtml);
+
+        if (parentNode) {
+            var $parent = this.$tree.find('#li_' + parentNode.nodeId);
+            var $children = $parent.find('#ul_' + parentNode.nodeId);
+
+            if ($children.length === 0) {
+                parentNode.nodes = newNodes;
+                var $switch = $parent.find('#' + _consts.className.SWITCH + "_" + parentNode.nodeId);
+                var $icon = $parent.find('#' + _consts.className.ICON + "_" + parentNode.nodeId);
+                //父节点是一个子节点，需改变父节点的line和icon
+                $children = $('<ul class="' + (parentNode.isLast ? "" : "line") + '" />').attr('id', 'ul_' + parentNode.nodeId);
+                $switch[0].className = $switch[0].className.replace(_consts.floder.DOCU, _consts.floder.OPEN);
+                $icon[0].className = $icon[0].className.replace(_consts.floder.DOCU, _consts.floder.OPEN);
+
+            } else {
+                var lastNode = parentNode.nodes[parentNode.nodes.length - 1];
+                var $last = $parent.find('#li_' + lastNode.nodeId);
+                var $switch = $last.find('#' + _consts.className.SWITCH + "_" + lastNode.nodeId);
+                //需要改变同级节点的line
+                $switch[0].className = $switch[0].className.replace(_consts.line.BOTTOM, _consts.line.CENTER);
+                Array.prototype.push.apply(parentNode.nodes, newNodes);
+            }
+            $children.append(nodeHtml.join('')).appendTo($parent);
+        } else {
+            var $last = this.$tree.children('li').last(),
+                $lastChildren = $last.find('#ul_' + $last.attr('nid'));
+            $lastChildren.addClass('line');
+            this.$tree.append(nodeHtml.join(''));
+        }
     };
 
     /**
@@ -3155,7 +3200,19 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
      * @return {Void}
      */
     Tree.prototype.removeNode = function (node) {
-        delete this.nodes[this.prefix + node.id];
+
+        if (!node) { return; }
+
+        if (!utils.isArray(node.nodes)) {
+            return;
+        } 
+
+        for (var i = 0; i < node.nodes.length; i++) {
+            this.removeNode(node.nodes[i]);
+            delete this.nodes[this.prefix + node.nodes[i].nodeId];
+        }
+
+        delete this.nodes[this.prefix + node.nodeId];
     };
 
     /**
