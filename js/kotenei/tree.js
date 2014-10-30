@@ -403,8 +403,6 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
             var $parent = this.$tree.find('#li_' + parentNode.nodeId);
             var $children = $parent.find('#ul_' + parentNode.nodeId);
 
-            console.log($children)
-
             if ($children.length === 0) {
                 parentNode.nodes = newNodes;
                 var $switch = $parent.find('#' + _consts.className.SWITCH + "_" + parentNode.nodeId);
@@ -414,8 +412,11 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
                 view.replaceSwitchClass($switch, _consts.floder.OPEN);
                 view.replaceSwitchClass($icon, _consts.floder.OPEN);
             } else {
+
                 var lastNode = parentNode.nodes[parentNode.nodes.length - 1];
                 var $last = $parent.find('#li_' + lastNode.nodeId);
+                $last.children('ul').addClass('line');
+
                 var $switch = $last.find('#' + _consts.className.SWITCH + "_" + lastNode.nodeId);
                 lastNode.isLast = false;
                 //需要改变同级节点的line
@@ -461,6 +462,7 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
             if (index >= 0) {
                 parentNode.nodes.splice(index, 1);
             }
+
             if (parentNode.nodes.length === 0) {
                 $current.parent().remove();
                 parentNode.isParent = false;

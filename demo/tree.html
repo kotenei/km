@@ -12,20 +12,21 @@
 </head>
 <body>
 
-    <div id="tree">
+    <div id="tree" style="width: 200px; float:left;">
     </div>
 
-    <button type="button" id="btnAdd">添加</button>
-
-    <button type="button" id="btnAdd2">添加2</button>
-
-    <button type="button" id="btnRemove">删除</button>
+    <div style="float:left;padding-top:20px;">
+        <button type="button" id="btnAdd">添加</button>
+        <button type="button" id="btnRemove">删除</button>
+    </div>
 
     <script type="text/javascript">
 
+
+
         var nodes = [
             {
-                nodeId: 1, parentId: 0, rootId: 0, text: '父节点', value: 123, isParent: true, open: true,  nodes:
+                nodeId: 1, parentId: 0, rootId: 0, text: '父节点', value: 123, isParent: true, open: true, nodes:
                 [
                     {
                         nodeId: 2, parentId: 1, rootId: 1, text: '父节点', value: 456, open: true, nodes: [
@@ -44,13 +45,13 @@
                     { nodeId: 8, parentId: 4, rootId: 4, text: '子节点', value: 456 },
                     { nodeId: 9, parentId: 4, rootId: 4, text: '子节点', value: 789 }
                 ]
-            },
-            {
-                nodeId:20,parentId:0,rootId:0,text:'父节点'
             }
         ];
 
         require(['kotenei'], function (kotenei) {
+
+            var num = 10;
+
             var Tree = kotenei.Tree;
             var tree = new Tree($("#tree"), {
                 data: nodes,
@@ -59,40 +60,33 @@
                 },
                 edit: {
                     enable: true
-                },
-                callback: {
-                    onCheck: function (node) {
-                        console.log(node.checked)
-                    }
                 }
             });
 
             $("#btnAdd").click(function () {
-                tree.addNodes(null,
-                    {
-                        nodeId: 10, parentId: 6, rootId: 1, text: "新节点", value: '123456',
-                        nodes: [
-                            { nodeId: 11, parentId: 10, rootId: 1, text: '新子节点', value: 456 },
-                            { nodeId: 12, parentId: 10, rootId: 1, text: '新子节点', value: 456 }
-                        ]
-                    }
-                );
+                var selectedNode = tree.getSelectedNode();
+                if (!selectedNode) {
+                    alert('请选择节点');
+                    return;
+                }
+                var newNode = {
+                    nodeId: ++num,
+                    parentId: selectedNode.nodeId,
+                    rootId: selectedNode.rootId,
+                    text: '节点' + num
+                };
+
+                tree.addNodes(selectedNode, newNode);
             });
 
-            $("#btnAdd2").click(function () {
-                tree.addNodes(null,
-                    {
-                        nodeId: 13, parentId: 5, rootId: 1, text: "新节点", value: '123456',
-                        nodes: [
-                            { nodeId: 14, parentId: 10, rootId: 1, text: '新子节点', value: 456 },
-                            { nodeId: 15, parentId: 10, rootId: 1, text: '新子节点', value: 456 }
-                        ]
-                    }
-                );
-            });
+
 
             $('#btnRemove').click(function () {
                 var selectedNode = tree.getSelectedNode();
+                if (!selectedNode) {
+                    alert('请选择节点');
+                    return;
+                }
                 tree.removeNode(selectedNode);
             });
         });
