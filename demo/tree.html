@@ -17,6 +17,8 @@
 
     <button type="button" id="btnAdd">添加</button>
 
+    <button type="button" id="btnAdd2">添加2</button>
+
     <button type="button" id="btnRemove">删除</button>
 
     <script type="text/javascript">
@@ -28,7 +30,8 @@
                     {
                         nodeId: 2, parentId: 1, rootId: 1, text: '父节点', value: 456, open: true, nodes: [
                             { nodeId: 5, parentId: 2, rootId: 1, text: '子节点', value: 456 },
-                            { nodeId: 6, parentId: 2, rootId: 1, text: '子节点', value: 789 }
+                            { nodeId: 6, parentId: 2, rootId: 1, text: '子节点', value: 789 },
+                            { nodeId: 7, parentId: 2, rootId: 1, text: '子节点', value: 789 }
                         ]
                     },
                     {
@@ -38,8 +41,8 @@
             },
             {
                 nodeId: 4, parentId: 0, rootId: 0, text: "父节点", value: 5486, open: true, nodes: [
-                    { nodeId: 7, parentId: 4, rootId: 4, text: '子节点', value: 456 },
-                    { nodeId: 8, parentId: 4, rootId: 4, text: '子节点', value: 789 }
+                    { nodeId: 8, parentId: 4, rootId: 4, text: '子节点', value: 456 },
+                    { nodeId: 9, parentId: 4, rootId: 4, text: '子节点', value: 789 }
                 ]
             }
         ];
@@ -62,10 +65,22 @@
             $("#btnAdd").click(function () {
                 tree.addNodes(null,
                     {
-                        nodeId: 9, parentId: 5, rootId: 0, text: "新节点", value: '123456',
+                        nodeId: 10, parentId: 1, rootId: 1, text: "新节点", value: '123456',
                         nodes: [
-                            { nodeId: 10, parentId: 9, rootId: 0, text: '新子节点', value: 456 },
-                            { nodeId: 11, parentId: 9, rootId: 0, text: '新子节点', value: 456 }
+                            { nodeId: 11, parentId: 10, rootId: 1, text: '新子节点', value: 456 },
+                            { nodeId: 12, parentId: 10, rootId: 1, text: '新子节点', value: 456 }
+                        ]
+                    }
+                );
+            });
+
+            $("#btnAdd2").click(function () {
+                tree.addNodes(null,
+                    {
+                        nodeId: 13, parentId: 5, rootId: 1, text: "新节点", value: '123456',
+                        nodes: [
+                            { nodeId: 14, parentId: 10, rootId: 1, text: '新子节点', value: 456 },
+                            { nodeId: 15, parentId: 10, rootId: 1, text: '新子节点', value: 456 }
                         ]
                     }
                 );

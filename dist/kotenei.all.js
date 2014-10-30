@@ -2964,19 +2964,30 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
 
             return str.join('');
         },
-        replaceSwitchClass: function (element) {
-            var className = element.className;
-            if (className.indexOf(_consts.floder.OPEN) !== -1) {
-                className = className.replace(new RegExp(_consts.floder.OPEN, 'ig'), _consts.floder.CLOSE);
-            } else {
-                className = className.replace(new RegExp(_consts.floder.CLOSE, 'ig'), _consts.floder.OPEN);
-            }
-            element.className = className;
-        },
-        replaceChkClass: function (element, checked) {
-            element.className = element.className.replace(new RegExp(checked ? 'false' : 'true'), checked ? 'true' : 'false');
-        },
+        replaceSwitchClass: function ($element, newName) {
+            var className = $element.attr('class');
 
+            if (!className) { return; }
+            var tmpList = className.split('_');
+
+            switch (newName) {
+                case _consts.line.ROOT:
+                case _consts.line.CENTER:
+                case _consts.line.BOTTOM:
+                    tmpList[0] = _consts.className.ICON + ' ' + _consts.className.SWITCH + ' ' + newName;
+                    break;
+                case _consts.floder.OPEN:
+                case _consts.floder.CLOSE:
+                case _consts.floder.DOCU:
+                    tmpList[1] = newName;
+                    break;
+            }
+
+            $element.attr('class', tmpList.join('_'));
+        },
+        replaceChkClass: function ($element, checked) {
+            $element.attr('class', $element.attr('class').replace(checked ? 'false' : 'true', checked ? 'true' : 'false'));
+        }
     };
 
     /**
@@ -3015,15 +3026,16 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
         for (var i = 0, node; i < data.length; i++) {
             node = data[i];
 
-            if (node.parentId === 0 && i === 0 && (i + 1) < data.length) {
+            if (i === 0 && (i + 1) < data.length) {
                 node.isFirst = true;
-            }
-
-            if ((i + 1) === data.length) {
+            } else if ((i + 1) === data.length) {
                 node.isLast = true;
             }
 
+
             node.hasChildren = this.hasChildren(node);
+            node.isParent = node.hasChildren;
+
             this.nodes[this.prefix + node.nodeId] = node;
             this.initNodes(node.nodes);
         }
@@ -3040,13 +3052,15 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
             //展开或收缩
             var $this = $(this),
                 id = $this.attr('nId'),
-                $children = self.$element.find('#ul_' + id),
-                $icon = self.$element.find('#icon_' + id);
+                $children = self.$tree.find('#ul_' + id),
+                $icon = self.$tree.find('#icon_' + id);
 
             if ($children.length === 0) { return; }
-            $children.slideToggle('fast');
-            view.replaceSwitchClass(this);
-            view.replaceSwitchClass($icon[0]);
+            $children.slideToggle('fast', function () {
+                view.replaceSwitchClass($this, $children[0].style.display === "none" ? _consts.floder.CLOSE : _consts.floder.OPEN);
+                view.replaceSwitchClass($icon, $children[0].style.display === "none" ? _consts.floder.CLOSE : _consts.floder.OPEN);
+            });
+
         }).on('click', '.chk', function () {
             //复选或单选
             var $this = $(this),
@@ -3059,7 +3073,7 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
             if (node.chkDisabled) { return; }
 
             node.checked = className.indexOf('true') === -1;
-            view.replaceChkClass(this, node.checked);
+            view.replaceChkClass($this, node.checked);
 
             if (self.options.check.chkType === "checkbox") {
                 self.check(node);
@@ -3067,7 +3081,7 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
                 for (var i = 0; i < checkedNodes.length; i++) {
                     if (checkedNodes[i] != node) {
                         checkedNodes[i].checked = false;
-                        view.replaceChkClass(document.getElementById('chk_' + checkedNodes[i].nodeId), false);
+                        view.replaceChkClass(self.$tree.find('#chk_' + checkedNodes[i].nodeId), false);
                     }
                 }
             }
@@ -3118,6 +3132,7 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
         }
 
         if (parentNode) {
+
 
             if (parentNode.isLast) {
                 line = '';
@@ -3182,15 +3197,15 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
                 var $icon = $parent.find('#' + _consts.className.ICON + "_" + parentNode.nodeId);
                 //父节点是一个子节点，需改变父节点的line和icon
                 $children = $('<ul class="' + (parentNode.isLast ? "" : "line") + '" />').attr('id', 'ul_' + parentNode.nodeId);
-                $switch[0].className = $switch[0].className.replace(_consts.floder.DOCU, _consts.floder.OPEN);
-                $icon[0].className = $icon[0].className.replace(_consts.floder.DOCU, _consts.floder.OPEN);
-
+                view.replaceSwitchClass($switch, _consts.floder.OPEN);
+                view.replaceSwitchClass($icon, _consts.floder.OPEN);
             } else {
                 var lastNode = parentNode.nodes[parentNode.nodes.length - 1];
                 var $last = $parent.find('#li_' + lastNode.nodeId);
                 var $switch = $last.find('#' + _consts.className.SWITCH + "_" + lastNode.nodeId);
+                lastNode.isLast = false;
                 //需要改变同级节点的line
-                $switch[0].className = $switch[0].className.replace(_consts.line.BOTTOM, _consts.line.CENTER);
+                view.replaceSwitchClass($switch, _consts.line.CENTER);
                 Array.prototype.push.apply(parentNode.nodes, newNodes);
             }
             $children.append(nodeHtml.join('')).appendTo($parent);
@@ -3213,10 +3228,12 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
 
         var parentNode = this.getNode(node.parentId);
         var childNodes = this.getChildNodes(node);
+        var $parent = this.$tree.find('#li_' + node.parentId);
         var $current = this.$tree.find('#li_' + node.nodeId);
         var $prev = $current.prev();
+        var $next = $current.next();
         var prevNode = this.getNode($prev.attr('nId'));
-
+        var nextNode = this.getNode($next.attr('nId'));
 
         //删除当前节点下所有子节点
         for (var i = 0; i < childNodes.length; i++) {
@@ -3230,17 +3247,23 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
             if (index >= 0) {
                 parentNode.nodes.splice(index, 1);
             }
-        } 
-
-        if ($prev.length > 0) {
-            if (node.isLast) {
-                prevNode.isLast = true;
-            } else {
-
+            if (parentNode.nodes.length === 0) {
+                parentNode.isParent = false;
+                parentNode.open = false;
+                view.replaceSwitchClass($parent.find('#' + _consts.className.SWITCH + '_' + parentNode.nodeId), _consts.floder.DOCU);
+                view.replaceSwitchClass($parent.find('#' + _consts.className.ICON + '_' + parentNode.nodeId), _consts.floder.DOCU);
             }
-
         }
 
+        if (prevNode) {
+            if (node.isLast) {
+                prevNode.isLast = true;
+                view.replaceSwitchClass($prev.find('#' + _consts.className.SWITCH + '_' + prevNode.nodeId), _consts.line.BOTTOM);
+                $prev.children('ul').removeClass('line');
+            }
+        }
+
+       
         $current.remove();
         delete this.nodes[this.prefix + node.nodeId];
     };
@@ -3313,14 +3336,14 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
      * @return {Void}
      */
     Tree.prototype.checkAction = function (nodes, checked) {
-        for (var i = 0, node, elm; i < nodes.length; i++) {
+        for (var i = 0, node, $elm; i < nodes.length; i++) {
             node = nodes[i];
             node.checked = checked;
-            elm = document.getElementById('chk_' + node.nodeId);
+            $elm = this.$tree.find('#chk_' + node.nodeId);
             if (node.chkDisabled) {
                 continue;
             }
-            view.replaceChkClass(elm, checked);
+            view.replaceChkClass($elm, checked);
         }
     };
 
