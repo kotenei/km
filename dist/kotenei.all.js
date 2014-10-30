@@ -2830,10 +2830,10 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
     var DEFAULTS = {
         data: [],
         edit: {
-            enable: false,
-            showAddBtn: false,
-            showEditBtn: false,
-            showRemvoeBtn: false
+            enable: false
+            //showAddBtn: false,
+            //showEditBtn: false,
+            //showRemvoeBtn: false
         },
         check: {
             enable: false,                          // 是否启用
@@ -2841,19 +2841,15 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
             chkBoxType: { Y: "ps", N: "ps" }        // Y：选中时对父与子级的关联关系，N：取消选中时对父与子级的关联关系，p:父级,s:子级
         },
         callback: {
-            beforeCheck: null,
-            beforeSelect: null,
-            beforeAdd: null,
-            beforeRename: null,
-            beforeExpand: null,
-            beforeRemove: null,
+            beforeCheck: $.noop,
+            beforeSelect: $.noop,
+            beforeAdd: $.noop,
+            beforeRemove: $.noop,
 
-            onCheck: null,
-            onSelect: null,
-            onAdd: null,
-            onRename: null,
-            onExpand: null,
-            onRemove: null
+            onCheck: $.noop,
+            onSelect: $.noop,
+            onAdd: $.noop,
+            onRemove: $.noop
         }
     };
 
@@ -2873,6 +2869,7 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
         },
         line: {
             ROOT: 'root',
+            ROOTS: 'roots',
             CENTER: 'center',
             BOTTOM: 'bottom'
         },
@@ -2899,6 +2896,9 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
         }
     };
 
+
+    var isCheckRadio = false;
+
     /**
      * view的操作
      * @type {Object}
@@ -2908,7 +2908,7 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
             var lineType = _consts.line.CENTER;
 
             if (node.isFirst && node.parentId === 0) {
-                lineType = _consts.line.ROOT;
+                lineType = _consts.line.ROOTS;
             } else if (node.isLast) {
                 lineType = _consts.line.BOTTOM;
             }
@@ -2942,28 +2942,42 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
             if (!options.check.enable || node.noCheck) {
                 return '';
             }
-            return '<span id="chk_' + node.nodeId + '" nId="' + node.nodeId + '" class="' + _consts.className.ICON + ' chk ' + options.check.chkType + '_' + String(node.checked === true) + '_' + (node.chkDisabled ? 'part' : 'full') + '"></span>';
+
+            var checked = String(node.checked === true);
+            var className;
+
+            if (options.check.chkType === 'radio') {
+                if (!isCheckRadio) {
+                    isCheckRadio = true;
+                } else {
+                    checked = false;
+                }
+            }
+
+            className = options.check.chkType + '_' + checked + '_' + (node.chkDisabled ? 'part' : 'full');
+
+            return '<span id="chk_' + node.nodeId + '" nId="' + node.nodeId + '" class="' + _consts.className.ICON + ' chk ' + className + '"></span>';
 
         },
-        getOperateHtml: function (node, options) {
-            var str = [];
+        //getOperateHtml: function (node, options) {
+        //    var str = [];
 
-            if (!options.edit.enable) {
-                return '';
-            }
+        //    if (!options.edit.enable) {
+        //        return '';
+        //    }
 
-            if (options.edit.showAddBtn) {
-                str.push('<span id="add_' + node.nodeId + '" nId="' + node.nodeId + '" class="' + _consts.className.ICON + ' add"></span>');
-            }
-            if (options.edit.showEditBtn) {
-                str.push('<span id="edit_' + node.nodeId + '" nId="' + node.nodeId + '" class="' + _consts.className.ICON + ' edit"></span>');
-            }
-            if (options.edit.showRemoveBtn) {
-                str.push('<span id="remove_' + node.nodeId + '" nId="' + node.nodeId + '"  class="' + _consts.className.ICON + ' remove"></span>');
-            }
+        //    if (options.edit.showAddBtn) {
+        //        str.push('<span id="add_' + node.nodeId + '" nId="' + node.nodeId + '" class="' + _consts.className.ICON + ' add"></span>');
+        //    }
+        //    if (options.edit.showEditBtn) {
+        //        str.push('<span id="edit_' + node.nodeId + '" nId="' + node.nodeId + '" class="' + _consts.className.ICON + ' edit"></span>');
+        //    }
+        //    if (options.edit.showRemoveBtn) {
+        //        str.push('<span id="remove_' + node.nodeId + '" nId="' + node.nodeId + '"  class="' + _consts.className.ICON + ' remove"></span>');
+        //    }
 
-            return str.join('');
-        },
+        //    return str.join('');
+        //},
         replaceSwitchClass: function ($element, newName) {
             var className = $element.attr('class');
 
@@ -2972,6 +2986,7 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
 
             switch (newName) {
                 case _consts.line.ROOT:
+                case _consts.line.ROOTS:
                 case _consts.line.CENTER:
                 case _consts.line.BOTTOM:
                     tmpList[0] = _consts.className.ICON + ' ' + _consts.className.SWITCH + ' ' + newName;
@@ -3068,11 +3083,15 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
                 node = self.getNode(id),
                 className = this.className,
                 checkedNodes = self.getCheckedNodes(),
-                checked;
+                checked = className.indexOf('true') === -1;
+
+            if (self.options.callback.beforeCheck() === false) {
+                return;
+            }
 
             if (node.chkDisabled) { return; }
 
-            node.checked = className.indexOf('true') === -1;
+            node.checked = checked;
             view.replaceChkClass($this, node.checked);
 
             if (self.options.check.chkType === "checkbox") {
@@ -3085,12 +3104,23 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
                     }
                 }
             }
+
+            self.options.callback.onCheck(node);
+
         }).on('click', 'a', function () {
             //选择
             var $this = $(this);
+
+            if (self.options.callback.beforeSelect() === false) {
+                return;
+            }
+
             if ($this.hasClass(_consts.node.SELECTED)) { return; }
             self.$element.find('a').removeClass(_consts.node.SELECTED);
             $this.addClass(_consts.node.SELECTED);
+
+            self.options.callback.onSelect(self.getSelectedNode());
+
         }).on('click', '.add', function () {
             //添加
             var $this = $(this);
@@ -3155,7 +3185,7 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
                 html.push('<a href="javascript:void(0);" id="a_' + node.nodeId + '" nId="' + node.nodeId + '">');
                 html.push(view.getIconHtml(node));
                 html.push('<span>' + node.text + '</span>');
-                html.push(view.getOperateHtml(node, this.options));
+                //html.push(view.getOperateHtml(node, this.options));
                 html.push('</a>');
                 this.createNode(node.nodes, html, node);
                 html.push('</li>');
@@ -3190,6 +3220,8 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
         if (parentNode) {
             var $parent = this.$tree.find('#li_' + parentNode.nodeId);
             var $children = $parent.find('#ul_' + parentNode.nodeId);
+
+            console.log($children)
 
             if ($children.length === 0) {
                 parentNode.nodes = newNodes;
@@ -3248,22 +3280,36 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
                 parentNode.nodes.splice(index, 1);
             }
             if (parentNode.nodes.length === 0) {
+                $current.parent().remove();
                 parentNode.isParent = false;
                 parentNode.open = false;
                 view.replaceSwitchClass($parent.find('#' + _consts.className.SWITCH + '_' + parentNode.nodeId), _consts.floder.DOCU);
                 view.replaceSwitchClass($parent.find('#' + _consts.className.ICON + '_' + parentNode.nodeId), _consts.floder.DOCU);
             }
         }
-
+        
         if (prevNode) {
             if (node.isLast) {
                 prevNode.isLast = true;
-                view.replaceSwitchClass($prev.find('#' + _consts.className.SWITCH + '_' + prevNode.nodeId), _consts.line.BOTTOM);
+
                 $prev.children('ul').removeClass('line');
+
+                if (prevNode.isFirst && prevNode.parentId === 0) {
+                    view.replaceSwitchClass($prev.find('#' + _consts.className.SWITCH + '_' + prevNode.nodeId), _consts.line.ROOT);
+                } else {
+                    view.replaceSwitchClass($prev.find('#' + _consts.className.SWITCH + '_' + prevNode.nodeId), _consts.line.BOTTOM);
+                }
+            }
+        } 
+     
+
+        if (node.isFirst && node.parentId === 0) {
+            if (nextNode) {
+                nextNode.isFirst = true;
+                view.replaceSwitchClass($next.find('#' + _consts.className.SWITCH + '_' + nextNode.nodeId), _consts.line.ROOT);
             }
         }
 
-       
         $current.remove();
         delete this.nodes[this.prefix + node.nodeId];
     };

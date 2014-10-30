@@ -917,12 +917,21 @@
   background-position: -56px -36px;
 }
 .k-tree li span.icon.root_open {
-  background-position: -92px 0;
+  background-position: -92px -54px;
 }
 .k-tree li span.icon.root_close {
-  background-position: -74px 0;
+  background-position: -74px -54px;
 }
 .k-tree li span.icon.root_docu {
+  background: none;
+}
+.k-tree li span.icon.roots_open {
+  background-position: -92px 0;
+}
+.k-tree li span.icon.roots_close {
+  background-position: -74px 0;
+}
+.k-tree li span.icon.roots_docu {
   background-position: -56px 0;
 }
 .k-tree li span.icon.center_open {

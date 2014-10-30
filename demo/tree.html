@@ -25,7 +25,7 @@
 
         var nodes = [
             {
-                nodeId: 1, parentId: 0, rootId: 0, text: '父节点', value: 123, isParent: true, open: true, chkDisabled: false, nodes:
+                nodeId: 1, parentId: 0, rootId: 0, text: '父节点', value: 123, isParent: true, open: true,  nodes:
                 [
                     {
                         nodeId: 2, parentId: 1, rootId: 1, text: '父节点', value: 456, open: true, nodes: [
@@ -44,6 +44,9 @@
                     { nodeId: 8, parentId: 4, rootId: 4, text: '子节点', value: 456 },
                     { nodeId: 9, parentId: 4, rootId: 4, text: '子节点', value: 789 }
                 ]
+            },
+            {
+                nodeId:20,parentId:0,rootId:0,text:'父节点'
             }
         ];
 
@@ -55,17 +58,19 @@
                     enable: true
                 },
                 edit: {
-                    enable: true,
-                    showAddBtn: true,
-                    showEditBtn: true,
-                    showRemoveBtn: true
+                    enable: true
+                },
+                callback: {
+                    onCheck: function (node) {
+                        console.log(node.checked)
+                    }
                 }
             });
 
             $("#btnAdd").click(function () {
                 tree.addNodes(null,
                     {
-                        nodeId: 10, parentId: 1, rootId: 1, text: "新节点", value: '123456',
+                        nodeId: 10, parentId: 6, rootId: 1, text: "新节点", value: '123456',
                         nodes: [
                             { nodeId: 11, parentId: 10, rootId: 1, text: '新子节点', value: 456 },
                             { nodeId: 12, parentId: 10, rootId: 1, text: '新子节点', value: 456 }
