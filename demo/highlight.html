@@ -10,7 +10,7 @@
 </head>
 <body>
     <div id="content">
-        <h4>Overflowing text to show scroll behavior</h4>
+        <h4 class="">Overflowing text to show scroll behavior</h4>《abc》
         <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
         <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>
         <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
@@ -31,8 +31,8 @@
 
             $('#btnKeyword').click(function () {
                 var val = $.trim($("#txtKeyword").val());
-                if (val.length === 0) { return; }
-                highlight.highlight($("#content"),[val]);
+
+                highlight.highlightHtml($("#content"), val.split(' '));
             });
         });
     </script>
