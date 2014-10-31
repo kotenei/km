@@ -752,6 +752,20 @@ define('kotenei/clipZoom', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop
 });
 
 /**
+ * 日期模块
+ * @date :2014-10-31
+ * @author kotenei (kotenei@qq.com)
+ */
+define('kotenei/datepicker', ['jquery'], function ($) {
+    
+    var DatePicker = function ($element,options) { }
+
+
+    return DatePicker;
+
+});
+
+/**
  * 拖放模块
  * @date :2014-09-10
  * @author kotenei (kotenei@qq.com)
@@ -4832,11 +4846,12 @@ define('kotenei/wordLimit', ['jquery'], function ($) {
     return WordLimit;
 });
 ;
-define("kotenei", ["kotenei/autoComplete", "kotenei/cache", "kotenei/clipZoom", "kotenei/dragdrop", "kotenei/dropdown", "kotenei/dropdownDatepicker", "kotenei/highlight", "kotenei/infiniteScroll", "kotenei/lazyload", "kotenei/loading", "kotenei/pager", "kotenei/placeholder", "kotenei/popTips", "kotenei/router", "kotenei/slider", "kotenei/switch", "kotenei/tooltips", "kotenei/tree", "kotenei/util", "kotenei/validate", "kotenei/validateTooltips", "kotenei/waterfall", "kotenei/window", "kotenei/wordLimit"], function(_autoComplete, _cache, _clipZoom, _dragdrop, _dropdown, _dropdownDatepicker, _highlight, _infiniteScroll, _lazyload, _loading, _pager, _placeholder, _popTips, _router, _slider, _switch, _tooltips, _tree, _util, _validate, _validateTooltips, _waterfall, _window, _wordLimit){
+define("kotenei", ["kotenei/autoComplete", "kotenei/cache", "kotenei/clipZoom", "kotenei/datepicker", "kotenei/dragdrop", "kotenei/dropdown", "kotenei/dropdownDatepicker", "kotenei/highlight", "kotenei/infiniteScroll", "kotenei/lazyload", "kotenei/loading", "kotenei/pager", "kotenei/placeholder", "kotenei/popTips", "kotenei/router", "kotenei/slider", "kotenei/switch", "kotenei/tooltips", "kotenei/tree", "kotenei/util", "kotenei/validate", "kotenei/validateTooltips", "kotenei/waterfall", "kotenei/window", "kotenei/wordLimit"], function(_autoComplete, _cache, _clipZoom, _datepicker, _dragdrop, _dropdown, _dropdownDatepicker, _highlight, _infiniteScroll, _lazyload, _loading, _pager, _placeholder, _popTips, _router, _slider, _switch, _tooltips, _tree, _util, _validate, _validateTooltips, _waterfall, _window, _wordLimit){
     return {
         "AutoComplete" : _autoComplete,
         "cache" : _cache,
         "ClipZoom" : _clipZoom,
+        "Datepicker" : _datepicker,
         "Dragdrop" : _dragdrop,
         "Dropdown" : _dropdown,
         "DropdownDatepicker" : _dropdownDatepicker,
