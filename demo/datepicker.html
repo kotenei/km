@@ -9,14 +9,16 @@
     <script type="text/javascript" src="./main.js"></script>
 </head>
 <body>
-    <input type="text" readonly="readonly" placeholder="点击日期选择" />
+    <input type="text" readonly="readonly" placeholder="yyy" id="picker" />
 
     <script type="text/javascript">
         require(['kotenei'], function (kotenei) {
 
             var DatePicker = kotenei.Datepicker;
 
-            //console.log(DatePicker)
+            var datePicker = new DatePicker($("#picker"), {
+
+            });
 
         });
     </script>
