@@ -1044,6 +1044,19 @@
   vertical-align: middle;
   line-height: 25px;
 }
+.k-datepicker table td.old,
+.k-datepicker table td.new {
+  color: #999;
+}
+.k-datepicker table td span {
+  cursor: pointer;
+  display: block;
+  border-radius: 4px;
+}
+.k-datepicker table td span:hover {
+  background: #428bca;
+  color: white;
+}
 .k-datepicker table th span {
   cursor: pointer;
   display: inline-block;

@@ -27,6 +27,27 @@
             line-height: 25px;
         }
 
+
+
+        td.old,
+        td.new
+        {
+            color: #999;
+        }
+
+        td span
+        {
+            cursor: pointer;
+            display:block;
+            border-radius:4px;
+
+            &:hover
+            {
+                background:#428bca;
+                color:white;
+            }
+        }
+
         th
         {
             span
@@ -36,7 +57,6 @@
                 border: 1px solid white;
                 padding: 0 5px;
                 position: relative;
-                
                 background: white;
             }
 
@@ -60,9 +80,9 @@
         overflow: hidden;
         width: 80px;
         border: 1px solid #ccc;
-        display:none;
-        position:absolute;
-        background:white;
+        display: none;
+        position: absolute;
+        background: white;
 
         .year-box-container
         {
@@ -81,8 +101,8 @@
                 width: 80px;
                 padding: 5px;
                 font-size: 12px;
-                height:135px;
-                display:none;
+                height: 135px;
+                display: none;
 
                 >li
                 {
@@ -120,7 +140,7 @@
 
             i
             {
-                cursor:pointer;
+                cursor: pointer;
             }
         }
     }
