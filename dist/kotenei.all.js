@@ -758,7 +758,6 @@ define('kotenei/clipZoom', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop
  */
 define('kotenei/datepicker', ['jquery'], function ($) {
 
-   
     var dates = {
         months: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
         days: ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"],
@@ -788,15 +787,25 @@ define('kotenei/datepicker', ['jquery'], function ($) {
 
     DatePicker.prototype.eventBind = function () { };
 
-    DatePicker.prototype.createPanel = function () { };
+    DatePicker.prototype.createPanel = function () {
 
-    DatePicker.prototype.createYear = function () { };
+    };
 
-    DatePicker.prototype.createMonth = function () { };
+    DatePicker.prototype.createYear = function () {
 
-    DatePicker.prototype.createDay = function () { };
+    };
 
-    DatePicker.prototype.createTime = function () { };
+    DatePicker.prototype.createMonth = function () {
+
+    };
+
+    DatePicker.prototype.createDay = function () {
+
+    };
+
+    DatePicker.prototype.createTime = function () {
+
+    };
 
     return DatePicker;
 
@@ -3967,7 +3976,7 @@ define('kotenei/validate', ['jquery'], function ($) {
             return this.optional($element) || /^\d{4}[\/-]\d{1,2}[\/-]\d{1,2}|\d{4}[\/-]\d{1,2}[\/-]\d{1,2}\s\d{1,2}[:]\d{1,2}[:]\d{1,2}\w$/.test(value);
         },
         mobile: function (value, $element) {
-            return this.optional($element) || /^((13[0-9])|(15[^4,\\D])|(18[0,5-9]))\d{8}$/.test(value);
+            return this.optional($element) || /^((13[0-9])|(15[^4,\\D])|(18[0|1|2|5-9])|(17[0|7]))\d{8}$/.test(value);
         },
         phone: function (value, $element) {
             return this.optional($element) || /^((0\d{2,3}\-)[1-9]\d{7}(\-\d{1,4})?)$/.test(value);
