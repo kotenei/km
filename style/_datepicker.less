@@ -1,1 +1,160 @@
+.k-datepicker
+{
+    position: absolute;
+    display: none;
+    border: 1px solid #cccccc;
+    min-width: 200px;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #333;
+    padding: 5px;
+    background: white;
 
+    .container
+    {
+        position: relative;
+    }
+
+    table
+    {
+        width: 100%;
+        border-collapse: collapse;
+
+        th, td
+        {
+            text-align: center;
+            vertical-align: middle;
+            line-height: 25px;
+        }
+
+        th
+        {
+            span
+            {
+                cursor: pointer;
+                display: inline-block;
+                border: 1px solid white;
+                padding: 0 5px;
+                position: relative;
+                
+                background: white;
+            }
+
+            span.selected
+            {
+                border: 1px solid #ccc;
+                border-bottom: none;
+                z-index: 5;
+            }
+        }
+
+        .prev,
+        .next
+        {
+            cursor: pointer;
+        }
+    }
+
+    .year-box
+    {
+        overflow: hidden;
+        width: 80px;
+        border: 1px solid #ccc;
+        display:none;
+        position:absolute;
+        background:white;
+
+        .year-box-container
+        {
+            overflow: hidden;
+            width: 9999px;
+
+            ul
+            {
+                margin: 0;
+                padding: 0;
+                list-style: none;
+                float: left;
+                display: inline;
+                overflow: hidden;
+                zoom: 1;
+                width: 80px;
+                padding: 5px;
+                font-size: 12px;
+                height:135px;
+                display:none;
+
+                >li
+                {
+                    float: left;
+                    display: inline;
+                    width: 34px;
+                    line-height: 25px;
+                    cursor: pointer;
+                    text-align: center;
+
+                    &:hover
+                    {
+                        background: #428bca;
+                        color: white;
+                    }
+                }
+
+                >li.cur
+                {
+                    color: #ccc;
+                    cursor: default;
+
+                    &:hover
+                    {
+                        background: none;
+                    }
+                }
+            }
+        }
+
+        .year-box-controls
+        {
+            overflow: hidden;
+            padding: 0 10px 5px;
+
+            i
+            {
+                cursor:pointer;
+            }
+        }
+    }
+
+    .month-box
+    {
+        position: absolute;
+        width: 80px;
+        border: 1px solid #ccc;
+        overflow: hidden;
+        padding: 5px;
+        margin: 0;
+        list-style: none;
+        font-size: 12px;
+        background: white;
+        display: none;
+        z-index: 4;
+
+        li
+        {
+            width: 34px;
+            line-height: 25px;
+            float: left;
+            display: inline;
+            overflow: hidden;
+            white-space: nowrap;
+            text-align: center;
+            cursor: pointer;
+
+            &:hover
+            {
+                background: #428bca;
+                color: white;
+            }
+        }
+    }
+}

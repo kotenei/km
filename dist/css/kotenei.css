@@ -1020,3 +1020,123 @@
   font-weight: bold;
   background: #FFFF00;
 }
+.k-datepicker {
+  position: absolute;
+  display: none;
+  border: 1px solid #cccccc;
+  min-width: 200px;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #333;
+  padding: 5px;
+  background: white;
+}
+.k-datepicker .container {
+  position: relative;
+}
+.k-datepicker table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.k-datepicker table th,
+.k-datepicker table td {
+  text-align: center;
+  vertical-align: middle;
+  line-height: 25px;
+}
+.k-datepicker table th span {
+  cursor: pointer;
+  display: inline-block;
+  border: 1px solid white;
+  padding: 0 5px;
+  position: relative;
+  background: white;
+}
+.k-datepicker table th span.selected {
+  border: 1px solid #ccc;
+  border-bottom: none;
+  z-index: 5;
+}
+.k-datepicker table .prev,
+.k-datepicker table .next {
+  cursor: pointer;
+}
+.k-datepicker .year-box {
+  overflow: hidden;
+  width: 80px;
+  border: 1px solid #ccc;
+  display: none;
+  position: absolute;
+  background: white;
+}
+.k-datepicker .year-box .year-box-container {
+  overflow: hidden;
+  width: 9999px;
+}
+.k-datepicker .year-box .year-box-container ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  float: left;
+  display: inline;
+  overflow: hidden;
+  zoom: 1;
+  width: 80px;
+  padding: 5px;
+  font-size: 12px;
+  height: 135px;
+  display: none;
+}
+.k-datepicker .year-box .year-box-container ul > li {
+  float: left;
+  display: inline;
+  width: 34px;
+  line-height: 25px;
+  cursor: pointer;
+  text-align: center;
+}
+.k-datepicker .year-box .year-box-container ul > li:hover {
+  background: #428bca;
+  color: white;
+}
+.k-datepicker .year-box .year-box-container ul > li.cur {
+  color: #ccc;
+  cursor: default;
+}
+.k-datepicker .year-box .year-box-container ul > li.cur:hover {
+  background: none;
+}
+.k-datepicker .year-box .year-box-controls {
+  overflow: hidden;
+  padding: 0 10px 5px;
+}
+.k-datepicker .year-box .year-box-controls i {
+  cursor: pointer;
+}
+.k-datepicker .month-box {
+  position: absolute;
+  width: 80px;
+  border: 1px solid #ccc;
+  overflow: hidden;
+  padding: 5px;
+  margin: 0;
+  list-style: none;
+  font-size: 12px;
+  background: white;
+  display: none;
+  z-index: 4;
+}
+.k-datepicker .month-box li {
+  width: 34px;
+  line-height: 25px;
+  float: left;
+  display: inline;
+  overflow: hidden;
+  white-space: nowrap;
+  text-align: center;
+  cursor: pointer;
+}
+.k-datepicker .month-box li:hover {
+  background: #428bca;
+  color: white;
+}
