@@ -1053,7 +1053,8 @@
   display: block;
   border-radius: 4px;
 }
-.k-datepicker table td span:hover {
+.k-datepicker table td span:hover,
+.k-datepicker table td span.active {
   background: #428bca;
   color: white;
 }
