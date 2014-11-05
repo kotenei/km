@@ -4458,7 +4458,8 @@ define('kotenei/validate', ['jquery'], function ($) {
         messages: {},
         focusClear: true,
         keyupClear: true,
-        errorPlacement: null
+        errorPlacement: null,
+        showSingleError: false
     }
 
     /**
@@ -4559,9 +4560,19 @@ define('kotenei/validate', ['jquery'], function ($) {
     Validate.prototype.validateFrom = function () {
         var self = this, pass = true;
 
-        for (var item in this.validFields.data) {
-            if (!self.validate({ target: this.validFields.data[item][0] })) { pass = false; }
+        if (this.options.showSingleError) {
+            this.hideAllError();
         }
+
+        for (var item in this.validFields.data) {
+            if (!self.validate({ target: this.validFields.data[item][0] })) {
+                pass = false;
+                if (this.options.showSingleError) {
+                    break;
+                }
+            }
+        }
+
         return pass;
     };
 
@@ -4631,6 +4642,16 @@ define('kotenei/validate', ['jquery'], function ($) {
         }
         if (!$error) { return; }
         $error.hide();
+    };
+
+    /**
+     * 隐藏所有错误
+     * @return {Void}        
+     */
+    Validate.prototype.hideAllError = function () {
+        for (var item in this.validFields.data) {
+            this.hideError($(this.validFields.data[item][0]));
+        }
     };
 
     /**
@@ -4738,7 +4759,8 @@ define('kotenei/validate', ['jquery'], function ($) {
             return this.optional($element) || /^\d{4}[\/-]\d{1,2}[\/-]\d{1,2}|\d{4}[\/-]\d{1,2}[\/-]\d{1,2}\s\d{1,2}[:]\d{1,2}[:]\d{1,2}\w$/.test(value);
         },
         mobile: function (value, $element) {
-            return this.optional($element) || /^((13[0-9])|(15[^4,\\D])|(18[0|1|2|5-9])|(17[0|7]))\d{8}$/.test(value);
+            //return this.optional($element) || /^((13[0-9])|(15[^4,\\D])|(18[0|1|2|5-9])|(17[0|7]))\d{8}$/.test(value);
+            return this.optional($element) || /^1\d{10}$/.test(value);
         },
         phone: function (value, $element) {
             return this.optional($element) || /^((0\d{2,3}\-)[1-9]\d{7}(\-\d{1,4})?)$/.test(value);
