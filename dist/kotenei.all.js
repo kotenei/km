@@ -766,16 +766,19 @@ define('kotenei/datepicker', ['jquery'], function ($) {
     };
 
     var DatePicker = function ($element, options) {
+        var date = new Date();
         this.$element = $element;
         this.options = $.extend({}, {
             appendTo: $(document.body),
+            showTime: false,
             year: { min: 1900, max: 2050 },
             format: 'yyyy-mm-dd'
         }, options);
-        this.year = new Date().getFullYear();
-        this.month = new Date().getMonth() + 1;
-        this.day = new Date().getDay();
+        this.year = date.getFullYear();
+        this.month = date.getMonth() + 1;
+        this.day = date.getDate();
         this.index = 0;
+        this.isSetTime = false;
         this.init();
         this.eventBind();
     };
@@ -797,13 +800,14 @@ define('kotenei/datepicker', ['jquery'], function ($) {
             var target = e.target,
                 $target = $(target);
 
-            if (target.id === 'year' || target.id === 'month' || $target.parents('.year-box:eq(0)').length > 0 || $target.parents('.month-box:eq(0)').length > 0) {
+            if (target.id === 'year' || target.id === 'month'
+                || $target.parents('.year-box:eq(0)').length > 0 || $target.parents('.month-box:eq(0)').length > 0) {
                 return false;
             }
 
             self.yearBoxToggle(false);
             self.monthBoxToggle(false);
-
+            self.timePanelHide();
             return false;
         }).on('click', '[role="prev"]', function () {
             //向前
@@ -876,8 +880,11 @@ define('kotenei/datepicker', ['jquery'], function ($) {
             self.toCurYearPanel();
         }).on('click', '[role="clear"]', function () {
             //清空
+            self.isSetTime = false;
             self.$element.val('');
-            self.$datepicker.find('tbody td span').removeClass('active');
+            self.setTodayInfo();
+            self.createDays();
+            self.setViewInfo();
             self.hide();
         }).on('click', '[role="today"]', function () {
             //今天
@@ -897,15 +904,62 @@ define('kotenei/datepicker', ['jquery'], function ($) {
             self.day = parseInt(day);
             self.createDays();
 
+            if (!self.options.showTime) {
+                self.set();
+                self.hide();
+            }
+            
+        }).on('click', 'span.hours', function () {
+            //点击小时
+            self.setTimePanelPosition($(this), self.$hoursBox);
+            return false;
+        }).on('click', 'span.minutes', function () {
+            //点击分种
+            self.setTimePanelPosition($(this), self.$minutesBox);
+            return false;
+        }).on('click', 'span.seconds', function () {
+            //点击秒
+            self.setTimePanelPosition($(this), self.$secondsBox);
+            return false;
+        }).on('click', '.time-box li', function () {
+            //选择时、分、秒
+            var $this = $(this),
+                value = $this.attr('data-value'),
+                text=$this.text(),
+                target = $this.attr('data-target');
+            switch (target) {
+                case "hours":
+                    self.hours = value;
+                    self.$hours.text(text);
+                    break;
+                case "minutes":
+                    self.minutes = value;
+                    self.$minutes.text(text);
+                    break;
+                case "seconds":
+                    self.seconds = value;
+                    self.$seconds.text(text);
+                    break;
+            }
+        }).on('click', '[role="confirm"]', function () {
+            //点击确定
+            self.isSetTime = true;
+            self.hours = Number(self.$hours.text());
+            self.minutes = Number(self.$minutes.text());
+            self.seconds = Number(self.$seconds.text());
             self.set();
             self.hide();
-
         });
 
         $(document).on('click.datepicker', function () {
             self.hide();
         });
     };
+
+    DatePicker.prototype.setTimePanelPosition = function ($curObj, $panel) {
+        var css = { left: $curObj.position().left - 1, top: $curObj.position().top - $panel.outerHeight() };
+        $panel.show().css(css).siblings('ul').hide();
+    }
 
     DatePicker.prototype.createPanel = function () {
         var html = [];
@@ -942,7 +996,11 @@ define('kotenei/datepicker', ['jquery'], function ($) {
 
         html.push('<div style="text-align:right">');
         html.push('<input type="button" value="清空" role="clear" />&nbsp;');
-        html.push('<input type="button" value="今天" role="today" />');
+        html.push('<input type="button" value="今天" role="today" />&nbsp;');
+        if (this.options.showTime) {
+            html.push('<input type="button" value="确定" role="confirm" />&nbsp;');
+        }
+
         html.push('</div>');
         html.push('</div>');
         html.push('</div>');
@@ -953,10 +1011,23 @@ define('kotenei/datepicker', ['jquery'], function ($) {
         this.$yearItems = this.$yearBox.find('ul');
         this.$month = this.$datepicker.find('#month');
         this.$monthBox = this.$datepicker.find('.month-box');
+        this.$timeBox = this.$datepicker.find('.time-box');
+        this.$hours = this.$timeBox.find('span.hours');
+        this.$minutes = this.$timeBox.find('span.minutes');
+        this.$seconds = this.$timeBox.find('span.seconds');
+        this.$hoursBox = this.$timeBox.find('.hours-box');
+        this.$minutesBox = this.$timeBox.find('.minutes-box');
+        this.$secondsBox = this.$timeBox.find('.seconds-box');
         this.$prev = this.$datepicker.find('th.prev i');
         this.$next = this.$datepicker.find('th.next i');
         this.index = this.$yearItems.find("li.cur").parent().show().index();
         this.createDays();
+
+        if (this.options.showTime) {
+            this.$timeBox.show();
+        } else {
+            this.$timeBox.hide();
+        }
     };
 
     DatePicker.prototype.getYearBox = function () {
@@ -1024,6 +1095,61 @@ define('kotenei/datepicker', ['jquery'], function ($) {
         return html.join('');
     };
 
+    DatePicker.prototype.getTimeBox = function () {
+
+        function fix(str) {
+
+            str = String(str);
+
+            if (str.length === 1) {
+                return '0' + str;
+            }
+
+            return str;
+        }
+
+        html = [], date = new Date();
+
+        html.push('<div class="time-box">');
+
+        //小时
+        html.push('<ul class="hours-box">');
+        for (var i = 0; i < 24; i++) {
+            html.push('<li data-target="hours" data-value=' + i + '>' + fix(i) + '</li>');
+        }
+        html.push('</ul>');
+
+        //分
+        html.push('<ul class="minutes-box">');
+        for (var i = 0; i <= 55; i += 5) {
+            html.push('<li data-target="minutes" data-value=' + i + '>' + fix(i) + '</li>');
+        }
+        html.push('</ul>');
+
+        //秒
+        html.push('<ul class="seconds-box">');
+        for (var i = 0; i <= 55; i += 15) {
+            html.push('<li data-target="seconds" data-value=' + i + '>' + fix(i) + '</li>');
+        }
+        html.push('</ul>');
+
+
+        html.push('<div class="time-box-container">');
+        html.push('<span>时间：</span>');
+        html.push('<div >');
+        html.push('<span class="hours">' + date.getHours() + '</span>');
+        html.push('<span>:</span>');
+        html.push('<span class="minutes">' + date.getMinutes() + '</span>');
+        html.push('<span>:</span>');
+        html.push('<span class="seconds">' + date.getSeconds() + '</span>');
+        html.push('</div>');
+        html.push('</div>');
+
+        html.push('</div>');
+
+        return html.join('');
+    };
+
     DatePicker.prototype.createDays = function () {
         var day = this.day;
 
@@ -1032,7 +1158,6 @@ define('kotenei/datepicker', ['jquery'], function ($) {
 
         //前一个月最后一天
         var prevMonthLastDay = this.getMonthLastDay(this.year, this.month - 1);
-
 
         //当月第一天星期几
         var fristDay = new Date(this.year, this.month - 1, 1).getDay();
@@ -1072,7 +1197,9 @@ define('kotenei/datepicker', ['jquery'], function ($) {
         for (var i = 0; i < 6; i++) {
             arrDaysHtml.push("<tr>");
             for (var j = flag, curValue, todayClass, tdClass; j < 42; j++) {
+
                 curValue = arr[j];
+
 
                 if (curValue.year == this.year && curValue.month == this.month && this.day == curValue.day) {
                     todayClass = "today";
@@ -1095,21 +1222,6 @@ define('kotenei/datepicker', ['jquery'], function ($) {
         this.setViewInfo();
     };
 
-    DatePicker.prototype.getTimeBox = function () {
-        html = [];
-        return '';
-    };
-
-    DatePicker.prototype.setViewInfo = function () {
-        this.$year.html(this.year);
-        this.$month.html(dates.months[this.month - 1]);
-        this.$yearBox.find("li").removeClass("cur");
-        this.$yearBox.find("#li_" + this.year).addClass("cur").parent().show().siblings().hide();
-        this.$datepicker.find('tbody td span').removeClass('active');
-        this.$datepicker.find('#' + this.year + '_' + this.month + '_' + this.day).children().addClass('active');
-    };
-
-    //获取月份最后一日
     DatePicker.prototype.getMonthLastDay = function (year, month) {
         return (new Date(new Date(year, month, 1).getTime() - 1000 * 60 * 60 * 24)).getDate();
     };
@@ -1138,6 +1250,12 @@ define('kotenei/datepicker', ['jquery'], function ($) {
         }
     };
 
+    DatePicker.prototype.timePanelHide = function () {
+        this.$hoursBox.hide();
+        this.$minutesBox.hide();
+        this.$secondsBox.hide();
+    };
+
     DatePicker.prototype.toCurYearPanel = function () {
         this.$yearItems.hide().eq(this.index).show();
     };
@@ -1157,42 +1275,67 @@ define('kotenei/datepicker', ['jquery'], function ($) {
         } else {
             this.$next.show();
         }
-
     };
 
     DatePicker.prototype.show = function () {
         this.$datepicker.show().css({
             left: this.$element.position().left,
             top: this.$element.position().top + this.$element[0].offsetHeight + 2
-        })
+        });
+        this.setTime();
     };
 
     DatePicker.prototype.hide = function () {
         this.$datepicker.hide();
         this.yearBoxToggle(false);
         this.monthBoxToggle(false);
+        this.timePanelHide();
     };
 
     DatePicker.prototype.setTodayInfo = function () {
         var today = new Date();
         this.year = today.getFullYear();
         this.month = today.getMonth() + 1;
-        this.day = today.getDay();
+        this.day = today.getDate();
         this.hours = today.getHours();
         this.minutes = today.getMinutes();
         this.seconds = today.getSeconds();
+    };
 
+    DatePicker.prototype.setViewInfo = function () {
+        this.prevToggle();
+        this.nextToggle();
+        this.$year.html(this.year);
+        this.$month.html(dates.months[this.month - 1]);
+        this.$yearBox.find("li").removeClass("cur");
+        this.$yearBox.find("#li_" + this.year).addClass("cur").parent().show().siblings().hide();
+        this.$datepicker.find('tbody td span').removeClass('active');
+        this.$datepicker.find('#' + this.year + '_' + this.month + '_' + this.day).children().addClass('active');
+        this.index = this.$yearItems.find("li.cur").parent().show().index();
+    };
+
+    DatePicker.prototype.setTime = function () {
+        var date = new Date();
+
+        var curHours = date.getHours(),
+            curMinutes = date.getMinutes(),
+            curSeconds = date.getSeconds();
+
+        this.$hours.text(this.isSetTime ? (this.hours || curHours) : curHours);
+        this.$minutes.text(this.isSetTime ? (this.minutes || curMinutes) : curMinutes);
+        this.$seconds.text(this.isSetTime ? (this.seconds || curSeconds) : curSeconds);
     };
 
     DatePicker.prototype.set = function (isToday) {
         isToday = isToday || false;
+        this.isSetTime = true;
         var today = new Date();
         var year = isToday ? today.getFullYear() : this.year,
             month = isToday ? today.getMonth() : this.month - 1,
-            day = isToday ? today.getDay() : this.day,
-            hours = isToday ? today.getHours() : (this.hours || today.getHours()),
-            minutes = isToday ? today.getMinutes() : (this.minutes || today.getMinutes()),
-            seconds = isToday ? today.getSeconds() : (this.seconds || today.getSeconds());
+            day = isToday ? today.getDate() : this.day,
+            hours = isToday || !this.options.showTime ? today.getHours() : (this.hours || today.getHours()),
+            minutes = isToday || !this.options.showTime ? today.getMinutes() : (this.minutes || today.getMinutes()),
+            seconds = isToday || !this.options.showTime ? today.getSeconds() : (this.seconds || today.getSeconds());
 
         var date = new Date(year, month, day, hours, minutes, seconds);
         var value = this.format(date);

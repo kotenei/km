@@ -1154,3 +1154,67 @@
   background: #428bca;
   color: white;
 }
+.k-datepicker .time-box {
+  position: relative;
+  border-top: 1px solid #ccc;
+  padding-top: 5px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.k-datepicker .time-box .hours-box {
+  width: 145px;
+  height: 100px;
+}
+.k-datepicker .time-box .minutes-box {
+  width: 100px;
+  height: 78px;
+}
+.k-datepicker .time-box .seconds-box {
+  height: 56px;
+  width: 80px;
+}
+.k-datepicker .time-box > .hours-box,
+.k-datepicker .time-box > .minutes-box,
+.k-datepicker .time-box > .seconds-box {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  zoom: 1;
+  position: absolute;
+  padding: 5px;
+  border: 1px solid #ccc;
+  background: white;
+  display: none;
+}
+.k-datepicker .time-box > .hours-box li,
+.k-datepicker .time-box > .minutes-box li,
+.k-datepicker .time-box > .seconds-box li {
+  float: left;
+  display: inline;
+  width: 22px;
+  height: 22px;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+}
+.k-datepicker .time-box > .hours-box li:hover,
+.k-datepicker .time-box > .minutes-box li:hover,
+.k-datepicker .time-box > .seconds-box li:hover {
+  background: #428bca;
+  color: white;
+}
+.k-datepicker .time-box > .time-box-container div {
+  display: inline-block;
+  border: 1px solid #ccc;
+}
+.k-datepicker .time-box > .time-box-container div > span.hours,
+.k-datepicker .time-box > .time-box-container div > span.minutes,
+.k-datepicker .time-box > .time-box-container div > span.seconds {
+  cursor: pointer;
+  width: 25px;
+  height: 25px;
+  line-height: 25px;
+  text-align: center;
+  display: inline-block;
+}
