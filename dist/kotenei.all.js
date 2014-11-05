@@ -851,6 +851,7 @@ define('kotenei/datepicker', ['jquery'], function ($) {
             //点击月份
             self.monthBoxToggle(true);
             self.yearBoxToggle(false);
+            self.timePanelHide();
         }).on('click', '.month-box li', function () {
             //选择月份
             var $this = $(this),
@@ -866,6 +867,7 @@ define('kotenei/datepicker', ['jquery'], function ($) {
             //点击年份
             self.yearBoxToggle(true);
             self.monthBoxToggle(false);
+            self.timePanelHide();
         }).on('click', '.year-box li', function () {
             //选择年份
             var $this = $(this),
@@ -1424,6 +1426,8 @@ define('kotenei/datepicker', ['jquery'], function ($) {
     DatePicker.prototype.setTimePanelPosition = function ($curObj, $panel) {
         var css = { left: $curObj.position().left - 1, top: $curObj.position().top - $panel.outerHeight() };
         $panel.show().css(css).siblings('ul').hide();
+        this.yearBoxToggle(false);
+        this.monthBoxToggle(false);
     };
    
     /**
