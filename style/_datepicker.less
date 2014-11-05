@@ -9,6 +9,7 @@
     color: #333;
     padding: 5px;
     background: white;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.176);
 
     .container
     {
@@ -182,10 +183,7 @@
     .time-box
     {
         position: relative;
-        border-top: 1px solid #ccc;
-        padding-top: 5px;
-        margin-top: 5px;
-        margin-bottom: 5px;
+        margin-bottom: 8px;
 
         .hours-box
         {
@@ -195,14 +193,14 @@
 
         .minutes-box
         {
-            width:100px;
+            width: 100px;
             height: 78px;
         }
 
         .seconds-box
         {
-            height:56px;
-            width:80px;
+            height: 56px;
+            width: 80px;
         }
 
         >.hours-box,
@@ -240,7 +238,7 @@
 
         >.time-box-container
         {
-
+            padding-left: 8px;
 
             div
             {
@@ -260,5 +258,12 @@
                 }
             }
         }
+    }
+
+    .line
+    {
+        background:#ccc;
+        margin:8px 0;
+        height:1px;
     }
 }

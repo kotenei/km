@@ -1030,6 +1030,7 @@
   color: #333;
   padding: 5px;
   background: white;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.176);
 }
 .k-datepicker .container {
   position: relative;
@@ -1156,10 +1157,7 @@
 }
 .k-datepicker .time-box {
   position: relative;
-  border-top: 1px solid #ccc;
-  padding-top: 5px;
-  margin-top: 5px;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
 }
 .k-datepicker .time-box .hours-box {
   width: 145px;
@@ -1204,6 +1202,9 @@
   background: #428bca;
   color: white;
 }
+.k-datepicker .time-box > .time-box-container {
+  padding-left: 8px;
+}
 .k-datepicker .time-box > .time-box-container div {
   display: inline-block;
   border: 1px solid #ccc;
@@ -1217,4 +1218,9 @@
   line-height: 25px;
   text-align: center;
   display: inline-block;
+}
+.k-datepicker .line {
+  background: #ccc;
+  margin: 8px 0;
+  height: 1px;
 }

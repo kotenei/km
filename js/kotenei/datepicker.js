@@ -271,13 +271,16 @@ define('kotenei/datepicker', ['jquery'], function ($) {
         html.push('</table>');
         html.push(this.getYearBox());
         html.push(this.getMonthBox());
+
+        html.push('<div class="line"></div>');
+
         html.push(this.getTimeBox());
 
-        html.push('<div style="text-align:right">');
-        html.push('<input type="button" value="清空" role="clear" />&nbsp;');
-        html.push('<input type="button" value="今天" role="today" />&nbsp;');
+        html.push('<div style="text-align:right;margin-bottom:5px;">');
+        html.push('<input type="button" value="清空" role="clear" class="btn btn-default" />&nbsp;');
+        html.push('<input type="button" value="今天" role="today" class="btn btn-success" />&nbsp;');
         if (this.options.showTime) {
-            html.push('<input type="button" value="确定" role="confirm" />&nbsp;');
+            html.push('<input type="button" value="确定" role="confirm" class="btn btn-primary" />&nbsp;');
         }
 
         html.push('</div>');
