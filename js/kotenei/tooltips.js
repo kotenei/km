@@ -15,19 +15,18 @@ define('kotenei/tooltips', ['jquery'], function ($) {
         this.$element = $element;
         this.options = $.extend({}, {
             delay: 0,
-            //title: '',
             content: '',
             tipClass: '',
             placement: 'right',
             trigger: 'hover click',
             container: $(document.body),
-            scrollContainer: null
-        }, options);
-        this.tpl = '<div class="k-tooltips">' +
+            scrollContainer: null,
+            tpl: '<div class="k-tooltips">' +
                        '<div class="k-tooltips-arrow"></div>' +
-                       '<div class="k-tooltips-title"></div>' +
                        '<div class="k-tooltips-inner"></div>' +
-                   '</div>';
+                   '</div>'
+        }, options);
+        
         this.init();
     };
 
@@ -37,10 +36,9 @@ define('kotenei/tooltips', ['jquery'], function ($) {
      */
     Tooltips.prototype.init = function () {
         var self = this;
-        this.$tips = $(this.tpl);
+        this.$tips = $(this.options.tpl);
         this.$tips.addClass(this.options.placement).addClass(this.options.tipClass);
         this.$container = $(this.options.container);
-        //this.setTitle();
         this.setContent();
         this.isShow = false;
         var triggers = this.options.trigger.split(' ');
@@ -64,7 +62,7 @@ define('kotenei/tooltips', ['jquery'], function ($) {
 
         if (this.options.scrollContainer) {
             $(this.options.scrollContainer).on('scroll.tooltips', function () {
-                console.log("")
+                
             });
         }
 
@@ -74,16 +72,6 @@ define('kotenei/tooltips', ['jquery'], function ($) {
 
         this.hide();
     };
-
-    /*设置标题
-    Tooltips.prototype.setTitle = function (title) {
-        title = $.trim(title || this.options.title);
-        if (title.length === 0) {
-            title = this.$element.attr('data-title') || "";
-        }
-        var $tips = this.$tips;
-        $tips.find('.tooltips-title').text(title);
-    };*/
 
 
     /**

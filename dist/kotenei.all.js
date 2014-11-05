@@ -3019,6 +3019,39 @@ define('kotenei/popTips', ['jquery'], function ($) {
     return PopTips.getInstance();
 });
 
+/*
+ * 弹出框模块
+ * @date:2014-09-05
+ * @author:kotenei(kotenei@qq.com)
+ */
+define('kotenei/popover', ['jquery', 'kotenei/tooltips', 'kotenei/util'], function ($, Tooltips, util) {
+
+    var Popover = function ($element, options) {
+        options = $.extend({}, {
+            title: '',
+            tpl: '<div class="k-popover">' +
+                       '<div class="k-popover-arrow"></div>' +
+                       '<div class="k-popover-title"></div>' +
+                       '<div class="k-popover-inner"></div>' +
+                   '</div>'
+        }, options);
+        Tooltips.call(this, $element, options);     
+    };
+
+    Popover.prototype = util.createProto(Tooltips.prototype);
+
+    //设置标题
+    Popover.prototype.setTitle = function (title) {
+        title = $.trim(title || this.options.title);
+        if (title.length === 0) {
+            title = this.$element.attr('data-title') || "";
+        }
+        var $tips = this.$tips;
+        $tips.find('.k-popover-title').text(title);
+    };
+
+    return Popover;
+});
 /**
  * 路由
  * @date :2014-09-21
@@ -3523,19 +3556,18 @@ define('kotenei/tooltips', ['jquery'], function ($) {
         this.$element = $element;
         this.options = $.extend({}, {
             delay: 0,
-            //title: '',
             content: '',
             tipClass: '',
             placement: 'right',
             trigger: 'hover click',
             container: $(document.body),
-            scrollContainer: null
-        }, options);
-        this.tpl = '<div class="k-tooltips">' +
+            scrollContainer: null,
+            tpl: '<div class="k-tooltips">' +
                        '<div class="k-tooltips-arrow"></div>' +
-                       '<div class="k-tooltips-title"></div>' +
                        '<div class="k-tooltips-inner"></div>' +
-                   '</div>';
+                   '</div>'
+        }, options);
+        
         this.init();
     };
 
@@ -3545,10 +3577,9 @@ define('kotenei/tooltips', ['jquery'], function ($) {
      */
     Tooltips.prototype.init = function () {
         var self = this;
-        this.$tips = $(this.tpl);
+        this.$tips = $(this.options.tpl);
         this.$tips.addClass(this.options.placement).addClass(this.options.tipClass);
         this.$container = $(this.options.container);
-        //this.setTitle();
         this.setContent();
         this.isShow = false;
         var triggers = this.options.trigger.split(' ');
@@ -3572,7 +3603,7 @@ define('kotenei/tooltips', ['jquery'], function ($) {
 
         if (this.options.scrollContainer) {
             $(this.options.scrollContainer).on('scroll.tooltips', function () {
-                console.log("")
+                
             });
         }
 
@@ -3582,16 +3613,6 @@ define('kotenei/tooltips', ['jquery'], function ($) {
 
         this.hide();
     };
-
-    /*设置标题
-    Tooltips.prototype.setTitle = function (title) {
-        title = $.trim(title || this.options.title);
-        if (title.length === 0) {
-            title = this.$element.attr('data-title') || "";
-        }
-        var $tips = this.$tips;
-        $tips.find('.tooltips-title').text(title);
-    };*/
 
 
     /**
@@ -5676,7 +5697,7 @@ define('kotenei/wordLimit', ['jquery'], function ($) {
     return WordLimit;
 });
 ;
-define("kotenei", ["kotenei/autoComplete", "kotenei/cache", "kotenei/clipZoom", "kotenei/datepicker", "kotenei/dragdrop", "kotenei/dropdown", "kotenei/dropdownDatepicker", "kotenei/highlight", "kotenei/infiniteScroll", "kotenei/lazyload", "kotenei/loading", "kotenei/pager", "kotenei/placeholder", "kotenei/popTips", "kotenei/router", "kotenei/slider", "kotenei/switch", "kotenei/tooltips", "kotenei/tree", "kotenei/util", "kotenei/validate", "kotenei/validateTooltips", "kotenei/waterfall", "kotenei/window", "kotenei/wordLimit"], function(_autoComplete, _cache, _clipZoom, _datepicker, _dragdrop, _dropdown, _dropdownDatepicker, _highlight, _infiniteScroll, _lazyload, _loading, _pager, _placeholder, _popTips, _router, _slider, _switch, _tooltips, _tree, _util, _validate, _validateTooltips, _waterfall, _window, _wordLimit){
+define("kotenei", ["kotenei/autoComplete", "kotenei/cache", "kotenei/clipZoom", "kotenei/datepicker", "kotenei/dragdrop", "kotenei/dropdown", "kotenei/dropdownDatepicker", "kotenei/highlight", "kotenei/infiniteScroll", "kotenei/lazyload", "kotenei/loading", "kotenei/pager", "kotenei/placeholder", "kotenei/popover", "kotenei/popTips", "kotenei/router", "kotenei/slider", "kotenei/switch", "kotenei/tooltips", "kotenei/tree", "kotenei/util", "kotenei/validate", "kotenei/validateTooltips", "kotenei/waterfall", "kotenei/window", "kotenei/wordLimit"], function(_autoComplete, _cache, _clipZoom, _datepicker, _dragdrop, _dropdown, _dropdownDatepicker, _highlight, _infiniteScroll, _lazyload, _loading, _pager, _placeholder, _popover, _popTips, _router, _slider, _switch, _tooltips, _tree, _util, _validate, _validateTooltips, _waterfall, _window, _wordLimit){
     return {
         "AutoComplete" : _autoComplete,
         "cache" : _cache,
@@ -5691,6 +5712,7 @@ define("kotenei", ["kotenei/autoComplete", "kotenei/cache", "kotenei/clipZoom", 
         "Loading" : _loading,
         "Pager" : _pager,
         "placeholder" : _placeholder,
+        "Popover" : _popover,
         "popTips" : _popTips,
         "Router" : _router,
         "Slider" : _slider,
