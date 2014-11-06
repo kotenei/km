@@ -765,20 +765,25 @@ define('kotenei/datepicker', ['jquery'], function ($) {
         daysMin: ["日", "一", "二", "三", "四", "五", "六"]
     };
 
+    var date = new Date();
     /**
      * 日期模块
      * @param {JQuery} $element - dom
      * @param {Object} options - 参数
      */
     var DatePicker = function ($element, options) {
-        var date = new Date();
+        var self = this;
         this.$element = $element;
         this.options = $.extend({}, {
             appendTo: $(document.body),
             showTime: false,
-            year: { min: 1900, max: 2050 },
-            format: 'yyyy-mm-dd'
+            year: { min: date.getFullYear() - 100, max: date.getFullYear() + 100 },
+            format: 'yyyy-MM-dd',
+            positionProxy: function(){
+                return self.getPosition();
+            }
         }, options);
+        this.isInput = this.$element.is('input');
         this.year = date.getFullYear();
         this.month = date.getMonth() + 1;
         this.day = date.getDate();
@@ -787,6 +792,29 @@ define('kotenei/datepicker', ['jquery'], function ($) {
         this.selectDay = false;
         this.init();
         this.eventBind();
+
+        this.event = {
+            selected: []
+        };
+    };
+
+    DatePicker.prototype.on = function(name, callback){
+        if($.isArray(this.event[name])){
+            this.event[name].push(callback);
+        }
+    };
+
+    /**
+     * 取位置坐标
+     *
+     * @return {Object}
+     */
+    DatePicker.prototype.getPosition = function(){
+        var position = this.$element.position();
+        return {
+            left: position.left,
+            top: position.top + this.$element[0].offsetHeight + 2
+        };
     };
 
     /**
@@ -794,7 +822,9 @@ define('kotenei/datepicker', ['jquery'], function ($) {
      * @return {Void}
      */
     DatePicker.prototype.init = function () {
-        this.$element.attr('readonly', 'readonly');
+        if(this.isInput){
+            this.$element.attr('readonly', 'readonly');
+        }
         this.createPanel();
         this.$datepicker.appendTo(this.options.appendTo);
     };
@@ -815,8 +845,8 @@ define('kotenei/datepicker', ['jquery'], function ($) {
             var target = e.target,
                 $target = $(target);
 
-            if (target.id === 'year' || target.id === 'month'
-                || $target.parents('.year-box:eq(0)').length > 0 || $target.parents('.month-box:eq(0)').length > 0) {
+            if (target.id === 'year' || target.id === 'month' || 
+                $target.parents('.year-box:eq(0)').length > 0 || $target.parents('.month-box:eq(0)').length > 0) {
                 return false;
             }
 
@@ -824,7 +854,7 @@ define('kotenei/datepicker', ['jquery'], function ($) {
             self.monthBoxToggle(false);
             self.timePanelHide();
             return false;
-        }).on('click', '[role="prev"]', function () {
+        }).on('click', '[role=prev]', function () {
             //向前
             self.month--;
             self.prevToggle();
@@ -835,9 +865,9 @@ define('kotenei/datepicker', ['jquery'], function ($) {
             }
             self.$next.show();
             self.createDays();
-        }).on('click', '[role="next"]', function () {
+        }).on('click', '[role=next]', function () {
             //向后
-            self.month++
+            self.month++;
             self.nextToggle();
             if (self.month > 12) {
                 self.month = 1;
@@ -855,7 +885,7 @@ define('kotenei/datepicker', ['jquery'], function ($) {
             var $this = $(this),
                 month = $this.attr("data-month");
 
-            self.month = parseInt($.trim(month));
+            self.month = Number($.trim(month));
             self.monthBoxToggle(false);
             self.createDays();
             self.prevToggle();
@@ -868,41 +898,46 @@ define('kotenei/datepicker', ['jquery'], function ($) {
         }).on('click', '.year-box li', function () {
             //选择年份
             var $this = $(this),
-                text = parseInt($.trim($this.text()));
+                text = Number($.trim($this.text()));
 
             if ($this.hasClass("cur")) { return; }
             self.$yearBox.find("li").removeClass("cur");
             $this.addClass("cur");
 
-            self.year = parseInt(text);
+            self.year = Number(text);
             self.createDays();
             self.yearBoxToggle(false);
             self.prevToggle();
             self.nextToggle();
-        }).on('click', '[role="yearPrev"]', function () {
+        }).on('click', '[role=yearPrev]', function () {
             //向前选择年份
-            if (self.index == 0) {
+            if (self.index === 0) {
                 return;
             }
             self.index--;
             self.toCurYearPanel();
 
-        }).on('click', '[role="yearNext"]', function () {
+        }).on('click', '[role=yearNext]', function () {
             //向后选择年份
-            if (self.index == self.$yearItems.length - 1) {
+            if (self.index === self.$yearItems.length - 1) {
                 return;
             }
             self.index++;
             self.toCurYearPanel();
-        }).on('click', '[role="clear"]', function () {
+        }).on('click', '[role=clear]', function () {
             //清空
-            self.$element.val('');
+            if(self.isInput){
+                self.$element.val('');
+            }
+            else{
+                self.$element.data('value', '');
+            }
             self.isSetTime = false;
             self.setTodayInfo();
             self.createDays();
             self.setViewInfo();
             self.hide();
-        }).on('click', '[role="today"]', function () {
+        }).on('click', '[role=today]', function () {
             //今天
             self.setTodayInfo();
             self.createDays();
@@ -916,9 +951,9 @@ define('kotenei/datepicker', ['jquery'], function ($) {
                 month = $this.attr('data-month'),
                 day = $this.attr('data-day');
 
-            var year = parseInt(year);
-            var month = parseInt(month);
-            var day = parseInt(day);
+            year = Number(year);
+            month = Number(month);
+            day = Number(day);
 
             self.year = year;
             self.month = month;
@@ -962,7 +997,7 @@ define('kotenei/datepicker', ['jquery'], function ($) {
                     self.$seconds.text(text);
                     break;
             }
-        }).on('click', '[role="confirm"]', function () {
+        }).on('click', '[role=confirm]', function () {
             //点击确定
 
             var $curDay = self.$datepicker.find('td span.active'),
@@ -993,7 +1028,7 @@ define('kotenei/datepicker', ['jquery'], function ($) {
      * @return {Void}
      */
     DatePicker.prototype.createPanel = function () {
-        var html = [];
+        var html = [], i;
 
         html.push('<div class="k-datepicker">');
         html.push('<div class="container">');
@@ -1010,7 +1045,7 @@ define('kotenei/datepicker', ['jquery'], function ($) {
         html.push('<th class="next"  style="width:28px;"><i class="fa fa-chevron-right" role="next"></i></th>');
         html.push('</tr>');
         html.push('<tr>');
-        for (var i = 0; i < dates.daysMin.length; i++) {
+        for (i = 0; i < dates.daysMin.length; i++) {
             html.push('<th>' + dates.daysMin[i] + '</th>');
         }
         html.push('</tr>');
@@ -1072,24 +1107,24 @@ define('kotenei/datepicker', ['jquery'], function ($) {
         var html = [], contentHtml = [], flag = 1, count = 1,
         totalCount = (this.options.year.max - this.options.year.min) + 1,
         year = this.options.year.min - 1,
-        page;
+        page, i, j;
 
         //分页
-        if (totalCount % 10 == 0) {
+        if (totalCount % 10 === 0) {
             page = totalCount / 10;
         } else {
-            page = parseInt(totalCount / 10) + 1;
+            page = Number(totalCount / 10) + 1;
         }
 
 
-        for (var i = 1; i <= page; i++) {
+        for (i = 1; i <= page; i++) {
 
             contentHtml.push('<ul>');
 
-            for (var j = flag; j <= totalCount ; j++) {
+            for (j = flag; j <= totalCount ; j++) {
 
                 year += 1;
-                contentHtml.push('<li id="li_' + year + '" class="' + (this.year == year ? "cur" : "") + '">' + year + '</li>');
+                contentHtml.push('<li id="li_' + year + '" class="' + (this.year === year ? "cur" : "") + '">' + year + '</li>');
                 flag++;
 
                 if (count % 10 === 0) {
@@ -1124,11 +1159,11 @@ define('kotenei/datepicker', ['jquery'], function ($) {
      * @return {String}
      */
     DatePicker.prototype.getMonthBox = function () {
-        var html = [];
+        var html = [], i;
 
         html.push('<ul class="month-box">');
 
-        for (var i = 0; i < dates.months.length; i++) {
+        for (i = 0; i < dates.months.length; i++) {
             html.push('<li data-month="' + (i + 1) + '">' + dates.months[i] + '</li>');
         }
 
@@ -1142,27 +1177,27 @@ define('kotenei/datepicker', ['jquery'], function ($) {
      * @return {String}
      */
     DatePicker.prototype.getTimeBox = function () {
-        var html = [], date = new Date();
+        var html = [], /*date = new Date(),*/ i;
 
         html.push('<div class="time-box">');
 
         //小时
         html.push('<ul class="hours-box">');
-        for (var i = 0; i < 24; i++) {
+        for (i = 0; i < 24; i++) {
             html.push('<li data-target="hours" data-value=' + i + '>' + this.supStr(i) + '</li>');
         }
         html.push('</ul>');
 
         //分
         html.push('<ul class="minutes-box">');
-        for (var i = 0; i <= 55; i += 5) {
+        for (i = 0; i <= 55; i += 5) {
             html.push('<li data-target="minutes" data-value=' + i + '>' + this.supStr(i) + '</li>');
         }
         html.push('</ul>');
 
         //秒
         html.push('<ul class="seconds-box">');
-        for (var i = 0; i <= 55; i += 15) {
+        for (i = 0; i <= 55; i += 15) {
             html.push('<li data-target="seconds" data-value=' + i + '>' + this.supStr(i) + '</li>');
         }
         html.push('</ul>');
@@ -1192,9 +1227,10 @@ define('kotenei/datepicker', ['jquery'], function ($) {
      * @return {Void}
      */
     DatePicker.prototype.createDays = function (year, month, day) {
-        var year = year || this.year;
-        var month = month || this.month;
-        var day = day || this.day;
+        var i, j;
+        year = year || this.year;
+        month = month || this.month;
+        day = day || this.day;
 
         //当月最后一天  new Date('2014/4/0').getDate() 表示获取2014年3月最后一天
         var curMonthLastDay = this.getMonthLastDay(year, month);
@@ -1209,17 +1245,17 @@ define('kotenei/datepicker', ['jquery'], function ($) {
         var arr = new Array(42), arrDaysHtml = [], tmp = 42 - curMonthLastDay;
 
         //存放天数，下标j为星期几
-        for (var i = 0, j = fristDay; i < curMonthLastDay; i++, j++) {
+        for (i = 0, j = fristDay; i < curMonthLastDay; i++, j++) {
             arr[j] = { year: year, month: month, day: i + 1, tdClass: '' };
-            if (i + 1 == curMonthLastDay) {
+            if (i + 1 === curMonthLastDay) {
                 tmp = 42 - j;
             }
         }
 
         //前补位
-        for (var i = fristDay, j = 0; i >= 1  ; i--, j++) {
+        for (i = fristDay, j = 0; i >= 1  ; i--, j++) {
 
-            if (month == 1) {
+            if (month === 1) {
                 arr[j] = { year: year - 1, month: 12, day: prevMonthLastDay - i + 1, tdClass: 'old' };
             } else {
                 arr[j] = { year: year, month: month - 1, day: prevMonthLastDay - i + 1, tdClass: 'old' };
@@ -1227,8 +1263,8 @@ define('kotenei/datepicker', ['jquery'], function ($) {
         }
 
         //后补位
-        for (var i = (42 - tmp) + 1, j = 1 ; i < 42; i++, j++) {
-            if (month == 12) {
+        for (i = (42 - tmp) + 1, j = 1 ; i < 42; i++, j++) {
+            if (month === 12) {
                 arr[i] = { year: year + 1, month: 1, day: j, tdClass: 'new' };
             } else {
                 arr[i] = { year: year, month: month + 1, day: j, tdClass: 'new' };
@@ -1236,15 +1272,16 @@ define('kotenei/datepicker', ['jquery'], function ($) {
         }
 
         //构造表格
-        var flag = 0, count = 0;
-        for (var i = 0; i < 6; i++) {
+        var flag = 0, count = 0, curValue, todayClass;
+        for (i = 0; i < 6; i++) {
             arrDaysHtml.push("<tr>");
-            for (var j = flag, curValue, todayClass, tdClass; j < 42; j++) {
+            for (j = flag; j < 42; j++) {
 
                 curValue = arr[j];
 
-
-                if (curValue.year == year && curValue.month == month && this.day == curValue.day) {
+                if (curValue.year === year && 
+                    curValue.month === month && 
+                    this.day === curValue.day) {
                     todayClass = "today";
                 } else {
                     todayClass = "";
@@ -1253,7 +1290,7 @@ define('kotenei/datepicker', ['jquery'], function ($) {
                 arrDaysHtml.push('<td id="' + curValue.year + '_' + curValue.month + '_' + curValue.day + '" class="' + curValue.tdClass + '   ' + todayClass + '  " data-year="' + curValue.year + '" data-month="' + curValue.month + '" data-day="' + curValue.day + '"><span>' + curValue.day + '</span></td>');
                 flag++;
                 count++;
-                if (count == 7) {
+                if (count === 7) {
                     count = 0;
                     break;
                 }
@@ -1332,7 +1369,7 @@ define('kotenei/datepicker', ['jquery'], function ($) {
      * @return {Void}
      */
     DatePicker.prototype.prevToggle = function () {
-        if (this.year === this.options.year.min && this.month == 1) {
+        if (this.year === this.options.year.min && this.month === 1) {
             this.$prev.hide();
         } else {
             this.$prev.show();
@@ -1344,7 +1381,7 @@ define('kotenei/datepicker', ['jquery'], function ($) {
      * @return {Void}
      */
     DatePicker.prototype.nextToggle = function () {
-        if (this.year == this.options.year.max && this.month == 12) {
+        if (this.year === this.options.year.max && this.month === 12) {
             this.$next.hide();
         } else {
             this.$next.show();
@@ -1356,7 +1393,13 @@ define('kotenei/datepicker', ['jquery'], function ($) {
      * @return {Void}
      */
     DatePicker.prototype.showInit = function () {
-        var value = $.trim(this.$element.val());
+        var value;
+        if(this.isInput){
+            value = $.trim(this.$element.val());
+        }
+        else{
+            value = $.trim(this.$element.data('value'));
+        }
 
         if (value.length === 0) { return; }
 
@@ -1396,11 +1439,9 @@ define('kotenei/datepicker', ['jquery'], function ($) {
             this.createDays();
             this.setViewInfo();
         }
-
-        this.$datepicker.show().css({
-            left: this.$element.position().left,
-            top: this.$element.position().top + this.$element[0].offsetHeight + 2
-        });
+        
+        var position = this.options.positionProxy();
+        this.$datepicker.show().css(position);
     };
 
     /**
@@ -1450,9 +1491,9 @@ define('kotenei/datepicker', ['jquery'], function ($) {
      */
     DatePicker.prototype.setViewInfo = function (year, month, day) {
 
-        var year = year || this.year,
-            month = month || this.month,
-            day = day || this.day;
+        year = year || this.year;
+        month = month || this.month;
+        day = day || this.day;
 
         this.prevToggle();
         this.nextToggle();
@@ -1470,7 +1511,7 @@ define('kotenei/datepicker', ['jquery'], function ($) {
      * @return {Void}
      */
     DatePicker.prototype.setTime = function () {
-        var date = new Date();
+        //var date = new Date();
 
         var curHours = date.getHours(),
             curMinutes = date.getMinutes(),
@@ -1497,9 +1538,17 @@ define('kotenei/datepicker', ['jquery'], function ($) {
             minutes = isToday || !this.options.showTime ? today.getMinutes() : (this.minutes || today.getMinutes()),
             seconds = isToday || !this.options.showTime ? today.getSeconds() : (this.seconds || today.getSeconds());
 
-        var date = new Date(year, month, day, hours, minutes, seconds);
-        var value = this.format(date);
-        this.$element.val(value).focus().blur();
+        var now = new Date(year, month, day, hours, minutes, seconds);
+        var value = this.format(now);
+        if(this.isInput){
+            this.$element.val(value).focus().blur();
+        }
+        else{
+            this.$element.data('value', value);
+        }
+        $.map(this.event.selected, function(v){
+            v(value);
+        });
     };
 
     /**
@@ -1519,12 +1568,12 @@ define('kotenei/datepicker', ['jquery'], function ($) {
             "h+": date.getHours(),
             "m+": date.getMinutes(),
             "s+": date.getSeconds()
-        };
+        }, k, value;
 
-        for (var k in o) {
+        for (k in o) {
             if (new RegExp("(" + k + ")").test(formatStr)) {
-                var value = o[k];
-                formatStr = formatStr.replace(RegExp.$1, value.toString().length == 1 ? ("0" + value.toString()) : value);
+                value = o[k];
+                formatStr = formatStr.replace(RegExp.$1, value.toString().length === 1 ? ("0" + value.toString()) : value);
             }
         }
 
@@ -1543,7 +1592,7 @@ define('kotenei/datepicker', ['jquery'], function ($) {
         }
 
         return str;
-    }
+    };
 
     /**
      * 全局日期选择器绑定
@@ -1557,7 +1606,7 @@ define('kotenei/datepicker', ['jquery'], function ($) {
                 format = $this.attr('data-format'),
                 showTime = $this.attr('data-showTime');
 
-            showTime = showTime ? showTime == "true" : false;
+            showTime = showTime ? showTime === "true" : false;
 
             $this.data('datepicker', new DatePicker($this, {
                 format: format,
