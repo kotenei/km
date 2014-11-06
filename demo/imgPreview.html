@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../dist/css/kotenei.css" />
+    <script type="text/javascript" src="./vendor/require/require.js"></script>
+    <script type="text/javascript" src="./main.js"></script>
+    <style>
+        table img
+        {
+            width:150px;
+            height:auto;
+        }
+    </style>
+</head>
+<body>
+
+    <table id="table">
+        <tr>
+            <td>
+                <img src="http://pw.dreams-travel.com/pic/feizhou/1-10.jpg" />
+            </td>
+            <td>
+                <img src="http://i.weather.com.cn/images/trip/index/lytqkx/2013/05/29/8F198D28063B911072A7DB3821F80238.jpg" />
+            </td>
+            <td>
+                <img src="http://www.chinadaily.com.cn/m/shandong/images/attachement/jpg/site1/20090703/0013729e44e10bb801f547.jpg" />
+            </td>
+            <td>
+                <img src="http://www.fjxmly.com/webedit/UploadFile/20081125144024255.jpg" />
+            </td>
+        </tr>
+    </table>
+
+
+    <script type="text/javascript">
+        require(['kotenei'], function (kotenei) {
+            var ImgPreview = kotenei.ImgPreview;
+            var imgPreview = new ImgPreview($("#table").find('img'), {
+
+            });
+        });
+    </script>
+</body>
+</html>

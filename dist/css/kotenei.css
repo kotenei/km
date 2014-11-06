@@ -1337,3 +1337,7 @@
   border-right: none;
   border-color: transparent transparent transparent white;
 }
+.k-imgPreview {
+  background: white;
+  padding: 10px;
+}

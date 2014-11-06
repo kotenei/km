@@ -73,7 +73,6 @@ define('kotenei/datepicker', ['jquery'], function ($) {
             return false;
         }).on('click', '[role="prev"]', function () {
             //向前
-            var options = self.options;
             self.month--;
             self.prevToggle();
 
@@ -85,7 +84,6 @@ define('kotenei/datepicker', ['jquery'], function ($) {
             self.createDays();
         }).on('click', '[role="next"]', function () {
             //向后
-            var options = self.options;
             self.month++
             self.nextToggle();
             if (self.month > 12) {
@@ -102,7 +100,6 @@ define('kotenei/datepicker', ['jquery'], function ($) {
         }).on('click', '.month-box li', function () {
             //选择月份
             var $this = $(this),
-                text = $this.text(),
                 month = $this.attr("data-month");
 
             self.month = parseInt($.trim(month));
@@ -392,7 +389,7 @@ define('kotenei/datepicker', ['jquery'], function ($) {
      * @return {String}
      */
     DatePicker.prototype.getTimeBox = function () {
-        html = [], date = new Date();
+        var html = [], date = new Date();
 
         html.push('<div class="time-box">');
 

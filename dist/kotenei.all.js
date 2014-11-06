@@ -826,7 +826,6 @@ define('kotenei/datepicker', ['jquery'], function ($) {
             return false;
         }).on('click', '[role="prev"]', function () {
             //向前
-            var options = self.options;
             self.month--;
             self.prevToggle();
 
@@ -838,7 +837,6 @@ define('kotenei/datepicker', ['jquery'], function ($) {
             self.createDays();
         }).on('click', '[role="next"]', function () {
             //向后
-            var options = self.options;
             self.month++
             self.nextToggle();
             if (self.month > 12) {
@@ -855,7 +853,6 @@ define('kotenei/datepicker', ['jquery'], function ($) {
         }).on('click', '.month-box li', function () {
             //选择月份
             var $this = $(this),
-                text = $this.text(),
                 month = $this.attr("data-month");
 
             self.month = parseInt($.trim(month));
@@ -1145,7 +1142,7 @@ define('kotenei/datepicker', ['jquery'], function ($) {
      * @return {String}
      */
     DatePicker.prototype.getTimeBox = function () {
-        html = [], date = new Date();
+        var html = [], date = new Date();
 
         html.push('<div class="time-box">');
 
@@ -2432,6 +2429,45 @@ define('kotenei/highlight', ['jquery'], function ($) {
     };
 
     return exports;
+});
+
+/**
+ * 图片预览模块
+ * @date :2014-11-6
+ * @author kotenei (kotenei@qq.com)
+ */
+/*global define, require, document*/
+define('kotenei/imgPreview', ['jquery', 'kotenei/loading', 'kotenei/popTips'], function ($, Loading, popTips) {
+
+    var ImgPreview = function ($elements, options) {
+        this.$elements = $elements;
+        this.options = $.extend({
+            showButtons: true,
+            backdrop: true,
+            backdropClose: true,
+            tpl: '<div class="k-imgPreview">' +
+                    '<div class="container"></div>' +
+                    '<p class="description"></p>' +
+                 '</div>'
+        });
+        this.imgs = {};
+        this.init();
+    };
+
+    ImgPreview.prototype.init = function () {
+        var self = this;
+        if (this.$elements.length === 0) { return; }
+        this.$imgPreview = $(this.options.tpl).appendTo(document.body);
+        this.$elements.css('cursor', 'pointer').each(function (i) {
+            var id = 'imgPreview_' + i;
+            this.id = id;
+            self.imgs[id] = $(this);
+        });
+
+    };
+
+    return ImgPreview;
+
 });
 
 /**
@@ -5777,7 +5813,7 @@ define('kotenei/wordLimit', ['jquery'], function ($) {
     return WordLimit;
 });
 ;
-define("kotenei", ["kotenei/autoComplete", "kotenei/cache", "kotenei/clipZoom", "kotenei/datepicker", "kotenei/dragdrop", "kotenei/dropdown", "kotenei/dropdownDatepicker", "kotenei/highlight", "kotenei/infiniteScroll", "kotenei/lazyload", "kotenei/loading", "kotenei/pager", "kotenei/placeholder", "kotenei/popover", "kotenei/popTips", "kotenei/router", "kotenei/slider", "kotenei/switch", "kotenei/tooltips", "kotenei/tree", "kotenei/util", "kotenei/validate", "kotenei/validateTooltips", "kotenei/waterfall", "kotenei/window", "kotenei/wordLimit"], function(_autoComplete, _cache, _clipZoom, _datepicker, _dragdrop, _dropdown, _dropdownDatepicker, _highlight, _infiniteScroll, _lazyload, _loading, _pager, _placeholder, _popover, _popTips, _router, _slider, _switch, _tooltips, _tree, _util, _validate, _validateTooltips, _waterfall, _window, _wordLimit){
+define("kotenei", ["kotenei/autoComplete", "kotenei/cache", "kotenei/clipZoom", "kotenei/datepicker", "kotenei/dragdrop", "kotenei/dropdown", "kotenei/dropdownDatepicker", "kotenei/highlight", "kotenei/imgPreview", "kotenei/infiniteScroll", "kotenei/lazyload", "kotenei/loading", "kotenei/pager", "kotenei/placeholder", "kotenei/popover", "kotenei/popTips", "kotenei/router", "kotenei/slider", "kotenei/switch", "kotenei/tooltips", "kotenei/tree", "kotenei/util", "kotenei/validate", "kotenei/validateTooltips", "kotenei/waterfall", "kotenei/window", "kotenei/wordLimit"], function(_autoComplete, _cache, _clipZoom, _datepicker, _dragdrop, _dropdown, _dropdownDatepicker, _highlight, _imgPreview, _infiniteScroll, _lazyload, _loading, _pager, _placeholder, _popover, _popTips, _router, _slider, _switch, _tooltips, _tree, _util, _validate, _validateTooltips, _waterfall, _window, _wordLimit){
     return {
         "AutoComplete" : _autoComplete,
         "cache" : _cache,
@@ -5787,6 +5823,7 @@ define("kotenei", ["kotenei/autoComplete", "kotenei/cache", "kotenei/clipZoom", 
         "Dropdown" : _dropdown,
         "DropdownDatepicker" : _dropdownDatepicker,
         "highlight" : _highlight,
+        "ImgPreview" : _imgPreview,
         "InfiniteScroll" : _infiniteScroll,
         "lazyload" : _lazyload,
         "Loading" : _loading,
