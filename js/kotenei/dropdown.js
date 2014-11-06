@@ -108,7 +108,7 @@ define('kotenei/dropdown', ['jquery'], function($){
      * 取下拉框的值
      * @return {Void}
      */
-    Dropdown.prototype.getVal = function(){
+    Dropdown.prototype.getVal = function () {
         return this.$soure.val();
     };
 

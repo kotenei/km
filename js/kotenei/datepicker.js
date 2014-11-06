@@ -41,7 +41,8 @@ define('kotenei/datepicker', ['jquery'], function ($) {
         this.eventBind();
 
         this.event = {
-            selected: []
+            selected: [],
+            clean:[]
         };
     };
 
@@ -49,6 +50,8 @@ define('kotenei/datepicker', ['jquery'], function ($) {
         if($.isArray(this.event[name])){
             this.event[name].push(callback);
         }
+
+        return this;
     };
 
     /**
@@ -184,6 +187,11 @@ define('kotenei/datepicker', ['jquery'], function ($) {
             self.createDays();
             self.setViewInfo();
             self.hide();
+
+            $.map(self.event.clean, function (v) {
+                v();
+            });
+
         }).on('click', '[role=today]', function () {
             //今天
             self.setTodayInfo();
@@ -758,7 +766,7 @@ define('kotenei/datepicker', ['jquery'], function ($) {
      * @return {Void}
      */
     DatePicker.prototype.setTime = function () {
-        //var date = new Date();
+        var date = new Date();
 
         var curHours = date.getHours(),
             curMinutes = date.getMinutes(),
