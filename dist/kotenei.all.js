@@ -3021,26 +3021,41 @@ define('kotenei/popTips', ['jquery'], function ($) {
 
 /*
  * 弹出框模块
- * @date:2014-09-05
+ * @date:2014-11-05
  * @author:kotenei(kotenei@qq.com)
  */
 define('kotenei/popover', ['jquery', 'kotenei/tooltips', 'kotenei/util'], function ($, Tooltips, util) {
 
+    /**
+     * 弹出框模块
+     * @param {JQuery} $element - dom
+     * @param {Object} options - 参数
+     */
     var Popover = function ($element, options) {
         options = $.extend({}, {
-            title: '',
+            type:'popover',
+            title: '标题',
             tpl: '<div class="k-popover">' +
                        '<div class="k-popover-arrow"></div>' +
                        '<div class="k-popover-title"></div>' +
                        '<div class="k-popover-inner"></div>' +
                    '</div>'
         }, options);
-        Tooltips.call(this, $element, options);     
+        Tooltips.call(this, $element, options);
+
+        this.setTitle();
     };
 
+    /**
+     * 继承tooltips
+     * @param {String} title - 标题
+     */
     Popover.prototype = util.createProto(Tooltips.prototype);
 
-    //设置标题
+    /**
+     * 设置标题
+     * @param {String} title - 标题
+     */
     Popover.prototype.setTitle = function (title) {
         title = $.trim(title || this.options.title);
         if (title.length === 0) {
@@ -3048,6 +3063,60 @@ define('kotenei/popover', ['jquery', 'kotenei/tooltips', 'kotenei/util'], functi
         }
         var $tips = this.$tips;
         $tips.find('.k-popover-title').text(title);
+    };
+
+   
+    /**
+     * 设置内容
+     * @param {String} content - 内容
+     */
+    Popover.prototype.setContent = function (content) {
+        content = $.trim(content || this.options.content);
+        if (content.length === 0) {
+            content = this.$element.attr('data-content') || "";
+        }
+        var $tips = this.$tips;
+        $tips.find('.k-popover-inner').html(content);
+    };
+
+
+    /**
+     * 全局popover
+     * @param {JQuery} $elements - dom
+     */
+    Popover.Global = function ($elements) {
+        var $elements = $elements || $('[data-module="popover"]');
+        $elements.each(function () {
+            var $this = $(this);
+            var popover = Popover.Get($this);
+            if (!popover) {
+                popover = new Popover($this, {
+                    title: $this.attr('data-title'),
+                    content: $this.attr('data-content'),
+                    placement: $this.attr('data-placement'),
+                    tipClass: $this.attr('data-tipClass'),
+                    trigger: $this.attr('data-trigger')
+                });
+                Popover.Set($this, popover);
+            }
+        });
+    };
+
+    /**
+     * 从缓存获取对象
+     * @param {JQuery} $element - dom
+     */
+    Popover.Get = function ($element) {
+        return $element.data("popover");
+    };
+
+    /**
+     * 设置缓存
+     * @param {JQuery} $element - dom
+     * @param {Object} popover - 缓存对象
+     */
+    Popover.Set = function ($element, popover) {
+        $element.data("popover", popover);
     };
 
     return Popover;
@@ -3561,13 +3630,14 @@ define('kotenei/tooltips', ['jquery'], function ($) {
             placement: 'right',
             trigger: 'hover click',
             container: $(document.body),
+            type: 'tooltips',
             scrollContainer: null,
             tpl: '<div class="k-tooltips">' +
                        '<div class="k-tooltips-arrow"></div>' +
                        '<div class="k-tooltips-inner"></div>' +
                    '</div>'
         }, options);
-        
+
         this.init();
     };
 
@@ -3583,15 +3653,16 @@ define('kotenei/tooltips', ['jquery'], function ($) {
         this.setContent();
         this.isShow = false;
         var triggers = this.options.trigger.split(' ');
+
         for (var i = 0, trigger; i < triggers.length; i++) {
             trigger = triggers[i];
             if (trigger === 'click') {
-                this.$element.on(trigger + ".tooltips", $.proxy(this.toggle, this));
+                this.$element.on(trigger + "." + this.options.type, $.proxy(this.toggle, this));
             } else if (trigger != 'manual') {
                 var eventIn = trigger === 'hover' ? 'mouseenter' : 'focus';
                 var eventOut = trigger === 'hover' ? 'mouseleave' : 'blur';
-                this.$element.on(eventIn, $.proxy(this.show, this));
-                this.$element.on(eventOut, $.proxy(this.hide, this));
+                this.$element.on(eventIn + "." + this.options.type, $.proxy(this.show, this));
+                this.$element.on(eventOut + "." + this.options.type, $.proxy(this.hide, this));
             }
         }
 
@@ -3602,12 +3673,12 @@ define('kotenei/tooltips', ['jquery'], function ($) {
         this.$container.append(this.$tips);
 
         if (this.options.scrollContainer) {
-            $(this.options.scrollContainer).on('scroll.tooltips', function () {
-                
+            $(this.options.scrollContainer).on('scroll.' + this.options.type, function () {
+
             });
         }
 
-        $(window).on('resize.tooltips', function () {
+        $(window).on('resize.' + this.options.type, function () {
             self.setPosition();
         });
 
