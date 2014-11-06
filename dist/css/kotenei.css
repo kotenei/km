@@ -1340,4 +1340,70 @@
 .k-imgPreview {
   background: white;
   padding: 10px;
+  position: fixed;
+  display: none;
+  z-index: 1200;
+}
+.k-imgPreview > .container {
+  position: relative;
+}
+.k-imgPreview > .container > span {
+  display: inline-block;
+  width: 26px;
+  height: 26px;
+  background: black;
+  border-radius: 50%;
+  border: 2px solid white;
+  text-align: center;
+  position: absolute;
+  cursor: pointer;
+}
+.k-imgPreview > .container > span.close {
+  right: -20px;
+  top: -20px;
+}
+.k-imgPreview > .container > span.close i {
+  margin-top: 2px;
+  margin-right: 2px;
+}
+.k-imgPreview > .container > span.prev {
+  top: 50%;
+  margin-top: -13px;
+  left: 15px;
+}
+.k-imgPreview > .container > span.prev i {
+  margin-right: 3px;
+  margin-top: 3px;
+}
+.k-imgPreview > .container > span.next {
+  top: 50%;
+  margin-top: -13px;
+  right: 15px;
+}
+.k-imgPreview > .container > span.next i {
+  margin-left: 2px;
+  margin-top: 1px;
+}
+.k-imgPreview > .container > span i {
+  color: white;
+  font-size: 12px;
+}
+.k-imgPreview > .container > img {
+  display: block;
+  border: none;
+}
+.k-imgPreview > .description {
+  margin: 0;
+}
+.k-imgPreview-backdrop {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: black;
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+  display: none;
+  z-index: 1199;
 }
