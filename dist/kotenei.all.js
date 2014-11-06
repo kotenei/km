@@ -3723,22 +3723,31 @@ define('kotenei/tooltips', ['jquery'], function ($) {
         var th = $tips.outerHeight();
         var position = { left: 0, top: 0 };
         var parent = $element[0];
+        var ret;
 
         do {
             position.left += parent.offsetLeft - parent.scrollLeft;
             position.top += parent.offsetTop - parent.scrollTop;
         } while ((parent = parent.offsetParent) && parent != this.$container[0]);
 
+
+
         switch (placement) {
             case 'left':
-                return { top: position.top + eh / 2 - th / 2, left: position.left - tw };
+                ret = { top: position.top + eh / 2 - th / 2, left: position.left - tw };
+                break;
             case 'top':
-                return { top: position.top - th, left: position.left + ew / 2 - tw / 2 };
+                ret = { top: position.top - th, left: position.left + ew / 2 - tw / 2 };
+                break;
             case 'right':
-                return { top: position.top + eh / 2 - th / 2, left: position.left + ew };
+                ret = { top: position.top + eh / 2 - th / 2, left: position.left + ew };
+                break;
             case 'bottom':
-                return { top: position.top + eh, left: position.left + ew / 2 - tw / 2 };
+                ret = { top: position.top + eh, left: position.left + ew / 2 - tw / 2 };
+                break;
         }
+
+        return ret;
     };
 
 
