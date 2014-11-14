@@ -319,10 +319,10 @@ define('kotenei/datepicker', ['jquery'], function ($) {
         html.push(this.getTimeBox());
 
         html.push('<div style="text-align:right;margin-bottom:5px;">');
-        html.push('<input type="button" value="清空" role="clear" class="btn btn-default" />&nbsp;');
-        html.push('<input type="button" value="今天" role="today" class="btn btn-success" />&nbsp;');
+        html.push('<input type="button" value="清空" role="clear" class="k-btn k-btn-default" />&nbsp;');
+        html.push('<input type="button" value="今天" role="today" class="k-btn k-btn-success" />&nbsp;');
         if (this.options.showTime) {
-            html.push('<input type="button" value="确定" role="confirm" class="btn btn-primary" />&nbsp;');
+            html.push('<input type="button" value="确定" role="confirm" class="k-btn k-btn-primary" />&nbsp;');
         }
 
         html.push('</div>');

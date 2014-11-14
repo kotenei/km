@@ -32,8 +32,8 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips'], func
                             '<h4 class="k-window-header"><span class="k-window-title"></span><span class="k-window-close">×</span></h4>' +
                             '<div class="k-window-container"></div>' +
                             '<div class="k-window-footer">' +
-                                '<button type="button" class="btn btn-primary k-window-ok">确定</button>' +
-                                '<button type="button" class="btn btn-default k-window-cancel">取消</button>' +
+                                '<button type="button" class="k-btn k-btn-primary k-window-ok">确定</button>' +
+                                '<button type="button" class="k-btn k-btn-default k-window-cancel">取消</button>' +
                             '</div>' +
                         '</div>';
         this.backdrop = '<div class="k-window-backdrop"></div>';

@@ -1072,10 +1072,10 @@ define('kotenei/datepicker', ['jquery'], function ($) {
         html.push(this.getTimeBox());
 
         html.push('<div style="text-align:right;margin-bottom:5px;">');
-        html.push('<input type="button" value="清空" role="clear" class="btn btn-default" />&nbsp;');
-        html.push('<input type="button" value="今天" role="today" class="btn btn-success" />&nbsp;');
+        html.push('<input type="button" value="清空" role="clear" class="k-btn k-btn-default" />&nbsp;');
+        html.push('<input type="button" value="今天" role="today" class="k-btn k-btn-success" />&nbsp;');
         if (this.options.showTime) {
-            html.push('<input type="button" value="确定" role="confirm" class="btn btn-primary" />&nbsp;');
+            html.push('<input type="button" value="确定" role="confirm" class="k-btn k-btn-primary" />&nbsp;');
         }
 
         html.push('</div>');
@@ -5730,8 +5730,8 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips'], func
                             '<h4 class="k-window-header"><span class="k-window-title"></span><span class="k-window-close">×</span></h4>' +
                             '<div class="k-window-container"></div>' +
                             '<div class="k-window-footer">' +
-                                '<button type="button" class="btn btn-primary k-window-ok">确定</button>' +
-                                '<button type="button" class="btn btn-default k-window-cancel">取消</button>' +
+                                '<button type="button" class="k-btn k-btn-primary k-window-ok">确定</button>' +
+                                '<button type="button" class="k-btn k-btn-default k-window-cancel">取消</button>' +
                             '</div>' +
                         '</div>';
         this.backdrop = '<div class="k-window-backdrop"></div>';
