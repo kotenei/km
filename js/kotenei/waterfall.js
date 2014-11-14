@@ -65,6 +65,7 @@ define('kotenei/waterfall', ['jquery', 'kotenei/infiniteScroll', 'kotenei/popTip
     Waterfall.prototype.arrangementInit = function () {
         this.arrHeight = [];
         this.nodes = this.$element.children(this.options.nodeTag);
+        if (this.nodes.length === 0) { return;}
         var n = this.options.resize ? (this.$document.width() / this.node_w | 0) : (this.$element.width() / this.node_w | 0);
         var len = 0;
         for (var i = 0, node_h, $node; i < this.nodes.length; i++) {
@@ -139,11 +140,12 @@ define('kotenei/waterfall', ['jquery', 'kotenei/infiniteScroll', 'kotenei/popTip
             var index = this.arrHeight.indexOf(min_h);
             return index;
         } else {
-            for (var i = 0; i < this.arrHeight; i++) {
+            for (var i = 0; i < this.arrHeight.length; i++) {
                 if (this.arrHeight[i] === min_h) {
                     return i;
                 }
             }
+            return -1;
         }
     };
 
