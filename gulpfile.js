@@ -14,7 +14,10 @@ var config     = JSON.parse(fs.readFileSync(configPath, 'utf8'));
 
 //将所有 kotenei 合成一份定义
 var build = function(){
-    return through2.obj(function(file, enc, callback) {
+    return through2.obj(function (file, enc, callback) {
+
+        console.log(file)
+
         var soure   = file.contents.toString('utf8');
         var jsPath  = path.join(__dirname, 'js', 'kotenei');
         var modules = [];
@@ -55,7 +58,6 @@ var build = function(){
         def.push('});');
 
         file.contents = new Buffer(soure + '\n;\n' + def.join('\n'));
-       
         callback(null, file);
     });
 };
@@ -74,15 +76,17 @@ gulp.task('less', function () {
     .pipe(gulp.dest('./dist/css'))
 });
 
-gulp.task('scripts', function(){
+gulp.task('scripts', function () {
+
+
     gulp.src([
         './js/kotenei/*.js'
     ])
     .pipe(concat('kotenei.all.js'))
-    .pipe(build())
-    .pipe(gulp.dest('./dist'))
-    .pipe(rename('kotenei.all.min.js'))
-    .pipe(uglify())
+    //.pipe(build())
+    //.pipe(gulp.dest('./dist'))
+    //.pipe(rename('kotenei.all.min.js'))
+    //.pipe(uglify())
     .pipe(gulp.dest('./dist'));
 });
 

@@ -6140,6 +6140,6 @@ define("kotenei", ["kotenei/autoComplete", "kotenei/cache", "kotenei/clipZoom", 
         "ValidateTooltips" : _validateTooltips,
         "Waterfall" : _waterfall,
         "Window" : _window,
-        "WordLimit" : _wordLimit
+       "WordLimit" : _wordLimit
     };
 });
