@@ -83,10 +83,10 @@ gulp.task('scripts', function () {
         './js/kotenei/*.js'
     ])
     .pipe(concat('kotenei.all.js'))
-    //.pipe(build())
-    //.pipe(gulp.dest('./dist'))
-    //.pipe(rename('kotenei.all.min.js'))
-    //.pipe(uglify())
+    .pipe(build())
+    .pipe(gulp.dest('./dist'))
+    .pipe(rename('kotenei.all.min.js'))
+    .pipe(uglify())
     .pipe(gulp.dest('./dist'));
 });
 
