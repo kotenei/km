@@ -2405,6 +2405,71 @@ function ($, Dropdown, DatePicker, util) {
 
 });
 /**
+ * 事件
+ * @date :2014-12-01
+ * @author kotenei (kotenei@qq.com)
+ */ 
+define('kotenei/event', [], function () {
+
+    var exports = {},
+        topics = {},
+        subId = -1;
+
+    exports.on = function (topic, func) {
+        if (!topics[topic]) {
+            topics[topic] = [];
+        }
+        var token = (++subId).toString();
+
+        topics[topic].push({
+            token: token,
+            func: func
+        });
+
+        return token;
+    };
+
+    exports.off = function (topic) {
+        if (!topic) {
+            subId = -1;
+            topics = {};
+            return;
+        }
+        if (/^\d+$/.test(topic)) {
+            for (var m in topics) {
+                if (topics[m]) {
+                    for (var i = 0, j = topics[m].length; i < j; i++) {
+                        if (topics[m][i].token === topic) {
+                            topics[m].splice(i, 1);
+                            return topic;
+                        }
+                    }
+                }
+            }
+        } else {
+            if (topics[topic]) {
+                delete topics[topic];
+            }
+        }
+    };
+
+    exports.trigger = function (topic, args) {
+        if (!topics[topic]) {
+            return false;
+        }
+        var arr = topics[topic],
+            len = arr ? arr.length : 0;
+
+        while (len--) {
+            arr[len].func(args);
+        }
+    };
+
+    return exports;
+
+});
+
+/**
  * 高亮模块
  * @date :2014-10-30
  * @author kotenei (kotenei@qq.com)
@@ -6112,7 +6177,7 @@ define('kotenei/wordLimit', ['jquery'], function ($) {
     return WordLimit;
 });
 ;
-define("kotenei", ["kotenei/autoComplete", "kotenei/cache", "kotenei/clipZoom", "kotenei/datepicker", "kotenei/dragdrop", "kotenei/dropdown", "kotenei/dropdownDatepicker", "kotenei/highlight", "kotenei/imgPreview", "kotenei/infiniteScroll", "kotenei/lazyload", "kotenei/loading", "kotenei/pager", "kotenei/placeholder", "kotenei/popover", "kotenei/popTips", "kotenei/router", "kotenei/slider", "kotenei/switch", "kotenei/tooltips", "kotenei/tree", "kotenei/util", "kotenei/validate", "kotenei/validateTooltips", "kotenei/waterfall", "kotenei/window", "kotenei/wordLimit"], function(_autoComplete, _cache, _clipZoom, _datepicker, _dragdrop, _dropdown, _dropdownDatepicker, _highlight, _imgPreview, _infiniteScroll, _lazyload, _loading, _pager, _placeholder, _popover, _popTips, _router, _slider, _switch, _tooltips, _tree, _util, _validate, _validateTooltips, _waterfall, _window, _wordLimit){
+define("kotenei", ["kotenei/autoComplete", "kotenei/cache", "kotenei/clipZoom", "kotenei/datepicker", "kotenei/dragdrop", "kotenei/dropdown", "kotenei/dropdownDatepicker", "kotenei/event", "kotenei/highlight", "kotenei/imgPreview", "kotenei/infiniteScroll", "kotenei/lazyload", "kotenei/loading", "kotenei/pager", "kotenei/placeholder", "kotenei/popover", "kotenei/popTips", "kotenei/router", "kotenei/slider", "kotenei/switch", "kotenei/tooltips", "kotenei/tree", "kotenei/util", "kotenei/validate", "kotenei/validateTooltips", "kotenei/waterfall", "kotenei/window", "kotenei/wordLimit"], function(_autoComplete, _cache, _clipZoom, _datepicker, _dragdrop, _dropdown, _dropdownDatepicker, _event, _highlight, _imgPreview, _infiniteScroll, _lazyload, _loading, _pager, _placeholder, _popover, _popTips, _router, _slider, _switch, _tooltips, _tree, _util, _validate, _validateTooltips, _waterfall, _window, _wordLimit){
     return {
         "AutoComplete" : _autoComplete,
         "cache" : _cache,
@@ -6121,6 +6186,7 @@ define("kotenei", ["kotenei/autoComplete", "kotenei/cache", "kotenei/clipZoom", 
         "Dragdrop" : _dragdrop,
         "Dropdown" : _dropdown,
         "DropdownDatepicker" : _dropdownDatepicker,
+        "event" : _event,
         "highlight" : _highlight,
         "ImgPreview" : _imgPreview,
         "InfiniteScroll" : _infiniteScroll,
@@ -6140,6 +6206,6 @@ define("kotenei", ["kotenei/autoComplete", "kotenei/cache", "kotenei/clipZoom", 
         "ValidateTooltips" : _validateTooltips,
         "Waterfall" : _waterfall,
         "Window" : _window,
-       "WordLimit" : _wordLimit
+        "WordLimit" : _wordLimit
     };
 });
