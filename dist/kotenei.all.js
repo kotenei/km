@@ -198,7 +198,7 @@ define('kotenei/app', ['jquery', 'kotenei/router', 'kotenei/util', 'kotenei/popT
             var instance = this._view[viewName].instance;
             require([viewName], function (View) {
                 if (!instance) {
-                    instance = new View($view);
+                    instance = new View($view, self);
                     self._view[viewName].instance = instance;
                 }
                 instance.run(params);
@@ -217,8 +217,14 @@ define('kotenei/app', ['jquery', 'kotenei/router', 'kotenei/util', 'kotenei/popT
         this.viewName = viewName;
     };
 
-    App.View = function ($el) {
+    App.View = function ($el, app) {
         this.$el = $el;
+        this.app = app;
+
+        //模板引擎绑定
+        if (app.config.Template) {
+            this.Template = app.config.Template;
+        }
     };
 
     App.View.prototype.run = function (context) {
@@ -231,8 +237,8 @@ define('kotenei/app', ['jquery', 'kotenei/router', 'kotenei/util', 'kotenei/popT
             initialize: function () { }
         }, definition || {});
 
-        var View = function ($el) {
-            App.View.call(this, $el);
+        var View = function ($el, app) {
+            App.View.call(this, $el, app);
         };
 
         View.prototype = util.createProto(App.View.prototype);
