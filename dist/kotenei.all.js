@@ -6020,7 +6020,7 @@ define('kotenei/waterfall', ['jquery', 'kotenei/infiniteScroll', 'kotenei/popTip
  * @date:2014-09-17
  * @author:kotenei(kotenei@qq.com)
  */
-define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips'], function ($, DragDrop, popTips) {
+define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kotenei/loading'], function ($, DragDrop, popTips, Loading) {
 
     /**
      * 窗体模块
@@ -6035,7 +6035,8 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips'], func
             width: '600',
             height: null,
             backdrop: true,
-            backdropClose: false
+            backdropClose: false,
+            iframe: false
         }, options);
 
         this._event = {
@@ -6066,7 +6067,15 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips'], func
     Window.prototype.init = function () {
         this.build();
         this.setTitle(this.options.title);
-        if (this.options.content !== null) { this.setContent(this.options.content); }
+
+        if (this.options.iframe) {
+            this.$container.css({
+                padding: 0,
+                overflowY: 'hidden'
+            }).append('<iframe frameborder="0" width="100%" src="' + this.options.url + '" scrolling="auto"></iframe>');
+        } else {
+            this.setContent(this.options.content);
+        }
         this.eventBind();
     };
 
@@ -6127,7 +6136,7 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips'], func
      * @return {Object} 
      */
     Window.prototype.remote = function () {
-        if (typeof this.options.url !== 'string' || this.options.content != null) { return; }
+        if (typeof this.options.url !== 'string' || this.options.content != null || this.iframe) { return; }
         var self = this;
         var dtd = $.Deferred();
         this.loading = true;
@@ -6144,6 +6153,7 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips'], func
      */
     Window.prototype.open = function () {
         var self = this;
+        Loading.show();
         $.when(
             this.remote()
         ).done(function () {
@@ -6152,10 +6162,10 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips'], func
             self.layout();
             self._event.open(self.$win);
 
-            var z=zIndex.get();
-            self.$win.css('zIndex',z);
-            self.$backdrop.css('zIndex',--z);
-
+            var z = zIndex.get();
+            self.$win.css('zIndex', z);
+            self.$backdrop.css('zIndex', --z);
+            Loading.hide();
         });
     };
 
@@ -6184,8 +6194,6 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips'], func
         this.$backdrop.hide();
         zIndex.pop();
     };
-
-
 
 
     /**
@@ -6229,6 +6237,9 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips'], func
         }
 
         this.$container.css("height", containerHeight);
+        if (this.options.iframe) {
+            this.$container.find('iframe').height(containerHeight);
+        }
         this.$win.css({
             height: newHeight,
             marginLeft: -this.$win.width() / 2,
@@ -6300,7 +6311,7 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips'], func
             win = new Window({ width: 400, backdropClose: false });
             window.winConfirm = win;
         }*/
-        var win =new Window({ width: 400, backdropClose: false });
+        var win = new Window({ width: 400, backdropClose: false });
         win.setTitle(title);
         win.setContent(content);
         win.on('ok', onOk || $.noop);
