@@ -23,7 +23,7 @@ define('kotenei/validate', ['jquery'], function ($) {
      * @type {Object}
      */
     Validate.DEFAULTS = {
-        errorClass: 'error',
+        errorClass: 'k-error',
         errorElement: 'label',
         rules: {},
         messages: {},
@@ -32,6 +32,8 @@ define('kotenei/validate', ['jquery'], function ($) {
         errorPlacement: null,
         showSingleError: false
     }
+
+    
 
     /**
      * 初始化
@@ -54,6 +56,10 @@ define('kotenei/validate', ['jquery'], function ($) {
         var self = this;
         var $elements = this.$form.find('input,select,textarea')
         .filter(function () {
+            if (this.getAttribute('data-rules')) {
+                self.metaRules(this);
+            }
+
             if (!(this.name in self.rules)) {
                 return false;
             } else {
@@ -65,6 +71,23 @@ define('kotenei/validate', ['jquery'], function ($) {
                 self.validFields.count++;
             }
         });
+    };
+
+    /**
+    * 读取html的属性设置的验证规则
+    * @return {Void} 
+    */
+    Validate.prototype.metaRules = function (element) {
+        var meta = element.getAttribute('data-rules');
+        meta = eval('(' + meta + ')');
+
+        if (!this.rules[element.name]) {
+            this.rules[element.name] = meta.rules;
+        }
+
+        if (!this.messages[element.name]) {
+            this.messages[element.name] = meta.messages;
+        }
     };
 
     /**

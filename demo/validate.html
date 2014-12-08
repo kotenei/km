@@ -20,7 +20,7 @@
             <tr>
                 <td>用户名：</td>
                 <td>
-                    <input type="text" name="userName" placeholder="请输入用户名" /></td>
+                    <input type="text" name="userName" placeholder="请输入用户名" data-rules="{rules:{required:true},messages:{required:'请输入 用户名'}}" /></td>
             </tr>
             <tr>
                 <td>密码：</td>
@@ -50,13 +50,13 @@
             var Validate = kotenei.Validate;
             var validate = new Validate($("#form"), {
                 rules: {
-                    'userName': { required: true },
+                    //'userName': { required: true },
                     'password': { required: true },
                     'rePwd': { required: true, equalTo: '#password' },
                     'email': { required: true, email: true }
                 },
                 messages: {
-                    'userName': { required: '请输入用户名' },
+                    //'userName': { required: '请输入用户名' },
                     'password': { required: '请输入密码' },
                     'rePwd': { required: '请输入确认密码', equalTo: '密码与确认密码不一致' },
                     'email': { required: '请输入电子邮箱', email: '邮箱格式错误' }
