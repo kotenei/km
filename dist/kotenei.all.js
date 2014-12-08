@@ -6136,7 +6136,7 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
      * @return {Object} 
      */
     Window.prototype.remote = function () {
-        if (typeof this.options.url !== 'string' || this.options.content != null || this.iframe) { return; }
+        if (typeof this.options.url !== 'string' || this.options.content != null||this.options.iframe ) { return; }
         var self = this;
         var dtd = $.Deferred();
         this.loading = true;
