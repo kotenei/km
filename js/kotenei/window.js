@@ -19,7 +19,8 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
             height: null,
             backdrop: true,
             backdropClose: false,
-            iframe: false
+            iframe: false,
+            appendTo: document.body
         }, options);
 
         this._event = {
@@ -92,9 +93,8 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
      * @return {Void}           
      */
     Window.prototype.on = function (type, callback) {
-        if (this._event.hasOwnProperty(type)) {
-            this._event[type] = callback || $.noop;
-        }
+        this._event[type] = callback || $.noop;
+        return this;
     };
 
     /**
@@ -119,7 +119,7 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
      * @return {Object} 
      */
     Window.prototype.remote = function () {
-        if (typeof this.options.url !== 'string' || this.options.content != null||this.options.iframe ) { return; }
+        if (typeof this.options.url !== 'string' || this.options.content != null || this.options.iframe) { return; }
         var self = this;
         var dtd = $.Deferred();
         this.loading = true;
@@ -243,8 +243,8 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
         this.$header = this.$win.find('.k-window-header');
         this.$container = this.$win.find('.k-window-container');
         this.$footer = this.$win.find('.k-window-footer');
-        this.$win.appendTo(document.body);
-        this.$backdrop.appendTo(document.body);
+        this.$win.appendTo(this.options.appendTo);
+        this.$backdrop.appendTo(this.options.appendTo);
     };
 
     /**
@@ -260,13 +260,13 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
             content = title;
             title = "提示";
         }
-        /*var win = window.winAlert;
+        var win = window.winAlert;
         if (!win) {
             win = new Window({ width: 400, backdropClose: false });
             win.$win.find(".window-cancel").hide();
             window.winAlert = win;
-        }*/
-        var win = new Window({ width: 400, backdropClose: false });
+        }
+        //var win = new Window({ width: 400, backdropClose: false });
         win.$win.find(".k-window-cancel").hide();
         win.setTitle(title);
         win.setContent(content);
@@ -289,12 +289,13 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
             content = title;
             title = "确认提示";
         }
-        /*var win = window.winConfirm;
+        var win = window.winConfirm;
+
         if (!win) {
             win = new Window({ width: 400, backdropClose: false });
             window.winConfirm = win;
-        }*/
-        var win = new Window({ width: 400, backdropClose: false });
+        }
+        //var win = new Window({ width: 400, backdropClose: false });
         win.setTitle(title);
         win.setContent(content);
         win.on('ok', onOk || $.noop);
