@@ -44,7 +44,9 @@ define('kotenei/ajax', ['jquery', 'kotenei/loading', 'kotenei/popTips', 'kotenei
                 $.ajax({
                     url: url,
                     type: type,
-                    data: data || {}
+                    data: data || {},
+                    dataType: 'json',
+                    traditional: true
                 }).done(function (ret) {
 
                     if (typeof ret === 'string') {
@@ -72,7 +74,7 @@ define('kotenei/ajax', ['jquery', 'kotenei/loading', 'kotenei/popTips', 'kotenei
                                 if (ret.Url) {
                                     window.location.href = ret.Url;
                                 } else {
-                                    
+
                                     dtd.resolve(ret);
                                 }
                             }
