@@ -5328,6 +5328,7 @@ define('kotenei/validate', ['jquery'], function ($) {
 
     /**
     * 读取html的属性设置的验证规则
+    * @param  {Dom} element - dom
     * @return {Void} 
     */
     Validate.prototype.metaRules = function (element) {
@@ -5350,7 +5351,7 @@ define('kotenei/validate', ['jquery'], function ($) {
 
         if (!this.tipsPlacement[element.name]) {
             this.tipsPlacement[element.name] = meta.tipsPlacement || 'right';
-        } 
+        }
     };
 
     /**
@@ -5552,6 +5553,45 @@ define('kotenei/validate', ['jquery'], function ($) {
     };
 
     /**
+    * 移除验证规则
+    * @param  {Dom} element - dom
+    * @param  {String} ruleName - 规则名称
+    * @return {Void} 
+    */
+    Validate.prototype.removeRule = function (element, ruleName) {
+        if (this.rules[element.name]) {
+            if (this.rules[element.name][ruleName]) {
+                delete this.rules[element.name][ruleName];
+            }
+        }
+        if (this.messages[element.name]) {
+            if (this.messages[element.name][ruleName]) {
+                delete this.messages[element.name][ruleName];
+            }
+        }
+    };
+
+    /**
+     * 设置验证规则
+     * @param  {Dom} element - dom
+     * @param  {Object} rule - 规则对象
+     * @return {Void} 
+     */
+    Validate.prototype.setRules = function (element, rule) {
+        if (!this.rules[element.name]) {
+            this.rules[element.name] = rule.rules;
+        } else {
+            $.extend(this.rules[element.name], rule.rules, true);
+        }
+
+        if (!this.messages[element.name]) {
+            this.messages[element.name] = rule.messages;
+        } else {
+            $.extend(this.messages[element.name], rule.messages, true);
+        }
+    };
+
+    /**
      * 添加自定义验证规则
      * @param  {String} name - 验证名称
      * @param  {Function} name - 验证方法
@@ -5561,7 +5601,8 @@ define('kotenei/validate', ['jquery'], function ($) {
     Validate.prototype.addMethod = function (name, method, message) {
         this.methods[name] = method;
         this.errorMessages[name] = message !== undefined ? message : this.errorMessages[name];
-    }
+    };
+
 
     /**
      * 默认错误提示信息
