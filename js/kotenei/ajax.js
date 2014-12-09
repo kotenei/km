@@ -3,7 +3,7 @@
  * @date:2014-12-05
  * @author:kotenei(kotenei@qq.com)
  */
-define('kotenei/ajax', ['jquery', 'kotenei/loading', 'kotenei/popTips'], function ($, Loading, popTips) {
+define('kotenei/ajax', ['jquery', 'kotenei/loading', 'kotenei/popTips', 'kotenei/validate', 'kotenei/validateTooltips'], function ($, Loading, popTips, Validate, ValidateTooltips) {
 
     /**
      * ajax 通用操作封装
@@ -90,12 +90,23 @@ define('kotenei/ajax', ['jquery', 'kotenei/loading', 'kotenei/popTips'], functio
                     return ajax("GET", url, data);
                 },
                 ajaxForm: function ($form) {
-                    var url = $form.attr('action'),
-                        type = $form.attr('method'),
-                        data = $form.serialize();
+                    var validate;
+
+                    if (!($form instanceof $) && $form instanceof Validate || $form instanceof ValidateTooltips) {
+                        validate = $form;
+                        $form = $form.$form;
+                    }
+
+                    url = $form.attr('action');
+                    type = $form.attr('method');
+                    data = $form.serialize();
 
                     if ($form.valid) {
                         if ($form.valid()) {
+                            return ajax(type, url, data);
+                        }
+                    } else if (validate && validate.valid) {
+                        if (validate.valid()) {
                             return ajax(type, url, data);
                         }
                     } else {
