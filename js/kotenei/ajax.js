@@ -25,17 +25,28 @@ define('kotenei/ajax', ['jquery', 'kotenei/loading', 'kotenei/popTips', 'kotenei
             *     Data:Object|Null          （返回的数据对象）
             * }
             */
-            var ajax = function (type, url, data) {
+            var ajax = function (type, url, data, config) {
+
+                var config = $.extend({}, {
+                    loadingEnable: true,
+                    popTips: {
+                        delay: 800,
+                        custom: false
+                    }
+                }, config);
 
                 var dtd = $.Deferred();
 
-                Loading.show();
+                if (config.loadingEnable) {
+                    Loading.show();
+                }
 
                 $.ajax({
                     url: url,
                     type: type,
                     data: data || {}
                 }).done(function (ret) {
+
                     if (typeof ret === 'string') {
                         try {
                             ret = eval('(' + ret + ')');
@@ -44,53 +55,82 @@ define('kotenei/ajax', ['jquery', 'kotenei/loading', 'kotenei/popTips', 'kotenei
                             return dtd.promise();
                         }
                     }
+
                     if (ret.Status) {
+
                         if (ret.Message) {
-                            popTips.success(ret.Message, 1000, function () {
+                            if (!config.popTips.custom) {
+                                popTips.success(ret.Message, config.popTips.delay, function () {
+                                    if (ret.Url) {
+                                        window.location.href = ret.Url;
+                                    } else {
+                                        dtd.resolve(ret);
+                                    }
+                                });
+                            } else {
+                                popTips.success(ret.Message, config.popTips.delay);
                                 if (ret.Url) {
                                     window.location.href = ret.Url;
                                 } else {
+                                    
                                     dtd.resolve(ret);
                                 }
-                            });
+                            }
+
                         } else if (ret.Url) {
                             window.location.href = ret.Url;
                         } else {
                             dtd.resolve(ret);
                         }
+
                     } else {
+
+
                         if (ret.ErrorMessage) {
-                            popTips.error(ret.ErrorMessage || "发生了未知错误", 1000, function () {
+                            if (!config.popTips.custom) {
+                                popTips.error(ret.ErrorMessage || "发生了未知错误", config.popTips.delay, function () {
+                                    if (ret.Url) {
+                                        window.location.href = ret.url;
+                                    } else {
+                                        dtd.resolve(ret);
+                                    }
+                                });
+                            } else {
+                                popTips.error(ret.ErrorMessage || "发生了未知错误", config.popTips.delay);
                                 if (ret.Url) {
                                     window.location.href = ret.url;
                                 } else {
                                     dtd.resolve(ret);
                                 }
-                            })
+                            }
                         } else if (ret.Url) {
                             window.location.href = ret.Url;
                         } else {
                             dtd.resolve(ret);
                         }
+
+
                     }
                 }).fail(function () {
-                    popTips.error("服务器发生错误", 1000);
+                    popTips.error("服务器发生错误", config.popTips.delay);
                 }).always(function () {
-                    Loading.hide();
+                    if (config.loadingEnable) {
+                        Loading.hide();
+                    }
                 });
 
                 return dtd.promise();
             };
 
             return {
-                post: function (url, data) {
-                    return ajax("POST", url, data);
+                post: function (url, data, config) {
+                    return ajax("POST", url, data, config);
                 },
-                get: function (url, data) {
-                    return ajax("GET", url, data);
+                get: function (url, data, config) {
+                    return ajax("GET", url, data, config);
                 },
-                ajaxForm: function ($form) {
-                    var validate;
+                ajaxForm: function ($form, config) {
+                    var validate, url, type, data;
 
                     if (!($form instanceof $) && $form instanceof Validate || $form instanceof ValidateTooltips) {
                         validate = $form;
@@ -101,17 +141,30 @@ define('kotenei/ajax', ['jquery', 'kotenei/loading', 'kotenei/popTips', 'kotenei
                     type = $form.attr('method');
                     data = $form.serialize();
 
+                    var dtd = $.Deferred();
+                    var ret = {
+                        Status: false,
+                        ErrorMessage: '验证失败'
+                    };
+
                     if ($form.valid) {
                         if ($form.valid()) {
-                            return ajax(type, url, data);
+                            return ajax(type, url, data, config);
+                        } else {
+                            dtd.reject(ret);
+                            return dtd.promise();
                         }
                     } else if (validate && validate.valid) {
                         if (validate.valid()) {
-                            return ajax(type, url, data);
+                            return ajax(type, url, data, config);
+                        } else {
+                            dtd.reject(ret);
+                            return dtd.promise();
                         }
                     } else {
-                        return ajax(type, url, data);
+                        return ajax(type, url, data, config);
                     }
+
 
                 }
             };

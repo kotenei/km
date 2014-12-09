@@ -15,6 +15,7 @@ define('kotenei/validate', ['jquery'], function ($) {
         this.options = $.extend({}, Validate.DEFAULTS, options);
         this.rules = this.options.rules;
         this.messages = this.options.messages;
+        this.tipsPlacement = this.options.tipsPlacement;
         this.init();
     }
 
@@ -27,13 +28,12 @@ define('kotenei/validate', ['jquery'], function ($) {
         errorElement: 'label',
         rules: {},
         messages: {},
+        tipsPlacement: {},
         focusClear: true,
         keyupClear: true,
         errorPlacement: null,
         showSingleError: false
     }
-
-    
 
     /**
      * 初始化
@@ -83,11 +83,21 @@ define('kotenei/validate', ['jquery'], function ($) {
 
         if (!this.rules[element.name]) {
             this.rules[element.name] = meta.rules;
+        } else {
+            $.extend(meta.rules, this.rules[element.name], true);
+            this.rules[element.name] = meta.rules;
         }
 
         if (!this.messages[element.name]) {
             this.messages[element.name] = meta.messages;
+        } else {
+            $.extend(meta.messages, this.messages[element.name], true);
+            this.messages[element.name] = meta.messages;
         }
+
+        if (!this.tipsPlacement[element.name]) {
+            this.tipsPlacement[element.name] = meta.tipsPlacement || 'right';
+        } 
     };
 
     /**
