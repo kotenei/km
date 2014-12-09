@@ -5669,7 +5669,7 @@ define('kotenei/validate', ['jquery'], function ($) {
 
             $.post(url, data)
             .success(function (msg) {
-                var valid = msg === true || msg === "true";
+                var valid = msg === true || msg.toLowerCase() === "true";
                 if (valid) {
                     self.hideError($element);
                 } else {
