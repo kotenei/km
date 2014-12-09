@@ -30,12 +30,16 @@ define('kotenei/loading', ['jquery', 'spin'], function ($, Spinner) {
         this.init();
     }
 
+    var isShow = false;
+
     Loading.prototype.init = function () {
         this.spinner = new Spinner(this.options);
         this.$loading = $(this.tpl).appendTo(document.body).hide();
     };
 
     Loading.prototype.show = function () {
+        if (isShow) { return; }
+        isShow = true;
         this.spinner.spin(this.$loading.get(0));
         this.$loading.fadeIn('fast');
     };
@@ -44,6 +48,7 @@ define('kotenei/loading', ['jquery', 'spin'], function ($, Spinner) {
         var self = this;
         this.$loading.hide();
         this.spinner.stop();
+        isShow = false;
     };
 
     Loading.show = function () {
