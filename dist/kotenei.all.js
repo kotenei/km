@@ -3422,7 +3422,7 @@ define('kotenei/loading', ['jquery', 'spin'], function ($, Spinner) {
  * @date:2014-09-14
  * @author:kotenei(kotenei@qq.com)
  */
-define('kotenei/pager', ['jquery'], function ($) {
+define('kotenei/pager', ['jquery', 'kotenei/event'], function ($, event) {
 
     /**
      * 分页模块
@@ -3432,13 +3432,18 @@ define('kotenei/pager', ['jquery'], function ($) {
     var Pager = function ($element, options) {
         this.$element = $element;
         this.options = $.extend({}, {
+            curPage: 1,
+            totalCount: 0,
+            pageSize: 20,
             className: 'k-pagination',
-            onclick: $.noop
         }, options);
-        this.curPage = 1;
-        this.totalCount = 0;
-        this.pageSize = 10;
+        this.curPage = this.options.curPage;
+        this.totalCount = this.options.totalCount;
+        this.pageSize = this.options.pageSize;
         this.template = '<div class="pager-box"></div>';
+        this.event = event;
+        this.init();
+
     }
 
     /**
@@ -3455,9 +3460,20 @@ define('kotenei/pager', ['jquery'], function ($) {
             if ($this.hasClass("disabled") || $this.hasClass("active")) { return; }
             self.curPage = parseInt(page);
             self.$pager.html(self.build());
-            self.options.onclick(self.curPage);
+            self.event.trigger('click.pager', [page]);
         });
     };
+
+    /**
+     * 事件绑定
+     * @return {Void} 
+     */
+    Pager.prototype.on = function (name, callback) {
+        self = this;
+        this.event.on(name + '.pager', function (args) {
+            callback.apply(self, args);
+        });
+    }
 
     /**
      * 创建分页HTML
@@ -3495,7 +3511,7 @@ define('kotenei/pager', ['jquery'], function ($) {
         allPage = ((this.totalCount % this.pageSize) !== 0 ? allPage + 1 : allPage);
         allPage = (allPage === 0 ? 1 : allPage);
 
-        
+
         //确定起始和结束页码
         start = (this.curPage + 2) > allPage ? (allPage - 4) : (this.curPage - 2);
         end = this.curPage < 4 ? 5 : this.curPage + 2;
@@ -3514,7 +3530,7 @@ define('kotenei/pager', ['jquery'], function ($) {
             start: start, end: end, pre: pre, next: next, allPage: allPage
         }
     };
- 
+
     return Pager;
 });
 

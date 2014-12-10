@@ -19,14 +19,13 @@
     <script type="text/javascript">
         require(['kotenei'], function (kotenei) {
             var pager = new kotenei.Pager($("#container"), {
-                onclick: function (page) {
-                    alert("当前页：" + page);
-                }
+                curPage: 1,
+                totalCount: 100,
+                pageSize: 10
             });
-            pager.curPage = 1;
-            pager.totalCount = 100;
-            pager.pageSize = 10;
-            pager.init();
+            pager.on('click', function () {
+                alert("当前页：" + this.curPage);
+            })
         });
     </script>
 </body>
