@@ -46,7 +46,8 @@ define('kotenei/ajax', ['jquery', 'kotenei/loading', 'kotenei/popTips', 'kotenei
                     type: type,
                     data: data || {},
                     dataType: 'json',
-                    traditional: true
+                    traditional: true,
+                    cache: false
                 }).done(function (ret) {
 
                     if (typeof ret === 'string') {

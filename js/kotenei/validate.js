@@ -12,27 +12,21 @@ define('kotenei/validate', ['jquery'], function ($) {
      */
     function Validate($form, options) {
         this.$form = $form;
-        this.options = $.extend({}, Validate.DEFAULTS, options);
+        this.options = $.extend({}, {
+            errorClass: 'k-error',
+            errorElement: 'label',
+            rules: {},
+            messages: {},
+            tipsPlacement: {},
+            focusClear: true,
+            keyupClear: true,
+            errorPlacement: null,
+            showSingleError: false
+        }, options);
         this.rules = this.options.rules;
         this.messages = this.options.messages;
         this.tipsPlacement = this.options.tipsPlacement;
         this.init();
-    }
-
-    /**
-     * 默认参数
-     * @type {Object}
-     */
-    Validate.DEFAULTS = {
-        errorClass: 'k-error',
-        errorElement: 'label',
-        rules: {},
-        messages: {},
-        tipsPlacement: {},
-        focusClear: true,
-        keyupClear: true,
-        errorPlacement: null,
-        showSingleError: false
     }
 
     /**
