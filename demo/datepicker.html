@@ -22,11 +22,13 @@
         require(['kotenei'], function (kotenei) {
             var DatePicker = kotenei.Datepicker;
             var datePicker = new DatePicker($("#picker"), {
-                format: 'yyyy-MM-dd'
+                format: 'yyyy-MM-dd',
+                minDate:'2013-10-11',
+                maxDate: '2014-11-30'
             });
 
             //全局
-            DatePicker.Global();
+            //DatePicker.Global();
 
         });
     </script>

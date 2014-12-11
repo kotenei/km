@@ -1126,6 +1126,11 @@ select.k-error {
 .k-datepicker .year-box .year-box-container ul > li.cur:hover {
   background: none;
 }
+.k-datepicker .year-box .year-box-container ul > li.disabled {
+  color: #ccc;
+  text-decoration: line-through;
+  cursor: not-allowed;
+}
 .k-datepicker .year-box .year-box-controls {
   overflow: hidden;
   padding: 0 10px 5px;
@@ -1159,6 +1164,14 @@ select.k-error {
 .k-datepicker .month-box li:hover {
   background: #428bca;
   color: white;
+}
+.k-datepicker .month-box li.disabled {
+  cursor: text;
+  color: #ccc;
+}
+.k-datepicker .month-box li.disabled:hover {
+  background: none;
+  color: #ccc;
 }
 .k-datepicker .time-box {
   position: relative;

@@ -1102,7 +1102,9 @@ define('kotenei/datepicker', ['jquery'], function ($) {
             format: 'yyyy-MM-dd',
             positionProxy: function () {
                 return self.getPosition();
-            }
+            },
+            minDate: null,
+            maxDate: null
         }, options);
         this.isInput = this.$element.is('input');
         this.year = date.getFullYear();
@@ -1112,8 +1114,6 @@ define('kotenei/datepicker', ['jquery'], function ($) {
         this.isSetTime = false;
         this.selectDay = false;
         this.init();
-        this.eventBind();
-
         this.event = {
             selected: [],
             clean: []
@@ -1149,8 +1149,88 @@ define('kotenei/datepicker', ['jquery'], function ($) {
         if (this.isInput) {
             this.$element.attr('readonly', 'readonly');
         }
-        this.createPanel();
-        this.$datepicker.appendTo(this.options.appendTo);
+        this.initSelectDate();
+
+        if (this.canBuild()) {
+            this.createPanel();
+            this.eventBind();
+        } else {
+            console.log('最大日期必须大于最小日期');
+        }
+    };
+
+    /**
+     * 初始化可选择日期
+     * @return {Void}
+     */
+    DatePicker.prototype.initSelectDate = function () {
+
+        var today = new Date();
+
+        if (this.options.minDate) {
+            if (this.options.minDate === 'today') {
+                this.minDate = today;
+            } else {
+                this.minDate = new Date(this.options.minDate.replace(/-/g, "/"));
+            }
+
+            this.options.year.min = this.minDate.getFullYear();
+        }
+
+        if (this.options.maxDate) {
+            if (this.options.maxDate === 'today') {
+                this.maxDate = today;
+            } else {
+                this.maxDate = new Date(this.options.maxDate.replace(/-/g, "/"));
+            }
+
+            this.options.year.max = this.maxDate.getFullYear();
+        }
+
+
+        if (this.maxDate) {
+
+            if (this.year > this.maxDate.getFullYear()) {
+                this.year = this.maxDate.getFullYear();
+            }
+
+            if (this.month > this.maxDate.getMonth() + 1) {
+                this.month = this.maxDate.getMonth() + 1;
+            }
+
+            if (this.day > this.maxDate.getDate()) {
+                this.day = this.maxDate.getDate();
+            }
+
+        } else if (this.minDate) {
+
+            if (this.year > this.minDate.getFullYear()) {
+                this.year = this.minDate.getFullYear();
+            }
+
+            if (this.month > this.minDate.getMonth() + 1) {
+                this.month = this.minDate.getMonth() + 1;
+            }
+
+            if (this.day > this.minDate.getDate()) {
+                this.day = this.minDate.getDate();
+            }
+
+        }
+
+    }
+
+    /**
+     * 判断是否可以创建
+     * @return {Bolean}
+     */
+    DatePicker.prototype.canBuild = function () {
+
+        if (this.maxDate && this.minDate && this.format(this.maxDate, 'yyyyMMdd') < this.format(this.minDate, 'yyyyMMdd')) {
+            return false;
+        }
+
+        return true;
     };
 
     /**
@@ -1209,6 +1289,10 @@ define('kotenei/datepicker', ['jquery'], function ($) {
             var $this = $(this),
                 month = $this.attr("data-month");
 
+            if ($this.hasClass('disabled')) {
+                return;
+            }
+
             self.month = Number($.trim(month));
             self.monthBoxToggle(false);
             self.createDays();
@@ -1224,15 +1308,17 @@ define('kotenei/datepicker', ['jquery'], function ($) {
             var $this = $(this),
                 text = Number($.trim($this.text()));
 
-            if ($this.hasClass("cur")) { return; }
+            if ($this.hasClass("cur") || $this.hasClass('disabled')) { return; }
             self.$yearBox.find("li").removeClass("cur");
             $this.addClass("cur");
 
             self.year = Number(text);
+            self.setMonthDisabled();
             self.createDays();
             self.yearBoxToggle(false);
             self.prevToggle();
             self.nextToggle();
+
         }).on('click', '[role=yearPrev]', function () {
             //向前选择年份
             if (self.index === 0) {
@@ -1419,6 +1505,7 @@ define('kotenei/datepicker', ['jquery'], function ($) {
         this.$prev = this.$datepicker.find('th.prev i');
         this.$next = this.$datepicker.find('th.next i');
         this.index = this.$yearItems.find("li.cur").parent().show().index();
+        this.setMonthDisabled();
         this.createDays();
 
         if (this.options.showTime) {
@@ -1426,6 +1513,8 @@ define('kotenei/datepicker', ['jquery'], function ($) {
         } else {
             this.$timeBox.hide();
         }
+
+        this.$datepicker.appendTo(this.options.appendTo);
     };
 
     /**
@@ -1445,6 +1534,7 @@ define('kotenei/datepicker', ['jquery'], function ($) {
             page = Number(totalCount / 10) + 1;
         }
 
+        var disabled;
 
         for (i = 1; i <= page; i++) {
 
@@ -1453,7 +1543,10 @@ define('kotenei/datepicker', ['jquery'], function ($) {
             for (j = flag; j <= totalCount ; j++) {
 
                 year += 1;
-                contentHtml.push('<li id="li_' + year + '" class="' + (this.year === year ? "cur" : "") + '">' + year + '</li>');
+
+
+                contentHtml.push('<li id="li_' + year + '" class="' + (this.year === year ? "cur" : "") + '" >' + year + '</li>');
+
                 flag++;
 
                 if (count % 10 === 0) {
@@ -1488,12 +1581,24 @@ define('kotenei/datepicker', ['jquery'], function ($) {
      * @return {String}
      */
     DatePicker.prototype.getMonthBox = function () {
-        var html = [], i;
+        var html = [], i, month, monthText, disabled;
 
         html.push('<ul class="month-box">');
 
         for (i = 0; i < dates.months.length; i++) {
-            html.push('<li data-month="' + (i + 1) + '">' + dates.months[i] + '</li>');
+            monthText = dates.months[i];
+            month = i + 1;
+            disabled = '';
+
+            //if (this.minDate && this.maxDate && (month < this.minDate.getMonth() + 1 || month > this.maxDate.getMonth() + 1)) {
+            //    disabled = 'disabled';
+            //} else if (this.minDate && month < this.minDate.getMonth() + 1) {
+            //    disabled = 'disabled';
+            //} else if (this.maxDate && month > this.maxDate.getMonth() + 1) {
+            //    disabled = 'disabled';
+            //}
+
+            html.push('<li class="' + disabled + '" data-month="' + (i + 1) + '">' + monthText + '</li>');
         }
 
         html.push('</ul>');
@@ -1698,7 +1803,16 @@ define('kotenei/datepicker', ['jquery'], function ($) {
      * @return {Void}
      */
     DatePicker.prototype.prevToggle = function () {
-        if (this.year === this.options.year.min && this.month === 1) {
+
+        var min = 1;
+
+        if (this.minDate) {
+            min = this.minDate.getMonth() + 1;
+        } else if (this.maxDate) {
+            min = this.maxDate.getMonth() + 1;
+        }
+
+        if (this.year === this.options.year.min && this.month === min) {
             this.$prev.hide();
         } else {
             this.$prev.show();
@@ -1710,10 +1824,94 @@ define('kotenei/datepicker', ['jquery'], function ($) {
      * @return {Void}
      */
     DatePicker.prototype.nextToggle = function () {
-        if (this.year === this.options.year.max && this.month === 12) {
+
+        var max = 12;
+
+        if (this.maxDate) {
+            max = this.maxDate.getMonth() + 1;
+        } else if (this.minDate) {
+            max = this.minDate.getMonth() + 1;
+        }
+
+        if (this.year === this.options.year.max && this.month === max) {
             this.$next.hide();
         } else {
             this.$next.show();
+        }
+    };
+
+    /**
+     * 禁用某月份
+     * @return {Void}
+     */
+    DatePicker.prototype.setMonthDisabled = function () {
+
+        var minYear, maxYear, minMonth, maxMonth, minDay, maxDay
+        var $li = this.$monthBox.find('li');
+
+        $li.removeClass('disabled');
+
+
+        function setMinDisabled($li, minMonth) {
+            $li.each(function () {
+                var $this = $(this),
+                    month = $this.attr('data-month');
+                if (month < minMonth) {
+                    $this.addClass('disabled');
+                }
+            });
+        };
+
+        function setMaxDisabled($li, maxMonth) {
+            $li.each(function () {
+                var $this = $(this),
+                    month = $this.attr('data-month');
+                if (month > maxMonth) {
+                    $this.addClass('disabled');
+                }
+            });
+        }
+
+        if (this.minDate && this.maxDate) {
+
+            minYear = this.minDate.getFullYear();
+            minMonth = this.minDate.getMonth() + 1;
+            minDay = this.minDate.getDate();
+
+            maxYear = this.maxDate.getFullYear();
+            maxMonth = this.maxDate.getMonth() + 1;
+            maxDay = this.maxDate.getDate();
+
+
+            if (minYear == this.year && minMonth > this.month) {
+                this.month = minMonth;
+                setMinDisabled($li, minMonth);
+            }
+
+            if (maxYear == this.year && maxMonth < this.month) {
+                this.month = maxMonth;
+                setMaxDisabled($li, maxMonth);
+            }
+
+        } else if (this.minDate) {
+            minYear = this.minDate.getFullYear();
+            minMonth = this.minDate.getMonth() + 1;
+            minDay = this.minDate.getDate();
+
+            if (minYear == this.year && minMonth > this.month) {
+                this.month = minMonth;
+                setMinDisabled($li, minMonth);
+            }
+
+        } else if (this.maxDate) {
+            maxYear = this.maxDate.getFullYear();
+            maxMonth = this.maxDate.getMonth() + 1;
+            maxDay = this.maxDate.getDate();
+
+            if (maxYear == this.year && maxMonth < this.month) {
+                this.month = maxMonth;
+                setMaxDisabled($li, maxMonth);
+            }
         }
     };
 
@@ -1885,10 +2083,10 @@ define('kotenei/datepicker', ['jquery'], function ($) {
      * @param {Object} date - 日期对象
      * @return {String}
      */
-    DatePicker.prototype.format = function (date) {
+    DatePicker.prototype.format = function (date, formatStr) {
         date = date || new Date();
 
-        var formatStr = this.options.format.replace(/"/g, "");
+        var formatStr = formatStr || this.options.format.replace(/"/g, "");
 
         var o = {
             "y+": date.getFullYear(),

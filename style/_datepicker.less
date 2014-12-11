@@ -132,6 +132,13 @@
                         background: none;
                     }
                 }
+
+                >li.disabled
+                {
+                    color: #ccc;
+                    text-decoration: line-through;
+                    cursor: not-allowed;
+                }
             }
         }
 
@@ -176,6 +183,18 @@
             {
                 background: #428bca;
                 color: white;
+            }
+        }
+
+        li.disabled
+        {
+            cursor:text;
+            color:#ccc;
+
+            &:hover
+            {
+                background: none;
+                color: #ccc;
             }
         }
     }
@@ -262,8 +281,8 @@
 
     .line
     {
-        background:#ccc;
-        margin:8px 0;
-        height:1px;
+        background: #ccc;
+        margin: 8px 0;
+        height: 1px;
     }
 }
