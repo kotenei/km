@@ -1313,7 +1313,6 @@ define('kotenei/datepicker', ['jquery'], function ($) {
             $this.addClass("cur");
 
             self.year = Number(text);
-            self.setMonthDisabled();
             self.createDays();
             self.yearBoxToggle(false);
             self.prevToggle();
@@ -1505,7 +1504,6 @@ define('kotenei/datepicker', ['jquery'], function ($) {
         this.$prev = this.$datepicker.find('th.prev i');
         this.$next = this.$datepicker.find('th.next i');
         this.index = this.$yearItems.find("li.cur").parent().show().index();
-        this.setMonthDisabled();
         this.createDays();
 
         if (this.options.showTime) {
@@ -1661,10 +1659,23 @@ define('kotenei/datepicker', ['jquery'], function ($) {
      * @return {Void}
      */
     DatePicker.prototype.createDays = function (year, month, day) {
-        var i, j;
+
+        this.setMonthDisabled();
+
+        var i, j, disabled;
         year = year || this.year;
         month = month || this.month;
         day = day || this.day;
+
+
+        if (this.mainDate && this.maxDate) {
+
+        } else if (this.mainDate) {
+
+        } else if (this.maxDate) {
+
+        }
+
 
         //当月最后一天  new Date('2014/4/0').getDate() 表示获取2014年3月最后一天
         var curMonthLastDay = this.getMonthLastDay(year, month);
@@ -1883,13 +1894,25 @@ define('kotenei/datepicker', ['jquery'], function ($) {
             maxDay = this.maxDate.getDate();
 
 
-            if (minYear == this.year && minMonth > this.month) {
-                this.month = minMonth;
+            if (minYear == this.year) {
+                if (minMonth > this.month) {
+                    this.month = minMonth;
+                }
+
+                if (this.month == minMonth && minDay > this.day) {
+                    this.day = minDay;
+                }
                 setMinDisabled($li, minMonth);
             }
 
-            if (maxYear == this.year && maxMonth < this.month) {
-                this.month = maxMonth;
+            if (maxYear == this.year) {
+
+                if (maxMonth < this.month) {
+                    this.month = maxMonth;
+                }
+                if (this.month == maxMonth && maxDay < this.day) {
+                    this.day = maxDay;
+                }
                 setMaxDisabled($li, maxMonth);
             }
 
@@ -1898,8 +1921,13 @@ define('kotenei/datepicker', ['jquery'], function ($) {
             minMonth = this.minDate.getMonth() + 1;
             minDay = this.minDate.getDate();
 
-            if (minYear == this.year && minMonth > this.month) {
-                this.month = minMonth;
+            if (minYear == this.year) {
+                if (minMonth > this.month) {
+                    this.month = minMonth;
+                }
+                if (minMonth == this.month && minDay > this.day) {
+                    this.day = minDay;
+                }
                 setMinDisabled($li, minMonth);
             }
 
@@ -1908,8 +1936,13 @@ define('kotenei/datepicker', ['jquery'], function ($) {
             maxMonth = this.maxDate.getMonth() + 1;
             maxDay = this.maxDate.getDate();
 
-            if (maxYear == this.year && maxMonth < this.month) {
-                this.month = maxMonth;
+            if (maxYear == this.year) {
+                if (maxMonth < this.month) {
+                    this.month = maxMonth;
+                }
+                if (maxMonth == this.month && maxDay < this.day) {
+                    this.day = maxDay;
+                }
                 setMaxDisabled($li, maxMonth);
             }
         }
