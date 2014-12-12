@@ -1105,7 +1105,7 @@ define('kotenei/datepicker', ['jquery'], function ($) {
             },
             minDate: null,
             maxDate: null,
-            zIndex:2000
+            zIndex: 2000
         }, options);
         this.isInput = this.$element.is('input');
         this.year = date.getFullYear();
@@ -1139,11 +1139,19 @@ define('kotenei/datepicker', ['jquery'], function ($) {
      * @return {Object}
      */
     DatePicker.prototype.getPosition = function () {
-        var position = this.$element.position();
+        var position = { left: 0, top: 0 };
+        var container = this.options.appendTo[0];
+        var parent = this.$element[0];
+
+        do {
+            position.left += parent.offsetLeft - parent.scrollLeft;
+            position.top += parent.offsetTop - parent.scrollTop;
+        } while ((parent = parent.offsetParent) && parent != container);
+
         return {
             left: position.left,
             top: position.top + this.$element[0].offsetHeight + 2,
-            zIndex:this.options.zIndex
+            zIndex: this.options.zIndex
         };
     };
 
@@ -1511,7 +1519,7 @@ define('kotenei/datepicker', ['jquery'], function ($) {
             this.$timeBox.hide();
         }
 
-        this.$datepicker.appendTo(this.options.appendTo);
+        this.$datepicker.appendTo(this.options.appendTo.length == 0 ? document.body : this.options.appendTo);
     };
 
     /**
@@ -2184,7 +2192,8 @@ define('kotenei/datepicker', ['jquery'], function ($) {
                 format = $this.attr('data-format'),
                 showTime = $this.attr('data-showTime'),
                 minDate = $this.attr('data-minDate'),
-                maxDate = $this.attr('data-maxDate');
+                maxDate = $this.attr('data-maxDate'),
+                appendTo = $this.attr('data-appendTo');
 
             var data = $this.data('datepicker');
 
@@ -2195,7 +2204,8 @@ define('kotenei/datepicker', ['jquery'], function ($) {
                     format: format,
                     showTime: showTime,
                     minDate: minDate,
-                    maxDate: maxDate
+                    maxDate: maxDate,
+                    appendTo: $(appendTo || document.body)
                 });
                 $this.data('datepicker', data);
             }
