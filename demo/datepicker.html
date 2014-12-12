@@ -15,7 +15,7 @@
     </p>
 
     <p>
-        全&nbsp;&nbsp;&nbsp;&nbsp;局：<input type="text" readonly="readonly" placeholder="全局" data-module="datepicker" data-format="yyyy-MM-dd hh:mm:ss" data-showtime="true" />
+        全&nbsp;&nbsp;&nbsp;&nbsp;局：<input type="text" readonly="readonly" placeholder="全局" data-module="datepicker" data-format="yyyy-MM-dd hh:mm:ss" data-showtime="true" data-minDate="2013-01-11" data-maxDate="today" />
     </p>
 
     <script type="text/javascript">
@@ -23,12 +23,10 @@
             var DatePicker = kotenei.Datepicker;
             var datePicker = new DatePicker($("#picker"), {
                 format: 'yyyy-MM-dd',
-                minDate:'2013-10-11',
-                maxDate: '2014-11-10'
             });
 
             //全局
-            //DatePicker.Global();
+            DatePicker.Global();
 
         });
     </script>

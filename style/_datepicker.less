@@ -3,7 +3,7 @@
     position: absolute;
     display: none;
     border: 1px solid #cccccc;
-    min-width: 200px;
+    min-width: 230px;
     border-radius: 4px;
     font-size: 14px;
     color: #333;
@@ -29,9 +29,9 @@
         }
 
 
-
         td.old,
-        td.new
+        td.new,
+        td.disabled
         {
             color: #999;
         }
@@ -47,6 +47,23 @@
             {
                 background: #428bca;
                 color: white;
+            }
+        }
+
+        td.disabled
+        {
+
+            span
+            {
+                cursor: text;
+                text-decoration: line-through;
+
+                &:hover,
+                &.active
+                {
+                    background: none;
+                    color: #999;
+                }
             }
         }
 
@@ -188,8 +205,8 @@
 
         li.disabled
         {
-            cursor:text;
-            color:#ccc;
+            cursor: text;
+            color: #ccc;
 
             &:hover
             {
