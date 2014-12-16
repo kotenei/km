@@ -3738,7 +3738,7 @@ define('kotenei/pager', ['jquery', 'kotenei/event'], function ($, event) {
      * @return {Void} 
      */
     Pager.prototype.on = function (name, callback) {
-        self = this;
+        var self = this;
         this.event.on(name + '.pager', function (args) {
             callback.apply(self, args);
         });
