@@ -150,15 +150,15 @@ define('kotenei/ajax', ['jquery', 'kotenei/loading', 'kotenei/popTips', 'kotenei
                         ErrorMessage: '验证失败'
                     };
 
-                    if ($form.valid) {
-                        if ($form.valid()) {
+                    if (validate && validate.valid) {
+                        if (validate.valid()) {
                             return ajax(type, url, data, config);
                         } else {
                             dtd.reject(ret);
                             return dtd.promise();
                         }
-                    } else if (validate && validate.valid) {
-                        if (validate.valid()) {
+                    } else if ($form.valid) {
+                        if ($form.valid()) {
                             return ajax(type, url, data, config);
                         } else {
                             dtd.reject(ret);
