@@ -46,7 +46,7 @@ define('kotenei/loading', ['jquery', 'spin'], function ($, Spinner) {
 
     Loading.prototype.hide = function () {
         var self = this;
-        this.$loading.hide();
+        this.$loading.stop().hide();
         this.spinner.stop();
         isShow = false;
     };
