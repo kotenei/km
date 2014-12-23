@@ -13,6 +13,13 @@ define('kotenei/ajax', ['jquery', 'kotenei/loading', 'kotenei/popTips', 'kotenei
 
         var _instance;
 
+        //完整路径
+        function getFullUrl(urlPath) {
+            var loc = window.location;
+            var url = "" + loc.protocol + "//" + loc.host + urlPath;
+            return url;
+        }
+
         function init() {
 
             /**
@@ -28,12 +35,22 @@ define('kotenei/ajax', ['jquery', 'kotenei/loading', 'kotenei/popTips', 'kotenei
             var ajax = function (type, url, data, config) {
 
                 var config = $.extend({}, {
+                    returnUrl: {
+                        enable: true,
+                        url: location.href
+                    },
                     loadingEnable: true,
                     popTips: {
                         delay: 800,
                         custom: false
                     }
                 }, config);
+
+                data = data || {};
+
+                if (config.returnUrl.enable) {
+                    data['returnUrl'] = config.returnUrl.url;
+                }
 
                 var dtd = $.Deferred();
 
@@ -44,7 +61,7 @@ define('kotenei/ajax', ['jquery', 'kotenei/loading', 'kotenei/popTips', 'kotenei
                 $.ajax({
                     url: url,
                     type: type,
-                    data: data || {},
+                    data: data,
                     dataType: 'json',
                     traditional: true,
                     cache: false
@@ -59,12 +76,15 @@ define('kotenei/ajax', ['jquery', 'kotenei/loading', 'kotenei/popTips', 'kotenei
                         }
                     }
 
+                    ret.Url = $.trim(ret.Url || '');
+
+
                     if (ret.Status) {
 
                         if (ret.Message) {
                             if (!config.popTips.custom) {
                                 popTips.success(ret.Message, config.popTips.delay, function () {
-                                    if (ret.Url) {
+                                    if (ret.Url && ret.Url.length > 0) {
                                         window.location.href = ret.Url;
                                     } else {
                                         dtd.resolve(ret);
@@ -72,7 +92,7 @@ define('kotenei/ajax', ['jquery', 'kotenei/loading', 'kotenei/popTips', 'kotenei
                                 });
                             } else {
                                 popTips.success(ret.Message, config.popTips.delay);
-                                if (ret.Url) {
+                                if (ret.Url && ret.Url.length > 0) {
                                     window.location.href = ret.Url;
                                 } else {
 
@@ -80,7 +100,7 @@ define('kotenei/ajax', ['jquery', 'kotenei/loading', 'kotenei/popTips', 'kotenei
                                 }
                             }
 
-                        } else if (ret.Url) {
+                        } else if (ret.Url && ret.Url.length > 0) {
                             window.location.href = ret.Url;
                         } else {
                             dtd.resolve(ret);
@@ -92,21 +112,21 @@ define('kotenei/ajax', ['jquery', 'kotenei/loading', 'kotenei/popTips', 'kotenei
                         if (ret.ErrorMessage) {
                             if (!config.popTips.custom) {
                                 popTips.error(ret.ErrorMessage || "发生了未知错误", config.popTips.delay, function () {
-                                    if (ret.Url) {
-                                        window.location.href = ret.url;
+                                    if (ret.Url && ret.Url.length > 0) {
+                                        window.location.href = ret.Url;
                                     } else {
                                         dtd.resolve(ret);
                                     }
                                 });
                             } else {
                                 popTips.error(ret.ErrorMessage || "发生了未知错误", config.popTips.delay);
-                                if (ret.Url) {
-                                    window.location.href = ret.url;
+                                if (ret.Url && ret.Url.length > 0) {
+                                    window.location.href = ret.Url;
                                 } else {
                                     dtd.resolve(ret);
                                 }
                             }
-                        } else if (ret.Url) {
+                        } else if (ret.Url && ret.Url.length > 0) {
                             window.location.href = ret.Url;
                         } else {
                             dtd.resolve(ret);
@@ -117,9 +137,7 @@ define('kotenei/ajax', ['jquery', 'kotenei/loading', 'kotenei/popTips', 'kotenei
                 }).fail(function () {
                     popTips.error("服务器发生错误", config.popTips.delay);
                 }).always(function () {
-                    if (config.loadingEnable) {
-                        Loading.hide();
-                    }
+                    Loading.hide();
                 });
 
                 return dtd.promise();

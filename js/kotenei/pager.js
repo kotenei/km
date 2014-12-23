@@ -32,15 +32,15 @@ define('kotenei/pager', ['jquery', 'kotenei/event'], function ($, event) {
      * @return {Void} 
      */
     Pager.prototype.init = function () {
-        if (this.totalCount === 0) { return; }
         var self = this;
-        this.$pager = $(this.template).append(this.build()).appendTo(this.$element);
+        this.$pager = $(this.template).appendTo(this.$element);
+        this.build();
         this.$pager.on('click', 'li', function () {
             var $this = $(this),
                 page = $this.attr('data-page');
             if ($this.hasClass("disabled") || $this.hasClass("active")) { return; }
             self.curPage = parseInt(page);
-            self.$pager.html(self.build());
+            self.build();
             self.event.trigger('click.pager', [page]);
         });
     };
@@ -78,7 +78,14 @@ define('kotenei/pager', ['jquery', 'kotenei/event'], function ($, event) {
         html.push('<li class="' + className + '" data-page="' + info.next + '" ><a href="javascript:void(0);">»</a></li>');
 
         html.push('</ul>');
-        return html.join('');
+
+        this.$pager.html(html.join(''));
+
+        if (this.totalCount == 0) {
+            this.$pager.hide();
+        } else {
+            this.$pager.show();
+        }
     };
 
     /**
