@@ -1516,6 +1516,10 @@ select.k-error {
 .k-table-bordered > tbody:last-child tr:last-child td:first-child {
   border-radius: 0 0 0 4px;
 }
+.k-table-bordered > thead:last-child tr:last-child td,
+.k-table-bordered > tbody:last-child tr:last-child td {
+  border-bottom: none;
+}
 .k-table-bordered > thead:first-child > tr:first-child th:last-child,
 .k-table-bordered > tbody:first-child > tr:first-child th:last-child,
 .k-table-bordered > thead:first-child > tr:first-child td:last-child,
