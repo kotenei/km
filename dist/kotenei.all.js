@@ -4821,6 +4821,14 @@ define('kotenei/tooltips', ['jquery'], function ($) {
     };
 
     /**
+     * 销毁
+     * @return {Void}
+     */
+    Tooltips.prototype.destroy = function () {
+        this.$tips.remove();
+    };
+
+    /**
      * 全局tooltips
      * @param {JQuery} $elements - dom
      */
