@@ -44,6 +44,9 @@ define('kotenei/validateTooltips', ['jquery', 'kotenei/validate', 'kotenei/toolt
 	 * @return {Void}        
 	 */
     ValidateTooltips.prototype.showError = function ($element, message) {
+
+        var $target;
+
         if (this.checkable($element[0])) {
             $element = this.validFields.data[$element[0].name];
         }
@@ -51,13 +54,16 @@ define('kotenei/validateTooltips', ['jquery', 'kotenei/validate', 'kotenei/toolt
 
 
         if (placement.target) {
-            $element = $(placement.target);
+            $target = $(placement.target);
+            $element.data('$target', $target);
+        } else {
+            $target = $element
         }
 
 
-        var tooltips = Tooltips.Get($element);
+        var tooltips = Tooltips.Get($target);
         if (!tooltips) {
-            tooltips = new Tooltips($element, {
+            tooltips = new Tooltips($target, {
                 content: message,
                 tipClass: 'danger',
                 trigger: 'manual',
@@ -65,12 +71,12 @@ define('kotenei/validateTooltips', ['jquery', 'kotenei/validate', 'kotenei/toolt
                 container: this.options.container || document.body,
                 scrollContainer: this.options.scrollContainer
             });
-            Tooltips.Set($element, tooltips);
+            Tooltips.Set($target, tooltips);
         } else {
             tooltips.setContent(message);
         }
         tooltips.show();
-        $element.addClass(this.options.errorClass);
+        $target.addClass(this.options.errorClass);
     };
 
     /**
@@ -82,6 +88,12 @@ define('kotenei/validateTooltips', ['jquery', 'kotenei/validate', 'kotenei/toolt
         if (this.checkable($element[0])) {
             $element = this.validFields.data[$element[0].name];
         }
+
+        var $target = $element.data('$target');
+        if ($target) {
+            $element = $target;
+        }
+
         var tooltips = Tooltips.Get($element);
         if (tooltips) {
             tooltips.hide();
