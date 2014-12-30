@@ -91,7 +91,7 @@ define('kotenei/validate', ['jquery'], function ($) {
         }
 
         if (!this.tipsPlacement[element.name]) {
-            this.tipsPlacement[element.name] = meta.tipsPlacement || 'right';
+            this.tipsPlacement[element.name] = meta.tipsPlacement || { position: 'right', target: element };
         }
     };
 

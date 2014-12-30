@@ -5662,7 +5662,7 @@ define('kotenei/validate', ['jquery'], function ($) {
         }
 
         if (!this.tipsPlacement[element.name]) {
-            this.tipsPlacement[element.name] = meta.tipsPlacement || 'right';
+            this.tipsPlacement[element.name] = meta.tipsPlacement || { position: 'right', target: element };
         }
     };
 
@@ -6156,7 +6156,7 @@ define('kotenei/validateTooltips', ['jquery', 'kotenei/validate', 'kotenei/toolt
     /**
 	 * 获取元素错误提示定位
 	 * @param  {object} element - dom
-	 * @return {String}       
+	 * @return {Object}       
 	 */
     ValidateTooltips.prototype.getTipsPlacement = function (element) {
         var name = element.name, placement = "right";
@@ -6164,10 +6164,11 @@ define('kotenei/validateTooltips', ['jquery', 'kotenei/validate', 'kotenei/toolt
             this.tipsPlacement = this.options.tipsPlacement || {};
         }
         if (!this.tipsPlacement[name]) {
-            this.tipsPlacement[name] = placement;
+            this.tipsPlacement[name] = { position: 'right', target: element };
         } else {
             placement = this.tipsPlacement[name];
         }
+
         return placement;
     };
 
@@ -6182,15 +6183,22 @@ define('kotenei/validateTooltips', ['jquery', 'kotenei/validate', 'kotenei/toolt
             $element = this.validFields.data[$element[0].name];
         }
         var placement = this.getTipsPlacement($element[0]);
+
+
+        if (placement.target) {
+            $element = $(placement.target);
+        }
+
+
         var tooltips = Tooltips.Get($element);
         if (!tooltips) {
             tooltips = new Tooltips($element, {
                 content: message,
                 tipClass: 'danger',
                 trigger: 'manual',
-                placement: placement,
+                placement: placement.position,
                 container: this.options.container || document.body,
-                scrollContainer: this.options.scrollContainer 
+                scrollContainer: this.options.scrollContainer
             });
             Tooltips.Set($element, tooltips);
         } else {
