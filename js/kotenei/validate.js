@@ -458,11 +458,11 @@ define('kotenei/validate', ['jquery'], function ($) {
 
             $.post(url, data)
             .success(function (msg) {
-                var valid = msg === true || msg.toLowerCase() === "true";
+                var valid = msg === true || String(msg).toLowerCase() === "true";
                 if (valid) {
                     self.hideError($element);
                 } else {
-                    self.showError($element, previous.message)
+                    self.showError($element, previous.message);
                 }
                 previous.valid = valid;
             })
