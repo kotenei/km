@@ -286,6 +286,9 @@ define('kotenei/app', ['jquery', 'kotenei/router', 'kotenei/util', 'kotenei/popT
                     instance = new View($view, self);
                     self._view[viewName].instance = instance;
                 }
+                if (instance.destroy) {
+                    instance.destroy();
+                }
                 instance.run(params);
             });
         }
