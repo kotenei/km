@@ -55,6 +55,7 @@ define('kotenei/app', ['jquery', 'kotenei/router', 'kotenei/util', 'kotenei/popT
         var self = this;
         var isFirst = false;
         var $view, hash, curHash = this.window.location.hash;
+        var instance;
         var $curView;
 
         //判断是否存在视图
@@ -67,12 +68,13 @@ define('kotenei/app', ['jquery', 'kotenei/router', 'kotenei/util', 'kotenei/popT
         } else {
             $view = this._view[viewName].$el;
             hash = this._view[viewName].hash;
+            instance = this._view[viewName].instance;
         }
 
         //原来的hash不等于现有的hash或者首次加载，则刷新当前页
         if (hash != curHash || isFirst) {
             this._view[viewName].hash = curHash;
-            var instance = this._view[viewName].instance;
+            instance = this._view[viewName].instance;
             require([viewName], function (View) {
                 if (!instance) {
                     instance = new View($view, self);
@@ -87,11 +89,23 @@ define('kotenei/app', ['jquery', 'kotenei/router', 'kotenei/util', 'kotenei/popT
 
         //隐藏旧视图
         if (this.viewName) {
-            this._view[this.viewName].$el.hide().removeClass(this.config.animateClass);
+            var $oldViewEl = this._view[this.viewName].$el,
+                oldViewInstance = this._view[this.viewName].instance;
+
+            $oldViewEl.hide().removeClass(this.config.animateClass);
+
+            if (oldViewInstance && typeof oldViewInstance.hide === 'function') {
+                oldViewInstance.hide();
+            }
         }
 
         //显示当前视图
         $view.show().addClass(this.config.animateClass);
+
+        if (instance && typeof instance.show === 'function') {
+            instance.show();
+        }
+
 
         //设置当前视图名称
         this.viewName = viewName;
