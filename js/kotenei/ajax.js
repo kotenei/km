@@ -42,7 +42,7 @@ define('kotenei/ajax', ['jquery', 'kotenei/loading', 'kotenei/popTips', 'kotenei
                     loadingEnable: true,
                     popTips: {
                         delay: 800,
-                        custom: false
+                        custom: true
                     }
                 }, config);
 
@@ -95,7 +95,6 @@ define('kotenei/ajax', ['jquery', 'kotenei/loading', 'kotenei/popTips', 'kotenei
                                 if (ret.Url && ret.Url.length > 0) {
                                     window.location.href = ret.Url;
                                 } else {
-
                                     dtd.resolve(ret);
                                 }
                             }

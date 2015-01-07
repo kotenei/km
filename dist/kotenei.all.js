@@ -42,7 +42,7 @@ define('kotenei/ajax', ['jquery', 'kotenei/loading', 'kotenei/popTips', 'kotenei
                     loadingEnable: true,
                     popTips: {
                         delay: 800,
-                        custom: false
+                        custom: true
                     }
                 }, config);
 
@@ -95,7 +95,6 @@ define('kotenei/ajax', ['jquery', 'kotenei/loading', 'kotenei/popTips', 'kotenei
                                 if (ret.Url && ret.Url.length > 0) {
                                     window.location.href = ret.Url;
                                 } else {
-
                                     dtd.resolve(ret);
                                 }
                             }
@@ -6939,7 +6938,7 @@ define('kotenei/wordLimit', ['jquery'], function ($) {
 ;
 define("kotenei", ["kotenei/ajax", "kotenei/app", "kotenei/autoComplete", "kotenei/cache", "kotenei/clipZoom", "kotenei/datepicker", "kotenei/dragdrop", "kotenei/dropdown", "kotenei/dropdownDatepicker", "kotenei/event", "kotenei/highlight", "kotenei/imgPreview", "kotenei/infiniteScroll", "kotenei/lazyload", "kotenei/loading", "kotenei/pager", "kotenei/placeholder", "kotenei/popover", "kotenei/popTips", "kotenei/router", "kotenei/slider", "kotenei/switch", "kotenei/tooltips", "kotenei/tree", "kotenei/util", "kotenei/validate", "kotenei/validateTooltips", "kotenei/waterfall", "kotenei/window", "kotenei/wordLimit"], function(_ajax, _app, _autoComplete, _cache, _clipZoom, _datepicker, _dragdrop, _dropdown, _dropdownDatepicker, _event, _highlight, _imgPreview, _infiniteScroll, _lazyload, _loading, _pager, _placeholder, _popover, _popTips, _router, _slider, _switch, _tooltips, _tree, _util, _validate, _validateTooltips, _waterfall, _window, _wordLimit){
     return {
-        "Ajax" : _ajax,
+        "ajax" : _ajax,
         "App" : _app,
         "AutoComplete" : _autoComplete,
         "cache" : _cache,
