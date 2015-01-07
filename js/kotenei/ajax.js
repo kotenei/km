@@ -41,8 +41,8 @@ define('kotenei/ajax', ['jquery', 'kotenei/loading', 'kotenei/popTips', 'kotenei
                     },
                     loadingEnable: true,
                     popTips: {
-                        delay: 800,
-                        custom: true
+                        delay: 600,
+                        callback: true
                     }
                 }, config);
 
@@ -82,7 +82,7 @@ define('kotenei/ajax', ['jquery', 'kotenei/loading', 'kotenei/popTips', 'kotenei
                     if (ret.Status) {
 
                         if (ret.Message) {
-                            if (!config.popTips.custom) {
+                            if (config.popTips.callback) {
                                 popTips.success(ret.Message, config.popTips.delay, function () {
                                     if (ret.Url && ret.Url.length > 0) {
                                         window.location.href = ret.Url;
@@ -95,6 +95,7 @@ define('kotenei/ajax', ['jquery', 'kotenei/loading', 'kotenei/popTips', 'kotenei
                                 if (ret.Url && ret.Url.length > 0) {
                                     window.location.href = ret.Url;
                                 } else {
+
                                     dtd.resolve(ret);
                                 }
                             }
@@ -109,7 +110,7 @@ define('kotenei/ajax', ['jquery', 'kotenei/loading', 'kotenei/popTips', 'kotenei
 
 
                         if (ret.ErrorMessage) {
-                            if (!config.popTips.custom) {
+                            if (config.popTips.callback) {
                                 popTips.error(ret.ErrorMessage || "发生了未知错误", config.popTips.delay, function () {
                                     if (ret.Url && ret.Url.length > 0) {
                                         window.location.href = ret.Url;
