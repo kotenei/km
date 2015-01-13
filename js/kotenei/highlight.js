@@ -18,7 +18,7 @@ define('kotenei/highlight', ['jquery'], function ($) {
      */
     exports.highlightHtml = function ($elm, keywords, className) {
 
-        if ($.isArray($elm)) {
+        if (!$.isArray($elm)) {
             className = keywords;
             keywords = $elm;
             $elm = $body;
