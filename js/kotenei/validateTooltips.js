@@ -84,7 +84,10 @@ define('kotenei/validateTooltips', ['jquery', 'kotenei/validate', 'kotenei/toolt
 	 * @param  {JQuery} $element -dom
 	 * @return {Void}  
 	 */
-    ValidateTooltips.prototype.hideError = function ($element) {
+    ValidateTooltips.prototype.hideError = function ($element, isRemoveClass) {
+        if (typeof isRemoveClass==='undefined') {
+            isRemoveClass = true;
+        }
         if (this.checkable($element[0])) {
             $element = this.validFields.data[$element[0].name];
         }
@@ -98,8 +101,9 @@ define('kotenei/validateTooltips', ['jquery', 'kotenei/validate', 'kotenei/toolt
         if (tooltips) {
             tooltips.hide();
         }
-        $element.removeClass(this.options.errorClass);
-
+        if (isRemoveClass) {
+            $element.removeClass(this.options.errorClass);
+        }
     };
 
     return ValidateTooltips;

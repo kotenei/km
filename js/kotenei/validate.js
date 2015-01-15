@@ -158,17 +158,28 @@ define('kotenei/validate', ['jquery'], function ($) {
      */
     Validate.prototype.validateFrom = function () {
         var self = this, pass = true;
+        var errorList = [];
 
-        if (this.options.showSingleError) {
-            this.hideAllError();
-        }
+        //if (this.options.showSingleError) {
+            //this.hideAllError();
+        //}
 
         for (var item in this.validFields.data) {
             if (!self.validate({ target: this.validFields.data[item][0] })) {
                 pass = false;
-                if (this.options.showSingleError) {
-                    break;
-                }
+                errorList.push({
+                    $element: $(this.validFields.data[item][0])
+                });
+                //if (this.options.showSingleError) {
+                //    break;
+                //}
+            }
+        }
+
+        if (this.options.showSingleError && errorList.length > 1) {
+            for (var i = 1, element; i < errorList.length; i++) {
+                $element = errorList[i].$element;
+                this.hideError($element,false);
             }
         }
 
@@ -230,12 +241,17 @@ define('kotenei/validate', ['jquery'], function ($) {
      * @param  {JQuery} $element - dom
      * @return {Void}        
      */
-    Validate.prototype.hideError = function ($element) {
+    Validate.prototype.hideError = function ($element, isRemoveClass) {
+        if (typeof isRemoveClass === 'undefined') {
+            isRemoveClass = true;
+        }
         if (this.checkable($element[0])) {
             $element = this.validFields.data[$element[0].name];
         }
         var $error = $element.data('error');
-        $element.removeClass(this.options.errorClass);
+        if (isRemoveClass) {
+            $element.removeClass(this.options.errorClass);
+        }
         if ($.isFunction(this.options.errorPlacement)) {
             this.options.errorPlacement($element, $([]));
         }
