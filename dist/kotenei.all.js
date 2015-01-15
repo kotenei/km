@@ -5748,9 +5748,6 @@ define('kotenei/validate', ['jquery'], function ($) {
         var self = this, pass = true;
         var errorList = [];
 
-        //if (this.options.showSingleError) {
-            //this.hideAllError();
-        //}
 
         for (var item in this.validFields.data) {
             if (!self.validate({ target: this.validFields.data[item][0] })) {
@@ -5758,9 +5755,6 @@ define('kotenei/validate', ['jquery'], function ($) {
                 errorList.push({
                     $element: $(this.validFields.data[item][0])
                 });
-                //if (this.options.showSingleError) {
-                //    break;
-                //}
             }
         }
 
