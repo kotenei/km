@@ -22,6 +22,8 @@ define('kotenei/datepicker', ['jquery'], function ($) {
         var self = this;
         this.$element = $element;
         this.options = $.extend({}, {
+            desktop: false,
+            data: [],
             appendTo: $(document.body),
             showTime: false,
             year: { min: date.getFullYear() - 100, max: date.getFullYear() + 100 },
@@ -159,6 +161,9 @@ define('kotenei/datepicker', ['jquery'], function ($) {
         var self = this;
 
         this.$element.on('click.datepicker', function () {
+            if (self.options.desktop) {
+                return;
+            }
             self.show();
             return false;
         });
@@ -296,6 +301,9 @@ define('kotenei/datepicker', ['jquery'], function ($) {
 
             if (!self.options.showTime) {
                 self.set();
+                if (self.options.desktop) {
+                    return;
+                }
                 self.hide();
             }
 
@@ -353,6 +361,9 @@ define('kotenei/datepicker', ['jquery'], function ($) {
         });
 
         $(document).on('click.datepicker', function () {
+            if (self.options.desktop) {
+                return;
+            }
             self.hide();
         });
     };
@@ -364,7 +375,7 @@ define('kotenei/datepicker', ['jquery'], function ($) {
     DatePicker.prototype.createPanel = function () {
         var html = [], i;
 
-        html.push('<div class="k-datepicker">');
+        html.push('<div class="k-datepicker" data-desktop="' + (this.options.desktop ? "true" : "") + '" >');
         html.push('<div class="container">');
         html.push('<table>');
 
@@ -397,7 +408,7 @@ define('kotenei/datepicker', ['jquery'], function ($) {
 
         html.push(this.getTimeBox());
 
-        html.push('<div style="text-align:right;margin-bottom:5px;">');
+        html.push('<div class="operate-box" style="text-align:right;margin-bottom:5px;">');
         html.push('<input type="button" value="清空" role="clear" class="k-btn k-btn-default" />&nbsp;');
 
         var todayHtml = '<input type="button" value="今天" role="today" class="k-btn k-btn-success" />&nbsp;';
@@ -427,7 +438,9 @@ define('kotenei/datepicker', ['jquery'], function ($) {
         this.$yearItems = this.$yearBox.find('ul');
         this.$month = this.$datepicker.find('#month');
         this.$monthBox = this.$datepicker.find('.month-box');
+        this.$line = this.$datepicker.find('.line');
         this.$timeBox = this.$datepicker.find('.time-box');
+        this.$operateBox = this.$datepicker.find('.operate-box');
         this.$hours = this.$timeBox.find('span.hours');
         this.$minutes = this.$timeBox.find('span.minutes');
         this.$seconds = this.$timeBox.find('span.seconds');
@@ -443,6 +456,20 @@ define('kotenei/datepicker', ['jquery'], function ($) {
             this.$timeBox.show();
         } else {
             this.$timeBox.hide();
+        }
+
+        if (this.options.desktop) {
+
+            if (this.options.footerHtml) {
+                this.$datepicker.append('<div>' + this.options.footerHtml + '</div>');
+            }
+
+            this.$line.hide();
+            this.$timeBox.hide();
+            this.$operateBox.hide();
+
+            this.$datepicker.appendTo(this.$element).show();
+            return;
         }
 
         this.$datepicker.appendTo(this.options.appendTo.length == 0 ? document.body : this.options.appendTo);
@@ -674,7 +701,7 @@ define('kotenei/datepicker', ['jquery'], function ($) {
         }
 
         //构造表格
-        var flag = 0, count = 0, curValue, todayClass;
+        var flag = 0, count = 0, curValue, todayClass,dotHtml;
         for (i = 0; i < 6; i++) {
             arrDaysHtml.push("<tr>");
             for (j = flag; j < 42; j++) {
@@ -689,7 +716,9 @@ define('kotenei/datepicker', ['jquery'], function ($) {
                     todayClass = "";
                 }
 
-                arrDaysHtml.push('<td id="' + curValue.year + '_' + curValue.month + '_' + curValue.day + '" class="' + curValue.tdClass + '   ' + todayClass + '  " data-year="' + curValue.year + '" data-month="' + curValue.month + '" data-day="' + curValue.day + '"><span>' + curValue.day + '</span></td>');
+                dotHtml = this.getDotHtml(curValue.year + '-' + this.fixZero(curValue.month) + '-' + this.fixZero(curValue.day));
+
+                arrDaysHtml.push('<td id="' + curValue.year + '_' + curValue.month + '_' + curValue.day + '" class="' + curValue.tdClass + '   ' + todayClass + '  " data-year="' + curValue.year + '" data-month="' + curValue.month + '" data-day="' + curValue.day + '"><span>' + curValue.day + '</span>' + dotHtml + '</td>');
                 flag++;
                 count++;
                 if (count === 7) {
@@ -702,6 +731,47 @@ define('kotenei/datepicker', ['jquery'], function ($) {
 
         this.$datepicker.find("tbody").html(arrDaysHtml.join(""));
         this.setViewInfo(year, month, day);
+    };
+
+    /**
+     * 不足两位补0
+     * @param {String} value - 值
+     * @return {String}
+     */
+    DatePicker.prototype.fixZero = function (value) {
+
+        value = String(value);
+
+        if (value.length===0) {
+            return'';
+        }
+
+        if (value.length===1) {
+            value = ('0' + value);
+            
+            return value;
+        }
+
+        return '';
+    };
+
+    /**
+     * 取圆点HTML
+     * @param {String} strDate - 日期
+     * @return {String}
+     */
+    DatePicker.prototype.getDotHtml = function (strDate) {
+        if (!this.options.data || this.options.data.length === 0) {
+            return '';
+        }
+
+        for (var i = 0,data; i < this.options.data.length; i++) {
+            data = this.options.data[i];
+            if (data === strDate) {
+                return '<em class="dot"></em>';
+            }
+        }
+        return '';
     };
 
     /**
@@ -939,7 +1009,12 @@ define('kotenei/datepicker', ['jquery'], function ($) {
      */
     DatePicker.prototype.show = function () {
 
-        $('div.k-datepicker').hide();
+        $('div.k-datepicker').each(function () {
+            var desktop = this.getAttribute("data-desktop");
+            if (!desktop || desktop != 'true') {
+                $(this).hide();
+            }
+        });
 
         if (this.options.showTime && !this.isSetTime) {
             this.setTodayInfo();

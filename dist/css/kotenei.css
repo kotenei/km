@@ -1050,6 +1050,7 @@ select.k-error {
   text-align: center;
   vertical-align: middle;
   line-height: 25px;
+  position: relative;
 }
 .k-datepicker table td.old,
 .k-datepicker table td.new,
@@ -1065,6 +1066,15 @@ select.k-error {
 .k-datepicker table td span.active {
   background: #428bca;
   color: white;
+}
+.k-datepicker table td em {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: red;
+  position: absolute;
+  right: 4px;
+  top: 4px;
 }
 .k-datepicker table td.disabled span {
   cursor: text;
