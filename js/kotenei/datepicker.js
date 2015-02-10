@@ -760,7 +760,7 @@ define('kotenei/datepicker', ['jquery'], function ($) {
             return value;
         }
 
-        return '';
+        return value;
     };
 
     /**
