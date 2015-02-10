@@ -33,6 +33,12 @@
                 data:['2015-01-01']
             });
 
+            datePicker2.on("selected", function (date) {
+                console.log(date)
+            }).on("change", function (date) {
+                console.log(date);
+            })
+
             //全局
             DatePicker.Global();
 
