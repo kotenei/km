@@ -18,26 +18,12 @@
         全&nbsp;&nbsp;&nbsp;&nbsp;局：<input type="text" readonly="readonly" placeholder="全局" data-module="datepicker" data-format="yyyy-MM-dd hh:mm:ss" data-showtime="true" data-minDate="2013-01-11" data-maxDate="today" />
     </p>
 
-    <div id="desktop" ></div>
-
     <script type="text/javascript">
         require(['kotenei'], function (kotenei) {
             var DatePicker = kotenei.Datepicker;
             var datePicker = new DatePicker($("#picker"), {
                 format: 'yyyy-MM-dd',
             });
-
-            var datePicker2 = new DatePicker($("#desktop"), {
-                desktop:true,
-                format: 'yyyy-MM-dd',
-                data:['2015-01-01']
-            });
-
-            datePicker2.on("selected", function (date) {
-                console.log(date)
-            }).on("change", function (date) {
-                console.log(date);
-            })
 
             //全局
             DatePicker.Global();
