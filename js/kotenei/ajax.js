@@ -48,8 +48,17 @@ define('kotenei/ajax', ['jquery', 'kotenei/loading', 'kotenei/popTips', 'kotenei
 
                 data = data || {};
 
-                if (config.returnUrl.enable) {
-                    data['returnUrl'] = config.returnUrl.url;
+
+                if (config.returnUrl.enable && typeof data == 'object') {
+                    var href = config.returnUrl.url;
+
+                    if (href.indexOf('#') != -1
+                        && href.indexOf('?') != -1
+                        && href.indexOf('?') > href.indexOf('#')) {
+                        href = href.substr(0, href.indexOf('?'));
+                    }
+
+                    data.returnUrl = href;
                 }
 
                 var dtd = $.Deferred();
@@ -161,6 +170,15 @@ define('kotenei/ajax', ['jquery', 'kotenei/loading', 'kotenei/popTips', 'kotenei
                     url = $form.attr('action');
                     type = $form.attr('method');
                     data = $form.serialize();
+
+
+                    var href = location.href;
+
+                    if (href.indexOf('#') != -1 && href.indexOf('?') != -1) {
+                        href = href.substr(0, href.indexOf('?'));
+                    }
+
+                    data += "&returnUrl=" + encodeURIComponent(href);
 
                     var dtd = $.Deferred();
                     var ret = {
