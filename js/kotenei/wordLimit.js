@@ -36,8 +36,8 @@ define('kotenei/wordLimit', ['jquery'], function ($) {
 
     /**
      * 更新字符长度和反馈状态
-     * @param  {[type]} value [description]
-     * @return {[type]}       [description]
+     * @param  {String} value 值
+     * @return {Void}    
      */
     WordLimit.prototype.update = function (value) {
         var len = value.length,
@@ -46,7 +46,17 @@ define('kotenei/wordLimit', ['jquery'], function ($) {
         if (len >= limit) {
             this.$element.val(value.substring(0, limit));
         }
-        this.$feedback.html(count < 0 ? 0 : count)
+        this.$feedback.html(count < 0 ? 0 : count);
+    };
+
+
+    /**
+     * 重置
+     * @return {Void}      
+     */
+    WordLimit.prototype.reset = function () {
+        this.$element.val("");
+        this.$feedback.html(this.options.maxLength);
     };
 
     /**
@@ -76,7 +86,7 @@ define('kotenei/wordLimit', ['jquery'], function ($) {
      */
     WordLimit.Get = function ($element) {
         return $element.data('wordLimit');
-    }
+    };
 
     /**
      * 设置缓存对象
@@ -85,7 +95,22 @@ define('kotenei/wordLimit', ['jquery'], function ($) {
      */
     WordLimit.Set = function ($element, wordLimit) {
         $element.data("wordLimit", wordLimit);
-    }
+    };
+
+
+    /**
+     * 重置
+     * @param {JQuery} $elements - dom
+     */
+    WordLimit.Reset = function ($elements) {
+        $elements = $elements || $("input,textarea").filter('[data-module="wordlimit"]');
+        $elements.each(function () {
+            var obj = WordLimit.Get($(this));
+            if (obj) {
+                obj.reset();
+            }
+        });
+    };
 
     return WordLimit;
 });
