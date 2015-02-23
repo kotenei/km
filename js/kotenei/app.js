@@ -91,12 +91,12 @@ define('kotenei/app', ['jquery', 'kotenei/router', 'kotenei/util', 'kotenei/popT
         if (this.viewName) {
             var $oldViewEl = this._view[this.viewName].$el,
                 oldViewInstance = this._view[this.viewName].instance;
+   
+            if (oldViewInstance && typeof oldViewInstance.hide === 'function') {
+                oldViewInstance.hide();           
+            }
 
             $oldViewEl.hide().removeClass(this.config.animateClass);
-
-            if (oldViewInstance && typeof oldViewInstance.hide === 'function') {
-                oldViewInstance.hide();
-            }
         }
 
         //显示当前视图
@@ -104,8 +104,7 @@ define('kotenei/app', ['jquery', 'kotenei/router', 'kotenei/util', 'kotenei/popT
 
         if (instance && typeof instance.show === 'function') {
             instance.show();
-        }
-
+        }     
 
         //设置当前视图名称
         this.viewName = viewName;

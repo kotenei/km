@@ -33,8 +33,10 @@ define('kotenei/loading', ['jquery', 'spin'], function ($, Spinner) {
     var isShow = false;
 
     Loading.prototype.init = function () {
-        this.spinner = new Spinner(this.options);
         this.$loading = $(this.tpl).appendTo(document.body).hide();
+        this.options.top = this.$loading.outerHeight() / 2 + "px";
+        this.options.left = this.$loading.outerWidth() / 2 + "px";
+        this.spinner = new Spinner(this.options);
     };
 
     Loading.prototype.show = function () {

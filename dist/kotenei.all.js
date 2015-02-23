@@ -319,12 +319,12 @@ define('kotenei/app', ['jquery', 'kotenei/router', 'kotenei/util', 'kotenei/popT
         if (this.viewName) {
             var $oldViewEl = this._view[this.viewName].$el,
                 oldViewInstance = this._view[this.viewName].instance;
+   
+            if (oldViewInstance && typeof oldViewInstance.hide === 'function') {
+                oldViewInstance.hide();           
+            }
 
             $oldViewEl.hide().removeClass(this.config.animateClass);
-
-            if (oldViewInstance && typeof oldViewInstance.hide === 'function') {
-                oldViewInstance.hide();
-            }
         }
 
         //显示当前视图
@@ -332,8 +332,7 @@ define('kotenei/app', ['jquery', 'kotenei/router', 'kotenei/util', 'kotenei/popT
 
         if (instance && typeof instance.show === 'function') {
             instance.show();
-        }
-
+        }     
 
         //设置当前视图名称
         this.viewName = viewName;
@@ -3673,6 +3672,9 @@ define('kotenei/lazyload', ['jquery'], function ($) {
         var self = this;
         this.$elements.each(function () {
             if (this.nodeName.toLowerCase() != 'img') { return; }
+            if (this.getAttribute('hasLoad')=='true') {
+                return;
+            }
             var $elm = $(this);
             var data = {};
             if (self.options.placeholder != null) {
@@ -3738,6 +3740,7 @@ define('kotenei/lazyload', ['jquery'], function ($) {
         var img = new Image();
         img.onload = function () {
             $img.attr('src', src);
+            $img.attr('hasLoad', true);
             callback();
         };
         img.onerror = function () {
@@ -3816,8 +3819,10 @@ define('kotenei/loading', ['jquery', 'spin'], function ($, Spinner) {
     var isShow = false;
 
     Loading.prototype.init = function () {
-        this.spinner = new Spinner(this.options);
         this.$loading = $(this.tpl).appendTo(document.body).hide();
+        this.options.top = this.$loading.outerHeight() / 2 + "px";
+        this.options.left = this.$loading.outerWidth() / 2 + "px";
+        this.spinner = new Spinner(this.options);
     };
 
     Loading.prototype.show = function () {

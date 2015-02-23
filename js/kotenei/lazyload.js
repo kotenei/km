@@ -29,6 +29,9 @@ define('kotenei/lazyload', ['jquery'], function ($) {
         var self = this;
         this.$elements.each(function () {
             if (this.nodeName.toLowerCase() != 'img') { return; }
+            if (this.getAttribute('hasLoad')=='true') {
+                return;
+            }
             var $elm = $(this);
             var data = {};
             if (self.options.placeholder != null) {
@@ -94,6 +97,7 @@ define('kotenei/lazyload', ['jquery'], function ($) {
         var img = new Image();
         img.onload = function () {
             $img.attr('src', src);
+            $img.attr('hasLoad', true);
             callback();
         };
         img.onerror = function () {
