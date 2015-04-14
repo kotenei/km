@@ -3239,13 +3239,15 @@ define('kotenei/highlight', ['jquery'], function ($) {
      */
     exports.highlightHtml = function ($elm, keywords, className) {
 
-        if (!$.isArray($elm)) {
+
+        if (typeof $elm!='object') {
             className = keywords;
             keywords = $elm;
             $elm = $body;
         }
 
         var html = this.highlightText($elm.html(), keywords, className);
+
         $elm.html(html);
     };
 
@@ -3279,6 +3281,7 @@ define('kotenei/highlight', ['jquery'], function ($) {
         }
 
         var matches = source.match(/[^<>]+|<(\/?)([A-Za-z]+)([^<>]*)>/g);
+
         for (var i = 0; i < matches.length; i++) {
             if (!/<[^>]+>/.test(matches[i]) && $.trim(matches[i]).length != 0) {
                 matches[i] = matches[i].replace(new RegExp('(' + keywords.join('|') + ')', 'ig'), '<mark class="' + className + '">$1</mark>');
