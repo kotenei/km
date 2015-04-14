@@ -18,6 +18,7 @@ define('kotenei/pager', ['jquery', 'kotenei/event'], function ($, event) {
             pageSize: 20,
             className: 'k-pagination',
         }, options);
+        this.canBuild = true;
         this.curPage = this.options.curPage;
         this.totalCount = this.options.totalCount;
         this.pageSize = this.options.pageSize;
@@ -40,8 +41,13 @@ define('kotenei/pager', ['jquery', 'kotenei/event'], function ($, event) {
                 page = $this.attr('data-page');
             if ($this.hasClass("disabled") || $this.hasClass("active")) { return; }
             self.curPage = parseInt(page);
-            self.build();
+
             self.event.trigger('click.pager', [page]);
+
+            if (self.canBuild) {
+                self.build();
+            }
+
         });
     };
 
