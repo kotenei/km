@@ -145,6 +145,7 @@ define('kotenei/ajax', ['jquery', 'kotenei/loading', 'kotenei/popTips', 'kotenei
                     }
                 }).fail(function () {
                     popTips.error("服务器发生错误", config.popTips.delay);
+                    dtd.reject();
                 }).always(function () {
                     Loading.hide();
                 });
