@@ -6724,6 +6724,7 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
                 padding: 0,
                 overflowY: 'hidden'
             }).append('<iframe frameborder="0" width="100%" src="' + this.options.url + '" scrolling="auto"></iframe>');
+            this.$iframe = this.$container.find('iframe');
         } else {
             this.setContent(this.options.content);
         }
