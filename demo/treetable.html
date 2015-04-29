@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../dist/css/kotenei.css" />
+    <script type="text/javascript" src="./vendor/require/require.js"></script>
+    <script type="text/javascript" src="./main.js"></script>
+    <style type="text/css">
+        
+    </style>
+</head>
+<body>
+
+    <div id="treetable"></div>
+
+    <script type="text/javascript">
+        require(['kotenei'], function (kotenei) {
+            var data = [
+                { nodeId: 1, parentId: 0, Id: 1, Name: '信息管理' },
+                { nodeId: 2, parentId: 1, Id: 2, Name: '文章列表' },
+                { nodeId: 3, parentId: 2, Id: 3, Name: '添加文章' },
+                { nodeId: 6, parentId: 1, Id: 6, Name: '焦点图' },
+                { nodeId: 4, parentId: 0, Id: 4, Name: '日程管理' },
+                { nodeId: 5, parentId: 4, Id: 5, Name: '日程列表' }
+            ];
+            var treeTable = new kotenei.TreeTable($('#treetable'), {
+                column: 1,
+                columns: [
+                    { title: '编号', field: 'Id', checkbox: true },
+                    {
+                        title: '权限名称', field: 'Name', formatter: function (value, data) {
+                            return '<a href="javascript:void(0);">' + value + '</a>';
+                        }
+                    },
+                ],
+                data: data
+            });
+        });
+
+    </script>
+</body>
+</html>
