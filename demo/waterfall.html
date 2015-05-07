@@ -8,6 +8,11 @@
     <script type="text/javascript" src="./vendor/require/require.js"></script>
     <script type="text/javascript" src="./main.js"></script>
     <style type="text/css">
+        body
+        {
+            padding:0;
+            margin:0;
+        }
         ul { list-style: none;padding: 0; margin: 0 auto; position: relative; }
 
         ul li { position: absolute;}
@@ -26,6 +31,7 @@
 
 
         for (var i = 10, j = 0; i < 20; i++, j++) {
+            
             arr[j] = 'http://www.bluesdream.com/case/jquery/ublue-jquery-waterfall/images/img' + (i + 1) + '.jpg';
         }
 
@@ -47,7 +53,8 @@
                         (function ($img, src) {
                             self.imgLoad($img, src, function (size) {
                                 tmpCount++;
-                                html.push('<li style="width:' + size.width + 'px;height:' + size.height + 'px;"><img src="' + src + '"  /></li>');
+
+                                html.push('<li style="width:' + size.width + 'px;"><img src="' + src + '"  /></li>');
                                 if (tmpCount >= maxLen) {
                                     var $lis = $(html.join(''));
                                     $list.append($lis);
