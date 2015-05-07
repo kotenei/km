@@ -6982,7 +6982,6 @@ define('kotenei/waterfall', ['jquery', 'kotenei/infiniteScroll', 'kotenei/popTip
         for (var i = 0, node_h, $node; i < this.nodes.length; i++) {
             $node = this.nodes.eq(i);
             node_h = $node.outerHeight();
-            console.log($node.outerHeight())
 
             //n表示一行有多少个节点，i<n表示第一行开始
             if (i < n) {
