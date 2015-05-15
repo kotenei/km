@@ -20,13 +20,15 @@ define('kotenei/waterfall', ['jquery', 'kotenei/infiniteScroll', 'kotenei/popTip
             resize: true,
             url: null,
             loaded: $.noop,
-            mobilePhone: false
+            mobilePhone: false,
+            pageSize:20
         }, options);
 
         this.$window = $(window);
         this.$document = $(document);
         this.loading = false;
         this.noMore = false;
+        this.page = 1;
         this.init();
     };
 
@@ -190,7 +192,9 @@ define('kotenei/waterfall', ['jquery', 'kotenei/infiniteScroll', 'kotenei/popTip
         var self = this;
         this.loading = true;
         $.get(this.options.url, {
-            rnd: Math.random()
+            rnd: Math.random(),
+            page: this.page++,
+            pageSize:this.options.pageSize
         }).done(function (ret) {
             if (!ret || ret.length === 0) {
                 self.noMore = true;
