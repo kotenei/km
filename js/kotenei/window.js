@@ -20,7 +20,8 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
             backdrop: true,
             backdropClose: false,
             iframe: false,
-            appendTo: document.body
+            appendTo: document.body,
+            showFooter:true
         }, options);
 
         this._event = {
@@ -192,7 +193,7 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
         //头部高度
         var headerHeight = this.$header.height();
         //底部高度
-        var footerHeight = this.$footer.height();
+        var footerHeight =this.options.showFooter? this.$footer.height():4;
         //最大容器高度
         var maxContainerHeight = maxWinHeight - headerHeight - footerHeight;
 
@@ -246,6 +247,9 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
         this.$footer = this.$win.find('.k-window-footer');
         this.$win.appendTo(this.options.appendTo);
         this.$backdrop.appendTo(this.options.appendTo);
+        if (!this.options.showFooter) {
+            this.$footer.hide();
+        }
     };
 
     /**
