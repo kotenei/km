@@ -22,6 +22,7 @@ define('kotenei/datepicker', ['jquery'], function ($) {
         var self = this;
         this.$element = $element;
         this.options = $.extend({}, {
+            position: 'left',
             desktop: false,
             data: [],
             appendTo: $(document.body),
@@ -46,7 +47,7 @@ define('kotenei/datepicker', ['jquery'], function ($) {
         this.event = {
             selected: [],
             clean: [],
-            change:[]
+            change: []
         };
     };
 
@@ -72,10 +73,23 @@ define('kotenei/datepicker', ['jquery'], function ($) {
         var container = this.options.appendTo[0];
         var parent = this.$element[0];
 
+
+
         do {
+
             position.left += parent.offsetLeft - parent.scrollLeft;
+
             position.top += parent.offsetTop - parent.scrollTop;
         } while ((parent = parent.offsetParent) && parent != container);
+
+        if (this.options.position != 'left') {
+
+            var tmp_h_1 = position.left + this.$element.outerWidth();
+            var tmp_h_2 = position.left + this.$datepicker.outerWidth();
+
+            position.left = position.left - (tmp_h_2 - tmp_h_1);
+
+        }
 
         return {
             left: position.left,
@@ -1226,6 +1240,7 @@ define('kotenei/datepicker', ['jquery'], function ($) {
                 showTime = $this.attr('data-showTime'),
                 minDate = $this.attr('data-minDate'),
                 maxDate = $this.attr('data-maxDate'),
+                position = $this.attr('data-position'),
                 appendTo = $this.attr('data-appendTo');
 
             var data = $this.data('datepicker');
@@ -1238,6 +1253,7 @@ define('kotenei/datepicker', ['jquery'], function ($) {
                     showTime: showTime,
                     minDate: minDate,
                     maxDate: maxDate,
+                    position: position || 'left',
                     appendTo: $(appendTo || document.body)
                 });
                 $this.data('datepicker', data);
