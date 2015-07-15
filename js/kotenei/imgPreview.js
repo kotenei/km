@@ -104,6 +104,12 @@ define('kotenei/imgPreview', ['jquery', 'kotenei/loading', 'kotenei/popTips'], f
             self.$prev.hide();
             self.$next.hide();
         });
+
+        this.$win.on('resize', function () {
+            var width = self.$img.attr('data-width'),
+                height = self.$img.attr('data-height');
+            self.setPosition({width:width,height:height});
+        });
     };
 
     /**
@@ -214,8 +220,19 @@ define('kotenei/imgPreview', ['jquery', 'kotenei/loading', 'kotenei/popTips'], f
 
         this.imgLoad(src, function (result, size) {
             if (result) {
-                self.$img.attr('src', src);
+                self.$img.attr({
+                    'src': src,
+                    'data-width': size.width,
+                    'data-height':size.height
+                });
                 self.setPosition(size);
+
+                self.$imgPreview.hide().fadeIn(self.options.delay);
+
+                if (self.options.backdrop) {
+                    self.$backdrop.fadeIn(self.options.delay);
+                }
+
             } else {
                 self.hide();
             }
@@ -255,16 +272,12 @@ define('kotenei/imgPreview', ['jquery', 'kotenei/loading', 'kotenei/popTips'], f
             height: size.height
         });
 
-        this.$imgPreview.hide().css({
+        this.$imgPreview.css({
             width: size.width + 20,
             height: size.height + 20,
-            marginTop: - ((size.height + 20) / 2),
-            marginLeft:  - ((size.width + 20) / 2)
-        }).fadeIn(this.options.delay);
-
-        if (this.options.backdrop) {
-            this.$backdrop.fadeIn(this.options.delay);
-        }
+            marginTop: -((size.height + 20) / 2),
+            marginLeft: -((size.width + 20) / 2)
+        });
 
     };
 
