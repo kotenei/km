@@ -1655,3 +1655,53 @@ table.k-treeTable tr.expanded.accept td span.indenter a {
 .k-contextMenu li:hover {
   background: #eee;
 }
+.k-magnifier {
+  position: relative;
+  width: 400px;
+  height: 400px;
+}
+.k-magnifier .k-magnifier-imgbox {
+  width: 400px;
+  height: 400px;
+  border: 1px solid #cccccc;
+  position: relative;
+}
+.k-magnifier .k-magnifier-imgbox img {
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.k-magnifier .k-magnifier-imgbox .k-magnifier-selector {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  border: 1px dashed #ccc;
+  background: white;
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+  left: 0;
+  top: 0;
+  cursor: move;
+  display: none;
+}
+.k-magnifier .k-magnifier-thumblist {
+  list-style: none;
+}
+.k-magnifier .k-magnifier-thumblist li {
+  float: left;
+}
+.k-magnifier .k-magnifier-view {
+  position: absolute;
+  overflow: hidden;
+  right: -510px;
+  top: 0;
+  width: 500px;
+  height: 500px;
+  display: none;
+}
+.k-magnifier .k-magnifier-view img {
+  position: absolute;
+  left: 0;
+  top: 0;
+}

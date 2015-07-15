@@ -3999,6 +3999,117 @@ define('kotenei/loading', ['jquery', 'spin'], function ($, Spinner) {
 });
 
 /*
+ * 放大镜模块
+ * @date:2015-07-15
+ * @author:kotenei(kotenei@qq.com)
+ */
+define('kotenei/magnifier', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
+
+    var Magnifier = function ($el, options) {
+        this.options = $.extend({}, {
+            main: {
+                width: 400,
+                height: 400
+            },
+            selector: {
+                width: 150,
+                height: 150
+            }
+        }, options);
+        this.$el = $el;
+        this._isCreate = false;
+        this.init();
+    };
+
+    Magnifier.prototype.init = function () {
+        this.create();
+        this.watch();
+    };
+
+    Magnifier.prototype.watch = function () {
+        var self = this;
+
+        this.$el.on('mousemove', function (e) {
+            self.$view.show();
+            self.$selector.show();
+            self.setPosition(e);
+        }).on('mouseleave', function (e) {
+            self.$view.hide();
+            self.$selector.hide();
+        });
+    };
+
+    Magnifier.prototype.create = function () {
+
+        this.$imgBox = this.$el.find('.k-magnifier-imgbox').css({
+            width: this.options.main.width,
+            height: this.options.main.height
+        });
+
+        this.$view = $('<div class="k-magnifier-view"><img src="../images/big.jpg" /></div>')
+            .appendTo(this.$el);
+
+        this.$viewImg = this.$view.find('img');
+
+        this.$selector = $('<div class="k-magnifier-selector"></div>')
+            .appendTo(this.$imgBox)
+            .css({ width: this.options.selector.width - 2, height: this.options.selector.height - 2 });
+    };
+
+    Magnifier.prototype.setPosition = function (e) {
+        var x = e.pageX,
+            y = e.pageY,
+            left = x - this.$el.offset().left,
+            top = y - this.$el.offset().top,
+            maxLeft = this.$el.width() - this.options.selector.width,
+            maxTop = this.$el.height() - this.options.selector.height,
+            percentX, percentY;
+
+        left = left - this.options.selector.width / 2;
+        top = top - this.options.selector.height / 2;
+
+
+        if (left < 0) {
+            left = 0;
+        } else if (left > maxLeft) {
+            left = maxLeft;
+        }
+
+        if (top < 0) {
+            top = 0;
+        } else if (top > maxTop) {
+            top = maxTop;
+        }
+
+        percentX = left / (this.$el.width() - this.options.selector.width);
+        percentY = top / (this.$el.height() - this.options.selector.height);
+
+       
+        this.$selector.css({
+            left: left,
+            top: top
+        });
+
+        if (!this.isSet) {
+            this.$viewImg.css({
+                width: this.$viewImg.width() / this.options.main.width * this.$viewImg.width(),
+                height: this.$viewImg.width() / this.options.main.height * this.$viewImg.height()
+            });
+            this.isSet = true;
+        }
+
+        this.$viewImg.css({
+            left: -percentX * (this.$viewImg.width()-this.$view.width()) ,
+            top: -percentY * (this.$viewImg.height()-this.$view.height())
+        })
+
+    };
+
+
+    return Magnifier;
+});
+
+/*
  * 分页模块
  * @date:2014-09-14
  * @author:kotenei(kotenei@qq.com)
@@ -7788,7 +7899,7 @@ define('kotenei/wordLimit', ['jquery'], function ($) {
     return WordLimit;
 });
 ;
-define("kotenei", ["kotenei/ajax", "kotenei/app", "kotenei/autoComplete", "kotenei/cache", "kotenei/clipZoom", "kotenei/contextMenu", "kotenei/datepicker", "kotenei/dragdrop", "kotenei/dropdown", "kotenei/dropdownDatepicker", "kotenei/event", "kotenei/highlight", "kotenei/imgPreview", "kotenei/infiniteScroll", "kotenei/lazyload", "kotenei/loading", "kotenei/pager", "kotenei/placeholder", "kotenei/popover", "kotenei/popTips", "kotenei/router", "kotenei/slider", "kotenei/switch", "kotenei/tooltips", "kotenei/tree", "kotenei/treeTable", "kotenei/util", "kotenei/validate", "kotenei/validateTooltips", "kotenei/waterfall", "kotenei/window", "kotenei/wordLimit"], function(_ajax, _app, _autoComplete, _cache, _clipZoom, _contextMenu, _datepicker, _dragdrop, _dropdown, _dropdownDatepicker, _event, _highlight, _imgPreview, _infiniteScroll, _lazyload, _loading, _pager, _placeholder, _popover, _popTips, _router, _slider, _switch, _tooltips, _tree, _treeTable, _util, _validate, _validateTooltips, _waterfall, _window, _wordLimit){
+define("kotenei", ["kotenei/ajax", "kotenei/app", "kotenei/autoComplete", "kotenei/cache", "kotenei/clipZoom", "kotenei/contextMenu", "kotenei/datepicker", "kotenei/dragdrop", "kotenei/dropdown", "kotenei/dropdownDatepicker", "kotenei/event", "kotenei/highlight", "kotenei/imgPreview", "kotenei/infiniteScroll", "kotenei/lazyload", "kotenei/loading", "kotenei/magnifier", "kotenei/pager", "kotenei/placeholder", "kotenei/popover", "kotenei/popTips", "kotenei/router", "kotenei/slider", "kotenei/switch", "kotenei/tooltips", "kotenei/tree", "kotenei/treeTable", "kotenei/util", "kotenei/validate", "kotenei/validateTooltips", "kotenei/waterfall", "kotenei/window", "kotenei/wordLimit"], function(_ajax, _app, _autoComplete, _cache, _clipZoom, _contextMenu, _datepicker, _dragdrop, _dropdown, _dropdownDatepicker, _event, _highlight, _imgPreview, _infiniteScroll, _lazyload, _loading, _magnifier, _pager, _placeholder, _popover, _popTips, _router, _slider, _switch, _tooltips, _tree, _treeTable, _util, _validate, _validateTooltips, _waterfall, _window, _wordLimit){
     return {
         "ajax" : _ajax,
         "App" : _app,
@@ -7806,6 +7917,7 @@ define("kotenei", ["kotenei/ajax", "kotenei/app", "kotenei/autoComplete", "koten
         "InfiniteScroll" : _infiniteScroll,
         "lazyload" : _lazyload,
         "Loading" : _loading,
+        "Magnifier" : _magnifier,
         "Pager" : _pager,
         "placeholder" : _placeholder,
         "Popover" : _popover,
