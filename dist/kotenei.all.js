@@ -4007,10 +4007,9 @@ define('kotenei/magnifier', ['jquery', 'kotenei/dragdrop'], function ($, DragDro
 
     var Magnifier = function ($el, options) {
         this.options = $.extend({}, {
-            main: {
-                width: 400,
-                height: 400
-            },
+            offset: 10,
+            width: 400,
+            height:400,
             selector: {
                 width: 150,
                 height: 150
@@ -4042,18 +4041,28 @@ define('kotenei/magnifier', ['jquery', 'kotenei/dragdrop'], function ($, DragDro
     Magnifier.prototype.create = function () {
 
         this.$imgBox = this.$el.find('.k-magnifier-imgbox').css({
-            width: this.options.main.width,
-            height: this.options.main.height
+            width: this.options.width,
+            height: this.options.height
         });
 
         this.$view = $('<div class="k-magnifier-view"><img src="../images/big.jpg" /></div>')
-            .appendTo(this.$el);
+            .appendTo(this.$el)
+            .css({
+                width: this.options.width,
+                height: this.options.height,
+                left: this.$imgBox.position().left + this.options.width + this.options.offset,
+                top:this.$imgBox.position().top
+            });
+            
 
         this.$viewImg = this.$view.find('img');
 
         this.$selector = $('<div class="k-magnifier-selector"></div>')
             .appendTo(this.$imgBox)
-            .css({ width: this.options.selector.width - 2, height: this.options.selector.height - 2 });
+            .css({
+                width: this.options.selector.width - 2,
+                height: this.options.selector.height - 2
+            });
     };
 
     Magnifier.prototype.setPosition = function (e) {
@@ -4084,25 +4093,19 @@ define('kotenei/magnifier', ['jquery', 'kotenei/dragdrop'], function ($, DragDro
         percentX = left / (this.$el.width() - this.options.selector.width);
         percentY = top / (this.$el.height() - this.options.selector.height);
 
-       
+
         this.$selector.css({
             left: left,
             top: top
         });
 
-        if (!this.isSet) {
-            this.$viewImg.css({
-                width: this.$viewImg.width() / this.options.main.width * this.$viewImg.width(),
-                height: this.$viewImg.width() / this.options.main.height * this.$viewImg.height()
-            });
-            this.isSet = true;
-        }
 
         this.$viewImg.css({
-            left: -percentX * (this.$viewImg.width()-this.$view.width()) ,
-            top: -percentY * (this.$viewImg.height()-this.$view.height())
+            width: this.options.width/this.options.selector.width*this.options.width,
+            height: this.options.height / this.options.selector.height * this.options.height,
+            left: -percentX * (this.$viewImg.width() - this.$view.width()),
+            top: -percentY * (this.$viewImg.height() - this.$view.height())
         })
-
     };
 
 
@@ -4381,89 +4384,6 @@ define('kotenei/placeholder', ['jquery'], function($) {
     }
 });
 /*
- * 弹出提示模块
- * @date:2014-09-10
- * @author:kotenei(kotenei@qq.com)
- */
-define('kotenei/popTips', ['jquery'], function ($) {
-
-    /**
-     * 弹出提示模块
-     * @return {Object} 
-     */
-    var PopTips = (function () {
-
-        var _instance;
-
-        function init() {
-
-            var $tips, tm;
-
-            function build(status, content, delay, callback) {
-
-                if (tm) { clearTimeout(tm); }
-
-                if ($.isFunction(delay)) { callback = delay; delay = 3000; }
-
-                callback = callback || $.noop;
-                delay = delay || 3000;
-
-                if ($tips) { $tips.stop().remove(); }
-
-                $tips = $(getHtml(status, content))
-                        .appendTo(document.body).hide();
-
-                $tips.css({ marginLeft: -($tips.width() / 2), marginTop: -($tips.height() / 2) }).fadeIn('fase', function () {
-                    tm = setTimeout(function () {
-                        $tips.stop().remove();
-                        callback();
-                    }, delay);
-                })
-            }
-
-            function getHtml(status, content) {
-                var html = [];
-                switch (status) {
-                    case "success":
-                        html.push('<div class="k-pop-tips success"><span class="fa fa-check"></span>&nbsp;<span>' + content + '</span></div>');
-                        break;
-                    case "error":
-                        html.push('<div class="k-pop-tips error"><span class="fa fa-close"></span>&nbsp;<span>' + content + '</span></div>');
-                        break;
-                    case "warning":
-                        html.push('<div class="k-pop-tips warning"><span class="fa fa-exclamation"></span>&nbsp;<span>' + content + '</span></div>');
-                        break;
-                }
-                return html.join('');
-            }
-
-            return {
-                success: function (content, callback, delay) {
-                    build("success", content, callback, delay);
-                },
-                error: function (content, callback, delay) {
-                    build("error", content, callback, delay);
-                },
-                warning: function (content, callback, delay) {
-                    build("warning", content, callback, delay);
-                }
-            };
-        }
-
-        return {
-            getInstance: function () {
-                if (!_instance) {
-                    _instance = init();
-                }
-                return _instance;
-            }
-        }
-    })();
-
-    return PopTips.getInstance();
-});
-
-/*
  * 弹出框模块
  * @date:2014-11-05
  * @author:kotenei(kotenei@qq.com)
@@ -4565,6 +4485,89 @@ define('kotenei/popover', ['jquery', 'kotenei/tooltips', 'kotenei/util'], functi
 
     return Popover;
 });
+/*
+ * 弹出提示模块
+ * @date:2014-09-10
+ * @author:kotenei(kotenei@qq.com)
+ */
+define('kotenei/popTips', ['jquery'], function ($) {
+
+    /**
+     * 弹出提示模块
+     * @return {Object} 
+     */
+    var PopTips = (function () {
+
+        var _instance;
+
+        function init() {
+
+            var $tips, tm;
+
+            function build(status, content, delay, callback) {
+
+                if (tm) { clearTimeout(tm); }
+
+                if ($.isFunction(delay)) { callback = delay; delay = 3000; }
+
+                callback = callback || $.noop;
+                delay = delay || 3000;
+
+                if ($tips) { $tips.stop().remove(); }
+
+                $tips = $(getHtml(status, content))
+                        .appendTo(document.body).hide();
+
+                $tips.css({ marginLeft: -($tips.width() / 2), marginTop: -($tips.height() / 2) }).fadeIn('fase', function () {
+                    tm = setTimeout(function () {
+                        $tips.stop().remove();
+                        callback();
+                    }, delay);
+                })
+            }
+
+            function getHtml(status, content) {
+                var html = [];
+                switch (status) {
+                    case "success":
+                        html.push('<div class="k-pop-tips success"><span class="fa fa-check"></span>&nbsp;<span>' + content + '</span></div>');
+                        break;
+                    case "error":
+                        html.push('<div class="k-pop-tips error"><span class="fa fa-close"></span>&nbsp;<span>' + content + '</span></div>');
+                        break;
+                    case "warning":
+                        html.push('<div class="k-pop-tips warning"><span class="fa fa-exclamation"></span>&nbsp;<span>' + content + '</span></div>');
+                        break;
+                }
+                return html.join('');
+            }
+
+            return {
+                success: function (content, callback, delay) {
+                    build("success", content, callback, delay);
+                },
+                error: function (content, callback, delay) {
+                    build("error", content, callback, delay);
+                },
+                warning: function (content, callback, delay) {
+                    build("warning", content, callback, delay);
+                }
+            };
+        }
+
+        return {
+            getInstance: function () {
+                if (!_instance) {
+                    _instance = init();
+                }
+                return _instance;
+            }
+        }
+    })();
+
+    return PopTips.getInstance();
+});
+
 /**
  * 路由
  * @date :2014-09-21

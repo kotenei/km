@@ -7,10 +7,9 @@ define('kotenei/magnifier', ['jquery', 'kotenei/dragdrop'], function ($, DragDro
 
     var Magnifier = function ($el, options) {
         this.options = $.extend({}, {
-            main: {
-                width: 400,
-                height: 400
-            },
+            offset: 10,
+            width: 400,
+            height:400,
             selector: {
                 width: 150,
                 height: 150
@@ -42,18 +41,28 @@ define('kotenei/magnifier', ['jquery', 'kotenei/dragdrop'], function ($, DragDro
     Magnifier.prototype.create = function () {
 
         this.$imgBox = this.$el.find('.k-magnifier-imgbox').css({
-            width: this.options.main.width,
-            height: this.options.main.height
+            width: this.options.width,
+            height: this.options.height
         });
 
         this.$view = $('<div class="k-magnifier-view"><img src="../images/big.jpg" /></div>')
-            .appendTo(this.$el);
+            .appendTo(this.$el)
+            .css({
+                width: this.options.width,
+                height: this.options.height,
+                left: this.$imgBox.position().left + this.options.width + this.options.offset,
+                top:this.$imgBox.position().top
+            });
+            
 
         this.$viewImg = this.$view.find('img');
 
         this.$selector = $('<div class="k-magnifier-selector"></div>')
             .appendTo(this.$imgBox)
-            .css({ width: this.options.selector.width - 2, height: this.options.selector.height - 2 });
+            .css({
+                width: this.options.selector.width - 2,
+                height: this.options.selector.height - 2
+            });
     };
 
     Magnifier.prototype.setPosition = function (e) {
@@ -84,25 +93,19 @@ define('kotenei/magnifier', ['jquery', 'kotenei/dragdrop'], function ($, DragDro
         percentX = left / (this.$el.width() - this.options.selector.width);
         percentY = top / (this.$el.height() - this.options.selector.height);
 
-       
+
         this.$selector.css({
             left: left,
             top: top
         });
 
-        if (!this.isSet) {
-            this.$viewImg.css({
-                width: this.$viewImg.width() / this.options.main.width * this.$viewImg.width(),
-                height: this.$viewImg.width() / this.options.main.height * this.$viewImg.height()
-            });
-            this.isSet = true;
-        }
 
         this.$viewImg.css({
-            left: -percentX * (this.$viewImg.width()-this.$view.width()) ,
-            top: -percentY * (this.$viewImg.height()-this.$view.height())
+            width: this.options.width/this.options.selector.width*this.options.width,
+            height: this.options.height / this.options.selector.height * this.options.height,
+            left: -percentX * (this.$viewImg.width() - this.$view.width()),
+            top: -percentY * (this.$viewImg.height() - this.$view.height())
         })
-
     };
 
 
