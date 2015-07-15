@@ -7207,7 +7207,8 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
             backdropClose: false,
             iframe: false,
             appendTo: document.body,
-            showFooter:true
+            showFooter: true,
+            btns: []
         }, options);
 
         this._event = {
@@ -7218,11 +7219,11 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
 
         this.loading = false;
         this.template = '<div class="k-window">' +
-                            '<h4 class="k-window-header"><span class="k-window-title"></span><span class="k-window-close">×</span></h4>' +
+                            '<h4 class="k-window-header"><span class="k-window-title"></span><span class="k-window-close" role="KWINCLOSE">×</span></h4>' +
                             '<div class="k-window-container"></div>' +
                             '<div class="k-window-footer">' +
-                                '<button type="button" class="k-btn k-btn-primary k-window-ok">确定</button>' +
-                                '<button type="button" class="k-btn k-btn-default k-window-cancel">取消</button>' +
+                                '<button type="button" class="k-btn k-btn-primary k-window-ok" role="KWINOK">确定</button>' +
+                                '<button type="button" class="k-btn k-btn-default k-window-cancel" role="KWINCLOSE">取消</button>' +
                             '</div>' +
                         '</div>';
         this.backdrop = '<div class="k-window-backdrop"></div>';
@@ -7265,13 +7266,23 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
                 self.close();
             }
         });
-        this.$win.on('click', '.k-window-cancel,.k-window-close', function () {
+        this.$win.on('click', '[role=KWINCLOSE]', function () {
             self.close();
-        }).on('click', '.k-window-ok', function () {
+        }).on('click', '[role=KWINOK]', function () {
             if (self._event.ok.call(self) !== false) {
-                self.hide();
+                self.close();
             }
         });
+
+        if (this.options.btns && this.options.btns.length > 0) {
+            for (var i = 0, item; i < this.options.btns.length; i++) {
+                item = this.options.btns[i];
+                this.$win.on('click', '[role=' + item.actionCode + ']', function () {
+                    item.func.call(self,self.$iframe);
+                });
+            }
+        }
+
     };
 
     /**
@@ -7379,7 +7390,7 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
         //头部高度
         var headerHeight = this.$header.height();
         //底部高度
-        var footerHeight =this.options.showFooter? this.$footer.height():4;
+        var footerHeight = this.options.showFooter ? this.$footer.height() : 4;
         //最大容器高度
         var maxContainerHeight = maxWinHeight - headerHeight - footerHeight;
 
@@ -7435,6 +7446,16 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
         this.$backdrop.appendTo(this.options.appendTo);
         if (!this.options.showFooter) {
             this.$footer.hide();
+        }
+        if (this.options.btns && this.options.btns.length > 0) {
+            this.$footer.find('.k-btn').hide();
+            var html = [];
+            for (var i = 0,item; i < this.options.btns.length; i++) {
+                item = this.options.btns[i];
+                html.push('<button type="button" class="k-btn ' + (item.className || "k-btn-primary") + '" role="' + item.actionCode + '">' + item.text + '</button>');
+
+            }
+            this.$footer.append(html.join(''));
         }
     };
 
