@@ -1127,6 +1127,118 @@ define('kotenei/clipZoom', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop
 
 });
 
+/*
+ * 右键菜单模块
+ * @date:2015-07-15
+ * @author:kotenei(kotenei@qq.com)
+ */
+define('kotenei/contextMenu', ['jquery'], function ($) {
+
+    /**
+     * 右键菜单模块
+     * @constructor
+     * @alias kotenei/contextMenu
+     * @param {JQuery} $el - dom
+     * @param {Object} options - 参数设置
+     */
+    var ContextMenu = function ($el, options) {
+        this.$el = $el;
+        this.options = $.extend({}, {
+            target: '',
+            className: 'k-contextMenu',
+            items: [],
+            callback: {
+                onShow: $.noop
+            }
+        }, options);
+        this.$curTarget = null;
+        this.tm = null;
+        this.init();
+    };
+
+    /**
+     * 初始化
+     * @return {Void}   
+     */
+    ContextMenu.prototype.init = function () {
+        if (this.options.items.length == 0 || this.$el.length == 0) {
+            return;
+        }
+        this.build();
+        this.watch();
+    };
+
+    /**
+     * 事件监控
+     * @return {Void}   
+     */
+    ContextMenu.prototype.watch = function () {
+        var self = this;
+
+        this.$el.on('contextmenu',this.options.target, function (e) {
+            var left = e.pageX,
+                top = e.pageY;
+
+            self.$curTarget = $(this);
+
+            self.tm = setTimeout(function () {
+                self.$contextMenu.css({
+                    left: left,
+                    top: top,
+                    display: 'block'
+                });
+
+                self.options.callback.onShow.call(self);
+
+            }, 100);
+
+            return false;
+        });
+
+        this.$contextMenu.on('click', 'li', function () {
+            var $el = $(this),
+                text = $el.text(),
+                item = self.items[text];
+            if (item && typeof item.func === 'function') {
+                item.func(self.$curTarget);
+            }
+        });
+
+        $(document.body).on('click', function () {
+            self.$contextMenu.hide();
+            self.$curTarget = null;
+        });
+    };
+
+    /**
+     * 创建菜单
+     * @return {Void}   
+     */
+    ContextMenu.prototype.build = function () {
+        var html = [];
+        this.items = {};
+        html.push('<ul class="' + this.options.className + '">');
+        for (var i = 0; i < this.options.items.length; i++) {
+            html.push('<li>' + this.options.items[i].text + '</li>');
+            this.items[this.filterHtml(this.options.items[i].text)] = this.options.items[i];
+        }
+        html.push('</ul>');
+        this.$contextMenu = $(html.join(''));
+        this.$contextMenu.appendTo(document.body);
+    };
+
+    /**
+     * 过滤html
+     * @return {String}   
+     */
+    ContextMenu.prototype.filterHtml = function (str) {
+        return str.replace(/<[^>]*>/ig, '');
+    };
+
+
+    return ContextMenu;
+});
+
 /**
  * 日期模块
  * @date :2014-10-31
@@ -7676,13 +7788,14 @@ define('kotenei/wordLimit', ['jquery'], function ($) {
     return WordLimit;
 });
 ;
-define("kotenei", ["kotenei/ajax", "kotenei/app", "kotenei/autoComplete", "kotenei/cache", "kotenei/clipZoom", "kotenei/datepicker", "kotenei/dragdrop", "kotenei/dropdown", "kotenei/dropdownDatepicker", "kotenei/event", "kotenei/highlight", "kotenei/imgPreview", "kotenei/infiniteScroll", "kotenei/lazyload", "kotenei/loading", "kotenei/pager", "kotenei/placeholder", "kotenei/popover", "kotenei/popTips", "kotenei/router", "kotenei/slider", "kotenei/switch", "kotenei/tooltips", "kotenei/tree", "kotenei/treeTable", "kotenei/util", "kotenei/validate", "kotenei/validateTooltips", "kotenei/waterfall", "kotenei/window", "kotenei/wordLimit"], function(_ajax, _app, _autoComplete, _cache, _clipZoom, _datepicker, _dragdrop, _dropdown, _dropdownDatepicker, _event, _highlight, _imgPreview, _infiniteScroll, _lazyload, _loading, _pager, _placeholder, _popover, _popTips, _router, _slider, _switch, _tooltips, _tree, _treeTable, _util, _validate, _validateTooltips, _waterfall, _window, _wordLimit){
+define("kotenei", ["kotenei/ajax", "kotenei/app", "kotenei/autoComplete", "kotenei/cache", "kotenei/clipZoom", "kotenei/contextMenu", "kotenei/datepicker", "kotenei/dragdrop", "kotenei/dropdown", "kotenei/dropdownDatepicker", "kotenei/event", "kotenei/highlight", "kotenei/imgPreview", "kotenei/infiniteScroll", "kotenei/lazyload", "kotenei/loading", "kotenei/pager", "kotenei/placeholder", "kotenei/popover", "kotenei/popTips", "kotenei/router", "kotenei/slider", "kotenei/switch", "kotenei/tooltips", "kotenei/tree", "kotenei/treeTable", "kotenei/util", "kotenei/validate", "kotenei/validateTooltips", "kotenei/waterfall", "kotenei/window", "kotenei/wordLimit"], function(_ajax, _app, _autoComplete, _cache, _clipZoom, _contextMenu, _datepicker, _dragdrop, _dropdown, _dropdownDatepicker, _event, _highlight, _imgPreview, _infiniteScroll, _lazyload, _loading, _pager, _placeholder, _popover, _popTips, _router, _slider, _switch, _tooltips, _tree, _treeTable, _util, _validate, _validateTooltips, _waterfall, _window, _wordLimit){
     return {
         "ajax" : _ajax,
         "App" : _app,
         "AutoComplete" : _autoComplete,
         "cache" : _cache,
         "ClipZoom" : _clipZoom,
+        "ContextMenu" : _contextMenu,
         "Datepicker" : _datepicker,
         "Dragdrop" : _dragdrop,
         "Dropdown" : _dropdown,

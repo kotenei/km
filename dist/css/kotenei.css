@@ -1629,3 +1629,29 @@ table.k-treeTable tr.collapsed.accept td span.indenter a {
 table.k-treeTable tr.expanded.accept td span.indenter a {
   background-image: url(../../images/treetable/collapse-light.png);
 }
+.k-contextMenu {
+  background-color: White;
+  border: 1px solid #cccccc;
+  position: absolute;
+  left: 0;
+  top: 0;
+  margin: 0;
+  padding: 0;
+  z-index: 15;
+  width: 150px;
+  box-shadow: 0px 0px 10px #cccccc;
+  display: none;
+  border-radius: 4px;
+  padding: 2px 0;
+  list-style: none;
+}
+.k-contextMenu li {
+  cursor: pointer;
+  height: 28px;
+  line-height: 28px;
+  padding: 0 15px;
+  font-size: 13px;
+}
+.k-contextMenu li:hover {
+  background: #eee;
+}

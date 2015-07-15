@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../dist/css/kotenei.css" />
+    <script type="text/javascript" src="./vendor/require/require.js"></script>
+    <script type="text/javascript" src="./main.js"></script>
+    <style type="text/css">
+    </style>
+</head>
+<body>
+
+    <div style="width: 300px; height: 300px; border: 1px solid red; vertical-align: middle; text-align: center; margin: 0 auto;">
+        
+        <div id="target" style="width:150px;height:150px;margin:50px auto;vertical-align: middle; text-align: center;border:1px solid yellow;">点击右键弹出菜单</div>
+    </div>
+
+    <script type="text/javascript">
+        require(['kotenei'], function (kotenei) {
+            var dragDrop = new kotenei.ContextMenu($('div'), {
+                target:'#target',
+                items:[
+                {
+                    text: '下载',
+                    func: function ($target) {
+                        alert('download1111');
+                    }
+                },
+                {
+                    text: '分享',
+                    func: function ($target) {
+                        alert('share')
+                    }
+                },
+                {
+                    text: '删除',
+                    func: function ($target) {
+                        alert('remove')
+                    }
+                },
+                {
+                    text: '编辑',
+                    func: function ($target) {
+                        alert('edit')
+                    }
+                },
+                {
+                    text: '查看',
+                    func: function ($target) {
+                        alert('view')
+                    }
+                },
+                {
+                    text: '重命名',
+                    func: function ($target) {
+                        alert('rename')
+                    }
+                }]
+            });
+        });
+    </script>
+</body>
+</html>
