@@ -4100,7 +4100,7 @@ define('kotenei/magnifier', ['jquery'], function ($) {
 
         this.$img = this.$el.find('.k-magnifier-imgbox img');
 
-        this.$view = $('<div class="k-magnifier-view"><img src="" /><div class="k-magnifier-loading"><span class="fa fa-spinner">asfdasfa</span><br/>图片加载中，请稍候...</div></div>')
+        this.$view = $('<div class="k-magnifier-view"><img src="" /><div class="k-magnifier-loading"><span class="fa fa-spinner fa-spin"></span><br/>图片加载中，请稍候...</div></div>')
             .appendTo(this.$el)
             .css({
                 width: this.options.zoomWidth,
