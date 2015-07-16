@@ -8,7 +8,7 @@ define('kotenei/magnifier', ['jquery'], function ($) {
     /**
      * 放大镜模块
      * @constructor
-     * @alias kotenei/imgPreview
+     * @alias kotenei/magnifier
      * @param {JQuery} $el - dom
      * @param {Object} options - 参数设置
      */
