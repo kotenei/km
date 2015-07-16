@@ -3348,6 +3348,165 @@ define('kotenei/event', [], function () {
 
 });
 
+/*
+ * 焦点图模块
+ * @date:2015-07-16
+ * @author:kotenei(kotenei@qq.com)
+ */
+define('kotenei/focusmap', ['jquery'], function ($) {
+
+    /**
+     * 焦点图模块
+     * @constructor
+     * @alias kotenei/focusmap
+     * @param {JQuery} $el - dom
+     * @param {Object} options - 参数设置
+     */
+    var FocusMap = function ($el, options) {
+        this.$el = $el;
+        this.options = $.extend({}, {
+            width: 600,
+            height: 300,
+            delay: 3000
+        }, options);
+        this.tm = null;
+        this.isStop = false;
+        this.index = 0;
+        this.init();
+    };
+
+    /**
+     * 初始化
+     * @return {Void}   
+     */
+    FocusMap.prototype.init = function () {
+        this.$el.width(this.options.width).height(this.options.height);
+        this.$ul = this.$el.find('ul');
+        this.$lis = this.$ul.find('li');
+        this.$ul.append(this.$lis.eq(0).clone(true));
+        this.$ul.prepend(this.$lis.eq(this.$lis.length - 1).clone(true));
+        this.$lis = this.$ul.find('li');
+        this.total = this.$lis.length;
+        this.max = this.total - 2;
+        this.$ul.width(this.total * this.options.width).css("left", -(this.index + 1) * this.options.width);
+        this.create();
+        this.watch();
+        if (this.max > 1) {
+            this.$el.append('<div class="k-focusmap-prev"><</div><div class="k-focusmap-next">></div>');
+            this.run();
+        }
+    };
+
+    /**
+     * 创建圆点
+     * @return {Void}   
+     */
+    FocusMap.prototype.create = function () {
+        var html = [], marginLeft = this.max * 16 / 2;
+        html.push('<div class="k-focusmap-dot" style="margin-left:-' + marginLeft + 'px;">');
+        for (var i = 0; i < this.max; i++) {
+            html.push('<span class="' + (i == 0 ? "current" : "") + '"></span>');
+        }
+        html.push('</div>');
+
+        this.$el.append(html.join(''));
+        this.$dots = this.$el.find('.k-focusmap-dot span');
+    };
+
+    /**
+     * 事件监控
+     * @return {Void}   
+     */
+    FocusMap.prototype.watch = function () {
+        var self = this;
+        this.$el.on('mouseenter', function () {
+            self.stop();
+        }).on('mouseleave', function () {
+            self.run();
+        }).on('click', '.k-focusmap-prev', function () {
+            self.index--;
+            self.active();
+        }).on('click', '.k-focusmap-next', function () {
+            self.index++;
+            self.active();
+        }).on('click', 'span', function () {
+            var $el = $(this),
+                index = $el.index();
+            self.index = index;
+            self.active();
+        });
+    };
+
+    /**
+     * 运行焦点图
+     * @return {Void}   
+     */
+    FocusMap.prototype.run = function () {
+        var self = this;
+        this.isStop = false;
+        this.tm = setTimeout(function () {
+            self.index++;
+            self.active(function () {
+                if (!self.isStop) {
+                    self.run();
+                }
+            });
+        }, this.options.delay);
+    };
+
+    /**
+     * 停止运行
+     * @return {Void}   
+     */
+    FocusMap.prototype.stop = function () {
+        if (this.tm) {
+            clearTimeout(this.tm);
+            this.isStop = true;
+        }
+    };
+
+    /**
+     * 切换图片
+     * @return {Void}   
+     */
+    FocusMap.prototype.active = function (callback) {
+        var self = this;
+
+        var tmpIndex = this.index + 1;
+
+        if (this.index == this.max) {
+            this.index = 0;
+        }
+
+        if (this.index < 0) {
+            this.index = this.max - 1;
+        }
+
+        this.$ul.stop().animate({
+            left: -tmpIndex * this.options.width
+        }, function () {
+
+            if (tmpIndex == self.total - 1) {
+                self.$ul.css('left', -1 * self.options.width);
+            }
+
+            if (tmpIndex==0) {
+                self.$ul.css('left', -(self.max) * self.options.width);
+            }
+
+            self.$dots.removeClass('current').eq(self.index).addClass('current');
+
+            if (typeof callback === 'function') {
+                callback();
+            }
+
+        });
+    };
+
+
+    return FocusMap;
+});
+
 /**
  * 高亮模块
  * @date :2014-10-30
@@ -7982,7 +8141,7 @@ define('kotenei/wordLimit', ['jquery'], function ($) {
     return WordLimit;
 });
 ;
-define("kotenei", ["kotenei/ajax", "kotenei/app", "kotenei/autoComplete", "kotenei/cache", "kotenei/clipZoom", "kotenei/contextMenu", "kotenei/datepicker", "kotenei/dragdrop", "kotenei/dropdown", "kotenei/dropdownDatepicker", "kotenei/event", "kotenei/highlight", "kotenei/imgPreview", "kotenei/infiniteScroll", "kotenei/lazyload", "kotenei/loading", "kotenei/magnifier", "kotenei/pager", "kotenei/placeholder", "kotenei/popover", "kotenei/popTips", "kotenei/router", "kotenei/slider", "kotenei/switch", "kotenei/tooltips", "kotenei/tree", "kotenei/treeTable", "kotenei/util", "kotenei/validate", "kotenei/validateTooltips", "kotenei/waterfall", "kotenei/window", "kotenei/wordLimit"], function(_ajax, _app, _autoComplete, _cache, _clipZoom, _contextMenu, _datepicker, _dragdrop, _dropdown, _dropdownDatepicker, _event, _highlight, _imgPreview, _infiniteScroll, _lazyload, _loading, _magnifier, _pager, _placeholder, _popover, _popTips, _router, _slider, _switch, _tooltips, _tree, _treeTable, _util, _validate, _validateTooltips, _waterfall, _window, _wordLimit){
+define("kotenei", ["kotenei/ajax", "kotenei/app", "kotenei/autoComplete", "kotenei/cache", "kotenei/clipZoom", "kotenei/contextMenu", "kotenei/datepicker", "kotenei/dragdrop", "kotenei/dropdown", "kotenei/dropdownDatepicker", "kotenei/event", "kotenei/focusmap", "kotenei/highlight", "kotenei/imgPreview", "kotenei/infiniteScroll", "kotenei/lazyload", "kotenei/loading", "kotenei/magnifier", "kotenei/pager", "kotenei/placeholder", "kotenei/popover", "kotenei/popTips", "kotenei/router", "kotenei/slider", "kotenei/switch", "kotenei/tooltips", "kotenei/tree", "kotenei/treeTable", "kotenei/util", "kotenei/validate", "kotenei/validateTooltips", "kotenei/waterfall", "kotenei/window", "kotenei/wordLimit"], function(_ajax, _app, _autoComplete, _cache, _clipZoom, _contextMenu, _datepicker, _dragdrop, _dropdown, _dropdownDatepicker, _event, _focusmap, _highlight, _imgPreview, _infiniteScroll, _lazyload, _loading, _magnifier, _pager, _placeholder, _popover, _popTips, _router, _slider, _switch, _tooltips, _tree, _treeTable, _util, _validate, _validateTooltips, _waterfall, _window, _wordLimit){
     return {
         "ajax" : _ajax,
         "App" : _app,
@@ -7995,6 +8154,7 @@ define("kotenei", ["kotenei/ajax", "kotenei/app", "kotenei/autoComplete", "koten
         "Dropdown" : _dropdown,
         "DropdownDatepicker" : _dropdownDatepicker,
         "event" : _event,
+        "Focusmap" : _focusmap,
         "highlight" : _highlight,
         "ImgPreview" : _imgPreview,
         "InfiniteScroll" : _infiniteScroll,

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../dist/css/kotenei.css" />
+    <script type="text/javascript" src="./vendor/require/require.js"></script>
+    <script type="text/javascript" src="./main.js"></script>
+    <style type="text/css">
+    </style>
+</head>
+<body>
+
+   <div class="k-focusmap">
+       <ul class="k-focusmap-list">
+           <li>
+               <a href="###">
+                   <img src="../images/focusmap/1.jpg" alt="²âÊÔ1" title="²âÊÔ1"/>
+               </a>
+           </li>
+           <li>
+               <a href="###">
+                   <img src="../images/focusmap/2.jpg" alt="²âÊÔ2" title="²âÊÔ2"/>
+               </a>
+           </li>
+           <li>
+               <a href="###">
+                   <img src="../images/focusmap/3.jpg" alt="²âÊÔ3" title="²âÊÔ3"/>
+               </a>
+           </li>
+       </ul>
+   </div>
+
+    <script type="text/javascript">
+        require(['kotenei'], function (kotenei) {
+            var focusMap = new kotenei.Focusmap($('.k-focusmap'), {
+                width: 600,
+                height:300
+            });
+        });
+    </script>
+</body>
+</html>
