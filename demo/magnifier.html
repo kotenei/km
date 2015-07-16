@@ -14,8 +14,7 @@
 
     <div class="k-magnifier" style="margin:100px;">
         <div class="k-magnifier-imgbox">
-            <img src="../images/big.jpg" />
-            
+            <img src="http://d.lanrentuku.com/down/js/tupian-1170/images/small.jpg" data-big-img="http://d.lanrentuku.com/down/js/tupian-1170/images/big.jpg" />
         </div>
         
         <!--<ul class="k-magnifier-thumblist">
@@ -30,7 +29,10 @@
     <script type="text/javascript">
         require(['kotenei'], function (kotenei) {
             var magnifier = new kotenei.Magnifier($('.k-magnifier'), {
-    
+                width: 400,         
+                height: 250,
+                zoomWidth: 400,
+                zoomHeight:400
             });
         });
     </script>

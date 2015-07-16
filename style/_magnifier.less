@@ -14,24 +14,24 @@
         img
         {
             width: 100%;
-            position:absolute;
-            left:0;
-            top:0;
+            position: absolute;
+            left: 0;
+            top: 0;
         }
 
         .k-magnifier-selector
         {
-            position:relative;
-            width:150px;
-            height:150px;
-            border:1px dashed #ccc;
-            background:white;
-            opacity:0.5;
-            filter:alpha(opacity=50);
-            left:0;
-            top:0;
-            cursor:move;
-            display:none;
+            position: relative;
+            width: 150px;
+            height: 150px;
+            border: 1px dashed #ccc;
+            background: white;
+            opacity: 0.5;
+            filter: alpha(opacity=50);
+            left: 0;
+            top: 0;
+            cursor: move;
+            display: none;
         }
     }
 
@@ -53,13 +53,27 @@
         top: 0;
         width: 500px;
         height: 500px;
-        display:none;
+        display: none;
+        border:1px solid #ccc;
 
         img
         {
             position: absolute;
             left: 0;
             top: 0;
+        }
+
+        .k-magnifier-loading
+        {
+            position:absolute;
+            width:200px;
+            height:50px;
+            line-height:25px;
+            left:50%;
+            top:55%;
+            margin-left:-100px;
+            margin-top:-25px;
+            text-align:center;
         }
     }
 }

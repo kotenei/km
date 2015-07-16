@@ -1699,9 +1699,21 @@ table.k-treeTable tr.expanded.accept td span.indenter a {
   width: 500px;
   height: 500px;
   display: none;
+  border: 1px solid #ccc;
 }
 .k-magnifier .k-magnifier-view img {
   position: absolute;
   left: 0;
   top: 0;
+}
+.k-magnifier .k-magnifier-view .k-magnifier-loading {
+  position: absolute;
+  width: 200px;
+  height: 50px;
+  line-height: 25px;
+  left: 50%;
+  top: 55%;
+  margin-left: -100px;
+  margin-top: -25px;
+  text-align: center;
 }
