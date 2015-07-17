@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../dist/css/kotenei.css" />
+    <script type="text/javascript" src="./vendor/require/require.js"></script>
+    <script type="text/javascript" src="./main.js"></script>
+    <style type="text/css">
+        .k-rating
+        {
+            margin-left: 40%;
+            margin-top: 20%;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="k-rating">
+        <div class="k-rating-star"></div>
+        &nbsp;<input type="text" value="" id="target" />
+    </div>
+
+    <p style="margin-left: 40%;">
+        <input type="text" value="" id="custom" placeholder="自定义事件" />
+    </p>
+
+    <script type="text/javascript">
+        require(['kotenei'], function (kotenei) {
+            var $custom = $('#custom');
+            var rating = new kotenei.Rating($('.k-rating'), {
+                path: '../images/star',
+                starOff: 'star-off-big.png',
+                starHalf: 'star-half-big.png',
+                starOn: 'star-on-big.png',
+                target: '#target',
+                number: 5,
+                values: ['差', '较差', '中', '较好', '好'],
+                score: 0,
+                half: true
+            });
+
+            rating.on('click', function (score, value) {
+                $custom.val(score);
+            }).on('mousemove', function (score, value) {
+                $custom.val(score);
+            }).on('mouseleave', function (score, value) {
+                $custom.val(score);
+            });
+
+        });
+    </script>
+</body>
+</html>

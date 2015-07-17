@@ -1785,3 +1785,17 @@ table.k-treeTable tr.expanded.accept td span.indenter a {
 .k-focusmap .k-focusmap-dot span.current {
   background: #FF4400;
 }
+.k-rating {
+  overflow: hidden;
+}
+.k-rating .k-rating-star {
+  display: inline-block;
+  vertical-align: middle;
+}
+.k-rating .k-rating-star img {
+  cursor: pointer;
+}
+.k-rating .k-rating-target {
+  display: inline-block;
+  vertical-align: middle;
+}
