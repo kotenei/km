@@ -42,8 +42,9 @@
 
 
             $("#btnConfirm").click(function  () {
-                 kotenei.Window.confirm('您确认要XXXX吗？',function  () {
+                 kotenei.Window.confirm('确认对话框','您确认要XXXX吗？',function  () {
                      alert('确认');
+                     return false;
                  },function(){
                     alert('取消');
                  });

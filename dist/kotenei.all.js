@@ -7965,14 +7965,14 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
         });
         this.$backdrop.on('click', function () {
             if (self.options.backdropClose) {
-                self.close();
+                self.hide();
             }
         });
         this.$win.on('click', '[role=KWINCLOSE]', function () {
             self.close();
         }).on('click', '[role=KWINOK]', function () {
             if (self._event.ok.call(self) !== false) {
-                self.close();
+                self.hide();
             }
         });
 
