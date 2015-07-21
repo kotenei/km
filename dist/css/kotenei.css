@@ -1407,6 +1407,7 @@ select.k-error {
 .k-imgPreview > .k-container > span.close {
   right: -20px;
   top: -20px;
+  opacity: 1;
 }
 .k-imgPreview > .k-container > span.close i {
   margin-top: 2px;
