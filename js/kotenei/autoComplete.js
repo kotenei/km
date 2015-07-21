@@ -33,7 +33,7 @@ define('kotenei/autoComplete', ['jquery'], function ($) {
             width: null,
             height: null,
             isBottom: true,
-            hightLight: false,
+            highlight: false,
             formatItem: function (item) { return item; },
             callback: {
                 setValue: null
@@ -175,7 +175,7 @@ define('kotenei/autoComplete', ['jquery'], function ($) {
         if (data.length === 0) { return; }
         var html = '<ul>';
         for (var i = 0; i < data.length; i++) {
-            html += '<li class="' + (i == 0 ? "active" : "") + '">' + this.hightLight(value, data[i]) + '</li>';
+            html += '<li class="' + (i == 0 ? "active" : "") + '">' + this.highlight(value, data[i]) + '</li>';
         }
         html += '</ul>';
         this.$listBox.append(html);
@@ -189,8 +189,8 @@ define('kotenei/autoComplete', ['jquery'], function ($) {
      * @param  {String} str  -  需要高亮的字符串
      * @return {String}      
      */
-    AutoComplete.prototype.hightLight = function (char, str) {
-        if (this.options.hightLight) {
+    AutoComplete.prototype.highlight = function (char, str) {
+        if (this.options.highlight) {
             var reg = new RegExp('(' + char + ')', 'ig');
             str = str.replace(reg, '<strong>$1</strong>');
             return str;

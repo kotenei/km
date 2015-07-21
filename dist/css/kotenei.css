@@ -1464,6 +1464,7 @@ select.k-error {
   border-collapse: collapse;
   border-spacing: 0;
   background: none;
+  border-bottom: 1px solid #ddd;
 }
 .k-table caption {
   color: #777;
@@ -1489,7 +1490,7 @@ select.k-error {
 .k-table > thead > tr:last-child > td,
 .k-table > tbody > tr:last-child > td,
 .k-table > tfoot > tr:last-child > td {
-  border-bottom: 1px solid #ddd;
+  /*border-bottom: 1px solid #ddd;*/
 }
 .k-table > thead > tr > th {
   border-top: none;
@@ -1507,7 +1508,6 @@ select.k-error {
   border: 1px solid #ddd;
   border-left: none;
   border-radius: 4px;
-  border-collapse: separate;
 }
 .k-table-bordered > thead > tr > th,
 .k-table-bordered > tbody > tr > th,
@@ -1536,8 +1536,11 @@ select.k-error {
 .k-table-bordered > tbody:first-child > tr:first-child td:last-child {
   border-radius: 0 4px 0 0;
 }
-.k-table-striped > tbody > tr:nth-child(odd) {
+.k-table-striped > tbody > tr.even {
   background-color: #F9F9F9;
+}
+.k-table-striped > tbody > tr:nth-child(even) {
+  background-color: #F9F9F9!important;
 }
 .k-table-hover > tbody > tr:hover {
   background-color: #f5f5f5;
