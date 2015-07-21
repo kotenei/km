@@ -1038,7 +1038,7 @@ select.k-error {
   background: white;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.176);
 }
-.k-datepicker .container {
+.k-datepicker .k-container {
   position: relative;
 }
 .k-datepicker table {

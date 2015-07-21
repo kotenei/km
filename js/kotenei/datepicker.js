@@ -394,7 +394,7 @@ define('kotenei/datepicker', ['jquery'], function ($) {
         var html = [], i;
 
         html.push('<div class="k-datepicker"  data-desktop="' + (this.options.desktop ? "true" : "") + '" >');
-        html.push('<div class="container">');
+        html.push('<div class="k-container">');
         html.push('<table>');
 
         //头部
