@@ -21,7 +21,7 @@ define('kotenei/imgPreview', ['jquery', 'kotenei/loading', 'kotenei/popTips'], f
             backdrop: true,
             backdropClose: true,
             tpl: '<div class="k-imgPreview">' +
-                    '<div class="container">' +
+                    '<div class="k-container">' +
                         '<span class="close" role="close"><i class="fa fa-close"></i></span>' +
                         '<span class="prev" role="prev"><i class="fa fa-chevron-left"></i></span>' +
                         '<span class="next" role="next"><i class="fa fa-chevron-right"></i></span>' +
@@ -44,7 +44,7 @@ define('kotenei/imgPreview', ['jquery', 'kotenei/loading', 'kotenei/popTips'], f
         if (this.$elements.length === 0) { return; }
 
         this.$imgPreview = $(this.options.tpl).appendTo(document.body);
-        this.$container = this.$imgPreview.find('.container');
+        this.$container = this.$imgPreview.find('.k-container');
         this.$img = this.$container.find('img');
         this.$prev = this.$container.find('.prev');
         this.$next = this.$container.find('.next');

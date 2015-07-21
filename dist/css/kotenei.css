@@ -1390,10 +1390,10 @@ select.k-error {
   display: block;
   opacity: 1;
 }
-.k-imgPreview > .container {
+.k-imgPreview > .k-container {
   position: relative;
 }
-.k-imgPreview > .container > span {
+.k-imgPreview > .k-container > span {
   display: inline-block;
   width: 26px;
   height: 26px;
@@ -1404,39 +1404,39 @@ select.k-error {
   position: absolute;
   cursor: pointer;
 }
-.k-imgPreview > .container > span.close {
+.k-imgPreview > .k-container > span.close {
   right: -20px;
   top: -20px;
 }
-.k-imgPreview > .container > span.close i {
+.k-imgPreview > .k-container > span.close i {
   margin-top: 2px;
   margin-right: 2px;
 }
-.k-imgPreview > .container > span.prev {
+.k-imgPreview > .k-container > span.prev {
   top: 50%;
   margin-top: -13px;
   left: 15px;
   display: none;
 }
-.k-imgPreview > .container > span.prev i {
+.k-imgPreview > .k-container > span.prev i {
   margin-right: 3px;
   margin-top: 3px;
 }
-.k-imgPreview > .container > span.next {
+.k-imgPreview > .k-container > span.next {
   top: 50%;
   margin-top: -13px;
   right: 15px;
   display: none;
 }
-.k-imgPreview > .container > span.next i {
+.k-imgPreview > .k-container > span.next i {
   margin-left: 2px;
   margin-top: 1px;
 }
-.k-imgPreview > .container > span i {
+.k-imgPreview > .k-container > span i {
   color: white;
   font-size: 12px;
 }
-.k-imgPreview > .container > img {
+.k-imgPreview > .k-container > img {
   display: block;
   border: none;
   width: 100%;
