@@ -83,6 +83,9 @@ define('kotenei/imgPreview', ['jquery', 'kotenei/loading', 'kotenei/popTips'], f
             //关闭
             self.hide();
         }).on('click', '[role=prev]', function () {
+            if (self.isLoading) {
+                return;
+            }
             //向前
             if (self.index === 0) {
                 return;
@@ -91,6 +94,11 @@ define('kotenei/imgPreview', ['jquery', 'kotenei/loading', 'kotenei/popTips'], f
             self.showControls();
             self.show();
         }).on('click', '[role=next]', function () {
+
+            if (self.isLoading) {
+                return;
+            }
+
             //向后
             if (self.index >= self.$elements.length - 1) {
                 return;
@@ -145,7 +153,7 @@ define('kotenei/imgPreview', ['jquery', 'kotenei/loading', 'kotenei/popTips'], f
         var img = new Image();
 
         img.onload = function () {
-            callback(true, { width: img.width, height: img.height });
+            callback(true, { width: img.width, height: img.height });   
         };
         img.onerror = function () {
             popTips.error('图片加载失败！', 1500);
@@ -212,13 +220,14 @@ define('kotenei/imgPreview', ['jquery', 'kotenei/loading', 'kotenei/popTips'], f
 
         src = $img.attr('data-href') || $img.attr('src');
 
-        if (!src || this.isLoading) { return; }
+        if (!src || this.isLoading) {  return; }
 
         this.isLoading = true;
 
         Loading.show();
 
         this.imgLoad(src, function (result, size) {
+
             if (result) {
                 self.$img.attr({
                     'src': src,
@@ -229,8 +238,13 @@ define('kotenei/imgPreview', ['jquery', 'kotenei/loading', 'kotenei/popTips'], f
 
                 self.$imgPreview.hide().fadeIn(self.options.delay);
 
-                if (self.options.backdrop) {
-                    self.$backdrop.fadeIn(self.options.delay);
+                if (self.options.backdrop && self.$backdrop[0].style.display != 'block') {
+                    self.$backdrop.css({
+                        opacity: 0,
+                        display: 'block'
+                    }).animate({
+                        opacity: 0.8
+                    }, self.options.delay)
                 }
 
             } else {
@@ -246,6 +260,8 @@ define('kotenei/imgPreview', ['jquery', 'kotenei/loading', 'kotenei/popTips'], f
      * @return {Void}   
      */
     ImgPreview.prototype.hide = function () {
+        this.isLoading = false;
+        Loading.hide();
         this.$imgPreview.fadeOut(this.options.delay);
         if (this.options.backdrop) {
             this.$backdrop.fadeOut(this.options.delay);

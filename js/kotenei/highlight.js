@@ -63,7 +63,7 @@ define('kotenei/highlight', ['jquery'], function ($) {
 
         for (var i = 0; i < matches.length; i++) {
             if (!/<[^>]+>/.test(matches[i]) && $.trim(matches[i]).length != 0) {
-                matches[i] = matches[i].replace(new RegExp('(' + keywords.join('|') + ')', 'ig'), '<mark class="' + className + '">$1</mark>');
+                matches[i] = matches[i].replace(new RegExp('(' + keywords.join('|') + ')', 'ig'), '<span class="' + className + '">$1</span>');
             }
         }
 
@@ -80,7 +80,7 @@ define('kotenei/highlight', ['jquery'], function ($) {
 
         className = className || defaultClass;
 
-        var reg = new RegExp('<mark class="?' + className + '"?>(.*?)<\/mark>', 'ig');
+        var reg = new RegExp('<span class="?' + className + '"?>(.*?)<\/span>', 'ig');
 
         source = source.replace(reg, '$1');
 
