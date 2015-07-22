@@ -28,7 +28,7 @@ define('kotenei/clipZoom', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop
 
         this.$selector = $element.find('.selector');
         this.$clipZoomBox = $element.find('.k-clipZoom-Box').width(this.options.width).height(this.options.height);
-        this.$container = this.$clipZoomBox.find('.container');
+        this.$container = this.$clipZoomBox.find('.k-container');
         this.$mainImg = this.$container.find('img');
         this.$viewBox = $element.find(".view-box");
         this.$viewImg = this.$viewBox.find("img");

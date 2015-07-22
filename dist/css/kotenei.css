@@ -795,7 +795,7 @@ select.k-error {
   background: #E8F3F7;
   overflow: hidden;
 }
-.k-clipZoom-Box .container {
+.k-clipZoom-Box .k-container img {
   border: 1px dashed black;
 }
 .k-clipZoom-Box .zoom {
