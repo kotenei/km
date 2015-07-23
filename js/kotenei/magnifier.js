@@ -188,6 +188,8 @@ define('kotenei/magnifier', ['jquery'], function ($) {
         })
     };
 
-
-    return Magnifier;
+    return function ($elm,options) {
+        var magnifier =new Magnifier($elm,options);
+        return magnifier;
+    }
 });

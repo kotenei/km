@@ -69,7 +69,7 @@ define('kotenei/slider', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) 
         var type = this.$bindElement[0].type;
         var self = this;
 
-        if (type.indexOf('select') !==-1) {
+        if (type.indexOf('select') !== -1) {
             this.$bindElement.on('change', function () {
                 var $this = $(this),
                     val = $.trim(self.getFilterValue($this.val()));
@@ -161,6 +161,9 @@ define('kotenei/slider', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) 
         this.$sliderHandle.css("left", percent + "%");
     };
 
-    return Slider;
+    return function ($elm, options) {
+        var slider = new Slider($elm, options);
+        return slider;
+    };
 
 });

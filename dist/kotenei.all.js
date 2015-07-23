@@ -706,7 +706,10 @@ define('kotenei/autoComplete', ['jquery'], function ($) {
         return null;
     }
 
-    return AutoComplete;
+    return function ($elm,options) {
+        var autoComplete = new AutoComplete($elm, options);
+        return autoComplete;
+    };
 
 });
 
@@ -1236,7 +1239,11 @@ define('kotenei/contextMenu', ['jquery'], function ($) {
     };
 
 
-    return ContextMenu;
+    return function ($elm, options) {
+        var contextMenu = new ContextMenu($elm, options);
+        return contextMenu;
+    }
+
 });
 
 /**
@@ -2482,6 +2489,7 @@ define('kotenei/datepicker', ['jquery'], function ($) {
                 minDate = $this.attr('data-minDate'),
                 maxDate = $this.attr('data-maxDate'),
                 position = $this.attr('data-position'),
+                zIndex = $this.attr('data-zIndex'),
                 appendTo = $this.attr('data-appendTo');
 
             var data = $this.data('datepicker');
@@ -2494,6 +2502,7 @@ define('kotenei/datepicker', ['jquery'], function ($) {
                     showTime: showTime,
                     minDate: minDate,
                     maxDate: maxDate,
+                    zIndex:zIndex||1000,
                     position: position || 'left',
                     appendTo: $(appendTo || document.body)
                 });
@@ -3353,7 +3362,7 @@ define('kotenei/event', [], function () {
  * @date:2015-07-16
  * @author:kotenei(kotenei@qq.com)
  */
-define('kotenei/focusmap', ['jquery'], function ($) {
+define('kotenei/focusMap', ['jquery'], function ($) {
 
     /**
      * 焦点图模块
@@ -3503,8 +3512,10 @@ define('kotenei/focusmap', ['jquery'], function ($) {
         });
     };
 
-
-    return FocusMap;
+    return function ($elm, options) {
+        var focusMap = new FocusMap($elm, options);
+        return focusMap;
+    }
 });
 
 /**
@@ -3898,7 +3909,11 @@ define('kotenei/imgPreview', ['jquery', 'kotenei/loading', 'kotenei/popTips'], f
 
     };
 
-    return ImgPreview;
+    return function ($elms,options) {
+        $elms = $elms || $('img');
+        var imgPreview = new ImgPreview($elms, options);
+        return imgPreview;
+    }
 
 });
 
@@ -4363,8 +4378,10 @@ define('kotenei/magnifier', ['jquery'], function ($) {
         })
     };
 
-
-    return Magnifier;
+    return function ($elm,options) {
+        var magnifier =new Magnifier($elm,options);
+        return magnifier;
+    }
 });
 
 /*
@@ -5317,7 +5334,7 @@ define('kotenei/slider', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) 
         var type = this.$bindElement[0].type;
         var self = this;
 
-        if (type.indexOf('select') !==-1) {
+        if (type.indexOf('select') !== -1) {
             this.$bindElement.on('change', function () {
                 var $this = $(this),
                     val = $.trim(self.getFilterValue($this.val()));
@@ -5409,7 +5426,10 @@ define('kotenei/slider', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) 
         this.$sliderHandle.css("left", percent + "%");
     };
 
-    return Slider;
+    return function ($elm, options) {
+        var slider = new Slider($elm, options);
+        return slider;
+    };
 
 });
 
@@ -5421,16 +5441,16 @@ define('kotenei/slider', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) 
 define('kotenei/switch', ['jquery'], function ($) {
 
     /**
-     * 开关模块
-     * @param {JQuery} $element - dom
-     * @param {Object} options - 参数设置
-     */
+    * 开关模块
+    * @param {JQuery} $element - dom
+    * @param {Object} options - 参数设置
+    */
     var Switch = function ($element, options) {
         this.$element = $element;
         this.options = $.extend({}, {
             values: {
-                on: { text: 'on', value: '1', className: '' },
-                off: { text: 'off', value: '0', className: '' }
+                on: { text: '是', value: true, className: '' },
+                off: { text: '否', value: false, className: '' }
             },
             callback: {
                 onclick: $.noop
@@ -5445,7 +5465,7 @@ define('kotenei/switch', ['jquery'], function ($) {
      * @return {Void}
      */
     Switch.prototype.init = function () {
-        if (this.$element[0].type !== 'checkbox') { return; }      
+        if (this.$element[0].type !== 'checkbox') { return; }
         this.$switch = $(this.template).append(this.build()).insertAfter(this.$element);
         this.$switchScroller = this.$switch.find('.k-switch-scroller');
         this.$element.hide();
@@ -5492,7 +5512,7 @@ define('kotenei/switch', ['jquery'], function ($) {
      * @return {Void}
      */
     Switch.prototype.on = function () {
-        if (this.disabled) { return;}
+        if (this.disabled) { return; }
         this.$element.prop('checked', true);
         this.$switchScroller.stop().animate({ left: 0 }, 300);
     };
@@ -5514,9 +5534,9 @@ define('kotenei/switch', ['jquery'], function ($) {
     Switch.prototype.get = function () {
         var values = this.options.values;
         if (this.checked) {
-            return values['on'].value;
+            return values['on'].value || values['on'].text;
         } else {
-            return values['off'].value;
+            return values['off'].value || values['off'].text;
         }
     };
 
@@ -5528,6 +5548,33 @@ define('kotenei/switch', ['jquery'], function ($) {
         this.$switch.off('click');
         this.$element.show();
         this.$switch.remove();
+    };
+
+    /**
+     * 全局Switch绑定
+     * @param {JQuery} $elms - 全局元素
+     * @return {Void}
+     */
+    Switch.Global = function ($elms) {
+        $elms = $elms || $('input[data-module="switch"]');
+        $elms.each(function () {
+            var $el = $(this),
+                values = $el.attr('data-values'),
+                funcName = $el.attr('data-onClick');
+
+            var data = $el.data('switch');
+
+            if (!data) {
+                data = new Switch($el, {
+                    values: values && values.length > 0 ? eval('(' + values + ')') : undefined,
+                    callback: {
+                        onclick: funcName && funcName.length > 0 ? eval('(' + funcName + ')') : $.noop
+                    }
+                });
+                $el.data('switch', data);
+            }
+
+        });
     };
 
     return Switch;
@@ -8381,33 +8428,33 @@ define('kotenei/wordLimit', ['jquery'], function ($) {
     return WordLimit;
 });
 ;
-define("kotenei", ["kotenei/ajax", "kotenei/app", "kotenei/autoComplete", "kotenei/cache", "kotenei/clipZoom", "kotenei/contextMenu", "kotenei/datepicker", "kotenei/dragdrop", "kotenei/dropdown", "kotenei/dropdownDatepicker", "kotenei/event", "kotenei/focusmap", "kotenei/highlight", "kotenei/imgPreview", "kotenei/infiniteScroll", "kotenei/lazyload", "kotenei/loading", "kotenei/magnifier", "kotenei/pager", "kotenei/placeholder", "kotenei/popover", "kotenei/popTips", "kotenei/rating", "kotenei/router", "kotenei/slider", "kotenei/switch", "kotenei/tooltips", "kotenei/tree", "kotenei/treeTable", "kotenei/util", "kotenei/validate", "kotenei/validateTooltips", "kotenei/waterfall", "kotenei/window", "kotenei/wordLimit"], function(_ajax, _app, _autoComplete, _cache, _clipZoom, _contextMenu, _datepicker, _dragdrop, _dropdown, _dropdownDatepicker, _event, _focusmap, _highlight, _imgPreview, _infiniteScroll, _lazyload, _loading, _magnifier, _pager, _placeholder, _popover, _popTips, _rating, _router, _slider, _switch, _tooltips, _tree, _treeTable, _util, _validate, _validateTooltips, _waterfall, _window, _wordLimit){
+define("kotenei", ["kotenei/ajax", "kotenei/app", "kotenei/autoComplete", "kotenei/cache", "kotenei/clipZoom", "kotenei/contextMenu", "kotenei/datepicker", "kotenei/dragdrop", "kotenei/dropdown", "kotenei/dropdownDatepicker", "kotenei/event", "kotenei/focusMap", "kotenei/highlight", "kotenei/imgPreview", "kotenei/infiniteScroll", "kotenei/lazyload", "kotenei/loading", "kotenei/magnifier", "kotenei/pager", "kotenei/placeholder", "kotenei/popover", "kotenei/popTips", "kotenei/rating", "kotenei/router", "kotenei/slider", "kotenei/switch", "kotenei/tooltips", "kotenei/tree", "kotenei/treeTable", "kotenei/util", "kotenei/validate", "kotenei/validateTooltips", "kotenei/waterfall", "kotenei/window", "kotenei/wordLimit"], function(_ajax, _app, _autoComplete, _cache, _clipZoom, _contextMenu, _datepicker, _dragdrop, _dropdown, _dropdownDatepicker, _event, _focusMap, _highlight, _imgPreview, _infiniteScroll, _lazyload, _loading, _magnifier, _pager, _placeholder, _popover, _popTips, _rating, _router, _slider, _switch, _tooltips, _tree, _treeTable, _util, _validate, _validateTooltips, _waterfall, _window, _wordLimit){
     return {
         "ajax" : _ajax,
         "App" : _app,
-        "AutoComplete" : _autoComplete,
+        "autoComplete" : _autoComplete,
         "cache" : _cache,
         "ClipZoom" : _clipZoom,
-        "ContextMenu" : _contextMenu,
+        "contextMenu" : _contextMenu,
         "Datepicker" : _datepicker,
         "Dragdrop" : _dragdrop,
         "Dropdown" : _dropdown,
         "DropdownDatepicker" : _dropdownDatepicker,
         "event" : _event,
-        "Focusmap" : _focusmap,
+        "focusMap" : _focusMap,
         "highlight" : _highlight,
-        "ImgPreview" : _imgPreview,
+        "imgPreview" : _imgPreview,
         "InfiniteScroll" : _infiniteScroll,
         "lazyload" : _lazyload,
         "Loading" : _loading,
-        "Magnifier" : _magnifier,
+        "magnifier" : _magnifier,
         "Pager" : _pager,
         "placeholder" : _placeholder,
         "Popover" : _popover,
         "popTips" : _popTips,
         "Rating" : _rating,
         "Router" : _router,
-        "Slider" : _slider,
+        "slider" : _slider,
         "Switch" : _switch,
         "Tooltips" : _tooltips,
         "Tree" : _tree,

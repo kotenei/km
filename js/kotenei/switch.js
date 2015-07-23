@@ -6,16 +6,16 @@
 define('kotenei/switch', ['jquery'], function ($) {
 
     /**
-     * 开关模块
-     * @param {JQuery} $element - dom
-     * @param {Object} options - 参数设置
-     */
+    * 开关模块
+    * @param {JQuery} $element - dom
+    * @param {Object} options - 参数设置
+    */
     var Switch = function ($element, options) {
         this.$element = $element;
         this.options = $.extend({}, {
             values: {
-                on: { text: 'on', value: '1', className: '' },
-                off: { text: 'off', value: '0', className: '' }
+                on: { text: '是', value: true, className: '' },
+                off: { text: '否', value: false, className: '' }
             },
             callback: {
                 onclick: $.noop
@@ -30,7 +30,7 @@ define('kotenei/switch', ['jquery'], function ($) {
      * @return {Void}
      */
     Switch.prototype.init = function () {
-        if (this.$element[0].type !== 'checkbox') { return; }      
+        if (this.$element[0].type !== 'checkbox') { return; }
         this.$switch = $(this.template).append(this.build()).insertAfter(this.$element);
         this.$switchScroller = this.$switch.find('.k-switch-scroller');
         this.$element.hide();
@@ -77,7 +77,7 @@ define('kotenei/switch', ['jquery'], function ($) {
      * @return {Void}
      */
     Switch.prototype.on = function () {
-        if (this.disabled) { return;}
+        if (this.disabled) { return; }
         this.$element.prop('checked', true);
         this.$switchScroller.stop().animate({ left: 0 }, 300);
     };
@@ -99,9 +99,9 @@ define('kotenei/switch', ['jquery'], function ($) {
     Switch.prototype.get = function () {
         var values = this.options.values;
         if (this.checked) {
-            return values['on'].value;
+            return values['on'].value || values['on'].text;
         } else {
-            return values['off'].value;
+            return values['off'].value || values['off'].text;
         }
     };
 
@@ -113,6 +113,33 @@ define('kotenei/switch', ['jquery'], function ($) {
         this.$switch.off('click');
         this.$element.show();
         this.$switch.remove();
+    };
+
+    /**
+     * 全局Switch绑定
+     * @param {JQuery} $elms - 全局元素
+     * @return {Void}
+     */
+    Switch.Global = function ($elms) {
+        $elms = $elms || $('input[data-module="switch"]');
+        $elms.each(function () {
+            var $el = $(this),
+                values = $el.attr('data-values'),
+                funcName = $el.attr('data-onClick');
+
+            var data = $el.data('switch');
+
+            if (!data) {
+                data = new Switch($el, {
+                    values: values && values.length > 0 ? eval('(' + values + ')') : undefined,
+                    callback: {
+                        onclick: funcName && funcName.length > 0 ? eval('(' + funcName + ')') : $.noop
+                    }
+                });
+                $el.data('switch', data);
+            }
+
+        });
     };
 
     return Switch;

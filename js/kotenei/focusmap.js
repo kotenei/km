@@ -3,7 +3,7 @@
  * @date:2015-07-16
  * @author:kotenei(kotenei@qq.com)
  */
-define('kotenei/focusmap', ['jquery'], function ($) {
+define('kotenei/focusMap', ['jquery'], function ($) {
 
     /**
      * 焦点图模块
@@ -153,6 +153,8 @@ define('kotenei/focusmap', ['jquery'], function ($) {
         });
     };
 
-
-    return FocusMap;
+    return function ($elm, options) {
+        var focusMap = new FocusMap($elm, options);
+        return focusMap;
+    }
 });

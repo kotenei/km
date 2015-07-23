@@ -330,6 +330,9 @@ define('kotenei/autoComplete', ['jquery'], function ($) {
         return null;
     }
 
-    return AutoComplete;
+    return function ($elm,options) {
+        var autoComplete = new AutoComplete($elm, options);
+        return autoComplete;
+    };
 
 });

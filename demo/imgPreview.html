@@ -136,10 +136,9 @@
 
     <script type="text/javascript">
         require(['kotenei'], function (kotenei) {
-            var ImgPreview = kotenei.ImgPreview;
-            var imgPreview = new ImgPreview($("#table").find('img'), {
 
-            });
+            kotenei.imgPreview($("#table").find('img'))
+
         });
     </script>
 </body>

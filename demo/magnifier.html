@@ -28,12 +28,13 @@
 
     <script type="text/javascript">
         require(['kotenei'], function (kotenei) {
-            var magnifier = new kotenei.Magnifier($('.k-magnifier'), {
+            kotenei.magnifier($('.k-magnifier'), {
                 width: 400,         
                 height: 250,
                 zoomWidth: 400,
                 zoomHeight:400
             });
+
         });
     </script>
 </body>

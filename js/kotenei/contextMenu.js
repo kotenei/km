@@ -107,5 +107,9 @@ define('kotenei/contextMenu', ['jquery'], function ($) {
     };
 
 
-    return ContextMenu;
+    return function ($elm, options) {
+        var contextMenu = new ContextMenu($elm, options);
+        return contextMenu;
+    }
+
 });

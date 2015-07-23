@@ -297,6 +297,10 @@ define('kotenei/imgPreview', ['jquery', 'kotenei/loading', 'kotenei/popTips'], f
 
     };
 
-    return ImgPreview;
+    return function ($elms,options) {
+        $elms = $elms || $('img');
+        var imgPreview = new ImgPreview($elms, options);
+        return imgPreview;
+    }
 
 });

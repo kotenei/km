@@ -1241,6 +1241,7 @@ define('kotenei/datepicker', ['jquery'], function ($) {
                 minDate = $this.attr('data-minDate'),
                 maxDate = $this.attr('data-maxDate'),
                 position = $this.attr('data-position'),
+                zIndex = $this.attr('data-zIndex'),
                 appendTo = $this.attr('data-appendTo');
 
             var data = $this.data('datepicker');
@@ -1253,6 +1254,7 @@ define('kotenei/datepicker', ['jquery'], function ($) {
                     showTime: showTime,
                     minDate: minDate,
                     maxDate: maxDate,
+                    zIndex:zIndex||1000,
                     position: position || 'left',
                     appendTo: $(appendTo || document.body)
                 });

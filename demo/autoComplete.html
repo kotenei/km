@@ -222,8 +222,8 @@
 
 
         require(['kotenei'], function (kotenei) {
-            var AutoComplete = kotenei.AutoComplete;
-            var autoComplete = new AutoComplete($("#txtAutoComplete"), {
+
+            kotenei.autoComplete($("#txtAutoComplete"), {
                 data: data,
                 callback: {
                     setValue: function (item) {
@@ -231,7 +231,13 @@
                     }
                 }
             });
+
+
         });
+
+
+        
+
 
 
     </script>
