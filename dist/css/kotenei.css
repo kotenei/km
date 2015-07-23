@@ -62,6 +62,10 @@ textarea.k-error,
 select.k-error {
   border: 1px solid #d43f3a;
 }
+label.k-error {
+  color: #d43f3a;
+  margin-left: 5px;
+}
 .k-btn {
   display: inline-block;
   padding: 6px 12px;
