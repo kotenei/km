@@ -22,6 +22,8 @@ define('kotenei/infiniteScroll', ['jquery'], function ($) {
 
         if (!this.$watchElement) { return; }
  
+        this.top = this.$watchElement.position().top;
+
         this.$scrollElement.on('scroll.infiniteScroll', function () {
             self.scroll();
         });
@@ -36,7 +38,7 @@ define('kotenei/infiniteScroll', ['jquery'], function ($) {
     InfiniteScroll.prototype.scroll = function () {
         var scrollElmHeight = this.$scrollElement.height();
         var scrollBottom = scrollElmHeight + this.$scrollElement.scrollTop();
-        var watchElmBottom = this.$watchElement.offset().top + this.$watchElement.height();
+        var watchElmBottom = this.top + this.$watchElement.height();
         var remaining = watchElmBottom - scrollBottom;
         var canScroll = remaining <= scrollElmHeight * this.options.scrollDistance;
         if (canScroll) {

@@ -3941,6 +3941,8 @@ define('kotenei/infiniteScroll', ['jquery'], function ($) {
 
         if (!this.$watchElement) { return; }
  
+        this.top = this.$watchElement.position().top;
+
         this.$scrollElement.on('scroll.infiniteScroll', function () {
             self.scroll();
         });
@@ -3955,7 +3957,7 @@ define('kotenei/infiniteScroll', ['jquery'], function ($) {
     InfiniteScroll.prototype.scroll = function () {
         var scrollElmHeight = this.$scrollElement.height();
         var scrollBottom = scrollElmHeight + this.$scrollElement.scrollTop();
-        var watchElmBottom = this.$watchElement.offset().top + this.$watchElement.height();
+        var watchElmBottom = this.top + this.$watchElement.height();
         var remaining = watchElmBottom - scrollBottom;
         var canScroll = remaining <= scrollElmHeight * this.options.scrollDistance;
         if (canScroll) {
@@ -7676,18 +7678,20 @@ define('kotenei/waterfall', ['jquery', 'kotenei/infiniteScroll', 'kotenei/popTip
     var Waterfall = function ($element, options) {
         this.$element = $element;
         this.options = $.extend({}, {
+            $scrollElement: $(window),
+            scrollDistance: 0,
             width: 200,
             left: 10,
-            margin:20,
+            margin: 20,
             nodeTag: 'li',
             resize: true,
             url: null,
             loaded: $.noop,
             mobilePhone: false,
-            pageSize:20
+            pageSize: 20
         }, options);
 
-        this.$window = $(window);
+        this.$panel = this.options.$scrollElement;
         this.$document = $(document);
         this.loading = false;
         this.noMore = false;
@@ -7703,15 +7707,17 @@ define('kotenei/waterfall', ['jquery', 'kotenei/infiniteScroll', 'kotenei/popTip
         var self = this;
 
         if (this.options.mobilePhone) {
-            this.options.width = (this.$window.width() - this.options.margin) / 2;
+            this.options.width = (this.$panel.width() - this.options.margin) / 2;
         }
 
         this.arrangementInit();
 
         this.infiniteScroll = new InfiniteScroll({
             $watchElement: this.$element,
-            scrollDistance: 0,
+            $scrollElement: this.options.$scrollElement,
+            scrollDistance: this.options.scrollDistance,
             callback: function () {
+
                 if (self.options.url) {
                     self.remote();
                     return;
@@ -7723,7 +7729,7 @@ define('kotenei/waterfall', ['jquery', 'kotenei/infiniteScroll', 'kotenei/popTip
         });
 
         if (this.options.resize) {
-            this.$window.on('resize.waterfall', $.proxy(this.arrangementInit, this));
+            this.$panel.on('resize.waterfall', $.proxy(this.arrangementInit, this));
         }
     };
 
@@ -7735,7 +7741,7 @@ define('kotenei/waterfall', ['jquery', 'kotenei/infiniteScroll', 'kotenei/popTip
         this.arrHeight = [];
         this.nodes = this.$element.children(this.options.nodeTag);
 
-        var winWidth=this.$window.width();
+        var winWidth = this.$panel.width();
 
         if (this.nodes.length === 0) { return; }
 
@@ -7753,7 +7759,7 @@ define('kotenei/waterfall', ['jquery', 'kotenei/infiniteScroll', 'kotenei/popTip
 
         if (width < this.options.width) {
             return;
-        }    
+        }
 
         this.$element.width(width);
 
@@ -7857,7 +7863,7 @@ define('kotenei/waterfall', ['jquery', 'kotenei/infiniteScroll', 'kotenei/popTip
         $.get(this.options.url, {
             rnd: Math.random(),
             page: this.page++,
-            pageSize:this.options.pageSize
+            pageSize: this.options.pageSize
         }).done(function (ret) {
             if (!ret || ret.length === 0) {
                 self.noMore = true;
