@@ -6496,7 +6496,7 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
  * @date:2015-04-29
  * @author:kotenei(kotenei@qq.com)
  */
-define('kotenei/treeTable', ['jquery', 'kotenei'], function ($, Kotenei) {
+define('kotenei/treeTable', ['jquery', 'kotenei/ajax'], function ($, ajax) {
 
     //树型表格
     function TreeTable($elm, options) {
@@ -6523,7 +6523,7 @@ define('kotenei/treeTable', ['jquery', 'kotenei'], function ($, Kotenei) {
             this.build();
             this.watch();
         } else if (this.options.url && this.options.url.length > 0) {
-            Kotenei.ajax.get(this.options.url, this.options.params).done(function (ret) {
+            ajax.get(this.options.url, this.options.params).done(function (ret) {
                 self.data = ret.Data;
                 self.dataInit();
                 self.build();
