@@ -1,10 +1,10 @@
-/**
+﻿/**
  * 日历下拉框 
  * @module kotenei/dropdownDatepicker 
  * @author vfasky (vfasky@gmail.com)
  */
 define('kotenei/dropdownDatepicker',
-['jquery', 'kotenei/dropdown', 'kotenei/datepicker', 'kotenei/util'],
+['jquery', 'kotenei/dropdown', 'kotenei/datePicker', 'kotenei/util'],
 function ($, Dropdown, DatePicker, util) {
 
     /**

@@ -1,9 +1,9 @@
-/**
+﻿/**
  * 日期模块
  * @date :2014-10-31
  * @author kotenei (kotenei@qq.com)
  */
-define('kotenei/datepicker', ['jquery'], function ($) {
+define('kotenei/datePicker', ['jquery'], function ($) {
 
     var dates = {
         months: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一", "十二"],
