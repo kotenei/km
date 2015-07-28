@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>分页</title>
+    <title>本地存储</title>
     <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
     <link href="../dist/css/kotenei.min.css" rel="stylesheet" />
@@ -85,7 +85,7 @@
                 </a>
             </li>
             <li>
-                <a href="pager.html" class="active">分页
+                <a href="pager.html">分页
                 </a>
             </li>
             <li>
@@ -121,75 +121,42 @@
                 </a>
             </li>
             <li>
-                <a href="localStorage.html">本地存储
+                <a href="localStorage.html" class="active">本地存储
                 </a>
             </li>
         </ul>
         <div class="demo-container">
-            <h1 class="page-header">分页</h1>
-            <div class="bs-example bs-example-padded-bottom" style="text-align: center;">
-                <div id="pagerContainer">
-                </div>
-            </div>
-            <h3>初始化</h3>
+            <h1 class="page-header">本地存储</h1>
+            <h3>调用</h3>
             <div class="highlight">
                 <pre>
-                    <code data-lang="js" class="language-js">
-var pager=new kotenei.Pager($elm,options);
-                    </code>
-                </pre>
-            </div>
-            <h3>参数 options</h3>
-            <table class="table table-bordered table-striped js-options-table">
-                <thead>
-                    <tr>
-                        <th>名称</th>
-                        <th>类型</th>
-                        <th style="width: 100px;">默认值</th>
-                        <th>描述</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>curPage</td>
-                        <td>int</td>
-                        <td>1</td>
-                        <td>当前页</td>
-                    </tr>
-                    <tr>
-                        <td>totalCount</td>
-                        <td>int</td>
-                        <td>0</td>
-                        <td>总记录数</td>
-                    </tr>
-                    <tr>
-                        <td>pageSize</td>
-                        <td>int</td>
-                        <td>20</td>
-                        <td>分页大小</td>
-                    </tr>
-                    <tr>
-                        <td>className</td>
-                        <td>string</td>
-                        <td>'k-pagination'</td>
-                        <td>分页样式</td>
-                    </tr>
-                </tbody>
-            </table>
-            <h3>事件与函数</h3>
-            <div class="highlight">
-                <pre>
-                    <code data-lang="js" class="language-js">
-//重新生成页码
-//如果手动设置了pager.curPage,pager.pageSize,pager.totalCount，可以使用该方法重新生成页码
-pager.build();
+                    <code>
+/**
+ * 设置缓存
+ * @key  {String} key - 缓存的key
+ * @value  {Object} value - 缓存值，不设置则删除缓存内容
+ * @duration  {Number} duration - 过期时间（秒），不设置或值小于1则为永久保存   
+ */
+kotenei.cache.set(key,value,duration);
+
+/**
+ * 获取缓存
+ * @key  {String} key - 缓存的key      
+ */
+kotenei.cache.get(key);
 
 
-//点击页码时触发
-pager.on('click',function(){
-    //函数内可以通过 "this."的方式访问curPage , pageSize , totalCount的值       
-});
+/**
+ * 移除缓存
+ * @key  {String} key - 缓存的key     
+ */
+kotenei.cache.remove(key);
 
+
+/**
+ * 清空缓存      
+ */
+kotenei.cache.clear();
 
                     </code>
                 </pre>
@@ -197,19 +164,8 @@ pager.on('click',function(){
 
         </div>
     </div>
+
     <script type="text/javascript" src="vendor/require/require.js"></script>
     <script type="text/javascript" src="main.js"></script>
-    <script type="text/javascript">
-        require(['kotenei'], function (kotenei) {
-            var pager = new kotenei.Pager($("#pagerContainer"), {
-                curPage: 1,
-                totalCount: 100,
-                pageSize: 10
-            });
-            pager.on('click', function () {
-                alert("当前页：" + this.curPage);
-            });
-        });
-    </script>
 </body>
 </html>

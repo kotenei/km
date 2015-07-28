@@ -1,41 +1,215 @@
 ﻿<!DOCTYPE html>
-
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8" />
-    <title></title>
-    <link rel="stylesheet" type="text/css" href="../style/vendor/font-awesome/css/font-awesome.min.css" />
-    <link rel="stylesheet" type="text/css" href="../dist/css/kotenei.css" />
-    <script type="text/javascript" src="./vendor/require/require.js"></script>
-    <script type="text/javascript" src="./main.js"></script>
-    <style type="text/css">
-    </style>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>弹出提示</title>
+    <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../dist/css/kotenei.min.css" rel="stylesheet" />
+    <link href="docs.min.css" rel="stylesheet" />
+    <link href="demo.css" rel="stylesheet" />
 </head>
 <body>
+    <div class="header">
+        <div class="wrap">
+            <ul class="nav-list">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="###" class="active">demo</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="main wrap">
+        <ul class="demo-nav-list">
+            <li>
+                <a href="window.html">模态窗口
+                </a>
+            </li>
+            <li>
+                <a href="tree.html">树型菜单
+                </a>
+            </li>
+            <li>
+                <a href="treetable.html">树型表格
+                </a>
+            </li>
+            <li>
+                <a href="placeholder.html">占位符
+                </a>
+            </li>
+            <li>
+                <a href="autocomplete.html">自动完成
+                </a>
+            </li>
+            <li>
+                <a href="datepicker.html">日期选择
+                </a>
+            </li>
+            <li>
+                <a href="imgpreview.html">图片预览
+                </a>
+            </li>
+            <li>
+                <a href="clipzoom.html">图片裁剪
+                </a>
+            </li>
+            <li>
+                <a href="magnifier.html">放大镜
+                </a>
+            </li>
+            <li>
+                <a href="focusmap.html">焦点图
+                </a>
+            </li>
+            <li>
+                <a href="highlight.html">文字高亮
+                </a>
+            </li>
+            <li>
+                <a href="rating.html">评级打分
+                </a>
+            </li>
+            <li>
+                <a href="poptips.html" class="active">弹出提示
+                </a>
+            </li>
+            <li>
+                <a href="tooltips.html">工具提示
+                </a>
+            </li>
+            <li>
+                <a href="popover.html">弹出框
+                </a>
+            </li>
+            <li>
+                <a href="switch.html">开关
+                </a>
+            </li>
+            <li>
+                <a href="pager.html">分页
+                </a>
+            </li>
+            <li>
+                <a href="loading.html">加载提示
+                </a>
+            </li>
+            <li>
+                <a href="validate.html">表单验证
+                </a>
+            </li>
+            <li>
+                <a href="wordlimit.html">字数限制
+                </a>
+            </li>
+            <li>
+                <a href="contextmenu.html">右键菜单
+                </a>
+            </li>
+            <li>
+                <a href="slider.html">滑块
+                </a>
+            </li>
+            <li>
+                <a href="lazyload.html">延迟加载
+                </a>
+            </li>
+            <li>
+                <a href="infinitescroll.html">无限滚动
+                </a>
+            </li>
+            <li>
+                <a href="waterfall.html">瀑布流
+                </a>
+            </li>
+            <li>
+                <a href="localStorage.html">本地存储
+                </a>
+            </li>
+        </ul>
+        <div class="demo-container">
+            <h1 class="page-header">弹出提示</h1>
 
-    <button type="button" id="btnSuccess">成功</button>
+            <div class="bs-example bs-example-padded-bottom" style="">
+                <button type="button" id="btnSuccess" class="k-btn k-btn-success">成功</button>
 
-    <button type="button" id="btnError">出错</button>
+                <button type="button" id="btnError" class="k-btn k-btn-danger">出错</button>
 
-    <button type="button" id="btnWarning">警告</button>
+                <button type="button" id="btnWarning" class="k-btn k-btn-warning">警告</button>
+            </div>
 
+
+            <h3>初始化</h3>
+            <div class="highlight">
+                <pre>
+                    <code data-lang="js" class="language-js">
+
+kotenei.popTips.success("成功！", function () {
+    alert("回调函数");
+});
+
+kotenei.popTips.error("失败！", 1500);
+
+kotenei.popTips.warning("警告！", 1500, function () {
+    alert("回调函数");
+});
+                    </code>
+                </pre>
+            </div>
+            <h3>参数</h3>
+            <table class="table table-bordered table-striped js-options-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>类型</th>
+                        <th style="width: 100px;">默认值</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>参数1</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>提示内容</td>
+                    </tr>
+                    <tr>
+                        <td>参数2</td>
+                        <td>int</td>
+                        <td>3000</td>
+                        <td>tips显示的时间，默认3000毫秒，选填</td>
+                    </tr>
+                    <tr>
+                        <td>参数3</td>
+                        <td>function</td>
+                        <td></td>
+                        <td>隐藏后触发的回调函数</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script type="text/javascript" src="vendor/require/require.js"></script>
+    <script type="text/javascript" src="main.js"></script>
     <script type="text/javascript">
+
         require(['kotenei'], function (kotenei) {
-            var popTips = kotenei.popTips;
             $("#btnSuccess").click(function () {
-                popTips.success("成功！", function () {
+                kotenei.popTips.success("成功！", function () {
                     alert("回调函数");
                 });
             });
+
             $("#btnError").click(function () {
-                popTips.error("失败！", 1500);
+                kotenei.popTips.error("失败！", 1500);
             });
+
             $("#btnWarning").click(function () {
-                popTips.warning("警告！", 1500, function () {
+                kotenei.popTips.warning("警告！", 1500, function () {
                     alert("回调函数");
                 });
             });
         });
+
+        
     </script>
 </body>
 </html>

@@ -1,30 +1,263 @@
 ﻿<!DOCTYPE html>
-
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8" />
-    <title></title>
-    <link rel="stylesheet" type="text/css" href="../dist/css/kotenei.css" />
-    <script type="text/javascript" src="./vendor/require/require.js"></script>
-    <script type="text/javascript" src="./main.js"></script>
-    <style type="text/css">
-    </style>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>树型菜单</title>
+    <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../dist/css/kotenei.min.css" rel="stylesheet" />
+    <link href="docs.min.css" rel="stylesheet" />
+    <link href="demo.css" rel="stylesheet" />
 </head>
 <body>
-
-    <div id="tree" style="width: 200px; float:left;">
+    <div class="header">
+        <div class="wrap">
+            <ul class="nav-list">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="###" class="active">demo</a></li>
+            </ul>
+        </div>
     </div>
+    <div class="main wrap">
+        <ul class="demo-nav-list">
+            <li>
+                <a href="window.html">模态窗口
+                </a>
+            </li>
+            <li>
+                <a href="tree.html" class="active">树型菜单
+                </a>
+            </li>
+            <li>
+                <a href="treetable.html">树型表格
+                </a>
+            </li>
+            <li>
+                <a href="placeholder.html">占位符
+                </a>
+            </li>
+            <li>
+                <a href="autocomplete.html">自动完成
+                </a>
+            </li>
+            <li>
+                <a href="datepicker.html">日期选择
+                </a>
+            </li>
+            <li>
+                <a href="imgpreview.html">图片预览
+                </a>
+            </li>
+            <li>
+                <a href="clipzoom.html">图片裁剪
+                </a>
+            </li>
+            <li>
+                <a href="magnifier.html">放大镜
+                </a>
+            </li>
+            <li>
+                <a href="focusmap.html">焦点图
+                </a>
+            </li>
+            <li>
+                <a href="highlight.html">文字高亮
+                </a>
+            </li>
+            <li>
+                <a href="rating.html">评级打分
+                </a>
+            </li>
+            <li>
+                <a href="poptips.html">弹出提示
+                </a>
+            </li>
+            <li>
+                <a href="tooltips.html">工具提示
+                </a>
+            </li>
+            <li>
+                <a href="popover.html">弹出框
+                </a>
+            </li>
+            <li>
+                <a href="switch.html">开关
+                </a>
+            </li>
+            <li>
+                <a href="pager.html">分页
+                </a>
+            </li>
+            <li>
+                <a href="loading.html">加载提示
+                </a>
+            </li>
+            <li>
+                <a href="validate.html">表单验证
+                </a>
+            </li>
+            <li>
+                <a href="wordlimit.html">字数限制
+                </a>
+            </li>
+            <li>
+                <a href="contextmenu.html">右键菜单
+                </a>
+            </li>
+            <li>
+                <a href="slider.html">滑块
+                </a>
+            </li>
+            <li>
+                <a href="lazyload.html">延迟加载
+                </a>
+            </li>
+            <li>
+                <a href="infinitescroll.html">无限滚动
+                </a>
+            </li>
+            <li>
+                <a href="waterfall.html">瀑布流
+                </a>
+            </li>
+            <li>
+                <a href="localStorage.html">本地存储
+                </a>
+            </li>
+        </ul>
+        <div class="demo-container">
+            <h1 class="page-header">树型菜单</h1>
+            <div class="bs-example bs-example-padded-bottom">
+                <div id="tree" style="width: 200px; margin-bottom: 10px;"></div>
+                <div>
+                    <button type="button" class="k-btn k-btn-primary" id="btnAdd">添加</button>
+                    <button type="button" class="k-btn k-btn-danger" id="btnRemove">删除</button>
+                </div>
+            </div>
+            <h3>初始化</h3>
+            <div class="highlight">
+                <pre>
+                    <code data-lang="js" class="language-js">
+//创建tree对象
+var tree = new kotenei.Tree($elm,options);
+                    </code>
+                </pre>
+            </div>
+            <h3>参数 options</h3>
+            <table class="table table-bordered table-striped js-options-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>类型</th>
+                        <th>默认值</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>data</td>
+                        <td>array</td>
+                        <td style="width: 100px;">[]</td>
+                        <td>节点数据
+                            <pre>
+                                <code>
+data: [
+    {
+        nodeId: 1,                          //节点编号
+        parentId: 0,                        //父节点编号
+        rootId: 0,                          //顶级节点编号
+        text: '父节点',                     //节点名称
+        value: 123,                         //节点值
+        isParent: true,                     //是否父级
+        open: true,                         //是否打开子级
+        nodes:[                             //子级数据
+            {
+                nodeId: 2, 
+                parentId: 1, 
+                rootId: 1,
+                text: '父节点', 
+                value: 456, 
+                open: true
+            }
+        ]
+    }
+}
+                                </code>
+                            </pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>check</td>
+                        <td>object</td>
+                        <td>
+                            <pre>
+                                <code>
+check: {
+    enable: false,
+    chkType: 'checkbox',
+    chkBoxType: { Y: "ps", N: "ps" }        
+},
+                                </code>
+                            </pre>
+                        </td>
+                        <td>
+                            <p><b>单/复选设置</b></p>
+                            <p><b>enable：</b>是否启用</p>
+                            <p><b>chkType：</b>'checkbox'或者'radio'</p>
+                            <p><b>chkBoxType：</b>关联操作。Y：表示选中，N：表示反选，p:关联父节点,s:关联子节点<code>当前参数只能作用在'checkbox'</code></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>callback</td>
+                        <td>object</td>
+                        <td>
+                            <pre>
+                                <code>
+callback: {
+    beforeCheck: $.noop,
+    beforeSelect:$.noop,
+    onCheck: $.noop,
+    onSelect:$.noop        
+},
+                                </code>
+                            </pre>
+                        </td>
+                        <td>
+                            <p><b>回调函数</b></p>
+                            <p><b>beforeCheck：</b>在勾选单/复选框的前的回调函数</p>
+                            <p><b>beforeSelect：</b>节点选择前的回调函数</p>
+                            <p><b>onCheck：</b>勾选单/复选框的回调函数</p>
+                            <p><b>onSelect：</b>选择节点的回调函数</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3>调用方法</h3>
+            <div class="highlight">
+                <pre>
+                    <code data-lang="js" class="language-js">
+//返回选中的节点
+tree.getSelectedNode();
 
-    <div style="float:left;padding-top:20px;">
-        <button type="button" id="btnAdd">添加</button>
-        <button type="button" id="btnRemove">删除</button>
+//返回勾选的节点
+win.getCheckedNodes();
+
+//添加节点（parentNode：父级节点，nodes：新的节点，节点格式参考data参数格式）
+tree.addNodes(parentNode,nodes);
+
+//移除某个节点
+tree.removeNode(node);
+                    </code>
+                </pre>
+            </div>
+        </div>
     </div>
-
+    <script type="text/javascript" src="vendor/require/require.js"></script>
+    <script type="text/javascript" src="main.js"></script>
     <script type="text/javascript">
 
-
-
-        var nodes = [
+        require(['kotenei'], function (kotenei) {
+            var nodes = [
             {
                 nodeId: 1, parentId: 0, rootId: 0, text: '父节点', value: 123, isParent: true, open: true, nodes:
                 [
@@ -46,21 +279,15 @@
                     { nodeId: 9, parentId: 4, rootId: 4, text: '子节点', value: 789 }
                 ]
             }
-        ];
-
-        require(['kotenei'], function (kotenei) {
+            ];
 
             var num = 10;
 
-            var Tree = kotenei.Tree;
-            var tree = new Tree($("#tree"), {
+            var tree = new kotenei.Tree($("#tree"), {
                 data: nodes,
                 check: {
                     enable: true,
-                    chkType: 'radio',
-                },
-                edit: {
-                    enable: true
+                    chkType: 'checkbox',
                 }
             });
 
@@ -83,6 +310,7 @@
 
 
             $('#btnRemove').click(function () {
+
                 var selectedNode = tree.getSelectedNode();
                 if (!selectedNode) {
                     alert('请选择节点');
@@ -91,6 +319,9 @@
                 tree.removeNode(selectedNode);
             });
         });
+
+        
+
     </script>
 </body>
 </html>

@@ -1,35 +1,171 @@
 ﻿<!DOCTYPE html>
-
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8" />
-    <title></title>
-    <link rel="stylesheet" type="text/css" href="../dist/css/kotenei.css" />
-    <script type="text/javascript" src="./vendor/require/require.js"></script>
-    <script type="text/javascript" src="./main.js"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>占位符</title>
+    <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../dist/css/kotenei.min.css" rel="stylesheet" />
+    <link href="docs.min.css" rel="stylesheet" />
+    <link href="demo.css" rel="stylesheet" />
 </head>
 <body>
-    <table>
-        <tr>
-            <td>文本框：</td>
-            <td>
-                <input type="text" placeholder="普通文本框" /></td>
-        </tr>
-        <tr>
-            <td>密码框：</td>
-            <td>
-                <input type="password" placeholder="请输入密码" /></td>
-        </tr>
-        <tr>
-            <td>文本域：</td>
-            <td>
-                <textarea rows="4" cols="50" placeholder="测试测试"></textarea></td>
-        </tr>
-    </table>
+    <div class="header">
+        <div class="wrap">
+            <ul class="nav-list">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="###" class="active">demo</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="main wrap">
+        <ul class="demo-nav-list">
+            <li>
+                <a href="window.html">模态窗口
+                </a>
+            </li>
+            <li>
+                <a href="tree.html">树型菜单
+                </a>
+            </li>
+            <li>
+                <a href="treetable.html">树型表格
+                </a>
+            </li>
+            <li>
+                <a href="placeholder.html" class="active">占位符
+                </a>
+            </li>
+            <li>
+                <a href="autocomplete.html">自动完成
+                </a>
+            </li>
+            <li>
+                <a href="datepicker.html">日期选择
+                </a>
+            </li>
+            <li>
+                <a href="imgpreview.html">图片预览
+                </a>
+            </li>
+            <li>
+                <a href="clipzoom.html">图片裁剪
+                </a>
+            </li>
+            <li>
+                <a href="magnifier.html">放大镜
+                </a>
+            </li>
+            <li>
+                <a href="focusmap.html">焦点图
+                </a>
+            </li>
+            <li>
+                <a href="highlight.html">文字高亮
+                </a>
+            </li>
+            <li>
+                <a href="rating.html">评级打分
+                </a>
+            </li>
+            <li>
+                <a href="poptips.html">弹出提示
+                </a>
+            </li>
+            <li>
+                <a href="tooltips.html">工具提示
+                </a>
+            </li>
+            <li>
+                <a href="popover.html">弹出框
+                </a>
+            </li>
+            <li>
+                <a href="switch.html">开关
+                </a>
+            </li>
+            <li>
+                <a href="pager.html">分页
+                </a>
+            </li>
+            <li>
+                <a href="loading.html">加载提示
+                </a>
+            </li>
+            <li>
+                <a href="validate.html">表单验证
+                </a>
+            </li>
+            <li>
+                <a href="wordlimit.html">字数限制
+                </a>
+            </li>
+            <li>
+                <a href="contextmenu.html">右键菜单
+                </a>
+            </li>
+            <li>
+                <a href="slider.html">滑块
+                </a>
+            </li>
+            <li>
+                <a href="lazyload.html">延迟加载
+                </a>
+            </li>
+            <li>
+                <a href="infinitescroll.html">无限滚动
+                </a>
+            </li>
+            <li>
+                <a href="waterfall.html">瀑布流
+                </a>
+            </li>
+            <li>
+                <a href="localStorage.html">本地存储
+                </a>
+            </li>
+        </ul>
+        <div class="demo-container">
+            <h1 class="page-header">占位符</h1>
+            <p>placeholder属性是HTML5 中为input添加的。在input上提供一个占位符，以文字形式展示输入字段预期值的提示信息（hint），该字段会在输入为空时显示。该组件是为了兼容IE8/9而制作的，<code>请在IE8/9浏览器查看Demo</code></p>
+            <br />
+            <div class="bs-example bs-example-padded-bottom">
+                <table class="k-table k-table-bordered ">
+                    <tr>
+                        <td>文本框：</td>
+                        <td>
+                            <input type="text" placeholder="普通文本框" /></td>
+                    </tr>
+                    <tr>
+                        <td>密码框：</td>
+                        <td>
+                            <input type="password" placeholder="请输入密码" /></td>
+                    </tr>
+                    <tr>
+                        <td>文本域：</td>
+                        <td>
+                            <textarea rows="4" cols="50" placeholder="测试测试"></textarea></td>
+                    </tr>
+                </table>
+            </div>
+            <h3>调用方法</h3>
+            <div class="highlight">
+                <pre>
+                    <code data-lang="js" class="language-js">
+//$elms:输入框的jQuery元素，不填则会获取页面上所有带 placeholder 属性的输入框
+kotenei.placeholder($elms);    
+                    </code>
+                </pre>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="vendor/require/require.js"></script>
+    <script type="text/javascript" src="main.js"></script>
     <script type="text/javascript">
         require(['kotenei'], function (kotenei) {
             kotenei.placeholder();
         });
+        
     </script>
 </body>
 </html>

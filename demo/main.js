@@ -9,8 +9,3 @@
         'kotenei': './dist/kotenei.all'
     }
 });
-
-
-
-
-

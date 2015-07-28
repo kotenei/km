@@ -1,32 +1,194 @@
 ﻿<!DOCTYPE html>
-
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8" />
-    <title></title>
-    <link rel="stylesheet" type="text/css" href="../dist/css/kotenei.css" />
-    <script type="text/javascript" src="./vendor/require/require.js"></script>
-    <script type="text/javascript" src="./main.js"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>无限滚动</title>
+    <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../dist/css/kotenei.min.css" rel="stylesheet" />
+    <link href="docs.min.css" rel="stylesheet" />
+    <link href="demo.css" rel="stylesheet" />
     <style type="text/css">
-        ul { width:800px;overflow:hidden;zoom:1;margin:0 auto;}
-        ul > li { width:200px;height:200px;float:left;display:inline;text-align:center;background:#cccccc;color:white;font-size:70px;margin:5px;line-height:200px;}
+        ul#list { width:840px;overflow:hidden;zoom:1;margin:0 auto;}
+        ul#list > li { width:200px;height:200px;float:left;display:inline;text-align:center;background:#cccccc;color:white;font-size:70px;margin:5px;line-height:200px;}
     </style>
 </head>
 <body>
-
-    <ul id="list">
-    </ul>
-
-
+    <div class="header">
+        <div class="wrap">
+            <ul class="nav-list">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="###" class="active">demo</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="main wrap">
+        <ul class="demo-nav-list">
+            <li>
+                <a href="window.html">模态窗口
+                </a>
+            </li>
+            <li>
+                <a href="tree.html">树型菜单
+                </a>
+            </li>
+            <li>
+                <a href="treetable.html">树型表格
+                </a>
+            </li>
+            <li>
+                <a href="placeholder.html">占位符
+                </a>
+            </li>
+            <li>
+                <a href="autocomplete.html">自动完成
+                </a>
+            </li>
+            <li>
+                <a href="datepicker.html">日期选择
+                </a>
+            </li>
+            <li>
+                <a href="imgpreview.html">图片预览
+                </a>
+            </li>
+            <li>
+                <a href="clipzoom.html">图片裁剪
+                </a>
+            </li>
+            <li>
+                <a href="magnifier.html">放大镜
+                </a>
+            </li>
+            <li>
+                <a href="focusmap.html">焦点图
+                </a>
+            </li>
+            <li>
+                <a href="highlight.html">文字高亮
+                </a>
+            </li>
+            <li>
+                <a href="rating.html">评级打分
+                </a>
+            </li>
+            <li>
+                <a href="poptips.html">弹出提示
+                </a>
+            </li>
+            <li>
+                <a href="tooltips.html">工具提示
+                </a>
+            </li>
+            <li>
+                <a href="popover.html">弹出框
+                </a>
+            </li>
+            <li>
+                <a href="switch.html">开关
+                </a>
+            </li>
+            <li>
+                <a href="pager.html">分页
+                </a>
+            </li>
+            <li>
+                <a href="loading.html">加载提示
+                </a>
+            </li>
+            <li>
+                <a href="validate.html">表单验证
+                </a>
+            </li>
+            <li>
+                <a href="wordlimit.html">字数限制
+                </a>
+            </li>
+            <li>
+                <a href="contextmenu.html">右键菜单
+                </a>
+            </li>
+            <li>
+                <a href="slider.html">滑块
+                </a>
+            </li>
+            <li>
+                <a href="lazyload.html">延迟加载
+                </a>
+            </li>
+            <li>
+                <a href="infinitescroll.html" class="active">无限滚动
+                </a>
+            </li>
+            <li>
+                <a href="waterfall.html">瀑布流
+                </a>
+            </li>
+            <li>
+                <a href="localStorage.html">本地存储
+                </a>
+            </li>
+        </ul>
+        <div class="demo-container">
+            <h1 class="page-header">无限滚动</h1>
+            <div class="bs-example bs-example-padded-bottom" id="scrollerContainer" style="overflow-y: auto; height: 400px;padding:0;">
+                <ul id="list">
+                </ul>
+            </div>
+            <h3>初始化</h3>
+            <div class="highlight">
+                <pre>
+                    <code data-lang="js" class="language-js">
+var infiniteScroll = new kotenei.InfiniteScroll(options)
+                    </code>
+                </pre>
+            </div>
+            <h3>参数 options</h3>
+            <table class="table table-bordered table-striped js-options-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>类型</th>
+                        <th style="width: 150px;">默认值</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>$scrollElement</td>
+                        <td>jQuery</td>
+                        <td>$(window)</td>
+                        <td>滚动容器，默认为浏览器窗口
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>$watchElement</td>
+                        <td>jQuery</td>
+                        <td>null</td>
+                        <td>
+                            监控元素，监控该元素的底部是否到达滚容器口底部
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>callback</td>
+                        <td>function</td>
+                        <td>$.noop</td>
+                        <td>滚动到底部时触发的回调函数</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script type="text/javascript" src="vendor/require/require.js"></script>
+    <script type="text/javascript" src="main.js"></script>
     <script type="text/javascript">
-
         require(['kotenei'], function (kotenei) {
-
             var arr = [];
-            var $watch = $("#list");
-            var InfiniteScroll = kotenei.InfiniteScroll;
+            var $watch = $("#list"),
+                $scrollerContainer = $('#scrollerContainer');
 
-            var infiniteScroll = new InfiniteScroll({
+            var infiniteScroll = new kotenei.InfiniteScroll({
+                $scrollElement: $scrollerContainer,
                 $watchElement: $watch,
                 callback: function () {
                     var last = arr.length > 0 ? arr[arr.length - 1] : 0;

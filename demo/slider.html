@@ -1,40 +1,220 @@
-<!DOCTYPE html>
-
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8" />
-    <title></title>
-    <link rel="stylesheet" type="text/css" href="../dist/css/kotenei.css" />
-    <script type="text/javascript" src="./vendor/require/require.js"></script>
-    <script type="text/javascript" src="./main.js"></script>
-    <style type="text/css">
-    </style>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>滑块</title>
+    <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../dist/css/kotenei.min.css" rel="stylesheet" />
+    <link href="docs.min.css" rel="stylesheet" />
+    <link href="demo.css" rel="stylesheet" />
 </head>
 <body>
-    <div id="slider1" style="margin: 0 auto; text-align: center;">
-        <p>
-            <input type="text" id="txtBindElement" /></p>
+    <div class="header">
+        <div class="wrap">
+            <ul class="nav-list">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="###" class="active">demo</a></li>
+            </ul>
+        </div>
     </div>
+    <div class="main wrap">
+        <ul class="demo-nav-list">
+            <li>
+                <a href="window.html">模态窗口
+                </a>
+            </li>
+            <li>
+                <a href="tree.html">树型菜单
+                </a>
+            </li>
+            <li>
+                <a href="treetable.html">树型表格
+                </a>
+            </li>
+            <li>
+                <a href="placeholder.html">占位符
+                </a>
+            </li>
+            <li>
+                <a href="autocomplete.html">自动完成
+                </a>
+            </li>
+            <li>
+                <a href="datepicker.html">日期选择
+                </a>
+            </li>
+            <li>
+                <a href="imgpreview.html">图片预览
+                </a>
+            </li>
+            <li>
+                <a href="clipzoom.html">图片裁剪
+                </a>
+            </li>
+            <li>
+                <a href="magnifier.html">放大镜
+                </a>
+            </li>
+            <li>
+                <a href="focusmap.html">焦点图
+                </a>
+            </li>
+            <li>
+                <a href="highlight.html">文字高亮
+                </a>
+            </li>
+            <li>
+                <a href="rating.html">评级打分
+                </a>
+            </li>
+            <li>
+                <a href="poptips.html">弹出提示
+                </a>
+            </li>
+            <li>
+                <a href="tooltips.html">工具提示
+                </a>
+            </li>
+            <li>
+                <a href="popover.html">弹出框
+                </a>
+            </li>
+            <li>
+                <a href="switch.html">开关
+                </a>
+            </li>
+            <li>
+                <a href="pager.html">分页
+                </a>
+            </li>
+            <li>
+                <a href="loading.html">加载提示
+                </a>
+            </li>
+            <li>
+                <a href="validate.html">表单验证
+                </a>
+            </li>
+            <li>
+                <a href="wordlimit.html">字数限制
+                </a>
+            </li>
+            <li>
+                <a href="contextmenu.html">右键菜单
+                </a>
+            </li>
+            <li>
+                <a href="slider.html" class="active">滑块
+                </a>
+            </li>
+            <li>
+                <a href="lazyload.html">延迟加载
+                </a>
+            </li>
+            <li>
+                <a href="infinitescroll.html">无限滚动
+                </a>
+            </li>
+            <li>
+                <a href="waterfall.html">瀑布流
+                </a>
+            </li>
+            <li>
+                <a href="localStorage.html">本地存储
+                </a>
+            </li>
+        </ul>
+        <div class="demo-container">
+            <h1 class="page-header">滑块</h1>
+            <div class="bs-example bs-example-padded-bottom">
 
-    <div id="slider2" style="margin: 0 auto; text-align: center;">
-        <p>
-            <select id="selBindElement">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-            </select>
-        </p>
+                <div id="slider1" style="margin: 0 auto; text-align: center;">
+                    <p>
+                        <input type="text" id="txtBindElement" />
+                    </p>
+                </div>
+                <br />
+                <div id="slider2" style="margin: 0 auto; text-align: center;">
+                    <p>
+                        <select id="selBindElement">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                        </select>
+                    </p>
+                </div>
+
+            </div>
+            <h3>初始化</h3>
+            <div class="highlight">
+                <pre>
+                    <code data-lang="js" class="language-js">
+kotenei.slider($elm,options)
+                    </code>
+                </pre>
+            </div>
+            <h3>参数 options</h3>
+            <table class="table table-bordered table-striped js-options-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>类型</th>
+                        <th style="width: 150px;">默认值</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>min</td>
+                        <td>int</td>
+                        <td>1</td>
+                        <td>最小值</td>
+                    </tr>
+                    <tr>
+                        <td>max</td>
+                        <td>int</td>
+                        <td>10</td>
+                        <td>最大值
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>step</td>
+                        <td>int</td>
+                        <td>1</td>
+                        <td>移动的步数</td>
+                    </tr>
+                    <tr>
+                        <td>value</td>
+                        <td>int</td>
+                        <td>1</td>
+                        <td>初始值</td>
+                    </tr>
+                    <tr>
+                        <td>$bindElement</td>
+                        <td>jQuery object</td>
+                        <td>$([])</td>
+                        <td>绑定元素</td>
+                    </tr>
+                    <tr>
+                        <td>callback</td>
+                        <td>object</td>
+                        <td>{slide: $.noop}</td>
+                        <td><b>slide：</b>滑动时的回调函数</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-
-
-
+    <script type="text/javascript" src="vendor/require/require.js"></script>
+    <script type="text/javascript" src="main.js"></script>
     <script type="text/javascript">
         require(['kotenei'], function (kotenei) {
             kotenei.slider($("#slider1"), {
@@ -53,9 +233,9 @@
 
             kotenei.slider($("#slider2"), {
                 min: 1,
-                step: 1,
+                step: 2,
                 max: 10,
-                value:7,
+                value: 7,
                 $bindElement: $("#selBindElement"),
                 callback: {
                     slide: function (value) {
@@ -63,8 +243,6 @@
                     }
                 }
             });
-
-
         });
     </script>
 </body>

@@ -1,32 +1,260 @@
 ﻿<!DOCTYPE html>
-
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8" />
-    <title></title>
-    <link rel="stylesheet" type="text/css" href="../dist/css/kotenei.css" />
-    <script type="text/javascript" src="./vendor/require/require.js"></script>
-    <script type="text/javascript" src="./main.js"></script>
-    <style type="text/css">
-        .k-rating
-        {
-            margin-left: 40%;
-            margin-top: 20%;
-        }
-    </style>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>评级打分</title>
+    <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../dist/css/kotenei.min.css" rel="stylesheet" />
+    <link href="docs.min.css" rel="stylesheet" />
+    <link href="demo.css" rel="stylesheet" />
 </head>
 <body>
-
-    <div class="k-rating">
-        <div class="k-rating-star"></div>
-        &nbsp;<input type="text" value="" id="target" />
+    <div class="header">
+        <div class="wrap">
+            <ul class="nav-list">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="###" class="active">demo</a></li>
+            </ul>
+        </div>
     </div>
+    <div class="main wrap">
+        <ul class="demo-nav-list">
+            <li>
+                <a href="window.html">模态窗口
+                </a>
+            </li>
+            <li>
+                <a href="tree.html">树型菜单
+                </a>
+            </li>
+            <li>
+                <a href="treetable.html">树型表格
+                </a>
+            </li>
+            <li>
+                <a href="placeholder.html">占位符
+                </a>
+            </li>
+            <li>
+                <a href="autocomplete.html">自动完成
+                </a>
+            </li>
+            <li>
+                <a href="datepicker.html">日期选择
+                </a>
+            </li>
+            <li>
+                <a href="imgpreview.html">图片预览
+                </a>
+            </li>
+            <li>
+                <a href="clipzoom.html">图片裁剪
+                </a>
+            </li>
+            <li>
+                <a href="magnifier.html">放大镜
+                </a>
+            </li>
+            <li>
+                <a href="focusmap.html">焦点图
+                </a>
+            </li>
+            <li>
+                <a href="highlight.html">文字高亮
+                </a>
+            </li>
+            <li>
+                <a href="rating.html" class="active">评级打分
+                </a>
+            </li>
+            <li>
+                <a href="poptips.html">弹出提示
+                </a>
+            </li>
+            <li>
+                <a href="tooltips.html">工具提示
+                </a>
+            </li>
+            <li>
+                <a href="popover.html">弹出框
+                </a>
+            </li>
+            <li>
+                <a href="switch.html">开关
+                </a>
+            </li>
+            <li>
+                <a href="pager.html">分页
+                </a>
+            </li>
+            <li>
+                <a href="loading.html">加载提示
+                </a>
+            </li>
+            <li>
+                <a href="validate.html">表单验证
+                </a>
+            </li>
+            <li>
+                <a href="wordlimit.html">字数限制
+                </a>
+            </li>
+            <li>
+                <a href="contextmenu.html">右键菜单
+                </a>
+            </li>
+            <li>
+                <a href="slider.html">滑块
+                </a>
+            </li>
+            <li>
+                <a href="lazyload.html">延迟加载
+                </a>
+            </li>
+            <li>
+                <a href="infinitescroll.html">无限滚动
+                </a>
+            </li>
+            <li>
+                <a href="waterfall.html">瀑布流
+                </a>
+            </li>
+            <li>
+                <a href="localStorage.html">本地存储
+                </a>
+            </li>
+        </ul>
+        <div class="demo-container">
+            <h1 class="page-header">评级打分</h1>
+            <div class="bs-example bs-example-padded-bottom">
+                <div class="k-rating">
+                    <div class="k-rating-star"></div>
+                    &nbsp;<input type="text" value="" id="target" class="form-control" style="display: inline-block; width: 100px;" />
+                    &nbsp;<input type="text" value="" id="custom" class="form-control" style="display: inline-block; width: 100px;" />
+                </div>
+            </div>
+            <h3>HTML结构</h3>
+            <pre>
+                <code>
+&lt;div class="k-rating"&gt;
+    &lt;div class="k-rating-star"&gt;&lt;/div&gt;                
+&lt;/div&gt;
+                </code>
+            </pre>
+            <h3>初始化</h3>
+            <div class="highlight">
+                <pre>
+                    <code data-lang="js" class="language-js">
+var rating = new kotenei.Rating($('.k-rating',options);
+                    </code>
+                </pre>
+            </div>
+            <h3>参数 options</h3>
+            <table class="table table-bordered table-striped js-options-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>类型</th>
+                        <th style="width: 100px;">默认值</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>path</td>
+                        <td>string</td>
+                        <td>'../images/star'</td>
+                        <td>星星图片所有的路径</td>
+                    </tr>
+                    <tr>
+                        <td>starOff</td>
+                        <td>string</td>
+                        <td>star-off.png</td>
+                        <td>非高亮的星星图片</td>
+                    </tr>
+                    <tr>
+                        <td>starHalf</td>
+                        <td>string</td>
+                        <td>star-half.png</td>
+                        <td>半高亮星星图片</td>
+                    </tr>
+                    <tr>
+                        <td>starOn</td>
+                        <td>string</td>
+                        <td>star-on.png</td>
+                        <td>高亮星星图片</td>
+                    </tr>
+                    <tr>
+                        <td>target</td>
+                        <td>string</td>
+                        <td>.k-rating-target</td>
+                        <td>目标元素选择器</td>
+                    </tr>
+                    <tr>
+                        <td>number</td>
+                        <td>int</td>
+                        <td>3</td>
+                        <td>星星的个数</td>
+                    </tr>
+                    <tr>
+                        <td>values</td>
+                        <td>array</td>
+                        <td>[1, 2, 3]</td>
+                        <td>每个星对应的值</td>
+                    </tr>
+                    <tr>
+                        <td>score</td>
+                        <td>int</td>
+                        <td>0</td>
+                        <td>分值,通过分值设置星星高亮</td>
+                    </tr>
+                    <tr>
+                        <td>half</td>
+                        <td>boolean</td>
+                        <td>true</td>
+                        <td>是否显示半星效果</td>
+                    </tr>
+                    <tr>
+                        <td>size</td>
+                        <td>int</td>
+                        <td>24</td>
+                        <td>星星图片的尺寸</td>
+                    </tr>
+                    <tr>
+                        <td>space</td>
+                        <td>int</td>
+                        <td>4</td>
+                        <td>星星图片之间的间距</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3>事件回调函数</h3>
+            <div class="highlight">
+                <pre>
+                    <code data-lang="js" class="language-js">
 
-    <p style="margin-left: 40%;">
-        <input type="text" value="" id="custom" placeholder="自定义事件" />
-    </p>
+//score：分值,value：高亮时所对应的value值
 
+rating.on('click', function (score, value) {
+    //点击时触发
+    $custom.val(score);
+}).on('mousemove', function (score, value) {
+    //滑过时触发
+    $custom.val(score);
+}).on('mouseleave', function (score, value) {
+    //滑出时触发
+    $custom.val(score);
+});
+                    </code>
+                </pre>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="vendor/require/require.js"></script>
+    <script type="text/javascript" src="main.js"></script>
     <script type="text/javascript">
+
         require(['kotenei'], function (kotenei) {
             var $custom = $('#custom');
             var rating = new kotenei.Rating($('.k-rating'), {
@@ -48,8 +276,9 @@
             }).on('mouseleave', function (score, value) {
                 $custom.val(score);
             });
-
         });
+
+        
     </script>
 </body>
 </html>

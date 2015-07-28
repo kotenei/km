@@ -13,11 +13,15 @@ var configPath = path.join(__dirname, 'build.config');
 var config     = JSON.parse(fs.readFileSync(configPath, 'utf8'));
 
 //将所有 kotenei 合成一份定义
-var build = function(){
+var build = function (defineName) {
+
+    defineName = defineName || 'kotenei';
+
     return through2.obj(function (file, enc, callback) {
         var soure   = file.contents.toString('utf8');
         var jsPath  = path.join(__dirname, 'js', 'kotenei');
         var modules = [];
+       
         //列出所有文件
         fs.readdirSync(jsPath).forEach(function(fileName){
             if(fileName.indexOf('.js') !== -1 && 
@@ -36,7 +40,7 @@ var build = function(){
         });
 
         var def = [];
-        def.push('define("kotenei", [' + reqs.join(', ') + '], function(' + safeModules.join(', ') + '){');
+        def.push('define("'+defineName+'", [' + reqs.join(', ') + '], function(' + safeModules.join(', ') + '){');
         def.push('    return {');
         var attr = [];
         modules.forEach(function(v){
@@ -75,16 +79,23 @@ gulp.task('less', function () {
 
 gulp.task('scripts', function () {
 
-
     gulp.src([
-        './js/kotenei/*.js'
+        './script/kotenei/*.js'
     ])
     .pipe(concat('kotenei.all.js'))
     .pipe(build())
     .pipe(gulp.dest('./dist'))
-    .pipe(rename('kotenei.all.min.js'))
     .pipe(uglify())
+    .pipe(rename('kotenei.all.min.js'))
     .pipe(gulp.dest('./dist'));
+
+    //gulp.src([
+    //    './js/kotenei/*.js'
+    //])
+    //.pipe(concat('km.min.js'))
+    //.pipe(build('KM'))
+    //.pipe(uglify())
+    //.pipe(gulp.dest('./dist'));
 });
 
 gulp.task('watch', function(){

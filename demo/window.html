@@ -1,59 +1,422 @@
-<!DOCTYPE html>
-
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8" />
-    <title></title>
-    <link rel="stylesheet" type="text/css" href="../dist/css/kotenei.css" />
-    <script type="text/javascript" src="./vendor/require/require.js"></script>
-    <script type="text/javascript" src="./main.js"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>模态窗体</title>
+    <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../dist/css/kotenei.min.css" rel="stylesheet" />
+    <link href="docs.min.css" rel="stylesheet" />
+    <link href="demo.css" rel="stylesheet" />
 </head>
 <body>
-    
-    <button type="button" id="btnAlert">Alert</button>
-    <button type="button" id="btnConfirm">Confirm</button>
-    <button type="button" id="btnCustom">Custom</button>
+    <div class="header">
+        <div class="wrap">
+            <ul class="nav-list">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="###" class="active">demo</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="main wrap">
+        <ul class="demo-nav-list">
+            <li>
+                <a href="window.html" class="active">模态窗口
+                </a>
+            </li>
+            <li>
+                <a href="tree.html" >树型菜单
+                </a>
+            </li>
+            <li>
+                <a href="treetable.html">树型表格
+                </a>
+            </li>
+            <li>
+                <a href="placeholder.html">占位符
+                </a>
+            </li>
+            <li>
+                <a href="autocomplete.html">自动完成
+                </a>
+            </li>
+            <li>
+                <a href="datepicker.html">日期选择
+                </a>
+            </li>
+            <li>
+                <a href="imgpreview.html">图片预览
+                </a>
+            </li>
+            <li>
+                <a href="clipzoom.html">图片裁剪
+                </a>
+            </li>
+            <li>
+                <a href="magnifier.html">放大镜
+                </a>
+            </li>
+            <li>
+                <a href="focusmap.html">焦点图
+                </a>
+            </li>
+            <li>
+                <a href="highlight.html">文字高亮
+                </a>
+            </li>
+            <li>
+                <a href="rating.html">评级打分
+                </a>
+            </li>
+            <li>
+                <a href="poptips.html">弹出提示
+                </a>
+            </li>
+            <li>
+                <a href="tooltips.html">工具提示
+                </a>
+            </li>
+            <li>
+                <a href="popover.html">弹出框
+                </a>
+            </li>
+            <li>
+                <a href="switch.html">开关
+                </a>
+            </li>
+            <li>
+                <a href="pager.html">分页
+                </a>
+            </li>
+            <li>
+                <a href="loading.html">加载提示
+                </a>
+            </li>
+            <li>
+                <a href="validate.html">表单验证
+                </a>
+            </li>
+            <li>
+                <a href="wordlimit.html">字数限制
+                </a>
+            </li>
+            <li>
+                <a href="contextmenu.html">右键菜单
+                </a>
+            </li>
+            <li>
+                <a href="slider.html">滑块
+                </a>
+            </li>
+            <li>
+                <a href="lazyload.html">延迟加载
+                </a>
+            </li>
+            <li>
+                <a href="infinitescroll.html">无限滚动
+                </a>
+            </li>
+            <li>
+                <a href="waterfall.html">瀑布流
+                </a>
+            </li>
+            <li>
+                <a href="localStorage.html">本地存储
+                </a>
+            </li>
+        </ul>
+        <div class="demo-container">
+            <h1 class="page-header">模态窗体</h1>
+            <h3>提示对话框</h3>
+            <div class="bs-example bs-example-padded-bottom">
+                <button role="alert" class="btn btn-primary btn-lg" type="button">
+                    Launch demo modal
+                </button>
+            </div>
+            <h3>调用</h3>
+            <div class="highlight">
+                <pre>
+                    <code data-lang="js" class="language-js">
+kotenei.Window.alert('提示框', '警告提示', function () {
+    alert('回调');
+});
+                    </code>
+                </pre>
+            </div>
+            <h3>参数</h3>
+            <table class="table table-bordered table-striped js-options-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>类型</th>
+                        <th>默认值</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>参数1</td>
+                        <td>string</td>
+                        <td style="width: 100px;">'提示'</td>
+                        <td>对话框标题，可不填</td>
+                    </tr>
+                    <tr>
+                        <td>参数2</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>对话框内容</td>
+                    </tr>
+                    <tr>
+                        <td>参数3</td>
+                        <td>function</td>
+                        <td></td>
+                        <td>对话框点击确认后的回调函数</td>
+                    </tr>
+                </tbody>
+            </table>
+            <hr />
+            <br />
+            <h3>确认对话框</h3>
+            <div class="bs-example bs-example-padded-bottom">
+                <button role="confirm" class="btn btn-primary btn-lg" type="button">
+                    Launch demo modal
+                </button>
+            </div>
+            <h3>调用</h3>
+            <div class="highlight">
+                <pre>
+                    <code data-lang="js" class="language-js">
+kotenei.Window.confirm('确认对话框xxx','您确认要XXXX吗？', function () {
+    alert('确认');
+}, function () {
+    alert('取消');
+});
 
+                    </code>
+                </pre>
+            </div>
+            <h3>参数</h3>
+            <table class="table table-bordered table-striped js-options-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>类型</th>
+                        <th>默认值</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>参数1</td>
+                        <td>string</td>
+                        <td style="width: 100px;">'确认对话框'</td>
+                        <td>对话框的标题，可不填</td>
+                    </tr>
+                    <tr>
+                        <td>参数2</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>对话框的内容</td>
+                    </tr>
+                    <tr>
+                        <td>参数3</td>
+                        <td>function</td>
+                        <td></td>
+                        <td>对话框点击确认后的回调函数，加上<code>return false;</code>可以阻止窗体关闭。</td>
+                    </tr>
+                    <tr>
+                        <td>参数4</td>
+                        <td>function</td>
+                        <td></td>
+                        <td>对话框点击取消后的回调函数，加上<code>return false;</code>可以阻止窗体关闭</td>
+                    </tr>
+                </tbody>
+            </table>
+            <hr />
+            <br />
+            <h3>自定义</h3>
+            <div class="bs-example bs-example-padded-bottom">
+                <button role="custom" class="btn btn-primary btn-lg" type="button">
+                    Launch demo modal
+                </button>
+            </div>
+            <h3>初始化</h3>
+            <div class="highlight">
+                <pre>
+                    <code data-lang="js" class="language-js">
+//创建win对象
+var win=new kotenei.Window(options);
+                    </code>
+                </pre>
+            </div>
+            <h3>参数 options</h3>
+            <table class="table table-bordered table-striped js-options-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>类型</th>
+                        <th>默认值</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>url</td>
+                        <td>string</td>
+                        <td style="width: 100px;">null</td>
+                        <td>远程地址，如果参数<code>iframe</code>设置为true，则使用<code>iframe</code>模式，否则使用<code>ajax</code>取内容。</td>
+                    </tr>
+                    <tr>
+                        <td>params</td>
+                        <td>object</td>
+                        <td>null</td>
+                        <td>使用ajax取内容时，传递到服务器的参数</td>
+                    </tr>
+                    <tr>
+                        <td>title</td>
+                        <td>string</td>
+                        <td>'弹出框'</td>
+                        <td>窗体的标题</td>
+                    </tr>
+                    <tr>
+                        <td>content</td>
+                        <td>string</td>
+                        <td>null</td>
+                        <td>窗体的内容</td>
+                    </tr>
+                    <tr>
+                        <td>width</td>
+                        <td>int</td>
+                        <td>600</td>
+                        <td>窗体的宽度</td>
+                    </tr>
+                    <tr>
+                        <td>height</td>
+                        <td>int</td>
+                        <td>null</td>
+                        <td>窗体的高度，默认为自适应当前浏览器窗口最大高度，当数值设置过大时，则转为自适应模式，窗体永远在浏览器的正中间。</td>
+                    </tr>
+                    <tr>
+                        <td>backdrop</td>
+                        <td>boolean</td>
+                        <td>true</td>
+                        <td>是否显示遮罩层，默认显示</td>
+                    </tr>
+                    <tr>
+                        <td>backdropClose</td>
+                        <td>boolean</td>
+                        <td>false</td>
+                        <td>点击遮罩层时，是否关闭窗体，默认为不隐藏</td>
+                    </tr>
+                    <tr>
+                        <td>iframe</td>
+                        <td>boolean</td>
+                        <td>false</td>
+                        <td>是否使用iframe模式，设置true的同时，把url也设置上</td>
+                    </tr>
+                    <tr>
+                        <td>showFooter</td>
+                        <td>boolean</td>
+                        <td>true</td>
+                        <td>是否显示窗体的底部区域（按钮区），默认为显示</td>
+                    </tr>
+                    <tr>
+                        <td>btns</td>
+                        <td>array</td>
+                        <td>[]</td>
+                        <td>自定义按钮
+                            <pre>
+                                <code>
+btns: [
+    {
+        text: '测试',                        //按钮文本
+        actionCode: 'test',                 //按钮绑定事件的唯一标识
+        className: 'k-btn-success',         //按钮的样式
+        func: function () {                 //点击按钮的回调函数
+            alert('测试');
+            win.close();
+        }
+    },
+]
+                                </code>
+                            </pre>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3>绑定事件</h3>
+            <div class="highlight">
+                <pre>
+                    <code data-lang="js" class="language-js">
+win.on('ok', function () {
+    alert("ok");
+}).on('close',function(){
+    alert('close');
+});
+                    </code>
+                </pre>
+            </div>
+            <h3>调用方法</h3>
+            <div class="highlight">
+                <pre>
+                    <code data-lang="js" class="language-js">
+//打开窗体
+win.open();
+
+//关闭窗体
+win.close();
+
+//强制关闭窗体
+win.close(true);
+
+//设置标题
+win.setTitle('title');
+
+//设置内容
+win.setContent('content');
+                    </code>
+                </pre>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="vendor/require/require.js"></script>
+    <script type="text/javascript" src="main.js"></script>
     <script type="text/javascript">
         require(['kotenei'], function (kotenei) {
             var win = new kotenei.Window({
-                url:'http://www.baidu.com',
                 width: 600,
-                height:500,
-                title: '弹窗标题',
-                //content: '<h4>Overflowing text to show scroll behavior</h4><p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p><p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p><p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p><p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p><p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p><p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p><p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p><p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p><p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>',
-                iframe: true
+                title: '标题',
+                content: '<h4>Overflowing text to show scroll behavior</h4><p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p><p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p><p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p><p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p><p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p><p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p><p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p><p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p><p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>',
+                btns: [
+                    {
+                        text: '测试',
+                        actionCode: 'test',
+                        className: 'k-btn-success',
+                        func: function () {
+                            alert('测试');
+                            this.close();
+                        }
+                    }
+                ]
             });
-    
-            win.on('ok',function(){
-                alert('ok');
+
+            win.on('ok', function () {
+                alert("ok")
             });
 
-            win.on('close',function(){
-                alert('close');
-            });
-
-             
-             $("#btnAlert").click(function  () {
-                 kotenei.Window.alert('警告提示',function  () {
-                     alert('回调');
-                 })
-             })
-
-
-            $("#btnConfirm").click(function  () {
-                 kotenei.Window.confirm('确认对话框','您确认要XXXX吗？',function  () {
-                     alert('确认');
-                     return false;
-                 },function(){
+            $(document.body).on('click', '[role=alert]', function () {
+                kotenei.Window.alert('提示框', '警告提示', function () {
+                    alert('回调');
+                });
+            }).on('click', '[role=confirm]', function () {
+                kotenei.Window.confirm('确认对话框xxx', '您确认要XXXX吗？', function () {
+                    alert('确认');
+                }, function () {
                     alert('取消');
-                 });
-             });
-
-            $("#btnCustom").click(function(){
+                });
+            }).on('click', '[role=custom]', function () {
                 win.open();
             });
-
         });
     </script>
 </body>

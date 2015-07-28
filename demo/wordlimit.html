@@ -1,35 +1,246 @@
 ﻿<!DOCTYPE html>
-
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8" />
-    <title></title>
-    <link rel="stylesheet" type="text/css" href="../dist/css/kotenei.css" />
-    <script type="text/javascript" src="./vendor/require/require.js"></script>
-    <script type="text/javascript" src="./main.js"></script>
-    <style type="text/css">
-        a { display: inline-block; padding: 2px 5px; margin: 0 2px; }
-    </style>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>字数限制</title>
+    <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../dist/css/kotenei.min.css" rel="stylesheet" />
+    <link href="docs.min.css" rel="stylesheet" />
+    <link href="demo.css" rel="stylesheet" />
 </head>
 <body>
-    <div style="margin-left: 400px; margin-top: 100px;">
-        <p>您还可以输入：<span id="feedback1">140</span> 字符</p>
-        <textarea rows="4" cols="50" data-module="wordlimit" data-feedback="#feedback1" maxlength="140"></textarea>
+    <div class="header">
+        <div class="wrap">
+            <ul class="nav-list">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="###" class="active">demo</a></li>
+            </ul>
+        </div>
     </div>
-    <div style="margin-left: 400px; margin-top: 20px;">
-        <p>您还可以输入：<span id="feedback2">20</span> 字符 (自定义)</p>
-        <textarea rows="4" cols="50"  id="custom"></textarea>
+    <div class="main wrap">
+        <ul class="demo-nav-list">
+            <li>
+                <a href="window.html">模态窗口
+                </a>
+            </li>
+            <li>
+                <a href="tree.html">树型菜单
+                </a>
+            </li>
+            <li>
+                <a href="treetable.html">树型表格
+                </a>
+            </li>
+            <li>
+                <a href="placeholder.html">占位符
+                </a>
+            </li>
+            <li>
+                <a href="autocomplete.html">自动完成
+                </a>
+            </li>
+            <li>
+                <a href="datepicker.html">日期选择
+                </a>
+            </li>
+            <li>
+                <a href="imgpreview.html">图片预览
+                </a>
+            </li>
+            <li>
+                <a href="clipzoom.html">图片裁剪
+                </a>
+            </li>
+            <li>
+                <a href="magnifier.html">放大镜
+                </a>
+            </li>
+            <li>
+                <a href="focusmap.html">焦点图
+                </a>
+            </li>
+            <li>
+                <a href="highlight.html">文字高亮
+                </a>
+            </li>
+            <li>
+                <a href="rating.html">评级打分
+                </a>
+            </li>
+            <li>
+                <a href="poptips.html">弹出提示
+                </a>
+            </li>
+            <li>
+                <a href="tooltips.html">工具提示
+                </a>
+            </li>
+            <li>
+                <a href="popover.html">弹出框
+                </a>
+            </li>
+            <li>
+                <a href="switch.html">开关
+                </a>
+            </li>
+            <li>
+                <a href="pager.html">分页
+                </a>
+            </li>
+            <li>
+                <a href="loading.html">加载提示
+                </a>
+            </li>
+            <li>
+                <a href="validate.html">表单验证
+                </a>
+            </li>
+            <li>
+                <a href="wordlimit.html" class="active">字数限制
+                </a>
+            </li>
+            <li>
+                <a href="contextmenu.html">右键菜单
+                </a>
+            </li>
+            <li>
+                <a href="slider.html">滑块
+                </a>
+            </li>
+            <li>
+                <a href="lazyload.html">延迟加载
+                </a>
+            </li>
+            <li>
+                <a href="infinitescroll.html">无限滚动
+                </a>
+            </li>
+            <li>
+                <a href="waterfall.html">瀑布流
+                </a>
+            </li>
+            <li>
+                <a href="localStorage.html">本地存储
+                </a>
+            </li>
+        </ul>
+        <div class="demo-container">
+            <h1 class="page-header">字数限制</h1>
+            <div class="bs-example bs-example-padded-bottom">
+                <div style="">
+                    <p>您还可以输入：<span id="feedback1">140</span> 字符</p>
+                    <textarea rows="4" cols="50" data-module="wordlimit" data-feedback="#feedback1" maxlength="140"></textarea>
+                </div>
+            </div>
+            <h3>全局调用</h3>
+            <div class="highlight">
+                <pre>
+                    <code data-lang="js" class="language-js">
+kotenei.WordLimit.Global();
+                    </code>
+                </pre>
+            </div>
+
+            <h3>HTML属性设置</h3>
+            <table class="table table-bordered table-striped js-options-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>类型</th>
+                        <th style="width: 200px;">设置值</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>data-module</td>
+                        <td>string</td>
+                        <td>wordlimit</td>
+                        <td>告诉程序当前html元素需要初始化为wordlimit模块
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>data-feedback</td>
+                        <td>string</td>
+                        <td>jQuery selector</td>
+                        <td>
+                            剩余字数反馈，值设置jQuery选择器，如'#id'
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>data-maxlength</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>最大字符数</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3>示例代码</h3>
+            <pre>
+                <code>
+//HTML属性设置
+&lt;textarea rows="4" 
+          cols="50" 
+          data-module="wordlimit" 
+          data-feedback="#feedback1" 
+          maxlength="140"&gt;&lt;/textarea&gt;
+                </code>
+            </pre>
+            <hr />
+            <h3>自定义</h3>
+            <div class="bs-example bs-example-padded-bottom">
+                <div>
+                    <p>您还可以输入：<span id="feedback2">20</span> 字符</p>
+                    <textarea rows="4" cols="50" id="custom"></textarea>
+                </div>
+            </div>
+            <h3>初始化</h3>
+
+            <div class="highlight">
+                <pre>
+                    <code data-lang="js" class="language-js">
+var wordlimit = new kotenei.WordLimit($elm,options);
+                    </code>
+                </pre>
+            </div>
+            <h3>参数 options</h3>
+            <table class="table table-bordered table-striped js-options-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>类型</th>
+                        <th style="width: 100px;">默认值</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>feedback</td>
+                        <td>string</td>
+                        <td>'.chars'</td>
+                        <td>剩余字数反馈，值设置jQuery选择器，如'#id'</td>
+                    </tr>
+                    <tr>
+                        <td>maxLength</td>
+                        <td>int</td>
+                        <td>140</td>
+                        <td>最大字符数</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
+    <script type="text/javascript" src="vendor/require/require.js"></script>
+    <script type="text/javascript" src="main.js"></script>
     <script type="text/javascript">
         require(['kotenei'], function (kotenei) {
-            var WordLimit = kotenei.WordLimit;
-            //全局
-            WordLimit.Global();
+            kotenei.WordLimit.Global();
 
             //自定义
-            var wordlimit = new WordLimit($("#custom"), {
+            var wordlimit = new kotenei.WordLimit($("#custom"), {
                 feedback: '#feedback2',
-                maxLength:20
+                maxLength: 20
             });
         });
     </script>

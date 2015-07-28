@@ -1,40 +1,283 @@
 ﻿<!DOCTYPE html>
-
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8" />
-    <title></title>
-    <link rel="stylesheet" type="text/css" href="../dist/css/kotenei.css" />
-    <script type="text/javascript" src="./vendor/require/require.js"></script>
-    <script type="text/javascript" src="./main.js"></script>
-    <style type="text/css">
-        a { display:inline-block;padding:2px 5px;margin:0 2px;}
-    </style>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>工具提示</title>
+    <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../dist/css/kotenei.min.css" rel="stylesheet" />
+    <link href="docs.min.css" rel="stylesheet" />
+    <link href="demo.css" rel="stylesheet" />
 </head>
 <body>
-    <div style="margin-left:400px;margin-top:300px;">
-        <a href="###" class="aaa" data-module="tooltips" data-tipClass="" data-content="左则显示" data-placement="left">左</a>
-        <a href="###" data-module="tooltips" data-tipClass="warning" data-content="上则显示" data-placement="top">上</a>
-        <a href="###" data-module="tooltips" data-tipClass="success" data-content="右则显示" data-placement="right">右</a>
-        <a href="###" data-module="tooltips" data-tipClass="danger" data-content="下则显示" data-placement="bottom">下</a>
-        <a href="###" id="custom">自定义</a>
+    <div class="header">
+        <div class="wrap">
+            <ul class="nav-list">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="###" class="active">demo</a></li>
+            </ul>
+        </div>
     </div>
+    <div class="main wrap">
+        <ul class="demo-nav-list">
+            <li>
+                <a href="window.html">模态窗口
+                </a>
+            </li>
+            <li>
+                <a href="tree.html">树型菜单
+                </a>
+            </li>
+            <li>
+                <a href="treetable.html">树型表格
+                </a>
+            </li>
+            <li>
+                <a href="placeholder.html">占位符
+                </a>
+            </li>
+            <li>
+                <a href="autocomplete.html">自动完成
+                </a>
+            </li>
+            <li>
+                <a href="datepicker.html">日期选择
+                </a>
+            </li>
+            <li>
+                <a href="imgpreview.html">图片预览
+                </a>
+            </li>
+            <li>
+                <a href="clipzoom.html">图片裁剪
+                </a>
+            </li>
+            <li>
+                <a href="magnifier.html">放大镜
+                </a>
+            </li>
+            <li>
+                <a href="focusmap.html">焦点图
+                </a>
+            </li>
+            <li>
+                <a href="highlight.html">文字高亮
+                </a>
+            </li>
+            <li>
+                <a href="rating.html">评级打分
+                </a>
+            </li>
+            <li>
+                <a href="poptips.html">弹出提示
+                </a>
+            </li>
+            <li>
+                <a href="tooltips.html" class="active">工具提示
+                </a>
+            </li>
+            <li>
+                <a href="popover.html">弹出框
+                </a>
+            </li>
+            <li>
+                <a href="switch.html">开关
+                </a>
+            </li>
+            <li>
+                <a href="pager.html">分页
+                </a>
+            </li>
+            <li>
+                <a href="loading.html">加载提示
+                </a>
+            </li>
+            <li>
+                <a href="validate.html">表单验证
+                </a>
+            </li>
+            <li>
+                <a href="wordlimit.html">字数限制
+                </a>
+            </li>
+            <li>
+                <a href="contextmenu.html">右键菜单
+                </a>
+            </li>
+            <li>
+                <a href="slider.html">滑块
+                </a>
+            </li>
+            <li>
+                <a href="lazyload.html">延迟加载
+                </a>
+            </li>
+            <li>
+                <a href="infinitescroll.html">无限滚动
+                </a>
+            </li>
+            <li>
+                <a href="waterfall.html">瀑布流
+                </a>
+            </li>
+            <li>
+                <a href="localStorage.html">本地存储
+                </a>
+            </li>
+        </ul>
+        <div class="demo-container">
+            <h1 class="page-header">工具提示</h1>
+            <div class="bs-example bs-example-padded-bottom" style="text-align: center;">
+                <a href="###" style="font-size: 18px; margin-right: 10px;" data-module="tooltips" data-tipclass="" data-content="左则显示" data-placement="left">左</a>
+                <a href="###" style="font-size: 18px; margin-right: 10px;" data-module="tooltips" data-tipclass="warning" data-content="上则显示" data-placement="top">上</a>
+                <a href="###" style="font-size: 18px; margin-right: 10px;" data-module="tooltips" data-tipclass="success" data-content="右则显示" data-placement="right">右</a>
+                <a href="###" style="font-size: 18px; margin-right: 10px;" data-module="tooltips" data-tipclass="danger" data-content="下则显示" data-placement="bottom">下</a>
+
+            </div>
+            <h3>全局调用</h3>
+            <div class="highlight">
+                <pre>
+                    <code data-lang="js" class="language-js">
+kotenei.Tooltips.Global();
+                    </code>
+                </pre>
+            </div>
+
+            <h3>HTML属性设置</h3>
+            <table class="table table-bordered table-striped js-options-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>类型</th>
+                        <th style="width: 200px;">设置值</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>data-module</td>
+                        <td>string</td>
+                        <td>tooltips</td>
+                        <td>告诉程序当前html元素需要初始化为tooltips模块
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>data-tipClass</td>
+                        <td>string</td>
+                        <td>'success' , 'warning' , 'info' , 'danger'
+                        </td>
+                        <td>提示的颜色
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>data-content</td>
+                        <td>string</td>
+                        <td></td>
+                        <td>提示内容</td>
+                    </tr>
+                    <tr>
+                        <td>data-placement</td>
+                        <td>string</td>
+                        <td>left,top,right,bottom</td>
+                        <td>弹出框显示的位置</td>
+                    </tr>
+                    <tr>
+                        <td>data-trigger</td>
+                        <td>string</td>
+                        <td>hover,click</td>
+                        <td>触发tips显示和隐藏的事件
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <hr />
+            <h3>自定义</h3>
+            <div class="bs-example bs-example-padded-bottom" style="text-align: center;">
+                <a href="###" style="font-size: 18px; margin-right: 10px;" id="custom">自定义</a>
+            </div>
+
+            <h3>初始化</h3>
+
+            <div class="highlight">
+                <pre>
+                    <code data-lang="js" class="language-js">
+var tooltips = new kotenei.Tooltips($elm, options);
+                    </code>
+                </pre>
+            </div>
+            <h3>参数 options</h3>
+            <table class="table table-bordered table-striped js-options-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>类型</th>
+                        <th style="width: 100px;">默认值</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>content</td>
+                        <td>string</td>
+                        <td>''</td>
+                        <td>提示内容</td>
+                    </tr>
+                    <tr>
+                        <td>tipClass</td>
+                        <td>string</td>
+                        <td>''</td>
+                        <td>样式名,可选择 'success' , 'warning' , 'info' , 'danger'，默认为黑色</td>
+                    </tr>
+                    <tr>
+                        <td>placement</td>
+                        <td>string</td>
+                        <td>'left'</td>
+                        <td>tips显示的方向，可选 'left' , 'top' , 'right' , 'bottom' </td>
+                    </tr>
+                    <tr>
+                        <td>trigger</td>
+                        <td>string</td>
+                        <td>'hover click'</td>
+                        <td>触发tips显示和隐藏的事件,'manual'则为自定义，通用调用自带函数控制显示和隐藏</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3>函数调用</h3>
+            <div class="highlight">
+                <pre>
+                    <code data-lang="js" class="language-js">
+//设置内容
+tooltips.setContent('');
+
+//显示
+tooltips.show('');
+
+//隐藏
+tooltips.hide();
+                    </code>
+                </pre>
+            </div>
+
+        </div>
+    </div>
+    <script type="text/javascript" src="vendor/require/require.js"></script>
+    <script type="text/javascript" src="main.js"></script>
     <script type="text/javascript">
         require(['kotenei'], function (kotenei) {
-            //全局
-            var Tooltips = kotenei.Tooltips;
-            Tooltips.Global();
+            kotenei.Tooltips.Global();
 
             var $custom = $("#custom");
-            var tooltips = new Tooltips($custom, {
+            var tooltips = new kotenei.Tooltips($custom, {
                 tipClass: 'info',
                 placement: 'right',
-                content:'<h3>自定义内容</h3>',
+                content: '<h3>自定义内容</h3>',
                 trigger: 'click'
             });
-
-            
         });
+
+        
+
     </script>
 </body>
 </html>

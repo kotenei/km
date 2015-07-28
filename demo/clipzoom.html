@@ -1,54 +1,270 @@
 ﻿<!DOCTYPE html>
-
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8" />
-    <title></title>
-    <link rel="stylesheet" type="text/css" href="../style/vendor/font-awesome/css/font-awesome.min.css" />
-    <link rel="stylesheet" type="text/css" href="../dist/css/kotenei.min.css" />
-    <script type="text/javascript" src="./vendor/require/require.js"></script>
-    <script type="text/javascript" src="./main.js"></script>
-    <style type="text/css">
-    </style>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>图片剪裁</title>
+    <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../dist/css/kotenei.min.css" rel="stylesheet" />
+    <link href="docs.min.css" rel="stylesheet" />
+    <link href="demo.css" rel="stylesheet" />
 </head>
 <body>
-
-    <!--裁剪html-->
-    <div class="k-clipZoom" style="margin: 0 auto; margin-top: 30px;">
-        <!--左则选取区-->
-        <div class="k-clipZoom-left">
-            <div class="k-clipZoom-Box">
-                <div class="k-container">
-                    <img />
-                </div>
-                <div class="selector">
-                </div>
-                <span class="zoom" role="plus"><i class="fa fa-plus"></i></span>
-                <span class="zoom zoomMinus" role="minus"><i class="fa fa-minus"></i></span>
-            </div>
-            <div class="button-box">
-                <button class="k-btn k-btn-primary" role="clip">裁剪</button>
-                <button class="k-btn k-btn-primary" role="center">居中</button>
-                <button class="k-btn k-btn-primary" role="reset">重置</button>
-            </div>
-        </div>
-        <!--右则预览区-->
-        <div class="k-clipZoom-left" style="margin-left: 10px;">
-            <div class="view-box">
-                <img />
-            </div>
-            <div class="result-box">
-                <img />
-            </div>
+    <div class="header">
+        <div class="wrap">
+            <ul class="nav-list">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="###" class="active">demo</a></li>
+            </ul>
         </div>
     </div>
+    <div class="main wrap">
+        <ul class="demo-nav-list">
+            <li>
+                <a href="window.html">模态窗口
+                </a>
+            </li>
+            <li>
+                <a href="tree.html">树型菜单
+                </a>
+            </li>
+            <li>
+                <a href="treetable.html">树型表格
+                </a>
+            </li>
+            <li>
+                <a href="placeholder.html">占位符
+                </a>
+            </li>
+            <li>
+                <a href="autocomplete.html">自动完成
+                </a>
+            </li>
+            <li>
+                <a href="datepicker.html">日期选择
+                </a>
+            </li>
+            <li>
+                <a href="imgpreview.html">图片预览
+                </a>
+            </li>
+            <li>
+                <a href="clipzoom.html" class="active">图片裁剪
+                </a>
+            </li>
+            <li>
+                <a href="magnifier.html">放大镜
+                </a>
+            </li>
+            <li>
+                <a href="focusmap.html">焦点图
+                </a>
+            </li>
+            <li>
+                <a href="highlight.html">文字高亮
+                </a>
+            </li>
+            <li>
+                <a href="rating.html">评级打分
+                </a>
+            </li>
+            <li>
+                <a href="poptips.html">弹出提示
+                </a>
+            </li>
+            <li>
+                <a href="tooltips.html">工具提示
+                </a>
+            </li>
+            <li>
+                <a href="popover.html">弹出框
+                </a>
+            </li>
+            <li>
+                <a href="switch.html">开关
+                </a>
+            </li>
+            <li>
+                <a href="pager.html">分页
+                </a>
+            </li>
+            <li>
+                <a href="loading.html">加载提示
+                </a>
+            </li>
+            <li>
+                <a href="validate.html">表单验证
+                </a>
+            </li>
+            <li>
+                <a href="wordlimit.html">字数限制
+                </a>
+            </li>
+            <li>
+                <a href="contextmenu.html">右键菜单
+                </a>
+            </li>
+            <li>
+                <a href="slider.html">滑块
+                </a>
+            </li>
+            <li>
+                <a href="lazyload.html">延迟加载
+                </a>
+            </li>
+            <li>
+                <a href="infinitescroll.html">无限滚动
+                </a>
+            </li>
+            <li>
+                <a href="waterfall.html">瀑布流
+                </a>
+            </li>
+            <li>
+                <a href="localStorage.html">本地存储
+                </a>
+            </li>
+        </ul>
+        <div class="demo-container">
+            <h1 class="page-header">图片剪裁</h1>
 
+            <div class="bs-example bs-example-padded-bottom">
 
+                <!--裁剪html-->
+                <div class="k-clipZoom" style="">
+                    <!--左则选取区-->
+                    <div class="k-clipZoom-left">
+                        <div class="k-clipZoom-Box">
+                            <div class="k-container">
+                                <img />
+                            </div>
+                            <div class="selector">
+                            </div>
+                            <span class="zoom" role="plus"><i class="fa fa-plus"></i></span>
+                            <span class="zoom zoomMinus" role="minus"><i class="fa fa-minus"></i></span>
+                        </div>
+                        <div class="button-box">
+                            <button class="k-btn k-btn-primary" role="clip">裁剪</button>
+                            <button class="k-btn k-btn-primary" role="center">居中</button>
+                            <button class="k-btn k-btn-primary" role="reset">重置</button>
+                        </div>
+                    </div>
+                    <!--右则预览区-->
+                    <div class="k-clipZoom-left" style="margin-left: 10px;">
+                        <div class="view-box">
+                            <img />
+                        </div>
+                        <div class="result-box">
+                            <img />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3>HTML结构</h3>
+            <pre>
+                <code>
+&lt;div class="k-clipZoom" style=""&gt;
+    &lt;!--左则选取区--&gt;
+    &lt;div class="k-clipZoom-left"&gt;
+        &lt;div class="k-clipZoom-Box"&gt;
+            &lt;div class="k-container"&gt;
+                &lt;img /&gt;
+            &lt;/div&gt;
+            &lt;div class="selector"&gt;
+            &lt;/div&gt;
+            &lt;span class="zoom" role="plus"&gt;&lt;i class="fa fa-plus"&gt;&lt;/i&gt;&lt;/span&gt;
+            &lt;span class="zoom zoomMinus" role="minus"&gt;&lt;i class="fa fa-minus"&gt;&lt;/i&gt;&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div class="button-box"&gt;
+            &lt;button class="k-btn k-btn-primary" role="clip"&gt;裁剪&lt;/button&gt;
+            &lt;button class="k-btn k-btn-primary" role="center"&gt;居中&lt;/button&gt;
+            &lt;button class="k-btn k-btn-primary" role="reset"&gt;重置&lt;/button&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;!--右则预览区--&gt;
+    &lt;div class="k-clipZoom-left" style="margin-left: 10px;"&gt;
+        &lt;div class="view-box"&gt;
+            &lt;img /&gt;
+        &lt;/div&gt;
+        &lt;div class="result-box"&gt;
+            &lt;img /&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+                </code>
+            </pre>
+
+            <h3>初始化</h3>
+            <div class="highlight">
+                <pre>
+                    <code data-lang="js" class="language-js">
+var clipZoom = new kotenei.ClipZoom($("div.k-clipZoom"),options);
+                    </code>
+                </pre>
+            </div>
+            <h3>参数 options</h3>
+            <table class="table table-bordered table-striped js-options-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>类型</th>
+                        <th style="width: 100px;">默认值</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>imgUrl</td>
+                        <td>string</td>
+                        <td>null</td>
+                        <td>裁剪图片的地址</td>
+                    </tr>
+                    <tr>
+                        <td>scale</td>
+                        <td>boolean</td>
+                        <td>true</td>
+                        <td>是否锁定比例</td>
+                    </tr>
+                    <tr>
+                        <td>width</td>
+                        <td>int</td>
+                        <td>400</td>
+                        <td>容器宽度</td>
+                    </tr>
+                    <tr>
+                        <td>height</td>
+                        <td>int</td>
+                        <td>300</td>
+                        <td>容器高度</td>
+                    </tr>
+                    <tr>
+                        <td>selectorWidth</td>
+                        <td>int</td>
+                        <td>120</td>
+                        <td>选择框的宽度</td>
+                    </tr>
+                    <tr>
+                        <td>selectorHeight</td>
+                        <td>int</td>
+                        <td>120</td>
+                        <td>选择框的高度</td>
+                    </tr>
+                    <tr>
+                        <td>callback</td>
+                        <td>object</td>
+                        <td>{clip: null}</td>
+                        <td>点击裁剪的回调函数，返回裁剪后的数据</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script type="text/javascript" src="vendor/require/require.js"></script>
+    <script type="text/javascript" src="main.js"></script>
     <script type="text/javascript">
         require(['kotenei'], function (kotenei) {
-            var ClipZoom = kotenei.ClipZoom;
-
-            var cz = new ClipZoom($("div.k-clipZoom"), {
+            var clipZoom = new kotenei.ClipZoom($("div.k-clipZoom"), {
                 imgUrl: '../dist/images/1.jpg',
                 callback: {
                     clip: function (clipData) {
@@ -56,8 +272,8 @@
                     }
                 }
             });
-
         });
+
     </script>
 </body>
 </html>

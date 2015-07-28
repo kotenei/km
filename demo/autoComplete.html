@@ -1,22 +1,234 @@
 ﻿<!DOCTYPE html>
-
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8" />
-    <title></title>
-    <link rel="stylesheet" type="text/css" href="../dist/css/kotenei.css" />
-    <script type="text/javascript" src="./vendor/require/require.js"></script>
-    <script type="text/javascript" src="./main.js"></script>
-    <style type="text/css">
-    </style>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>自动完成</title>
+    <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../dist/css/kotenei.min.css" rel="stylesheet" />
+    <link href="docs.min.css" rel="stylesheet" />
+    <link href="demo.css" rel="stylesheet" />
 </head>
 <body>
+    <div class="header">
+        <div class="wrap">
+            <ul class="nav-list">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="###" class="active">demo</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="main wrap">
+        <ul class="demo-nav-list">
+            <li>
+                <a href="window.html">模态窗口
+                </a>
+            </li>
+            <li>
+                <a href="tree.html">树型菜单
+                </a>
+            </li>
+            <li>
+                <a href="treetable.html">树型表格
+                </a>
+            </li>
+            <li>
+                <a href="placeholder.html">占位符
+                </a>
+            </li>
+            <li>
+                <a href="autocomplete.html" class="active">自动完成
+                </a>
+            </li>
+            <li>
+                <a href="datepicker.html">日期选择
+                </a>
+            </li>
+            <li>
+                <a href="imgpreview.html">图片预览
+                </a>
+            </li>
+            <li>
+                <a href="clipzoom.html">图片裁剪
+                </a>
+            </li>
+            <li>
+                <a href="magnifier.html">放大镜
+                </a>
+            </li>
+            <li>
+                <a href="focusmap.html">焦点图
+                </a>
+            </li>
+            <li>
+                <a href="highlight.html">文字高亮
+                </a>
+            </li>
+            <li>
+                <a href="rating.html">评级打分
+                </a>
+            </li>
+            <li>
+                <a href="poptips.html">弹出提示
+                </a>
+            </li>
+            <li>
+                <a href="tooltips.html">工具提示
+                </a>
+            </li>
+            <li>
+                <a href="popover.html">弹出框
+                </a>
+            </li>
+            <li>
+                <a href="switch.html">开关
+                </a>
+            </li>
+            <li>
+                <a href="pager.html">分页
+                </a>
+            </li>
+            <li>
+                <a href="loading.html">加载提示
+                </a>
+            </li>
+            <li>
+                <a href="validate.html">表单验证
+                </a>
+            </li>
+            <li>
+                <a href="wordlimit.html">字数限制
+                </a>
+            </li>
+            <li>
+                <a href="contextmenu.html">右键菜单
+                </a>
+            </li>
+            <li>
+                <a href="slider.html">滑块
+                </a>
+            </li>
+            <li>
+                <a href="lazyload.html">延迟加载
+                </a>
+            </li>
+            <li>
+                <a href="infinitescroll.html">无限滚动
+                </a>
+            </li>
+            <li>
+                <a href="waterfall.html">瀑布流
+                </a>
+            </li>
+            <li>
+                <a href="localStorage.html">本地存储
+                </a>
+            </li>
+        </ul>
+        <div class="demo-container">
+            <h1 class="page-header">自动完成</h1>
 
-    <input type="text" id="txtAutoComplete" placeholder="请输入a-z测试" style="position:fixed;left:45%;top:45%;" />
+            <div class="bs-example bs-example-padded-bottom">
+                <input type="text" id="txtAutoComplete" placeholder="请输入a-z测试" class="form-control" style="width: 300px;" />
+            </div>
 
+
+            <h3>初始化</h3>
+            <div class="highlight">
+                <pre>
+                    <code data-lang="js" class="language-js">
+kotenei.autoComplete($elm,options);
+                    </code>
+                </pre>
+            </div>
+            <h3>参数 options</h3>
+            <table class="table table-bordered table-striped js-options-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>类型</th>
+                        <th style="width: 100px;">默认值</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>data</td>
+                        <td>array</td>
+                        <td>[]</td>
+                        <td>数据集合</td>
+                    </tr>
+                    <tr>
+                        <td>url</td>
+                        <td>string</td>
+                        <td>null</td>
+                        <td>ajax地址</td>
+                    </tr>
+                    <tr>
+                        <td>zIndex</td>
+                        <td>int</td>
+                        <td>1000</td>
+                        <td>堆叠顺序</td>
+                    </tr>
+                    <tr>
+                        <td>max</td>
+                        <td>int</td>
+                        <td>10</td>
+                        <td>下拉显示最大个数</td>
+                    </tr>
+                    <tr>
+                        <td>width</td>
+                        <td>int</td>
+                        <td>null</td>
+                        <td>宽度，默认为input宽度</td>
+                    </tr>
+                    <tr>
+                        <td>height</td>
+                        <td>int</td>
+                        <td>null</td>
+                        <td>高度，默认为auto</td>
+                    </tr>
+                    <tr>
+                        <td>isBottom</td>
+                        <td>boolean</td>
+                        <td>true</td>
+                        <td>下拉面板显示的位置，默认为input下方，false则为input上方</td>
+                    </tr>
+                    <tr>
+                        <td>highlight</td>
+                        <td>boolean</td>
+                        <td>false</td>
+                        <td>是否高亮搜索值</td>
+                    </tr>
+                    <tr>
+                        <td>formatItem</td>
+                        <td>function</td>
+                        <td></td>
+                        <td>自定义为每个要显示的项目使用高级标签</td>
+                    </tr>
+                    <tr>
+                        <td>callback</td>
+                        <td>object</td>
+                        <td>
+                            <pre>
+                                <code>
+callback: {
+    setValue: null
+}
+                                </code>
+                            </pre>
+                        </td>
+                        <td>input设置所选值时触发的回调函数</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script type="text/javascript" src="vendor/require/require.js"></script>
+    <script type="text/javascript" src="main.js"></script>
     <script type="text/javascript">
-
-        var data = [
+        require(['kotenei'], function (kotenei) {
+            var data = [
 	        "Aberdeen", "Ada", "Adamsville", "Addyston", "Adelphi", "Adena", "Adrian", "Akron",
 	        "Albany", "Alexandria", "Alger", "Alledonia", "Alliance", "Alpha", "Alvada",
 	        "Alvordton", "Amanda", "Amelia", "Amesville", "Amherst", "Amlin", "Amsden",
@@ -218,11 +430,8 @@
 	        "Woodstock", "Woodville", "Wooster", "Wren", "Xenia", "Yellow Springs",
 	        "Yorkshire", "Yorkville", "Youngstown", "Zaleski", "Zanesfield", "Zanesville",
 	        "Zoar"
-        ];
-
-
-        require(['kotenei'], function (kotenei) {
-
+            ];
+            
             kotenei.autoComplete($("#txtAutoComplete"), {
                 data: data,
                 callback: {
@@ -231,15 +440,7 @@
                     }
                 }
             });
-
-
         });
-
-
-        
-
-
-
     </script>
 </body>
 </html>

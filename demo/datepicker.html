@@ -1,34 +1,346 @@
 ﻿<!DOCTYPE html>
-
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8" />
-    <title></title>
-    <link rel="stylesheet" type="text/css" href="../style/vendor/font-awesome/css/font-awesome.min.css" />
-    <link rel="stylesheet" type="text/css" href="../dist/css/kotenei.css" />
-    <script type="text/javascript" src="./vendor/require/require.js"></script>
-    <script type="text/javascript" src="./main.js"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>日期选择</title>
+    <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../dist/css/kotenei.min.css" rel="stylesheet" />
+    <link href="docs.min.css" rel="stylesheet" />
+    <link href="demo.css" rel="stylesheet" />
 </head>
 <body>
-    <p style="padding-left:100px;">
-        自定义：<input type="text" readonly="readonly" placeholder="自定义" id="picker" style="width:300px;" />
-    </p>
+    <div class="header">
+        <div class="wrap">
+            <ul class="nav-list">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="###" class="active">demo</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="main wrap">
+        <ul class="demo-nav-list">
+            <li>
+                <a href="window.html">模态窗口
+                </a>
+            </li>
+            <li>
+                <a href="tree.html">树型菜单
+                </a>
+            </li>
+            <li>
+                <a href="treetable.html">树型表格
+                </a>
+            </li>
+            <li>
+                <a href="placeholder.html">占位符
+                </a>
+            </li>
+            <li>
+                <a href="autocomplete.html">自动完成
+                </a>
+            </li>
+            <li>
+                <a href="datepicker.html" class="active">日期选择
+                </a>
+            </li>
+            <li>
+                <a href="imgpreview.html">图片预览
+                </a>
+            </li>
+            <li>
+                <a href="clipzoom.html">图片裁剪
+                </a>
+            </li>
+            <li>
+                <a href="magnifier.html">放大镜
+                </a>
+            </li>
+            <li>
+                <a href="focusmap.html">焦点图
+                </a>
+            </li>
+            <li>
+                <a href="highlight.html">文字高亮
+                </a>
+            </li>
+            <li>
+                <a href="rating.html">评级打分
+                </a>
+            </li>
+            <li>
+                <a href="poptips.html">弹出提示
+                </a>
+            </li>
+            <li>
+                <a href="tooltips.html">工具提示
+                </a>
+            </li>
+            <li>
+                <a href="popover.html">弹出框
+                </a>
+            </li>
+            <li>
+                <a href="switch.html">开关
+                </a>
+            </li>
+            <li>
+                <a href="pager.html">分页
+                </a>
+            </li>
+            <li>
+                <a href="loading.html">加载提示
+                </a>
+            </li>
+            <li>
+                <a href="validate.html">表单验证
+                </a>
+            </li>
+            <li>
+                <a href="wordlimit.html">字数限制
+                </a>
+            </li>
+            <li>
+                <a href="contextmenu.html">右键菜单
+                </a>
+            </li>
+            <li>
+                <a href="slider.html">滑块
+                </a>
+            </li>
+            <li>
+                <a href="lazyload.html">延迟加载
+                </a>
+            </li>
+            <li>
+                <a href="infinitescroll.html">无限滚动
+                </a>
+            </li>
+            <li>
+                <a href="waterfall.html">瀑布流
+                </a>
+            </li>
+            <li>
+                <a href="localStorage.html">本地存储
+                </a>
+            </li>
+        </ul>
+        <div class="demo-container">
+            <h1 class="page-header">日期选择</h1>
 
-    <p style="padding-left:100px;">
-        全&nbsp;&nbsp;&nbsp;&nbsp;局：<input type="text" readonly="readonly" placeholder="全局" data-module="datepicker" data-format="yyyy-MM-dd hh:mm:ss" data-showtime="true" data-minDate="2013-01-11" data-maxDate="today" data-position="right" />
-    </p>
+            <div class="bs-example bs-example-padded-bottom">
+                <input type="text" readonly="readonly" placeholder="全局" data-module="datepicker" data-format="yyyy-MM-dd hh:mm:ss" data-showtime="true" data-mindate="2013-01-11" data-maxDate="today" data-position="right" data-zIndex="1200" class="form-control" style="width: 300px;" />
+            </div>
+            <h3>全局调用</h3>
+            <pre>
+                <code data-lang="js" class="language-js">
+kotenei.DatePicker.Global();
+                </code>
+            </pre>
 
+            <h3>HTML属性设置</h3>
+            <table class="table table-bordered table-striped js-options-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>类型</th>
+                        <th style="width: 200px;">设置值</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>data-module</td>
+                        <td>string</td>
+                        <td>datepicker</td>
+                        <td>告诉程序当前html元素需要初始化为datepicker模块
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>data-format</td>
+                        <td>string</td>
+                        <td>'yyyy-MM-dd hh:mm:ss'<br />'yyyy-MM-dd'等</td>
+                        <td>
+                            <p><b>日期格式化</b></p>
+                            <p><b>yyyy：</b>年</p>
+                            <p><b>MM：</b>月</p>
+                            <p><b>dd：</b>日</p>
+                            <p><b>hh：</b>小时</p>
+                            <p><b>mm：</b>分钟</p>
+                            <p><b>ss：</b>秒</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>data-showTime</td>
+                        <td>string</td>
+                        <td>true or false</td>
+                        <td>是否显示时间选择</td>
+                    </tr>
+                    <tr>
+                        <td>data-minDate</td>
+                        <td>string</td>
+                        <td>'2014-10-01'日期格式或者'today'</td>
+                        <td>最小日期</td>
+                    </tr>
+                    <tr>
+                        <td>data-maxDate</td>
+                        <td>string</td>
+                        <td>'2014-10-01'日期格式或者'today'</td>
+                        <td>
+                            最大日期
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>data-position</td>
+                        <td>string</td>
+                        <td>'left' 或者 'right'</td>
+                        <td>日期选择器定位</td>
+                    </tr>
+                    <tr>
+                        <td>data-zIndex</td>
+                        <td>string</td>
+                        <td>'1000'等数值</td>
+                        <td>层叠顺序</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3>示例代码</h3>
+            <pre>
+                <code>
+//HTML属性设置
+&lt;input  type="text" 
+        readonly="readonly" 
+        placeholder="全局" 
+        data-module="datepicker" 
+        data-format="yyyy-MM-dd hh:mm:ss" 
+        data-showTime="true" 
+        data-minDate="2013-01-11" 
+        data-maxDate="today" 
+        data-position="right"
+        data-zIndex="1000" /&gt;
+                </code>
+            </pre>
+
+            <hr />
+            <h3>自定义</h3>
+            <div class="bs-example bs-example-padded-bottom">
+                <input type="text" readonly="readonly" placeholder="自定义" id="picker" class="form-control" style="width: 300px;" />
+            </div>
+            <h3>初始化</h3>
+            <div class="highlight">
+                <pre>
+                    <code data-lang="js" class="language-js">
+//创建datepicker对象
+var datePicker = new kotenei.DatePicker($elm,options);
+                    </code>
+                </pre>
+            </div>
+            <h3>参数 options</h3>
+            <table class="table table-bordered table-striped js-options-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>类型</th>
+                        <th style="width: 100px;">默认值</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>position</td>
+                        <td>string</td>
+                        <td>'left'</td>
+                        <td>日期选择器显示的位置，默认与input左对齐，值可以是'left'和'right'</td>
+                    </tr>
+                    <!--<tr>
+                        <td>desktop</td>
+                        <td>boolean</td>
+                        <td>false</td>
+                        <td>是否直接显示到页面上，<code>如果为true,请把初始化的$elm设为非input元素</code></td>
+                    </tr>-->
+                    <tr>
+                        <td>appendTo</td>
+                        <td>jQuery</td>
+                        <td>$(document.body)</td>
+                        <td>日期选择器生成后插入到的元素，默认插入到body下</td>
+                    </tr>
+                    <tr>
+                        <td>showTime</td>
+                        <td>boolean</td>
+                        <td>false</td>
+                        <td>是否显示时间选择，默认为不显示</td>
+                    </tr>
+                    <tr>
+                        <td>year</td>
+                        <td>object</td>
+                        <td>
+                            <pre>
+                            <code>
+{ 
+    min: new Date().getFullYear() - 100, 
+    max: new Date().getFullYear() + 100 
+}
+                            </code>
+                            </pre>
+                        </td>
+                        <td>年份的选择范围</td>
+                    </tr>
+                    <tr>
+                        <td>format</td>
+                        <td>string</td>
+                        <td>'yyyy-MM-dd'</td>
+                        <td>
+                            <p><b>日期格式化</b></p>
+                            <p><b>yyyy：</b>年</p>
+                            <p><b>MM：</b>月</p>
+                            <p><b>dd：</b>日</p>
+                            <p><b>hh：</b>小时</p>
+                            <p><b>mm：</b>分钟</p>
+                            <p><b>ss：</b>秒</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>minDate</td>
+                        <td>string</td>
+                        <td>null</td>
+                        <td>最小日期，格式'2014-10-11'或'today'
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>maxDate</td>
+                        <td>string</td>
+                        <td>null</td>
+                        <td>最大日期，格式同上
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>zIndex</td>
+                        <td>int</td>
+                        <td>2000</td>
+                        <td>堆叠顺序
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script type="text/javascript" src="vendor/require/require.js"></script>
+    <script type="text/javascript" src="main.js"></script>
     <script type="text/javascript">
+
         require(['kotenei'], function (kotenei) {
-            var DatePicker = kotenei.DatePicker;
-            var datePicker = new DatePicker($("#picker"), {
-                format: 'yyyy-MM-dd',
+
+
+
+            var datePicker = new kotenei.DatePicker($("#picker"), {
+                format: 'yyyy-MM-dd'
             });
 
             //全局
-            DatePicker.Global();
-
+            kotenei.DatePicker.Global();
         });
+
+        
     </script>
 </body>
 </html>

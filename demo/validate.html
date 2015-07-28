@@ -1,54 +1,374 @@
 ﻿<!DOCTYPE html>
-
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8" />
-    <title></title>
-    <link rel="stylesheet" type="text/css" href="../dist/css/kotenei.css" />
-    <script type="text/javascript" src="./vendor/require/require.js"></script>
-    <script type="text/javascript" src="./main.js"></script>
-    <style type="text/css">
-        table td
-        {
-            line-height: 30px;
-        }
-    </style>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>表单验证</title>
+    <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../dist/css/kotenei.min.css" rel="stylesheet" />
+    <link href="docs.min.css" rel="stylesheet" />
+    <link href="demo.css" rel="stylesheet" />
 </head>
 <body>
-    <form id="form">
-        <table>
-            <tr>
-                <td>用户名：</td>
-                <td>
-                    <input type="text" name="userName" placeholder="请输入用户名" data-rules="{rules:{required:true},messages:{required:'请输入 用户名'}}" /></td>
-            </tr>
-            <tr>
-                <td>密码：</td>
-                <td>
-                    <input type="password" name="password" id="password" placeholder="请输入密码" /></td>
-            </tr>
-            <tr>
-                <td>确认密码：</td>
-                <td>
-                    <input type="password" name="rePwd" placeholder="请输入确认密码" /></td>
-            </tr>
-            <tr>
-                <td>电子邮箱：</td>
-                <td>
-                    <input type="text" name="email" placeholder="请输入电子邮箱" /></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td>
-                    <input type="submit" value="提交" /></td>
-            </tr>
-        </table>
-    </form>
+    <div class="header">
+        <div class="wrap">
+            <ul class="nav-list">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="###" class="active">demo</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="main wrap">
+        <ul class="demo-nav-list">
+            <li>
+                <a href="window.html">模态窗口
+                </a>
+            </li>
+            <li>
+                <a href="tree.html">树型菜单
+                </a>
+            </li>
+            <li>
+                <a href="treetable.html">树型表格
+                </a>
+            </li>
+            <li>
+                <a href="placeholder.html">占位符
+                </a>
+            </li>
+            <li>
+                <a href="autocomplete.html">自动完成
+                </a>
+            </li>
+            <li>
+                <a href="datepicker.html">日期选择
+                </a>
+            </li>
+            <li>
+                <a href="imgpreview.html">图片预览
+                </a>
+            </li>
+            <li>
+                <a href="clipzoom.html">图片裁剪
+                </a>
+            </li>
+            <li>
+                <a href="magnifier.html">放大镜
+                </a>
+            </li>
+            <li>
+                <a href="focusmap.html">焦点图
+                </a>
+            </li>
+            <li>
+                <a href="highlight.html">文字高亮
+                </a>
+            </li>
+            <li>
+                <a href="rating.html">评级打分
+                </a>
+            </li>
+            <li>
+                <a href="poptips.html">弹出提示
+                </a>
+            </li>
+            <li>
+                <a href="tooltips.html">工具提示
+                </a>
+            </li>
+            <li>
+                <a href="popover.html">弹出框
+                </a>
+            </li>
+            <li>
+                <a href="switch.html">开关
+                </a>
+            </li>
+            <li>
+                <a href="pager.html">分页
+                </a>
+            </li>
+            <li>
+                <a href="loading.html">加载提示
+                </a>
+            </li>
+            <li>
+                <a href="validate.html" class="active">表单验证
+                </a>
+            </li>
+            <li>
+                <a href="wordlimit.html">字数限制
+                </a>
+            </li>
+            <li>
+                <a href="contextmenu.html">右键菜单
+                </a>
+            </li>
+            <li>
+                <a href="slider.html">滑块
+                </a>
+            </li>
+            <li>
+                <a href="lazyload.html">延迟加载
+                </a>
+            </li>
+            <li>
+                <a href="infinitescroll.html">无限滚动
+                </a>
+            </li>
+            <li>
+                <a href="waterfall.html">瀑布流
+                </a>
+            </li>
+            <li>
+                <a href="localStorage.html">本地存储
+                </a>
+            </li>
+        </ul>
+        <div class="demo-container">
+            <h1 class="page-header">表单验证</h1>
+            <p><code>轻量级的验证模块，重写jQuery.validate，用法与jQuery.validate类似，但部分功能会不一样，如自定义添加验证等</code></p>
+            <div class="bs-example bs-example-padded-bottom">
+
+                <h4>普通验证</h4>
+                <form id="form">
+                    <table class="k-table k-table-bordered">
+                        <tr>
+                            <td style="width: 120px;">用户名：</td>
+                            <td>
+                                <input type="text" name="userName" placeholder="请输入用户名" data-rules="{rules:{required:true},messages:{required:'请输入 用户名'}}" /></td>
+                        </tr>
+                        <tr>
+                            <td>密码：</td>
+                            <td>
+                                <input type="password" name="password" id="password" placeholder="请输入密码" /></td>
+                        </tr>
+                        <tr>
+                            <td>确认密码：</td>
+                            <td>
+                                <input type="password" name="rePwd" placeholder="请输入确认密码" /></td>
+                        </tr>
+                        <tr>
+                            <td>电子邮箱：</td>
+                            <td>
+                                <input type="text" name="email" placeholder="请输入电子邮箱" /></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <input type="submit" class="k-btn k-btn-primary" value="提交" /></td>
+                        </tr>
+                    </table>
+                </form>
+                <hr />
+                <h4>带工具提示的验证</h4>
+                <form id="form2">
+                    <table class="k-table k-table-bordered">
+                        <tr>
+                            <td style="width: 120px;">用户名：</td>
+                            <td>
+                                <input type="text" name="userName" placeholder="请输入用户名" data-rules="{rules:{required:true},messages:{required:'请输入 用户名'}}" /></td>
+                        </tr>
+                        <tr>
+                            <td>密码：</td>
+                            <td>
+                                <input type="password" name="password" id="password1" placeholder="请输入密码" /></td>
+                        </tr>
+                        <tr>
+                            <td>确认密码：</td>
+                            <td>
+                                <input type="password" name="rePwd" placeholder="请输入确认密码" /></td>
+                        </tr>
+                        <tr>
+                            <td>电子邮箱：</td>
+                            <td>
+                                <input type="text" name="email" placeholder="请输入电子邮箱" /></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <input type="submit" class="k-btn k-btn-primary" value="提交" /></td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+
+            <h3>初始化</h3>
+            <div class="highlight">
+                <pre>
+                    <code data-lang="js" class="language-js">
+//普通验证
+var validate=new kotenei.Validate($form,options);
+
+//带tooltips提示的验证
+var validate=new kotenei.ValidateTooltips($form,options);
+                    </code>
+                </pre>
+            </div>
+            <h3>参数 options</h3>
+            <table class="table table-bordered table-striped js-options-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>类型</th>
+                        <th style="width: 100px;">默认值</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>rules</td>
+                        <td>object</td>
+                        <td>{}</td>
+                        <td>验证规则，用法与jquery.validate类似</td>
+                    </tr>
+                    <tr>
+                        <td>messages</td>
+                        <td>object</td>
+                        <td>{}</td>
+                        <td>错误提示，用法与jquery.validate类似</td>
+                    </tr>
+                    <tr>
+                        <td>tipsPlacement</td>
+                        <td>object</td>
+                        <td>{}</td>
+                        <td>
+                            <p>工具提示，只能作用在<code>ValidateTooltips</code></p>
+                            <p><b>使用方式：</b>'userName': {position:'top',target:$elm,}</p>
+                            <p><b>position：</b>方位，可选 'left' , 'top' , 'right' , 'bottom'</p>
+                            <p><b>target：</b>tips指向的jQuery对象，默认是被验证的元素</p>
+                            <p><code>一般不需要设置该属性，对于一些特殊情况的，如要更改验证提示的方向，提示所指向的元素等</code></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>errorClass</td>
+                        <td>string</td>
+                        <td>'.k-error'</td>
+                        <td>错误提示的样式</td>
+                    </tr>
+                    <tr>
+                        <td>errorElement</td>
+                        <td>string</td>
+                        <td>'label'</td>
+                        <td>错误提示的标签，默认使用label</td>
+                    </tr>
+                    <tr>
+                        <td>focusClear</td>
+                        <td>boolean</td>
+                        <td>true</td>
+                        <td>获取焦点时隐藏错误</td>
+                    </tr>
+                    <tr>
+                        <td>keyupClear</td>
+                        <td>boolean</td>
+                        <td>true</td>
+                        <td>键盘操作时隐藏错误提示</td>
+                    </tr>
+                    <tr>
+                        <td>showSingleError</td>
+                        <td>boolean</td>
+                        <td>true</td>
+                        <td>提交时是否只显示单个错误提示</td>
+                    </tr>
+                    <tr>
+                        <td>errorPlacement</td>
+                        <td>function</td>
+                        <td>null</td>
+                        <td>
+                            自定义验证显示方法
+                            <pre>
+                                <code>
+errorPlacement:function($elm,$error){
+    $elm：被验证的元素
+    $error：错误提示的元素      
+}
+                                </code>
+                            </pre>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3>meta规则设置</h3>
+            <table class="table table-bordered table-striped js-options-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>类型</th>
+                        <th style="width: 400px;">设置值</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>data-rules</td>
+                        <td>string</td>
+                        <td>
+                            <pre>
+                                <code>
+"{ rules:{required:true},
+   messages:{required:'请输入用户名'},
+   tipsPlacement:{position:'right',target:'jQuery Selector'}}"
+                                </code>
+                            </pre>
+                        </td>
+                        <td>
+                            验证规则，值为json字符串，相关参数说明请参考上表
+                            <p><code>这里的target参数为jQuery的选择器，如'#id','.className'等,不填target则为当前html元素</code></p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3>示例代码</h3>
+
+            <div class="highlight">
+                <pre>
+                    <code>
+
+&lt;input type="text"  
+       name="userName" 
+       placeholder="请输入用户名" 
+       data-rules="{rules:{required:true},messages:{required:'请输入用户名'},tipsPlacement:{position:'bottom'}}" /&gt
+
+                    </code>
+                </pre>
+            </div>
+
+            <h3>函数调用</h3>
+            <div class="highlight">
+                <pre>
+                    <code>
+
+//执行验证，返回true或者false
+validate.valid();
+
+
+//添加验证规则,例子如下
+validate.addMethod('complare', function (value, $element) {
+    var $start = self.editorWin.$win.find('#editorStartTime'),
+        startTime = $start.val();
+    return this.optional($element) || Number(value) > Number(startTime);
+}, '结束时间必须大于开始时间');
+
+
+//给某个元素设置规则，elm为非jQuery对象
+validate.setRules(elm,{required:true,messages:'不能为空'});
+
+
+//移除某个元素已有的规则，elm为非jQuery对象，ruleName为规则的名称，如required,email等
+validate.removeRule(elm,ruleName);
+
+
+                    </code>
+                </pre>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="vendor/require/require.js"></script>
+    <script type="text/javascript" src="main.js"></script>
     <script type="text/javascript">
+
         require(['kotenei'], function (kotenei) {
-            var placeholder = kotenei.placeholder;
-            var Validate = kotenei.Validate;
-            var validate = new Validate($("#form"), {
+            var validate1 = new kotenei.Validate($("#form"), {
                 rules: {
                     //'userName': { required: true },
                     'password': { required: true },
@@ -63,8 +383,27 @@
                 }
             });
 
-            placeholder();
+            var validate2 = new kotenei.ValidateTooltips($("#form2"), {
+                rules: {
+                    //'userName': { required: true },
+                    'password': { required: true },
+                    'rePwd': { required: true, equalTo: '#password' },
+                    'email': { required: true, email: true }
+                },
+                messages: {
+                    //'userName': { required: '请输入用户名' },
+                    'password': { required: '请输入密码' },
+                    'rePwd': { required: '请输入确认密码', equalTo: '密码与确认密码不一致' },
+                    'email': { required: '请输入电子邮箱', email: '邮箱格式错误' }
+                },
+                tipsPlacement: {
+                    'userName': { position: 'bottom' }
+                },
+                showSingleError: true
+            });
         });
+
+        
     </script>
 </body>
 </html>

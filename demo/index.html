@@ -2,19 +2,25 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>分页</title>
+    <title>首页</title>
     <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="../dist/css/kotenei.min.css" rel="stylesheet" />
     <link href="docs.min.css" rel="stylesheet" />
+    <link href="../dist/css/kotenei.min.css" rel="stylesheet" />
     <link href="demo.css" rel="stylesheet" />
+    
+    <style type="text/css">
+        .bs-docs-section p
+        {
+            font-size: 16px;
+        }
+    </style>
 </head>
 <body>
     <div class="header">
         <div class="wrap">
             <ul class="nav-list">
-                <li><a href="index.html">首页</a></li>
-                <li><a href="###" class="active">demo</a></li>
+                <li><a href="###" class="active">首页</a></li>
             </ul>
         </div>
     </div>
@@ -85,7 +91,7 @@
                 </a>
             </li>
             <li>
-                <a href="pager.html" class="active">分页
+                <a href="pager.html">分页
                 </a>
             </li>
             <li>
@@ -125,91 +131,37 @@
                 </a>
             </li>
         </ul>
-        <div class="demo-container">
-            <h1 class="page-header">分页</h1>
-            <div class="bs-example bs-example-padded-bottom" style="text-align: center;">
-                <div id="pagerContainer">
-                </div>
-            </div>
-            <h3>初始化</h3>
-            <div class="highlight">
-                <pre>
-                    <code data-lang="js" class="language-js">
-var pager=new kotenei.Pager($elm,options);
-                    </code>
-                </pre>
-            </div>
-            <h3>参数 options</h3>
-            <table class="table table-bordered table-striped js-options-table">
-                <thead>
-                    <tr>
-                        <th>名称</th>
-                        <th>类型</th>
-                        <th style="width: 100px;">默认值</th>
-                        <th>描述</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>curPage</td>
-                        <td>int</td>
-                        <td>1</td>
-                        <td>当前页</td>
-                    </tr>
-                    <tr>
-                        <td>totalCount</td>
-                        <td>int</td>
-                        <td>0</td>
-                        <td>总记录数</td>
-                    </tr>
-                    <tr>
-                        <td>pageSize</td>
-                        <td>int</td>
-                        <td>20</td>
-                        <td>分页大小</td>
-                    </tr>
-                    <tr>
-                        <td>className</td>
-                        <td>string</td>
-                        <td>'k-pagination'</td>
-                        <td>分页样式</td>
-                    </tr>
-                </tbody>
-            </table>
-            <h3>事件与函数</h3>
-            <div class="highlight">
-                <pre>
-                    <code data-lang="js" class="language-js">
-//重新生成页码
-//如果手动设置了pager.curPage,pager.pageSize,pager.totalCount，可以使用该方法重新生成页码
-pager.build();
+        <div class="bs-docs-section">
+            <h2>简介</h2>
+            <p>这是一套基于Jquery开发的插件集，此插件集样式风格与bootstrap相似，并且基于AMD规范。</p>
+            <p>此插件集包含了很多常用的插件，如模态窗口、表单验证、日期选择等等，通过使用此插件集可以快速帮您构建web应用程序。</p>
+            <p>此插件集会不定期更新，详情：<code>https://github.com/kotenei/kotenei.github.io</code></p>
+            <hr />
+            <h2>文件引用</h2>
+            <pre>
+                <code>
+&lt;!--样式--&gt;
+&lt;link rel="stylesheet" type="text/css" href="../dist/css/vendor/font-awesome/css/font-awesome.min.css" /&gt;
+&lt;link rel="stylesheet" type="text/css" href="../dist/css/kotenei.min.css" /&gt;
 
+&lt;!--脚本--&gt;
+&lt;script type="text/javascript" src="vendor/require/require.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="main.js"&gt;&lt;/script&gt;
+                </code>
+            </pre>
 
-//点击页码时触发
-pager.on('click',function(){
-    //函数内可以通过 "this."的方式访问curPage , pageSize , totalCount的值       
+            <h2>使用方法</h2>
+            <pre>
+                <code>
+require(['kotenei'], function (kotenei) {
+    ...初始化使用等操作，详情请查看各demo源码
 });
-
-
-                    </code>
-                </pre>
-            </div>
+                </code>
+            </pre>
 
         </div>
     </div>
-    <script type="text/javascript" src="vendor/require/require.js"></script>
-    <script type="text/javascript" src="main.js"></script>
-    <script type="text/javascript">
-        require(['kotenei'], function (kotenei) {
-            var pager = new kotenei.Pager($("#pagerContainer"), {
-                curPage: 1,
-                totalCount: 100,
-                pageSize: 10
-            });
-            pager.on('click', function () {
-                alert("当前页：" + this.curPage);
-            });
-        });
-    </script>
+    
+    
 </body>
 </html>

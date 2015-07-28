@@ -1,144 +1,200 @@
 ﻿<!DOCTYPE html>
-
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8" />
-    <title></title>
-    <link rel="stylesheet" type="text/css" href="../style/vendor/font-awesome/css/font-awesome.min.css" />
-    <link rel="stylesheet" type="text/css" href="../dist/css/kotenei.min.css" />
-    <script type="text/javascript" src="./vendor/require/require.js"></script>
-    <script type="text/javascript" src="./main.js"></script>
-    <style>
-        table img
-        {
-            width: 150px;
-            height: auto;
-        }
-    </style>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>图片预览</title>
+    <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../dist/css/kotenei.min.css" rel="stylesheet" />
+    <link href="docs.min.css" rel="stylesheet" />
+    <link href="demo.css" rel="stylesheet" />
 </head>
 <body>
-
-    <table id="table">
-        <tr>
-            <td>
-                <img src="../dist/images/2.jpg"
-                    data-href="http://photos.tuchong.com/352792/f/7316182.jpg" />
-            </td>
-            <td>
-                <img src="../dist/images/3.jpg"
-                    data-href="http://mp3.zhuqu.com/static/images/water/92/92dcb6e0fc67524ccace5be20fbd470a.jpg" />
-            </td>
-            <td>
-                <img src="../dist/images/4.jpg"
-                    data-href="http://pic21.nipic.com/20120608/7221955_181807536109_2.jpg" />
-            </td>
-            <td>
-                <img src="../dist/images/5.jpg"
-                    data-href="http://d.hiphotos.baidu.com/image/w%3D1366%3Bcrop%3D0%2C0%2C1366%2C768/sign=a92a9f25bd096b6381195a533a05bc27/2f738bd4b31c870102e7eaec247f9e2f0708ff63.jpg" />
-            </td>
-        </tr>
-    </table>
-
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-
+    <div class="header">
+        <div class="wrap">
+            <ul class="nav-list">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="###" class="active">demo</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="main wrap">
+        <ul class="demo-nav-list">
+            <li>
+                <a href="window.html">模态窗口
+                </a>
+            </li>
+            <li>
+                <a href="tree.html">树型菜单
+                </a>
+            </li>
+            <li>
+                <a href="treetable.html">树型表格
+                </a>
+            </li>
+            <li>
+                <a href="placeholder.html">占位符
+                </a>
+            </li>
+            <li>
+                <a href="autocomplete.html">自动完成
+                </a>
+            </li>
+            <li>
+                <a href="datepicker.html">日期选择
+                </a>
+            </li>
+            <li>
+                <a href="imgpreview.html" class="active">图片预览
+                </a>
+            </li>
+            <li>
+                <a href="clipzoom.html">图片裁剪
+                </a>
+            </li>
+            <li>
+                <a href="magnifier.html">放大镜
+                </a>
+            </li>
+            <li>
+                <a href="focusmap.html">焦点图
+                </a>
+            </li>
+            <li>
+                <a href="highlight.html">文字高亮
+                </a>
+            </li>
+            <li>
+                <a href="rating.html">评级打分
+                </a>
+            </li>
+            <li>
+                <a href="poptips.html">弹出提示
+                </a>
+            </li>
+            <li>
+                <a href="tooltips.html">工具提示
+                </a>
+            </li>
+            <li>
+                <a href="popover.html">弹出框
+                </a>
+            </li>
+            <li>
+                <a href="switch.html">开关
+                </a>
+            </li>
+            <li>
+                <a href="pager.html">分页
+                </a>
+            </li>
+            <li>
+                <a href="loading.html">加载提示
+                </a>
+            </li>
+            <li>
+                <a href="validate.html">表单验证
+                </a>
+            </li>
+            <li>
+                <a href="wordlimit.html">字数限制
+                </a>
+            </li>
+            <li>
+                <a href="contextmenu.html">右键菜单
+                </a>
+            </li>
+            <li>
+                <a href="slider.html">滑块
+                </a>
+            </li>
+            <li>
+                <a href="lazyload.html">延迟加载
+                </a>
+            </li>
+            <li>
+                <a href="infinitescroll.html">无限滚动
+                </a>
+            </li>
+            <li>
+                <a href="waterfall.html">瀑布流
+                </a>
+            </li>
+            <li>
+                <a href="localStorage.html">本地存储
+                </a>
+            </li>
+        </ul>
+        <div class="demo-container">
+            <h1 class="page-header">图片预览</h1>
+            <div class="bs-example bs-example-padded-bottom">
+                <table class="k-table k-table-bordered" style="width:100%;">
+                    <tr>
+                        <td>
+                            <img src="../dist/images/2.jpg"
+                                data-href="http://photos.tuchong.com/352792/f/7316182.jpg" style="width:100%;"/>
+                        </td>
+                        <td>
+                            <img src="../dist/images/3.jpg"
+                                data-href="http://mp3.zhuqu.com/static/images/water/92/92dcb6e0fc67524ccace5be20fbd470a.jpg" style="width:100%;"/>
+                        </td>
+                        <td>
+                            <img src="../dist/images/4.jpg"
+                                data-href="http://pic21.nipic.com/20120608/7221955_181807536109_2.jpg" style="width:100%;" />
+                        </td>
+                        <td>
+                            <img src="../dist/images/5.jpg"
+                                data-href="http://d.hiphotos.baidu.com/image/w%3D1366%3Bcrop%3D0%2C0%2C1366%2C768/sign=a92a9f25bd096b6381195a533a05bc27/2f738bd4b31c870102e7eaec247f9e2f0708ff63.jpg"style="width:100%;" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <h3>调用</h3>
+            <div class="highlight">
+                <pre>
+                    <code data-lang="js" class="language-js">
+kotenei.imgPreview($elms,options);
+                    </code>
+                </pre>
+            </div>
+            <h3>参数 options</h3>
+            <table class="table table-bordered table-striped js-options-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>类型</th>
+                        <th style="width: 100px;">默认值</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>delay</td>
+                        <td>int</td>
+                        <td>500</td>
+                        <td>渐变显示的速度</td>
+                    </tr>
+                    <tr>
+                        <td>backdrop</td>
+                        <td>boolean</td>
+                        <td>true</td>
+                        <td>是否显示遮罩层</td>
+                    </tr>
+                    <tr>
+                        <td>backdropClose</td>
+                        <td>boolean</td>
+                        <td>true</td>
+                        <td>点击遮罩层是否关闭窗口预览</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script type="text/javascript" src="vendor/require/require.js"></script>
+    <script type="text/javascript" src="main.js"></script>
     <script type="text/javascript">
         require(['kotenei'], function (kotenei) {
-
-            kotenei.imgPreview($("#table").find('img'))
-
+            kotenei.imgPreview($(".k-table").find('img'));
         });
     </script>
 </body>

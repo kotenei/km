@@ -105,6 +105,13 @@ label.k-error
     line-height: 1.42857;
     padding: 6px 12px;
     vertical-align: middle;
+
+    &:focus
+    {
+        border-color: #66afe9;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6);
+        box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6);
+    }
 }
 
 .k-input-group
@@ -155,4 +162,60 @@ label.k-error
             height: 34px;
         }
     }
+}
+
+.k-checkbox,
+.k-radio
+{
+    display: block;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    position: relative;
+
+    label
+    {
+        cursor: pointer;
+        
+        margin-bottom: 0;
+        min-height: 20px;
+        vertical-align: middle;
+    }
+
+    span
+    {
+        vertical-align: middle;
+        font-weight:bold;
+    }
+}
+
+.k-checkbox-inline,
+.k-radio-inline
+{
+    cursor: pointer;
+    display: inline-block;
+    font-weight: 400;
+    margin-bottom: 0;
+    position: relative;
+    vertical-align: middle;
+
+    label
+    {
+    }
+
+    span
+    {
+        vertical-align:middle;
+        font-weight:bold;
+    }
+}
+
+.k-checkbox input[type="checkbox"],
+.k-checkbox-inline input[type="checkbox"],
+.k-radio input[type="radio"],
+.k-radio-inline input[type="radio"]
+{
+    vertical-align: middle;
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }

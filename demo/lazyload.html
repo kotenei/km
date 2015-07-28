@@ -1,60 +1,217 @@
 ﻿<!DOCTYPE html>
-
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8" />
-    <title></title>
-    <link rel="stylesheet" type="text/css" href="../dist/css/kotenei.css" />
-    <script type="text/javascript" src="./vendor/require/require.js"></script>
-    <script type="text/javascript" src="./main.js"></script>
-    <style>
-        p { background: #ebebeb; width: 400px; height: 300px;margin:0 auto; margin-bottom: 50px; }
-        p img { width: 400px; height: 300px; }
-    </style>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>延迟加载</title>
+    <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../dist/css/kotenei.min.css" rel="stylesheet" />
+    <link href="docs.min.css" rel="stylesheet" />
+    <link href="demo.css" rel="stylesheet" />
 </head>
 <body>
+    <div class="header">
+        <div class="wrap">
+            <ul class="nav-list">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="###" class="active">demo</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="main wrap">
+        <ul class="demo-nav-list">
+            <li>
+                <a href="window.html">模态窗口
+                </a>
+            </li>
+            <li>
+                <a href="tree.html">树型菜单
+                </a>
+            </li>
+            <li>
+                <a href="treetable.html">树型表格
+                </a>
+            </li>
+            <li>
+                <a href="placeholder.html">占位符
+                </a>
+            </li>
+            <li>
+                <a href="autocomplete.html">自动完成
+                </a>
+            </li>
+            <li>
+                <a href="datepicker.html">日期选择
+                </a>
+            </li>
+            <li>
+                <a href="imgpreview.html">图片预览
+                </a>
+            </li>
+            <li>
+                <a href="clipzoom.html">图片裁剪
+                </a>
+            </li>
+            <li>
+                <a href="magnifier.html">放大镜
+                </a>
+            </li>
+            <li>
+                <a href="focusmap.html">焦点图
+                </a>
+            </li>
+            <li>
+                <a href="highlight.html">文字高亮
+                </a>
+            </li>
+            <li>
+                <a href="rating.html">评级打分
+                </a>
+            </li>
+            <li>
+                <a href="poptips.html">弹出提示
+                </a>
+            </li>
+            <li>
+                <a href="tooltips.html">工具提示
+                </a>
+            </li>
+            <li>
+                <a href="popover.html">弹出框
+                </a>
+            </li>
+            <li>
+                <a href="switch.html">开关
+                </a>
+            </li>
+            <li>
+                <a href="pager.html">分页
+                </a>
+            </li>
+            <li>
+                <a href="loading.html">加载提示
+                </a>
+            </li>
+            <li>
+                <a href="validate.html">表单验证
+                </a>
+            </li>
+            <li>
+                <a href="wordlimit.html">字数限制
+                </a>
+            </li>
+            <li>
+                <a href="contextmenu.html">右键菜单
+                </a>
+            </li>
+            <li>
+                <a href="slider.html">滑块
+                </a>
+            </li>
+            <li>
+                <a href="lazyload.html" class="active">延迟加载
+                </a>
+            </li>
+            <li>
+                <a href="infinitescroll.html">无限滚动
+                </a>
+            </li>
+            <li>
+                <a href="waterfall.html">瀑布流
+                </a>
+            </li>
+            <li>
+                <a href="localStorage.html">本地存储
+                </a>
+            </li>
+        </ul>
+        <div class="demo-container">
+            <h1 class="page-header">延迟加载</h1>
+            <p><code>慢慢滚动观察图片加载</code></p>
+            <div class="bs-example bs-example-padded-bottom" id="scrollerContainer" style="overflow-y:auto;max-height:400px;">
+                <p>
+                        <img src="../dist/images/default.jpg" data-url="http://pw.dreams-travel.com/pic/feizhou/1-10.jpg" />
+                    </p>
+                    <p>
+                        <img src="../dist/images/default.jpg" data-url="http://i.weather.com.cn/images/trip/index/lytqkx/2013/05/29/8F198D28063B911072A7DB3821F80238.jpg" />
+                    </p>
+                    <p>
+                        <img src="../dist/images/default.jpg" data-url="http://www.chinadaily.com.cn/m/shandong/images/attachement/jpg/site1/20090703/0013729e44e10bb801f547.jpg" />
+                    </p>
+                    <p>
+                        <img src="../dist/images/default.jpg" data-url="http://www.fjxmly.com/webedit/UploadFile/20081125144024255.jpg" />
+                    </p>
+                    <p>
+                        <img src="../dist/images/default.jpg" data-url="http://www.898.travel/img/20100221/160354307624.jpg" />
+                    </p>
+                    <p>
+                        <img src="../dist/images/default.jpg" data-url="http://i.weather.com.cn/images/guizhou/gzly/lyjdjs/2009/12/25/44318D3C93A735B80761A39EB8B477E5.jpg" />
+                    </p>
+                    <p>
+                        <img src="../dist/images/default.jpg" data-url="http://images.beijing.cn/20080516/Img214068160.jpg" />
+                    </p>
+                    <p>
+                        <img src="../dist/images/default.jpg" data-url="http://a3.att.hudong.com/10/35/01000000000000119063576208810.jpg" />
+                    </p>
+                    <p>
+                        <img src="../dist/images/default.jpg" data-url="http://imgsrc.baidu.com/baike/pic/item/91138622dfc871bed6cae231.jpg" />
+                    </p>
+                <br />
+            </div>
+            <h3>调用</h3>
+            <div class="highlight">
+                <pre>
+                    <code data-lang="js" class="language-js">
+//直接调用（img标签的src设置默认图片，并设置data-url属性存放加载的图片）
+kotenei.lazyload();
 
-    <p>
-        <img src="../images/default.jpg" data-url="http://pw.dreams-travel.com/pic/feizhou/1-10.jpg" />
-    </p>
 
-    <p>
-        <img src="../images/default.jpg" data-url="http://i.weather.com.cn/images/trip/index/lytqkx/2013/05/29/8F198D28063B911072A7DB3821F80238.jpg" />
-    </p>
-
-
-    <p>
-        <img src="../images/default.jpg" data-url="http://www.chinadaily.com.cn/m/shandong/images/attachement/jpg/site1/20090703/0013729e44e10bb801f547.jpg" />
-    </p>
-
-
-    <p>
-        <img src="../images/default.jpg" data-url="http://www.fjxmly.com/webedit/UploadFile/20081125144024255.jpg" />
-    </p>
-    <p>
-        <img src="../images/default.jpg" data-url="http://www.898.travel/img/20100221/160354307624.jpg" />
-    </p>
-    <p>
-        <img src="../images/default.jpg" data-url="http://i.weather.com.cn/images/guizhou/gzly/lyjdjs/2009/12/25/44318D3C93A735B80761A39EB8B477E5.jpg" />
-    </p>
-    <p>
-        <img src="../images/default.jpg" data-url="http://images.beijing.cn/20080516/Img214068160.jpg" />
-    </p>
-    <p>
-        <img src="../images/default.jpg" data-url="http://a3.att.hudong.com/10/35/01000000000000119063576208810.jpg" />
-    </p>
-    <p>
-        <img src="../images/default.jpg" data-url="http://www.myxlc.com/images/Article/2010/0829/2043162641.jpg" />
-    </p>
-    <p>
-        <img src="../images/default.jpg" data-url="http://imgsrc.baidu.com/baike/pic/item/91138622dfc871bed6cae231.jpg" />
-    </p>
-
-
+//自定义参数调用
+kotenei.lazyload($elms,options);
+                    </code>
+                </pre>
+            </div>
+            <h3>参数 options</h3>
+            <table class="table table-bordered table-striped js-options-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>类型</th>
+                        <th style="width: 150px;">默认值</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>placeholder</td>
+                        <td>string</td>
+                        <td>null</td>
+                        <td>图片占位符路径，当设置该值的时候，图片src会被设置为该值，并把原来的src存放到新增的<code>data-url</code>属性里</td>
+                    </tr>
+                    <tr>
+                        <td>$container</td>
+                        <td>jQuery</td>
+                        <td>$(window)</td>
+                        <td>
+                            滚动容器，默认为浏览器窗口
+                        </td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script type="text/javascript" src="vendor/require/require.js"></script>
+    <script type="text/javascript" src="main.js"></script>
     <script type="text/javascript">
+
         require(['kotenei'], function (kotenei) {
-            kotenei.lazyload();
+            kotenei.lazyload($('img'), {
+                $container: $('#scrollerContainer')
+            });
         });
+
+        
     </script>
 </body>
 </html>
