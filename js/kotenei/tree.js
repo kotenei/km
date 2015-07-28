@@ -32,6 +32,10 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
             onSelect: $.noop,
             onAdd: $.noop,
             onRemove: $.noop
+        },
+        view: {
+            showLine: true,
+            showIcon: true
         }
     };
 
@@ -86,7 +90,12 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
      * @type {Object}
      */
     var view = {
-        getLineHtml: function (node) {
+        getLineHtml: function (node,options) {
+
+            if (!options.view.showLine) {
+                return;
+            }
+
             var lineType = _consts.line.CENTER;
 
             if (node.isFirst && node.parentId === 0) {
@@ -108,7 +117,14 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
 
             return '<span id="switch_' + node.nodeId + '" nId="' + node.nodeId + '" class="' + _consts.className.ICON + ' ' + _consts.className.SWITCH + ' ' + lineType + '"></span>';
         },
-        getIconHtml: function (node) {
+        getIconHtml: function (node,options) {
+
+            
+            if (!options.view.showIcon) {
+                return;
+            }
+            
+
             html = '<span id="' + _consts.className.ICON + '_' + node.nodeId + '" class="' + _consts.className.ICON + ' ico_' + _consts.floder.DOCU + '"></span>';
             if (node.hasChildren) {
                 //有子节点
@@ -194,7 +210,11 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
      */
     var Tree = function ($element, options) {
         this.$element = $element;
+
+        
+
         this.options = $.extend(true, DEFAULTS, options);
+
         this.nodes = {};
         this.prefix = 'node';
         this.init();
@@ -362,10 +382,10 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
             node = this.getNode(data[i].nodeId);
             if (node) {
                 html.push('<li id="li_' + node.nodeId + '" nId="' + node.nodeId + '">');
-                html.push(view.getLineHtml(node));
+                html.push(view.getLineHtml(node,this.options));
                 html.push(view.getChkHtml(node, this.options));
                 html.push('<a href="javascript:void(0);" id="a_' + node.nodeId + '" nId="' + node.nodeId + '">');
-                html.push(view.getIconHtml(node));
+                html.push(view.getIconHtml(node,this.options));
                 html.push('<span>' + node.text + '</span>');
                 //html.push(view.getOperateHtml(node, this.options));
                 html.push('</a>');
@@ -471,7 +491,7 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
                 view.replaceSwitchClass($parent.find('#' + _consts.className.ICON + '_' + parentNode.nodeId), _consts.floder.DOCU);
             }
         }
-        
+
         if (prevNode) {
             if (node.isLast) {
                 prevNode.isLast = true;
@@ -484,8 +504,8 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
                     view.replaceSwitchClass($prev.find('#' + _consts.className.SWITCH + '_' + prevNode.nodeId), _consts.line.BOTTOM);
                 }
             }
-        } 
-     
+        }
+
 
         if (node.isFirst && node.parentId === 0) {
             if (nextNode) {

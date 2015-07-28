@@ -59,14 +59,21 @@
 }
 input.k-error,
 textarea.k-error,
-select.k-error {
+select.k-error,
+div.k-error {
+  border: 1px solid #d43f3a;
+}
+.k-input-group input.k-error,
+.k-input-group textarea.k-error,
+.k-input-group select.k-error {
   border: 1px solid #d43f3a;
 }
 label.k-error {
   color: #d43f3a;
   margin-left: 5px;
 }
-.k-input {
+.k-input,
+.k-form-control {
   background-color: #fff;
   background-image: none;
   border: 1px solid #ccc;
@@ -80,7 +87,8 @@ label.k-error {
   padding: 6px 12px;
   vertical-align: middle;
 }
-.k-input:focus {
+.k-input:focus,
+.k-form-control:focus {
   border-color: #66afe9;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
@@ -111,6 +119,11 @@ label.k-error {
   border-bottom-right-radius: 0;
   border-top-right-radius: 0;
 }
+.k-input-group .k-form-control:focus {
+  border-color: #66afe9;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+}
 .k-input-group .k-input-group-btn {
   font-size: 0;
   position: relative;
@@ -125,6 +138,8 @@ label.k-error {
   position: relative;
   margin-left: -1px;
   height: 34px;
+  margin-right: 0;
+  min-width: 46px;
 }
 .k-checkbox,
 .k-radio {
@@ -168,13 +183,30 @@ label.k-error {
   padding: 0;
   box-sizing: border-box;
 }
+.k-upload-box {
+  position: relative;
+  overflow: hidden;
+  float: left;
+}
+.k-upload-box input[type='file'] {
+  position: absolute;
+  left: 0;
+  top: 0;
+  filter: alpha(opacity=0);
+  opacity: 0;
+  font-size: 40px;
+  height: 100%;
+  width: 100%;
+  cursor: pointer;
+  display: block;
+}
 .k-btn {
   display: inline-block;
   padding: 6px 12px;
   font-size: 14px;
   line-height: 1.42857143;
   border-radius: 4px;
-  margin: 0 4px;
+  margin: 0;
   vertical-align: middle;
   white-space: nowrap;
   border: 1px solid transparent;
@@ -1908,4 +1940,12 @@ table.k-treeTable tr.expanded.accept td span.indenter a {
 .k-rating .k-rating-target {
   display: inline-block;
   vertical-align: middle;
+}
+.k-dropDownTree-panel {
+  border: 1px solid #617775;
+  background: #f0f6e4;
+  padding: 5px;
+  position: absolute;
+  z-index: 999;
+  display: none;
 }

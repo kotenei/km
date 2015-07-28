@@ -79,10 +79,20 @@
 
 input.k-error,
 textarea.k-error,
-select.k-error
+select.k-error,
+div.k-error
 {
-    border:1px solid #d43f3a;
-   
+    border: 1px solid #d43f3a;
+}
+
+.k-input-group
+{
+    input.k-error,
+    textarea.k-error,
+    select.k-error
+    {
+        border: 1px solid #d43f3a;
+    }
 }
 
 label.k-error
@@ -91,7 +101,8 @@ label.k-error
     margin-left:5px;
 }
 
-.k-input
+.k-input,
+.k-form-control
 {
     background-color: #fff;
     background-image: none;
@@ -141,6 +152,13 @@ label.k-error
         transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
         border-bottom-right-radius: 0;
         border-top-right-radius: 0;
+
+        &:focus
+        {
+            border-color: #66afe9;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6);
+            box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6);
+        }
     }
 
     .k-input-group-btn
@@ -160,6 +178,8 @@ label.k-error
             position: relative;
             margin-left: -1px;
             height: 34px;
+            margin-right:0;
+            min-width:46px;
         }
     }
 }
@@ -218,4 +238,26 @@ label.k-error
     margin:0;
     padding:0;
     box-sizing:border-box;
+}
+
+.k-upload-box
+{
+    position: relative;
+    overflow: hidden;
+    float:left;
+ 
+
+    input[type='file']
+    {
+        position: absolute;
+        left: 0;
+        top: 0;
+        filter:alpha(opacity=0);
+        opacity: 0;
+        font-size: 40px;
+        height: 100%;
+        width: 100%;
+        cursor: pointer;
+        display: block;
+    }
 }

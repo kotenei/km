@@ -80,7 +80,7 @@ gulp.task('less', function () {
 gulp.task('scripts', function () {
 
     gulp.src([
-        './script/kotenei/*.js'
+        './js/kotenei/*.js'
     ])
     .pipe(concat('kotenei.all.js'))
     .pipe(build())

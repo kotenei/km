@@ -2992,6 +2992,103 @@ define('kotenei/dragdrop', ['jquery'], function ($) {
 
 });
 
+/*
+ * 下拉树模块
+ * @date:2015-07-28
+ * @author:kotenei(kotenei@qq.com)
+ */
+define('kotenei/dropDownTree', ['jquery', 'kotenei/tree'], function ($, Tree) {
+
+    var DropDownTree = function ($elm, options) {
+        this.$elm = $elm;
+        this.options = $.extend({}, {
+            data: [],
+            width: null,
+            height: 300,
+            zIndex: 999,
+            appendTo: $(document.body),
+            isTree: true,
+            multiple: false,
+            callback: {
+                onCheck: $.noop,
+                onSelect: $.noop
+            }
+        }, options);
+        this.$treePanel = $('<div class="k-dropDownTree-panel"></div>');
+        this.init();
+    };
+
+    DropDownTree.prototype.init = function () {
+        this.elmWidth = this.$elm.outerWidth();
+
+        this.$treePanel.css({
+            width: this.options.width || this.elmWidth,
+            height: this.options.height,
+            zIndex: this.options.zIndex
+        }).appendTo(this.options.appendTo);
+
+        if (!this.options.isTree) {
+            this.options.view = {
+                showLine: false,
+                showIcon: false
+            }
+        }
+
+        if (this.options.multiple) {
+            this.options.check = {
+                enabel: true,
+                chkType: 'checkbox',
+                chkBoxType: { Y: "", N: "" }
+            };
+        }
+
+        this.tree = new Tree(this.$treePanel, this.options);
+
+        this.watch();
+    };
+
+    DropDownTree.prototype.watch = function () {
+        var self = this;
+
+        this.$elm.on('click', function () {
+            self.show();
+            return false;
+        });
+
+        $(document).on('click.dropDownTree', function (e) {
+            var $target = $(e.target);
+            if ($target.hasClass('k-dropDownTree-panel') ||
+                $target.parents('.k-dropDownTree-panel').length > 0 ||
+                $target == self.$elm) {
+                return;
+            }
+            self.hide();
+        });
+    };
+
+    DropDownTree.prototype.show = function () {
+        var self = this;
+        this.$treePanel.fadeIn().css({
+            left: self.$elm.offset().left,
+            top: self.$elm.offset().top + self.$elm.outerHeight()
+        });
+        this.tm = setTimeout(function () {
+            self.$treePanel.css({
+                left: self.$elm.offset().left,
+                top: self.$elm.offset().top + self.$elm.outerHeight()
+            });
+            clearTimeout(self.tm);
+        }, 50);
+    };
+
+    DropDownTree.prototype.hide = function () {
+        this.$treePanel.fadeOut();
+    };
+
+    return DropDownTree;
+
+});
+
 /**
  * 下拉框
  * @author vfasky (vfasky@gmail.com)
@@ -5845,6 +5942,10 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
             onSelect: $.noop,
             onAdd: $.noop,
             onRemove: $.noop
+        },
+        view: {
+            showLine: true,
+            showIcon: true
         }
     };
 
@@ -5899,7 +6000,12 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
      * @type {Object}
      */
     var view = {
-        getLineHtml: function (node) {
+        getLineHtml: function (node,options) {
+
+            if (!options.view.showLine) {
+                return;
+            }
+
             var lineType = _consts.line.CENTER;
 
             if (node.isFirst && node.parentId === 0) {
@@ -5921,7 +6027,14 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
 
             return '<span id="switch_' + node.nodeId + '" nId="' + node.nodeId + '" class="' + _consts.className.ICON + ' ' + _consts.className.SWITCH + ' ' + lineType + '"></span>';
         },
-        getIconHtml: function (node) {
+        getIconHtml: function (node,options) {
+
+            
+            if (!options.view.showIcon) {
+                return;
+            }
+            
+
             html = '<span id="' + _consts.className.ICON + '_' + node.nodeId + '" class="' + _consts.className.ICON + ' ico_' + _consts.floder.DOCU + '"></span>';
             if (node.hasChildren) {
                 //有子节点
@@ -6007,7 +6120,11 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
      */
     var Tree = function ($element, options) {
         this.$element = $element;
+
+        
+
         this.options = $.extend(true, DEFAULTS, options);
+
         this.nodes = {};
         this.prefix = 'node';
         this.init();
@@ -6175,10 +6292,10 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
             node = this.getNode(data[i].nodeId);
             if (node) {
                 html.push('<li id="li_' + node.nodeId + '" nId="' + node.nodeId + '">');
-                html.push(view.getLineHtml(node));
+                html.push(view.getLineHtml(node,this.options));
                 html.push(view.getChkHtml(node, this.options));
                 html.push('<a href="javascript:void(0);" id="a_' + node.nodeId + '" nId="' + node.nodeId + '">');
-                html.push(view.getIconHtml(node));
+                html.push(view.getIconHtml(node,this.options));
                 html.push('<span>' + node.text + '</span>');
                 //html.push(view.getOperateHtml(node, this.options));
                 html.push('</a>');
@@ -6284,7 +6401,7 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
                 view.replaceSwitchClass($parent.find('#' + _consts.className.ICON + '_' + parentNode.nodeId), _consts.floder.DOCU);
             }
         }
-        
+
         if (prevNode) {
             if (node.isLast) {
                 prevNode.isLast = true;
@@ -6297,8 +6414,8 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
                     view.replaceSwitchClass($prev.find('#' + _consts.className.SWITCH + '_' + prevNode.nodeId), _consts.line.BOTTOM);
                 }
             }
-        } 
-     
+        }
+
 
         if (node.isFirst && node.parentId === 0) {
             if (nextNode) {
@@ -8434,7 +8551,7 @@ define('kotenei/wordLimit', ['jquery'], function ($) {
     return WordLimit;
 });
 ;
-define("kotenei", ["kotenei/ajax", "kotenei/app", "kotenei/autoComplete", "kotenei/cache", "kotenei/clipZoom", "kotenei/contextMenu", "kotenei/datePicker", "kotenei/dragdrop", "kotenei/dropdown", "kotenei/dropdownDatepicker", "kotenei/event", "kotenei/focusMap", "kotenei/highlight", "kotenei/imgPreview", "kotenei/infiniteScroll", "kotenei/lazyload", "kotenei/loading", "kotenei/magnifier", "kotenei/pager", "kotenei/placeholder", "kotenei/popover", "kotenei/popTips", "kotenei/rating", "kotenei/router", "kotenei/slider", "kotenei/switch", "kotenei/tooltips", "kotenei/tree", "kotenei/treeTable", "kotenei/util", "kotenei/validate", "kotenei/validateTooltips", "kotenei/waterfall", "kotenei/window", "kotenei/wordLimit"], function(_ajax, _app, _autoComplete, _cache, _clipZoom, _contextMenu, _datePicker, _dragdrop, _dropdown, _dropdownDatepicker, _event, _focusMap, _highlight, _imgPreview, _infiniteScroll, _lazyload, _loading, _magnifier, _pager, _placeholder, _popover, _popTips, _rating, _router, _slider, _switch, _tooltips, _tree, _treeTable, _util, _validate, _validateTooltips, _waterfall, _window, _wordLimit){
+define("kotenei", ["kotenei/ajax", "kotenei/app", "kotenei/autoComplete", "kotenei/cache", "kotenei/clipZoom", "kotenei/contextMenu", "kotenei/datePicker", "kotenei/dragdrop", "kotenei/dropdown", "kotenei/dropdownDatepicker", "kotenei/dropDownTree", "kotenei/event", "kotenei/focusMap", "kotenei/highlight", "kotenei/imgPreview", "kotenei/infiniteScroll", "kotenei/lazyload", "kotenei/loading", "kotenei/magnifier", "kotenei/pager", "kotenei/placeholder", "kotenei/popover", "kotenei/popTips", "kotenei/rating", "kotenei/router", "kotenei/slider", "kotenei/switch", "kotenei/tooltips", "kotenei/tree", "kotenei/treeTable", "kotenei/util", "kotenei/validate", "kotenei/validateTooltips", "kotenei/waterfall", "kotenei/window", "kotenei/wordLimit"], function(_ajax, _app, _autoComplete, _cache, _clipZoom, _contextMenu, _datePicker, _dragdrop, _dropdown, _dropdownDatepicker, _dropDownTree, _event, _focusMap, _highlight, _imgPreview, _infiniteScroll, _lazyload, _loading, _magnifier, _pager, _placeholder, _popover, _popTips, _rating, _router, _slider, _switch, _tooltips, _tree, _treeTable, _util, _validate, _validateTooltips, _waterfall, _window, _wordLimit){
     return {
         "ajax" : _ajax,
         "App" : _app,
@@ -8446,6 +8563,7 @@ define("kotenei", ["kotenei/ajax", "kotenei/app", "kotenei/autoComplete", "koten
         "Dragdrop" : _dragdrop,
         "Dropdown" : _dropdown,
         "DropdownDatepicker" : _dropdownDatepicker,
+        "DropDownTree" : _dropDownTree,
         "event" : _event,
         "focusMap" : _focusMap,
         "highlight" : _highlight,
