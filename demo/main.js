@@ -1,5 +1,6 @@
 ﻿require.config({
-    baseUrl:'../',
+    baseUrl: '../',
+    urlArgs:'v=1.0',
     shim:{
         
     },

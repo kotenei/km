@@ -1941,11 +1941,18 @@ table.k-treeTable tr.expanded.accept td span.indenter a {
   display: inline-block;
   vertical-align: middle;
 }
-.k-dropDownTree-panel {
-  border: 1px solid #617775;
-  background: #f0f6e4;
+.k-dropDownTree {
+  /*border: 1px solid #617775;
+    background: #f0f6e4;*/
+  background-color: #FFFFFF;
+  border: 1px solid #ebebeb;
+  border-radius: 4px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.176);
   padding: 5px;
   position: absolute;
   z-index: 999;
   display: none;
+}
+.k-dropDownTree-list .k-tree > li {
+  padding-left: 7px;
 }
