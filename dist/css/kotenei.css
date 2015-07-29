@@ -1952,6 +1952,7 @@ table.k-treeTable tr.expanded.accept td span.indenter a {
   position: absolute;
   z-index: 999;
   display: none;
+  overflow: auto;
 }
 .k-dropDownTree-list .k-tree > li {
   padding-left: 7px;

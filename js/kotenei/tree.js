@@ -5,40 +5,7 @@
  */
 define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
 
-    /**
-     * 默认参数
-     * @type {Object}
-     */
-    var DEFAULTS = {
-        data: [],
-        edit: {
-            enable: false
-            //showAddBtn: false,
-            //showEditBtn: false,
-            //showRemvoeBtn: false
-        },
-        check: {
-            enable: false,                          // 是否启用
-            chkType: 'checkbox',                    // 单选框还是复选框，默认复选
-            chkBoxType: { Y: "ps", N: "ps" }        // Y：选中时对父与子级的关联关系，N：取消选中时对父与子级的关联关系，p:父级,s:子级
-        },
-        callback: {
-            beforeCheck: $.noop,
-            beforeSelect: $.noop,
-            beforeAdd: $.noop,
-            beforeRemove: $.noop,
-
-            onCheck: $.noop,
-            onSelect: $.noop,
-            onAdd: $.noop,
-            onRemove: $.noop
-        },
-        view: {
-            showLine: true,
-            showIcon: true
-        }
-    };
-
+    
     /**
      * 常量
      * @type {Object}
@@ -211,9 +178,36 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
     var Tree = function ($element, options) {
         this.$element = $element;
 
-        
+       
+        this.options = $.extend(true, {
+            data: [],
+            edit: {
+                enable: false
+                //showAddBtn: false,
+                //showEditBtn: false,
+                //showRemvoeBtn: false
+            },
+            check: {
+                enable: false,                          // 是否启用
+                chkType: 'checkbox',                    // 单选框还是复选框，默认复选
+                chkBoxType: { Y: "ps", N: "ps" }        // Y：选中时对父与子级的关联关系，N：取消选中时对父与子级的关联关系，p:父级,s:子级
+            },
+            callback: {
+                beforeCheck: $.noop,
+                beforeSelect: $.noop,
+                beforeAdd: $.noop,
+                beforeRemove: $.noop,
 
-        this.options = $.extend(true, DEFAULTS, options);
+                onCheck: $.noop,
+                onSelect: $.noop,
+                onAdd: $.noop,
+                onRemove: $.noop
+            },
+            view: {
+                showLine: true,
+                showIcon: true
+            }
+        }, options);
 
         this.nodes = {};
         this.prefix = 'node';

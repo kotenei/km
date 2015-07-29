@@ -5,13 +5,18 @@
  */
 define('kotenei/dropDownTree', ['jquery', 'kotenei/tree'], function ($, Tree) {
 
+    /**
+     * 下拉树类
+     * @param {JQuery} $element - dom
+     * @param {Object} options - 参数
+     */
     var DropDownTree = function ($elm, options) {
         this.$elm = $elm;
         this.options = $.extend(true, {
             data: [],
             url: null,
             width: null,
-            height: 220,
+            height: 200,
             zIndex: 999,
             appendTo: $(document.body),
             isTree: true,
@@ -21,13 +26,25 @@ define('kotenei/dropDownTree', ['jquery', 'kotenei/tree'], function ($, Tree) {
                 check: $.noop
             }
         }, options);
+
         this.$treePanel = $('<div class="k-dropDownTree"></div>');
         this.init();
     };
 
+    /**
+     * 初始化
+     * @return {Void}
+     */
     DropDownTree.prototype.init = function () {
 
         var self = this;
+
+        if ((!this.url || this.url.length == 0) &&
+            (!this.options.data || this.options.data.length == 0)) {
+            return;
+        }
+
+        this.$elm.attr('readonly', 'readonly');
 
         this.elmWidth = this.$elm.outerWidth();
 
@@ -75,10 +92,15 @@ define('kotenei/dropDownTree', ['jquery', 'kotenei/tree'], function ($, Tree) {
 
     };
 
+    /**
+     * 事件监控
+     * @return {Void}
+     */
     DropDownTree.prototype.watch = function () {
         var self = this;
 
         this.$elm.on('click', function () {
+            $('div.k-dropDownTree').hide();
             self.show();
             return false;
         });
@@ -87,14 +109,21 @@ define('kotenei/dropDownTree', ['jquery', 'kotenei/tree'], function ($, Tree) {
             var $target = $(e.target);
 
             if ($target.hasClass('k-dropDownTree') ||
-                $target.parents('.k-dropDownTree').length > 0 ||
-                $target == self.$elm) {
+                $target.parents('.k-dropDownTree').length > 0) {
                 return;
             }
             self.hide();
         });
+
+        $(window).on('resize.dropDownTree', function () {
+            self.setPosition();
+        });
     };
 
+    /**
+     * 单选操作
+     * @return {Void}
+     */
     DropDownTree.prototype.select = function (node) {
         if (this.options.multiple) {
             this.tree.$tree.find('a.selected').removeClass('selected');
@@ -105,6 +134,10 @@ define('kotenei/dropDownTree', ['jquery', 'kotenei/tree'], function ($, Tree) {
         this.options.callback.select(node);
     };
 
+    /**
+     * 复选操作
+     * @return {Void}
+     */
     DropDownTree.prototype.check = function (node) {
 
         var nodes = this.tree.getCheckedNodes();
@@ -118,25 +151,39 @@ define('kotenei/dropDownTree', ['jquery', 'kotenei/tree'], function ($, Tree) {
         this.options.callback.check(nodes);
     };
 
-    DropDownTree.prototype.show = function () {
-        var self = this;
-        this.$treePanel.fadeIn().css({
-            left: self.$elm.offset().left,
-            top: self.$elm.offset().top + self.$elm.outerHeight()
+    /**
+     * 设置位置
+     * @return {Void}
+     */
+    DropDownTree.prototype.setPosition = function () {
+        this.$treePanel.css({
+            left: this.$elm.offset().left,
+            top: this.$elm.offset().top + this.$elm.outerHeight() + 2
         });
-        this.tm = setTimeout(function () {
-            self.$treePanel.css({
-                left: self.$elm.offset().left,
-                top: self.$elm.offset().top + self.$elm.outerHeight() + 2
-            });
-            clearTimeout(self.tm);
-        }, 50);
     };
 
+    /**
+     * 显示
+     * @return {Void}
+     */
+    DropDownTree.prototype.show = function () {
+        var self = this;
+        this.$treePanel.fadeIn();
+        this.setPosition();
+    };
+
+    /**
+     * 隐藏
+     * @return {Void}
+     */
     DropDownTree.prototype.hide = function () {
         this.$treePanel.fadeOut();
     };
 
+    /**
+     * 全局调用
+     * @return {Void}
+     */
     DropDownTree.Global = function ($elms) {
         $elms = $elms || $('input[data-module=dropdowntree]');
         $elms.each(function () {
@@ -147,26 +194,31 @@ define('kotenei/dropDownTree', ['jquery', 'kotenei/tree'], function ($, Tree) {
                 zIndex = $elm.attr('data-zIndex'),
                 appendTo = $elm.attr('data-appendTo'),
                 isTree = $elm.attr('data-isTree') || true,
-                multiple = $elm.attr('multiple') || false,
+                multiple = $elm.attr('data-multiple') || false,
+                array = $elm.attr('data-data'),
+                callback = $elm.attr('data-callback'),
                 data;
 
             data = $elm.data('dropDownTree');
 
             if (!data) {
                 data = new DropDownTree($elm, {
+                    data: eval(array),
                     url: url,
-                    width: width,
-                    height: height,
-                    zIndex: zIndex,
+                    width: width && width.length > 0 ? parseInt(width) : null,
+                    height: height && height.length > 0 ? parseInt(height) : 200,
+                    zIndex: zIndex && zIndex.length > 0 ? parseInt(zIndex) : 999,
                     appendTo: $(appendTo || document.body),
-                    isTree: isTree,
-                    multiple: multiple
+                    isTree: isTree && isTree == 'false' ? false : true,
+                    multiple: multiple && multiple == 'true' ? true : false,
+                    callback: callback && callback.length > 0 ? eval('(' + callback + ')') : null
                 });
                 $elm.data('dropDownTree', data);
             }
 
         });
     };
+
 
     return DropDownTree;
 

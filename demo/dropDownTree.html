@@ -19,148 +19,292 @@
         </div>
     </div>
     <div class="main wrap">
-        <ul class="demo-nav-list">
-            <li>
-                <a href="window.html">模态窗口
-                </a>
-            </li>
-            <li>
-                <a href="tree.html">树型菜单
-                </a>
-            </li>
-            <li>
-                <a href="treetable.html">树型表格
-                </a>
-            </li>
-            <li>
-                <a href="dropDownTree.html" class="active">下拉树
-                </a>
-            </li>
-            <li>
-                <a href="placeholder.html">占位符
-                </a>
-            </li>
-            <li>
-                <a href="autocomplete.html">自动完成
-                </a>
-            </li>
-            <li>
-                <a href="datepicker.html">日期选择
-                </a>
-            </li>
-            <li>
-                <a href="imgpreview.html">图片预览
-                </a>
-            </li>
-            <li>
-                <a href="clipzoom.html">图片裁剪
-                </a>
-            </li>
-            <li>
-                <a href="magnifier.html">放大镜
-                </a>
-            </li>
-            <li>
-                <a href="focusmap.html">焦点图
-                </a>
-            </li>
-            <li>
-                <a href="highlight.html">文字高亮
-                </a>
-            </li>
-            <li>
-                <a href="rating.html">评级打分
-                </a>
-            </li>
-            <li>
-                <a href="poptips.html">弹出提示
-                </a>
-            </li>
-            <li>
-                <a href="tooltips.html">工具提示
-                </a>
-            </li>
-            <li>
-                <a href="popover.html">弹出框
-                </a>
-            </li>
-            <li>
-                <a href="switch.html">开关
-                </a>
-            </li>
-            <li>
-                <a href="pager.html">分页
-                </a>
-            </li>
-            <li>
-                <a href="loading.html">加载提示
-                </a>
-            </li>
-            <li>
-                <a href="validate.html">表单验证
-                </a>
-            </li>
-            <li>
-                <a href="wordlimit.html">字数限制
-                </a>
-            </li>
-            <li>
-                <a href="contextmenu.html">右键菜单
-                </a>
-            </li>
-            <li>
-                <a href="slider.html">滑块
-                </a>
-            </li>
-            <li>
-                <a href="lazyload.html">延迟加载
-                </a>
-            </li>
-            <li>
-                <a href="infinitescroll.html">无限滚动
-                </a>
-            </li>
-            <li>
-                <a href="waterfall.html">瀑布流
-                </a>
-            </li>
-            <li>
-                <a href="localStorage.html">本地存储
-                </a>
-            </li>
+        <ul class="demo-nav-list" id="navList"> 
         </ul>
+        <script type="text/javascript" src="nav.js"></script>
+        <script type="text/javascript">
+            nav(document.getElementById('navList'), 'dropDownTree');
+        </script>
         <div class="demo-container">
             <h1 class="page-header">下拉树</h1>
             <div class="bs-example bs-example-padded-bottom">
                 <table class="k-table k-table-bordered">
                     <tr>
-                        <td style="width: 150px;">单选下拉树：</td>
+                        <td style="width:150px;">下拉单选列表：</td>
                         <td>
-                            <input type="text" class="k-form-control" placeholder="单选下拉树" id="txtFirst" /></td>
+                            <input type="text" class="k-form-control" placeholder="下拉单选列表"
+                                data-module="dropdowntree"
+                                data-data="nodes"
+                                data-istree="false"
+                                data-callback="{select:select,check:check}" /></td>
                     </tr>
                     <tr>
-                        <td>多选下拉树：</td>
+                        <td>下拉多选列表：</td>
                         <td>
-                            <input type="text" class="k-form-control" placeholder="单选下拉树" id="Text1" /></td>
+                            <input type="text" class="k-form-control" placeholder="下拉多选列表"
+                                data-module="dropdowntree"
+                                data-data="nodes"
+                                data-istree="false"
+                                data-multiple="true"
+                                data-callback="{select:select,check:check}" /></td>
                     </tr>
                 </table>
             </div>
+            <h3>全局调用</h3>
+            <pre>
+                <code>
+kotenei.DropDownTree.Global();
+                </code>
+            </pre>
+            <h3>HTML参数设置</h3>
+            <table class="table table-bordered table-striped js-options-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>设置值</th>
+                        <th style="width: 60%;">描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>data-module</td>
+                        <td>dropdowntree</td>
+                        <td>告诉程序当前html元素需要初始化为dropdowntree模块
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>data-data</td>
+                        <td>数据变量的名称
+                        </td>
+                        <td>节点数据</td>
+                    </tr>
+                    <tr>
+                        <td>data-url</td>
+                        <td></td>
+                        <td>远程数据地址</td>
+                    </tr>
+                    <tr>
+                        <td>data-width</td>
+                        <td>'1~N' 数字</td>
+                        <td>宽度</td>
+                    </tr>
+                    <tr>
+                        <td>data-height</td>
+                        <td>'1~N' 数字</td>
+                        <td>高度
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>data-zIndex</td>
+                        <td>'1~N' 数字</td>
+                        <td>层叠顺序
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>data-isTree</td>
+                        <td>'true' or 'false'</td>
+                        <td>是否树模式，默认为是
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>data-multiple</td>
+                        <td>'true' or false</td>
+                        <td>是否多选，默认为否
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>data-callback</td>
+                        <td>'{select:xxx,check:xxx}'</td>
+                        <td>回调函数，使用json字符串，xxx为函数的名称
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3>示例代码</h3>
+            <pre>
+                <code>
+//节点数据
+var nodes = [
+    { nodeId: 1, parentId: 0, text: '选项1' },
+    { nodeId: 2, parentId: 0, text: '选项2' },
+    { nodeId: 3, parentId: 0, text: '选项3' },
+    { nodeId: 4, parentId: 0, text: '选项4' },
+    { nodeId: 5, parentId: 0, text: '选项5' },
+];
+
+//单选回调函数
+function select(node) {
+    alert('select')
+}
+
+//复选回调函数
+function check(nodes) {
+    alert('check')
+}
+
+//HTML参数设置
+&lt;input  type="text" 
+        class="k-form-control" 
+        placeholder="下拉多选列表"
+        data-module="dropdowntree"
+        data-data="nodes"
+        data-istree="false"
+        data-multiple="true"
+        data-callback="{select:select,check:check}" /&gt;
+
+                </code>
+            </pre>
+            <hr />
+            <h3>自定义</h3>
+            <div class="bs-example bs-example-padded-bottom">
+                <table class="k-table k-table-bordered">
+                    <tr>
+                        <td style="width: 150px;">下拉单选树：</td>
+                        <td>
+                            <input type="text" class="k-form-control" placeholder="下拉单选树" id="txtSelectTree" /></td>
+                    </tr>
+                    <tr>
+                        <td style="width: 150px;">下拉多选树：</td>
+                        <td>
+                            <input type="text" class="k-form-control" placeholder="下拉多选树" id="txtMultipleTree" /></td>
+                    </tr>
+                </table>
+            </div>
+            <h3>初始化</h3>
+            <pre>
+                <code>
+var dropDownTree=new kotenei.DropDownTree($elm,options);
+                </code>
+            </pre>
+            <h3>参数 options</h3>
+            <table class="table table-bordered table-striped js-options-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>类型</th>
+                        <th style="width: 100px;">默认值</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>data</td>
+                        <td>array</td>
+                        <td>[]</td>
+                        <td>节点数组</td>
+                    </tr>
+                    <tr>
+                        <td>url</td>
+                        <td>string</td>
+                        <td>null</td>
+                        <td>远程数据地址</td>
+                    </tr>
+                    <tr>
+                        <td>width</td>
+                        <td>int</td>
+                        <td>null</td>
+                        <td>宽度，默认与文本框宽度相同</td>
+                    </tr>
+                    <tr>
+                        <td>height</td>
+                        <td>int</td>
+                        <td>200</td>
+                        <td>高度</td>
+                    </tr>
+                    <tr>
+                        <td>zIndex</td>
+                        <td>int</td>
+                        <td>999</td>
+                        <td>层叠顺序</td>
+                    </tr>
+                    <tr>
+                        <td>isTree</td>
+                        <td>boolean</td>
+                        <td>true</td>
+                        <td>是否树型模式</td>
+                    </tr>
+                    <tr>
+                        <td>multiple</td>
+                        <td>boolean</td>
+                        <td>false</td>
+                        <td>是否多选</td>
+                    </tr>
+                    <tr>
+                        <td>appendTo</td>
+                        <td>jQuery object</td>
+                        <td>$(document.body)</td>
+                        <td>下拉菜单初始化后插入到哪个元素里，默认是body</td>
+                    </tr>
+                    <tr>
+                        <td>callback</td>
+                        <td>object</td>
+                        <td>
+                        <pre>
+                            <code>
+{
+    select: $.noop,
+    check: $.noop                        
+}
+                            </code>
+                        </pre>
+                        </td>
+                        <td>单选和复选的回调函数</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3>函数调用</h3>
+            <p><code>一般不需要用到这些函数</code></p>
+            <pre>
+                <code>
+//显示
+dropDownTree.show();
+
+//隐藏
+dropDownTree.hide();
+
+                </code>
+            </pre>
         </div>
     </div>
     <script type="text/javascript" src="vendor/require/require.js"></script>
     <script type="text/javascript" src="main.js"></script>
     <script type="text/javascript">
 
+        var nodes = [
+            { nodeId: 1, parentId: 0, text: '选项1' },
+            { nodeId: 2, parentId: 0, text: '选项2' },
+            { nodeId: 3, parentId: 0, text: '选项3' },
+            { nodeId: 4, parentId: 0, text: '选项4' },
+            { nodeId: 5, parentId: 0, text: '选项5' },
+        ];
+
+        function select(node) {
+            alert('select')
+        }
+
+        function check(nodes) {
+            alert('check')
+        }
+
         require(['kotenei'], function (kotenei) {
             var data = [
-                { nodeId: 1, parentId: 0, rootId: 0, text: '父节点', value: 123 },
-                { nodeId: 2, parentId: 0, rootId: 1, text: '子节点', value: 456 }
+                {
+                    nodeId: 1, parentId: 0, rootId: 0, text: '父节点', value: 123, open: true, nodes: [
+                        { nodeId: 2, parentId: 1, rootId: 1, text: '子节点', value: 456 }
+                    ]
+                }
+
             ];
-            var dropdownTree = new kotenei.DropDownTree($('#txtFirst'), {
-                data: data,
-                isTree: true,
-                multiple: false
+            var selectTree = new kotenei.DropDownTree($('#txtSelectTree'), {
+                data: data
             });
+
+            var multipleTree = new kotenei.DropDownTree($('#txtMultipleTree'), {
+                data: data,
+                multiple: true
+            });
+
+            kotenei.DropDownTree.Global();
         });
 
     </script>

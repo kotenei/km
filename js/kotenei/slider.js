@@ -82,6 +82,10 @@ define('kotenei/slider', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) 
                 if (e.keyCode === 13) {
                     self.setValue(val);
                 }
+            }).on('blur', function () {
+                var $this = $(this),
+                    val = $.trim(self.getFilterValue($this.val()));
+                self.setValue(val);
             });
         }
     };
