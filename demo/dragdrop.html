@@ -1,0 +1,153 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>拖放</title>
+    <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../dist/css/kotenei.min.css" rel="stylesheet" />
+    <link href="docs.min.css" rel="stylesheet" />
+    <link href="demo.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="header">
+        <div class="wrap">
+            <ul class="nav-list">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="###" class="active">demo</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="main wrap">
+        <ul class="demo-nav-list" id="navList">
+        </ul>
+        <script type="text/javascript" src="nav.js"></script>
+        <script type="text/javascript">
+            nav(document.getElementById('navList'), 'dragdrop');
+        </script>
+        <div class="demo-container">
+            <h1 class="page-header">拖放</h1>
+            <div class="bs-example bs-example-padded-bottom">
+                <div id="feedback" style="height: 30px;"></div>
+                <div id="panel" style="width: 500px; height: 300px; border: 1px solid red; margin: 0 auto;">
+                    <div id="layer" style="width: 100px; height: 100px; background: red;"></div>
+                </div>
+            </div>
+            <h3>初始化</h3>
+            <pre>
+                <code>
+var dragdrop=new kotenei.Dragdrop(options);
+                </code>
+            </pre>
+            <h3>参数 options</h3>
+            <table class="table table-bordered table-striped js-options-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th style="width:150px;">类型</th>
+                        <th style="width: 100px;">默认值</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>$layer</td>
+                        <td>jQuery object</td>
+                        <td>null</td>
+                        <td>被拖动的层</td>
+                    </tr>
+                    <tr>
+                        <td>$range</td>
+                        <td>jQuery object</td>
+                        <td>null</td>
+                        <td>拖动的范围</td>
+                    </tr>
+                    <tr>
+                        <td>direction</td>
+                        <td>string</td>
+                        <td>''</td>
+                        <td>拖动的方向，'h'为水平,'v'为垂直</td>
+                    </tr>
+                    <tr>
+                        <td>boundary</td>
+                        <td>boolean</td>
+                        <td>false</td>
+                        <td>是否能拖出当前可视窗口</td>
+                    </tr>
+                    <tr>
+                        <td>resizable</td>
+                        <td>boolean</td>
+                        <td>false</td>
+                        <td>拖动层是否能被缩放</td>
+                    </tr>
+                    <tr>
+                        <td>scale</td>
+                        <td>boolean</td>
+                        <td>false</td>
+                        <td>缩放时是否锁定比例</td>
+                    </tr>
+                    <tr>
+                        <td>minWidth</td>
+                        <td>int</td>
+                        <td>100</td>
+                        <td>缩放时最小宽度</td>
+                    </tr>
+                    <tr>
+                        <td>callback</td>
+                        <td>object</td>
+                        <td>
+                            <pre>
+                                <code>
+{
+    start: $.noop,
+    move: $.noop,
+    stop: $.noop,
+    resize:$.noop
+}
+                                </code>
+                            </pre>
+                        </td>
+                        <td>
+                            <p>回调函数</p>
+                            <p><b>start：</b>开始拖动的回调函数</p>
+                            <p><b>move：</b>拖动时的回调函数</p>
+                            <p><b>stop：</b>停止拖动的回调函数</p>
+                            <p><b>stop：</b>缩放时的回调函数</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="vendor/require/require.js"></script>
+    <script type="text/javascript" src="main.js"></script>
+    <script type="text/javascript">
+        require(['kotenei'], function (kotenei) {
+            var $feedback = $('#feedback');
+            var dragdrop = new kotenei.Dragdrop({
+                $range: $('#panel'),
+                $layer: $('#layer'),
+                resizable: true,
+                callback: {
+                    start: function () {
+                        $feedback.html('start');
+                    },
+                    move: function (e) {
+                        $feedback.html(e.x + '<br/>' + e.y);
+                    },
+                    stop: function (e) {
+                        $feedback.html('stop');
+                    },
+                    resize: function (e) {
+                        var html = [];
+                        html.push('width:' + e.width + '<br/>');
+                        html.push('height:' + e.height + '<br/>');
+                        $feedback.html(html.join(''));
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
