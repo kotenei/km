@@ -163,9 +163,8 @@ define('kotenei/ajax', ['jquery', 'kotenei/loading', 'kotenei/popTips', 'kotenei
                 ajaxForm: function ($form, config) {
                     var validate, url, type, data;
 
-                    if (!($form instanceof $) && $form instanceof Validate || $form instanceof ValidateTooltips) {
-                        validate = $form;
-                        $form = $form.$form;
+                    if (!$form.valid) {
+                        validate = $form.data('validate');
                     }
 
                     url = $form.attr('action');
@@ -7267,6 +7266,7 @@ define('kotenei/validate', ['jquery'], function ($) {
             return;
         }
         this.eventBind();
+        this.$form.data('validate', this);
     };
 
     /**

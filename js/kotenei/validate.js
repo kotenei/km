@@ -39,6 +39,7 @@ define('kotenei/validate', ['jquery'], function ($) {
             return;
         }
         this.eventBind();
+        this.$form.data('validate', this);
     };
 
     /**
