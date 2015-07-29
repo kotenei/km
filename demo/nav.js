@@ -27,8 +27,8 @@
         { text: '延迟加载', activeCode: 'lazyload', link: 'lazyload.html' },
         { text: '无限滚动', activeCode: 'infinitescroll', link: 'infinitescroll.html' },
         { text: '瀑布流', activeCode: 'waterfall', link: 'waterfall.html' },
-        { text: '本地存储', activeCode: 'localStorage', link: 'localStorage.html' }
-        //{ text: 'ajax', activeCode: 'ajax', link: 'ajax.html' }
+        { text: '本地存储', activeCode: 'localStorage', link: 'localStorage.html' },
+        { text: 'Ajax', activeCode: 'ajax', link: 'ajax.html' }
     ];
 
 

@@ -1,0 +1,130 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Ajax</title>
+    <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../dist/css/kotenei.min.css" rel="stylesheet" />
+    <link href="docs.min.css" rel="stylesheet" />
+    <link href="demo.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="header">
+        <div class="wrap">
+            <ul class="nav-list">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="###" class="active">demo</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="main wrap">
+        <ul class="demo-nav-list" id="navList">
+        </ul>
+        <script type="text/javascript" src="nav.js"></script>
+        <script type="text/javascript">
+            nav(document.getElementById('navList'), 'ajax');
+        </script>
+        <div class="demo-container">
+            <h1 class="page-header">Ajax</h1>
+            <h3>调用</h3>
+            <div class="highlight">
+                <pre>
+                    <code>
+
+//get提交
+kotenei.ajax.get(url,data,[config])
+       .done(function(returnStatus){
+            ... ajax success    
+        })
+       .fail(function(){
+            ... ajax error      
+        })
+       .always(function(){
+            ... ajax complete       
+        });
+
+
+//post提交，用法跟get相同
+kotenei.ajax.post(url,data,[config]);
+
+
+//表单提交，回调函数跟get相同
+kotenei.ajax.ajaxForm($form,[config]);
+
+
+
+*ReturnStatus为json格式字符串，须包含以下参数，属性大写开头:
+*{
+*     Url:String|Null           （跳转页面的地址）
+*     Status:Boolean,           （操作成功与否）
+*     Message:String|Null,      （操作成功提示信息）
+*     ErrorMessage:String/Null, （操作失败错误信息）
+*     Data:Object|Null          （返回的数据对象）
+*}
+
+                    </code>
+                </pre>
+            </div>
+            <h3>参数 config</h3>
+            <p><code>config参数可不填</code></p>
+            <table class="table table-bordered table-striped js-options-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>类型</th>
+                        <th style="width: 100px;">默认值</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>returnUrl</td>
+                        <td>object</td>
+                        <td>
+                            <pre>
+                                <code>
+{
+    enable: true,
+    url: location.href
+}
+                                </code>
+                            </pre>
+                        </td>
+                        <td>
+                            <p><b>enable：</b>是否在ajax地址加上returnUrl参数，默认是</p>
+                            <p><b>url：</b>returnUrl的地址，默认为当前地址</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>loadingEnable</td>
+                        <td>boolean</td>
+                        <td>
+                            true
+                        </td>
+                        <td>异步操作时是否使用Loading提示，默认使用</td>
+                    </tr>
+                    <tr>
+                        <td>popTips</td>
+                        <td>object</td>
+                        <td>
+                            <pre>
+                                <code>
+{
+    delay: 600,
+    callback: true
+}
+                                </code>
+                            </pre>
+                        </td>
+                        <td>
+                            <p><b>delay：</b>弹出提示的显示时间，默认600毫秒。</p>
+                            <p><b>callback：</b>是否在弹出提示的回调函数中执行其它操作，如果想在提示隐藏后再执行其它操作，可以设置该值为true，如果不希望等待提示隐藏后再执行其它操作，可以设置为false，默认为true。</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
