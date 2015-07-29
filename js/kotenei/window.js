@@ -370,6 +370,10 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
                     return onClose.call(this);
                 });
 
+                $elm.parent('.k-input-group').on('click.window', 'button', function () {
+                    data.open();
+                });
+
                 $elm.data('data', data).on('click', function () {
                     data.open();
                 });

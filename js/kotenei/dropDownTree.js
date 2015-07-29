@@ -21,6 +21,7 @@ define('kotenei/dropDownTree', ['jquery', 'kotenei/tree'], function ($, Tree) {
             appendTo: $(document.body),
             isTree: true,
             multiple: false,
+            inputGroup: '.k-input-group',
             callback: {
                 select: $.noop,
                 check: $.noop
@@ -44,12 +45,14 @@ define('kotenei/dropDownTree', ['jquery', 'kotenei/tree'], function ($, Tree) {
             return;
         }
 
+        this.$inputGroup = this.$elm.parent(this.options.inputGroup);
+
         this.$elm.attr('readonly', 'readonly');
 
         this.elmWidth = this.$elm.outerWidth();
 
         this.$treePanel.css({
-            width: this.options.width || this.elmWidth,
+            width: this.options.width || this.$inputGroup.outerWidth() || this.elmWidth,
             height: this.options.height,
             zIndex: this.options.zIndex
         }).appendTo(this.options.appendTo);
@@ -99,7 +102,16 @@ define('kotenei/dropDownTree', ['jquery', 'kotenei/tree'], function ($, Tree) {
     DropDownTree.prototype.watch = function () {
         var self = this;
 
-        this.$elm.on('click', function () {
+        this.$elm.on('click.dropDownTree', function () {
+            if (self.$treePanel[0].style.display == 'block') {
+                return false;
+            }
+            $('div.k-dropDownTree').hide();
+            self.show();
+            return false;
+        });
+
+        this.$inputGroup.on('click.dropDownTree', 'button', function () {
             if (self.$treePanel[0].style.display == 'block') {
                 return false;
             }
@@ -149,7 +161,6 @@ define('kotenei/dropDownTree', ['jquery', 'kotenei/tree'], function ($, Tree) {
         for (var i = 0; i < nodes.length; i++) {
             values.push(nodes[i].value || nodes[i].text);
         }
-
         this.$elm.val(values.join(','));
         this.options.callback.check(nodes);
     };

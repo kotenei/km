@@ -29,6 +29,7 @@ define('kotenei/datePicker', ['jquery'], function ($) {
             showTime: false,
             year: { min: date.getFullYear() - 100, max: date.getFullYear() + 100 },
             format: 'yyyy-MM-dd',
+            inputGroup: '.k-input-group',
             positionProxy: function () {
                 return self.getPosition();
             },
@@ -43,12 +44,13 @@ define('kotenei/datePicker', ['jquery'], function ($) {
         this.index = 0;
         this.isSetTime = false;
         this.selectDay = false;
-        this.init();
         this.event = {
             selected: [],
             clean: [],
             change: []
         };
+        this.init();
+        
     };
 
     /**
@@ -106,6 +108,9 @@ define('kotenei/datePicker', ['jquery'], function ($) {
         if (this.isInput) {
             this.$element.attr('readonly', 'readonly');
         }
+
+        this.$groupBox = this.$element.parent(this.options.inputGroup);
+
         this.initMinMaxDate();
 
         if (this.canBuild()) {
@@ -174,6 +179,11 @@ define('kotenei/datePicker', ['jquery'], function ($) {
      */
     DatePicker.prototype.eventBind = function () {
         var self = this;
+
+        this.$groupBox.on('click.datepicker', 'button', function () {
+            self.show();
+            return false;
+        });
 
         this.$element.on('click.datepicker', function () {
             if (self.options.desktop) {
