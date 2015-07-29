@@ -134,6 +134,157 @@ kotenei.Window.confirm('确认对话框xxx','您确认要XXXX吗？', function (
             </table>
             <hr />
             <br />
+            <h3>全局调用</h3>
+            <div class="bs-example bs-example-padded-bottom">
+                <button class="btn btn-primary btn-lg"
+                    type="button"
+                    data-module="window"
+                    data-url="http://www.baidu.com"
+                    data-width="680"
+                    data-height="480"
+                    data-iframe="true"
+                    data-title="标题"
+                    data-content="内容"
+                    data-onok="ok"
+                    data-onclose="close"
+                    data-btns="btns">
+                    Launch demo modal
+                </button>
+            </div>
+            
+            <pre>
+                <code>
+//$elms为带有data-module=window属性的元素，可不填（不填性能会低下）
+kotenei.Window.Global($elms);
+                </code>
+            </pre>
+            <h3>HTML参数设置</h3>
+            <table class="table table-bordered table-striped js-options-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>设置值</th>
+                        <th style="width: 60%;">描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>data-module</td>
+                        <td>window</td>
+                        <td>告诉程序当前html元素需要初始化为window模块
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>data-url</td>
+                        <td>
+                        </td>
+                        <td>
+                            远程地址，iframe为true才会启用
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>data-width</td>
+                        <td>'1~N'数字</td>
+                        <td>宽度</td>
+                    </tr>
+                    <tr>
+                        <td>data-height</td>
+                        <td>'1~N'数字</td>
+                        <td>高度</td>
+                    </tr>
+                    <tr>
+                        <td>data-iframe</td>
+                        <td>'true' or 'false'</td>
+                        <td>
+                            是否启用iframe
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>data-title</td>
+                        <td></td>
+                        <td>
+                            窗口标题
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>data-content</td>
+                        <td></td>
+                        <td>
+                            窗口内容
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>data-btns</td>
+                        <td>数组变量名称</td>
+                        <td>
+                            自定义按钮
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>data-onok</td>
+                        <td>函数的名称</td>
+                        <td>
+                            点击确定的回调函数
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>data-onclose</td>
+                        <td>函数的名称</td>
+                        <td>
+                            关闭窗口的回调函数
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3>示例代码</h3>
+            <pre>
+                <code>
+//HTML参数设置
+&lt;button class="btn btn-primary btn-lg"
+        type="button"
+        id="btnGlobal"
+        data-module="window"
+        data-url="http://www.baidu.com"
+        data-width="680"
+        data-height="480"
+        data-iframe="true"
+        data-title="标题"
+        data-content="内容"
+        data-onok="ok"
+        data-onclose="close"&gt;
+        Launch demo modal
+&lt;/button&gt;
+
+//设置自定义按钮
+var btns: [
+    {
+        text: '测试',                        //按钮文本
+        actionCode: 'test',                 //按钮绑定事件的唯一标识
+        className: 'k-btn-success',         //按钮的样式
+        func: function () {                 //点击按钮的回调函数
+            alert('测试');
+            win.close();
+        }
+    },
+]
+
+
+//设置确定回调函数
+function ok() {
+    alert("ok");
+}
+
+//设置关闭回调函数
+function close() {
+    alert("close");
+}
+
+//全局调用
+kotenei.Window.Global($('#btnGlobal'));
+                </code>
+            </pre>
+            <hr />
+            <br />
             <h3>自定义</h3>
             <div class="bs-example bs-example-padded-bottom">
                 <button role="custom" class="btn btn-primary btn-lg" type="button">
@@ -256,7 +407,7 @@ win.on('ok', function () {
                     </code>
                 </pre>
             </div>
-            <h3>调用方法</h3>
+            <h3>函数调用</h3>
             <div class="highlight">
                 <pre>
                     <code data-lang="js" class="language-js">
@@ -282,7 +433,29 @@ win.setContent('content');
     <script type="text/javascript" src="vendor/require/require.js"></script>
     <script type="text/javascript" src="main.js"></script>
     <script type="text/javascript">
+
+        function ok() {
+            alert("ok");
+        }
+
+        function close() {
+            alert("close");
+        }
+
+        var btns = [{
+            text: '测试',
+            actionCode: 'test',
+            className: 'k-btn-success',
+            func: function () {
+                alert('测试');
+                this.close();
+            }
+        }];
+
         require(['kotenei'], function (kotenei) {
+
+            kotenei.Window.Global();
+
             var win = new kotenei.Window({
                 width: 600,
                 title: '标题',

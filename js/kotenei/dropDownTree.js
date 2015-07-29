@@ -100,6 +100,9 @@ define('kotenei/dropDownTree', ['jquery', 'kotenei/tree'], function ($, Tree) {
         var self = this;
 
         this.$elm.on('click', function () {
+            if (self.$treePanel[0].style.display == 'block') {
+                return false;
+            }
             $('div.k-dropDownTree').hide();
             self.show();
             return false;
@@ -168,7 +171,7 @@ define('kotenei/dropDownTree', ['jquery', 'kotenei/tree'], function ($, Tree) {
      */
     DropDownTree.prototype.show = function () {
         var self = this;
-        this.$treePanel.fadeIn();
+        this.$treePanel.slideDown();
         this.setPosition();
     };
 
@@ -177,7 +180,7 @@ define('kotenei/dropDownTree', ['jquery', 'kotenei/tree'], function ($, Tree) {
      * @return {Void}
      */
     DropDownTree.prototype.hide = function () {
-        this.$treePanel.fadeOut();
+        this.$treePanel.slideUp();
     };
 
     /**

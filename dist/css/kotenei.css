@@ -1154,7 +1154,7 @@ label.k-error {
   padding: 0 0 0 18px;
 }
 .k-tree li ul.line {
-  background: url("../../images/tree/line_conn.gif") repeat-y;
+  background: url("../images/tree/line_conn.gif") repeat-y;
 }
 .k-tree ul {
   list-style: none;

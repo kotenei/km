@@ -34,7 +34,8 @@
             <h3>全局调用</h3>
             <pre>
                 <code data-lang="js" class="language-js">
-kotenei.DatePicker.Global();
+//$elms为带有data-module=datepicker属性的元素，可不填（不填性能会低下）
+kotenei.DatePicker.Global($elms);
                 </code>
             </pre>
 
@@ -43,22 +44,19 @@ kotenei.DatePicker.Global();
                 <thead>
                     <tr>
                         <th>名称</th>
-                        <th>类型</th>
-                        <th style="width: 200px;">设置值</th>
-                        <th>描述</th>
+                        <th>设置值</th>
+                        <th style="width:60%;">描述</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td>data-module</td>
-                        <td>string</td>
                         <td>datepicker</td>
                         <td>告诉程序当前html元素需要初始化为datepicker模块
                         </td>
                     </tr>
                     <tr>
                         <td>data-format</td>
-                        <td>string</td>
                         <td>'yyyy-MM-dd hh:mm:ss'<br />'yyyy-MM-dd'等</td>
                         <td>
                             <p><b>日期格式化</b></p>
@@ -72,19 +70,16 @@ kotenei.DatePicker.Global();
                     </tr>
                     <tr>
                         <td>data-showTime</td>
-                        <td>string</td>
                         <td>true or false</td>
                         <td>是否显示时间选择</td>
                     </tr>
                     <tr>
                         <td>data-minDate</td>
-                        <td>string</td>
                         <td>'2014-10-01'日期格式或者'today'</td>
                         <td>最小日期</td>
                     </tr>
                     <tr>
                         <td>data-maxDate</td>
-                        <td>string</td>
                         <td>'2014-10-01'日期格式或者'today'</td>
                         <td>
                             最大日期
@@ -92,13 +87,11 @@ kotenei.DatePicker.Global();
                     </tr>
                     <tr>
                         <td>data-position</td>
-                        <td>string</td>
                         <td>'left' 或者 'right'</td>
                         <td>日期选择器定位</td>
                     </tr>
                     <tr>
                         <td>data-zIndex</td>
-                        <td>string</td>
                         <td>'1000'等数值</td>
                         <td>层叠顺序</td>
                     </tr>

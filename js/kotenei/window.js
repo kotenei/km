@@ -330,6 +330,55 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
     };
 
     /**
+     * 全局调用
+     * @return {void}
+     */
+    Window.Global = function ($elms) {
+        $elms = $elms || $('[data-module=window]');
+        $elms.each(function () {
+            var $elm = $(this),
+                url = $elm.attr('data-url'),
+                width = $elm.attr('data-width'),
+                height = $elm.attr('data-height'),
+                iframe = $elm.attr('data-iframe'),
+                title = $elm.attr('data-title') || '模态窗口',
+                content = $elm.attr('data-content'),
+                showFooter = $elm.attr('data-showFooter'),
+                buttons = $elm.attr('data-btns'),
+                onOk = $elm.attr('data-onOk'),
+                onClose = $elm.attr('data-onClose'),
+                data = $elm.data('data');
+
+            onOk = onOk && onOk.length > 0 ? eval(onOk) : $.noop;
+            onClose = onClose && onClose.length > 0 ? eval(onClose) : $.noop;
+
+            if (!data) {
+                data = new Window({
+                    url: url,
+                    title: title,
+                    content: content,
+                    width: width && width.length > 0 ? parseInt(width) : 680,
+                    height: height && height.length > 0 ? parseInt(height) : 480,
+                    showFooter: showFooter && showFooter == 'false' ? false : true,
+                    iframe: iframe && iframe == 'false' ? false : true,
+                    btns: buttons && buttons.length > 0 ? eval(buttons) : []
+                });
+
+                data.on('ok', function () {
+                    return onOk.call(this);
+                }).on('close', function () {
+                    return onClose.call(this);
+                });
+
+                $elm.data('data', data).on('click', function () {
+                    data.open();
+                });
+            }
+
+        });
+    };
+
+    /**
      * 窗体堆叠顺序设置
      * @return {Object}
      */

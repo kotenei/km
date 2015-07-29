@@ -38,7 +38,8 @@
             <div class="highlight">
                 <pre>
                     <code data-lang="js" class="language-js">
-kotenei.Tooltips.Global();
+//$elms为带有data-module=tooltips属性的元素，可不填（不填性能会低下）
+kotenei.Tooltips.Global($elms);
                     </code>
                 </pre>
             </div>
@@ -48,22 +49,19 @@ kotenei.Tooltips.Global();
                 <thead>
                     <tr>
                         <th>名称</th>
-                        <th>类型</th>
-                        <th style="width: 200px;">设置值</th>
-                        <th>描述</th>
+                        <th>设置值</th>
+                        <th style="width:60%;">描述</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td>data-module</td>
-                        <td>string</td>
                         <td>tooltips</td>
                         <td>告诉程序当前html元素需要初始化为tooltips模块
                         </td>
                     </tr>
                     <tr>
                         <td>data-tipClass</td>
-                        <td>string</td>
                         <td>'success' , 'warning' , 'info' , 'danger'
                         </td>
                         <td>提示的颜色
@@ -71,19 +69,16 @@ kotenei.Tooltips.Global();
                     </tr>
                     <tr>
                         <td>data-content</td>
-                        <td>string</td>
                         <td></td>
                         <td>提示内容</td>
                     </tr>
                     <tr>
                         <td>data-placement</td>
-                        <td>string</td>
                         <td>left,top,right,bottom</td>
                         <td>弹出框显示的位置</td>
                     </tr>
                     <tr>
                         <td>data-trigger</td>
-                        <td>string</td>
                         <td>hover,click</td>
                         <td>触发tips显示和隐藏的事件
                         </td>

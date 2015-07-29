@@ -531,7 +531,7 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
                 case "s":
                     this.checkAction(childNodes, node.checked);
                     break;
-                default:
+                case "ps":
                     this.checkAction(parentNodes, node.checked);
                     this.checkAction(childNodes, node.checked);
                     break;
@@ -544,7 +544,7 @@ define('kotenei/tree', ['jquery', 'kotenei/dragdrop'], function ($, DragDrop) {
                 case "s":
                     this.checkAction(childNodes, node.checked);
                     break;
-                default:
+                case "ps":
                     uncheckParent.call(this, parentNode, node.checked);
                     this.checkAction(childNodes, node.checked);
                     break;

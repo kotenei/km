@@ -38,7 +38,8 @@
             <div class="highlight">
                 <pre>
                     <code data-lang="js" class="language-js">
-kotenei.Switch.Global();
+//$elms为带有data-module=switch属性的元素，可不填（不填性能会低下）
+kotenei.Switch.Global($elms);
                     </code>
                 </pre>
             </div>
@@ -47,22 +48,19 @@ kotenei.Switch.Global();
                 <thead>
                     <tr>
                         <th>名称</th>
-                        <th>类型</th>
-                        <th style="width: 200px;">设置值</th>
-                        <th>描述</th>
+                        <th>设置值</th>
+                        <th style="width:60%;">描述</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td>data-module</td>
-                        <td>string</td>
                         <td>switch</td>
                         <td>告诉程序当前html元素需要初始化为switch模块
                         </td>
                     </tr>
                     <tr>
                         <td>data-values</td>
-                        <td>string</td>
                         <td>
                             <pre>
                                 <code>
@@ -78,7 +76,6 @@ kotenei.Switch.Global();
                     </tr>
                     <tr>
                         <td>data-onClick</td>
-                        <td>string</td>
                         <td>函数的名称</td>
                         <td>点击开关时触发的回调函数，这个属性填函数名就可以</td>
                     </tr>
