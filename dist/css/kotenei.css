@@ -477,6 +477,7 @@ label.k-error {
   display: block;
   transition: opacity 0.5s;
   visibility: visible;
+  z-index: 100;
 }
 .k-tooltips.in {
   opacity: 0.9;
@@ -1416,6 +1417,7 @@ label.k-error {
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.176);
   min-width: 220px;
   min-height: 100px;
+  z-index: 100;
 }
 .k-popover.in {
   opacity: 1;

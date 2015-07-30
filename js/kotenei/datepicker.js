@@ -50,7 +50,7 @@ define('kotenei/datePicker', ['jquery'], function ($) {
             change: []
         };
         this.init();
-        
+
     };
 
     /**
@@ -74,8 +74,6 @@ define('kotenei/datePicker', ['jquery'], function ($) {
         var position = { left: 0, top: 0 };
         var container = this.options.appendTo[0];
         var parent = this.$element[0];
-
-
 
         do {
 
@@ -403,7 +401,7 @@ define('kotenei/datePicker', ['jquery'], function ($) {
     DatePicker.prototype.createPanel = function () {
         var html = [], i;
 
-        html.push('<div class="k-datepicker"  data-desktop="' + (this.options.desktop ? "true" : "") + '" >');
+        html.push('<div class="k-datepicker k-pop-panel"  data-desktop="' + (this.options.desktop ? "true" : "") + '" >');
         html.push('<div class="k-container">');
         html.push('<table>');
 
@@ -1041,7 +1039,7 @@ define('kotenei/datePicker', ['jquery'], function ($) {
      */
     DatePicker.prototype.show = function () {
 
-        $('div.k-datepicker').each(function () {
+        $('div.k-pop-panel').each(function () {
             var desktop = this.getAttribute("data-desktop");
             if (!desktop || desktop != 'true') {
                 $(this).hide();
@@ -1192,7 +1190,8 @@ define('kotenei/datePicker', ['jquery'], function ($) {
         var value = this.format(now);
 
         return value;
-    }
+    };
+
 
     /**
      * 获取日期格式化后的字符串
@@ -1251,7 +1250,6 @@ define('kotenei/datePicker', ['jquery'], function ($) {
                 minDate = $this.attr('data-minDate'),
                 maxDate = $this.attr('data-maxDate'),
                 position = $this.attr('data-position'),
-                zIndex = $this.attr('data-zIndex'),
                 appendTo = $this.attr('data-appendTo');
 
             var data = $this.data('datepicker');
@@ -1264,7 +1262,6 @@ define('kotenei/datePicker', ['jquery'], function ($) {
                     showTime: showTime,
                     minDate: minDate,
                     maxDate: maxDate,
-                    zIndex:zIndex||1000,
                     position: position || 'left',
                     appendTo: $(appendTo || document.body)
                 });

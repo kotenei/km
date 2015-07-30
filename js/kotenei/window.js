@@ -22,6 +22,7 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
             iframe: false,
             appendTo: document.body,
             showFooter: true,
+            borderRadius:'6px',
             btns: []
         }, options);
 
@@ -250,7 +251,8 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
     Window.prototype.build = function () {
         this.$win = $(this.template).css({
             width: this.options.width,
-            height: this.options.height
+            height: this.options.height,
+            borderRadius: this.options.borderRadius
         });
         this.$backdrop = $(this.backdrop);
         this.$header = this.$win.find('.k-window-header');

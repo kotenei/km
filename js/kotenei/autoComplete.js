@@ -39,7 +39,7 @@ define('kotenei/autoComplete', ['jquery'], function ($) {
                 setValue: null
             }
         }, options);
-        this.tpl = '<div class="k-autocomplete"></div>';
+        this.tpl = '<div class="k-autocomplete k-pop-panel"></div>';
         this.active = 0;
         this.init();
     };
@@ -204,6 +204,7 @@ define('kotenei/autoComplete', ['jquery'], function ($) {
      * @return {Void}
      */
     AutoComplete.prototype.show = function () {
+        $('div.k-pop-panel').hide();
         if (!this.hasItem()) { this.hide(); return; }
         this.setCss();
         this.$listBox.show();
@@ -330,7 +331,7 @@ define('kotenei/autoComplete', ['jquery'], function ($) {
         return null;
     }
 
-    return function ($elm,options) {
+    return function ($elm, options) {
         var autoComplete = new AutoComplete($elm, options);
         return autoComplete;
     };

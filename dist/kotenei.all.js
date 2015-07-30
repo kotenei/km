@@ -414,7 +414,7 @@ define('kotenei/autoComplete', ['jquery'], function ($) {
                 setValue: null
             }
         }, options);
-        this.tpl = '<div class="k-autocomplete"></div>';
+        this.tpl = '<div class="k-autocomplete k-pop-panel"></div>';
         this.active = 0;
         this.init();
     };
@@ -579,6 +579,7 @@ define('kotenei/autoComplete', ['jquery'], function ($) {
      * @return {Void}
      */
     AutoComplete.prototype.show = function () {
+        $('div.k-pop-panel').hide();
         if (!this.hasItem()) { this.hide(); return; }
         this.setCss();
         this.$listBox.show();
@@ -705,7 +706,7 @@ define('kotenei/autoComplete', ['jquery'], function ($) {
         return null;
     }
 
-    return function ($elm,options) {
+    return function ($elm, options) {
         var autoComplete = new AutoComplete($elm, options);
         return autoComplete;
     };
@@ -1297,7 +1298,7 @@ define('kotenei/datePicker', ['jquery'], function ($) {
             change: []
         };
         this.init();
-        
+
     };
 
     /**
@@ -1321,8 +1322,6 @@ define('kotenei/datePicker', ['jquery'], function ($) {
         var position = { left: 0, top: 0 };
         var container = this.options.appendTo[0];
         var parent = this.$element[0];
-
-
 
         do {
 
@@ -1650,7 +1649,7 @@ define('kotenei/datePicker', ['jquery'], function ($) {
     DatePicker.prototype.createPanel = function () {
         var html = [], i;
 
-        html.push('<div class="k-datepicker"  data-desktop="' + (this.options.desktop ? "true" : "") + '" >');
+        html.push('<div class="k-datepicker k-pop-panel"  data-desktop="' + (this.options.desktop ? "true" : "") + '" >');
         html.push('<div class="k-container">');
         html.push('<table>');
 
@@ -2288,7 +2287,7 @@ define('kotenei/datePicker', ['jquery'], function ($) {
      */
     DatePicker.prototype.show = function () {
 
-        $('div.k-datepicker').each(function () {
+        $('div.k-pop-panel').each(function () {
             var desktop = this.getAttribute("data-desktop");
             if (!desktop || desktop != 'true') {
                 $(this).hide();
@@ -2439,7 +2438,8 @@ define('kotenei/datePicker', ['jquery'], function ($) {
         var value = this.format(now);
 
         return value;
-    }
+    };
+
 
     /**
      * 获取日期格式化后的字符串
@@ -2498,7 +2498,6 @@ define('kotenei/datePicker', ['jquery'], function ($) {
                 minDate = $this.attr('data-minDate'),
                 maxDate = $this.attr('data-maxDate'),
                 position = $this.attr('data-position'),
-                zIndex = $this.attr('data-zIndex'),
                 appendTo = $this.attr('data-appendTo');
 
             var data = $this.data('datepicker');
@@ -2511,7 +2510,6 @@ define('kotenei/datePicker', ['jquery'], function ($) {
                     showTime: showTime,
                     minDate: minDate,
                     maxDate: maxDate,
-                    zIndex:zIndex||1000,
                     position: position || 'left',
                     appendTo: $(appendTo || document.body)
                 });
@@ -3001,6 +2999,266 @@ define('kotenei/dragdrop', ['jquery'], function ($) {
 
 });
 
+/*
+ * 下拉树模块
+ * @date:2015-07-28
+ * @author:kotenei(kotenei@qq.com)
+ */
+define('kotenei/dropDownTree', ['jquery', 'kotenei/tree'], function ($, Tree) {
+
+    /**
+     * 下拉树类
+     * @param {JQuery} $element - dom
+     * @param {Object} options - 参数
+     */
+    var DropDownTree = function ($elm, options) {
+        this.$elm = $elm;
+        this.options = $.extend(true, {
+            data: [],
+            url: null,
+            width: null,
+            height: 200,
+            zIndex: 999,
+            appendTo: $(document.body),
+            isTree: true,
+            multiple: false,
+            inputGroup: '.k-input-group',
+            bindElement: null,
+            callback: {
+                select: $.noop,
+                check: $.noop
+            }
+        }, options);
+
+        this.$treePanel = $('<div class="k-dropDownTree k-pop-panel"></div>');
+        this.init();
+    };
+
+    /**
+     * 初始化
+     * @return {Void}
+     */
+    DropDownTree.prototype.init = function () {
+
+        var self = this;
+
+        if ((!this.options.url || this.options.url.length == 0) &&
+            (!this.options.data || this.options.data.length == 0)) {
+            return;
+        }
+
+        this.options.bindElement = $(this.options.bindElement);
+
+        this.$inputGroup = this.$elm.parent(this.options.inputGroup);
+
+        this.$elm.attr('readonly', 'readonly');
+
+        this.elmWidth = this.$elm.outerWidth();
+
+        this.$treePanel.css({
+            width: this.options.width || this.$inputGroup.outerWidth() || this.elmWidth,
+            height: this.options.height,
+            zIndex: this.options.zIndex
+        }).appendTo(this.options.appendTo);
+
+        if (!this.options.isTree) {
+            this.options.view = {
+                showLine: false,
+                showIcon: false
+            }
+
+            this.$treePanel.addClass('k-dropDownTree-list');
+        }
+
+        if (this.options.multiple) {
+            this.options.check = {
+                enable: true,
+                chkType: 'checkbox',
+                chkBoxType: { Y: "", N: "" }
+            };
+        }
+
+        this.options.callback.onCheck = function (nodes) {
+            self.check(nodes);
+        };
+
+        this.options.callback.onSelect = function (node) {
+            self.select(node);
+        };
+
+
+        if (this.options.url) {
+            $.get(this.options.url, { rand: Math.random() }, function (data) {
+
+                if (typeof data === 'string') {
+                    data = eval(data);
+                }
+
+                self.options.data = data;
+                self.tree = new Tree(self.$treePanel, self.options);
+                self.watch();
+            });
+        } else {
+            this.tree = new Tree(this.$treePanel, this.options);
+            this.watch();
+        }
+
+    };
+
+    /**
+     * 事件监控
+     * @return {Void}
+     */
+    DropDownTree.prototype.watch = function () {
+        var self = this;
+
+        this.$elm.on('click.dropDownTree', function (e) {
+            self.show();
+            return false;
+        });
+
+        this.$inputGroup.on('click.dropDownTree', 'button', function (e) {
+            self.show();
+            return false;
+        });
+
+        $(document).on('click.dropDownTree', function (e) {
+            var $target = $(e.target);
+            if ($target.hasClass('k-dropDownTree') ||
+                $target.parents('.k-dropDownTree').length > 0) {
+                return;
+            }
+            self.hide();
+        });
+
+        $(window).on('resize.dropDownTree', function () {
+            self.setPosition();
+        });
+    };
+
+    /**
+     * 单选操作
+     * @return {Void}
+     */
+    DropDownTree.prototype.select = function (node) {
+        if (this.options.multiple) {
+            this.tree.$tree.find('a.selected').removeClass('selected');
+            return;
+        }
+
+        if (this.options.bindElement) {
+            this.options.bindElement.val(node.value || node.nodeId || node.text);
+        }
+
+        this.$elm.val(node.text).attr('title', node.text).focus().blur();
+
+        this.options.callback.select(node);
+
+    };
+
+    /**
+     * 复选操作
+     * @return {Void}
+     */
+    DropDownTree.prototype.check = function (node) {
+
+        var nodes = this.tree.getCheckedNodes();
+        var arrValue = [],
+            arrText = [];
+
+        for (var i = 0; i < nodes.length; i++) {
+            arrText.push(nodes[i].text);
+            arrValue.push(nodes[i].value || nodes[i].nodeId || nodes[i].text);
+        }
+
+        if (this.options.bindElement) {
+            this.options.bindElement.val(arrValue.join(','));
+        }
+
+        this.$elm.val(arrText.join(',')).attr('title', arrText.join(',')).focus().blur();
+        this.options.callback.check(nodes);
+    };
+
+    /**
+     * 设置位置
+     * @return {Void}
+     */
+    DropDownTree.prototype.setPosition = function () {
+        this.$treePanel.css({
+            left: this.$elm.offset().left,
+            top: this.$elm.offset().top + this.$elm.outerHeight() + 2
+        });
+    };
+
+    /**
+     * 显示
+     * @return {Void}
+     */
+    DropDownTree.prototype.show = function () {
+
+        if (this.$treePanel[0].style.display == 'block') {
+            return;
+        }
+        $('div.k-pop-panel').hide();
+        this.$treePanel.slideDown();
+        this.setPosition();
+    };
+
+    /**
+     * 隐藏
+     * @return {Void}
+     */
+    DropDownTree.prototype.hide = function () {
+        this.$treePanel.slideUp();
+    };
+
+    /**
+     * 全局调用
+     * @return {Void}
+     */
+    DropDownTree.Global = function ($elms) {
+        $elms = $elms || $('input[data-module=dropdowntree]');
+
+        $elms.each(function () {
+            var $elm = $(this),
+                url = $elm.attr('data-url'),
+                width = $elm.attr('data-width'),
+                height = $elm.attr('data-height'),
+                zIndex = $elm.attr('data-zIndex'),
+                appendTo = $elm.attr('data-appendTo'),
+                isTree = $elm.attr('data-isTree') || true,
+                multiple = $elm.attr('data-multiple') || false,
+                array = $elm.attr('data-data'),
+                callback = $elm.attr('data-callback'),
+                bindElm = $elm.attr('data-bindelement') || null,
+                data;
+
+            data = $elm.data('dropDownTree');
+
+            if (!data) {
+                data = new DropDownTree($elm, {
+                    data: eval(array),
+                    url: url,
+                    width: width && width.length > 0 ? parseInt(width) : null,
+                    height: height && height.length > 0 ? parseInt(height) : 200,
+                    zIndex: zIndex && zIndex.length > 0 ? parseInt(zIndex) : 999,
+                    appendTo: $(appendTo || document.body),
+                    isTree: isTree && isTree == 'false' ? false : true,
+                    multiple: multiple && multiple == 'true' ? true : false,
+                    bindElement: bindElm,
+                    callback: callback && callback.length > 0 ? eval('(' + callback + ')') : {}
+                });
+                $elm.data('dropDownTree', data);
+            }
+
+        });
+    };
+
+
+    return DropDownTree;
+
+});
+
 /**
  * 下拉框
  * @author vfasky (vfasky@gmail.com)
@@ -3301,246 +3559,6 @@ function ($, Dropdown, DatePicker, util) {
     return DropdownDatePicker;
 
 });
-/*
- * 下拉树模块
- * @date:2015-07-28
- * @author:kotenei(kotenei@qq.com)
- */
-define('kotenei/dropDownTree', ['jquery', 'kotenei/tree'], function ($, Tree) {
-
-    /**
-     * 下拉树类
-     * @param {JQuery} $element - dom
-     * @param {Object} options - 参数
-     */
-    var DropDownTree = function ($elm, options) {
-        this.$elm = $elm;
-        this.options = $.extend(true, {
-            data: [],
-            url: null,
-            width: null,
-            height: 200,
-            zIndex: 999,
-            appendTo: $(document.body),
-            isTree: true,
-            multiple: false,
-            inputGroup: '.k-input-group',
-            callback: {
-                select: $.noop,
-                check: $.noop
-            }
-        }, options);
-
-        this.$treePanel = $('<div class="k-dropDownTree"></div>');
-        this.init();
-    };
-
-    /**
-     * 初始化
-     * @return {Void}
-     */
-    DropDownTree.prototype.init = function () {
-
-        var self = this;
-
-        if ((!this.url || this.url.length == 0) &&
-            (!this.options.data || this.options.data.length == 0)) {
-            return;
-        }
-
-        this.$inputGroup = this.$elm.parent(this.options.inputGroup);
-
-        this.$elm.attr('readonly', 'readonly');
-
-        this.elmWidth = this.$elm.outerWidth();
-
-        this.$treePanel.css({
-            width: this.options.width || this.$inputGroup.outerWidth() || this.elmWidth,
-            height: this.options.height,
-            zIndex: this.options.zIndex
-        }).appendTo(this.options.appendTo);
-
-        if (!this.options.isTree) {
-            this.options.view = {
-                showLine: false,
-                showIcon: false
-            }
-
-            this.$treePanel.addClass('k-dropDownTree-list');
-        }
-
-        if (this.options.multiple) {
-            this.options.check = {
-                enable: true,
-                chkType: 'checkbox',
-                chkBoxType: { Y: "", N: "" }
-            };
-        }
-
-        this.options.callback.onCheck = function (nodes) {
-            self.check(nodes);
-        };
-
-        this.options.callback.onSelect = function (node) {
-            self.select(node);
-        };
-
-        if (this.options.url) {
-            $.get(this.options.url, { rand: Math.random() }, function (data) {
-                self.options.data = data;
-                self.tree = new Tree(self.$treePanel, self.options);
-                self.watch();
-            });
-        } else {
-            this.tree = new Tree(this.$treePanel, this.options);
-            this.watch();
-        }
-
-    };
-
-    /**
-     * 事件监控
-     * @return {Void}
-     */
-    DropDownTree.prototype.watch = function () {
-        var self = this;
-
-        this.$elm.on('click.dropDownTree', function () {
-            if (self.$treePanel[0].style.display == 'block') {
-                return false;
-            }
-            $('div.k-dropDownTree').hide();
-            self.show();
-            return false;
-        });
-
-        this.$inputGroup.on('click.dropDownTree', 'button', function () {
-            if (self.$treePanel[0].style.display == 'block') {
-                return false;
-            }
-            $('div.k-dropDownTree').hide();
-            self.show();
-            return false;
-        });
-
-        $(document).on('click.dropDownTree', function (e) {
-            var $target = $(e.target);
-
-            if ($target.hasClass('k-dropDownTree') ||
-                $target.parents('.k-dropDownTree').length > 0) {
-                return;
-            }
-            self.hide();
-        });
-
-        $(window).on('resize.dropDownTree', function () {
-            self.setPosition();
-        });
-    };
-
-    /**
-     * 单选操作
-     * @return {Void}
-     */
-    DropDownTree.prototype.select = function (node) {
-        if (this.options.multiple) {
-            this.tree.$tree.find('a.selected').removeClass('selected');
-            return;
-        }
-        this.$elm.val(node.value || node.text);
-
-        this.options.callback.select(node);
-    };
-
-    /**
-     * 复选操作
-     * @return {Void}
-     */
-    DropDownTree.prototype.check = function (node) {
-
-        var nodes = this.tree.getCheckedNodes();
-        var values = [];
-
-        for (var i = 0; i < nodes.length; i++) {
-            values.push(nodes[i].value || nodes[i].text);
-        }
-        this.$elm.val(values.join(','));
-        this.options.callback.check(nodes);
-    };
-
-    /**
-     * 设置位置
-     * @return {Void}
-     */
-    DropDownTree.prototype.setPosition = function () {
-        this.$treePanel.css({
-            left: this.$elm.offset().left,
-            top: this.$elm.offset().top + this.$elm.outerHeight() + 2
-        });
-    };
-
-    /**
-     * 显示
-     * @return {Void}
-     */
-    DropDownTree.prototype.show = function () {
-        var self = this;
-        this.$treePanel.slideDown();
-        this.setPosition();
-    };
-
-    /**
-     * 隐藏
-     * @return {Void}
-     */
-    DropDownTree.prototype.hide = function () {
-        this.$treePanel.slideUp();
-    };
-
-    /**
-     * 全局调用
-     * @return {Void}
-     */
-    DropDownTree.Global = function ($elms) {
-        $elms = $elms || $('input[data-module=dropdowntree]');
-        $elms.each(function () {
-            var $elm = $(this),
-                url = $elm.attr('data-url'),
-                width = $elm.attr('data-width'),
-                height = $elm.attr('data-height'),
-                zIndex = $elm.attr('data-zIndex'),
-                appendTo = $elm.attr('data-appendTo'),
-                isTree = $elm.attr('data-isTree') || true,
-                multiple = $elm.attr('data-multiple') || false,
-                array = $elm.attr('data-data'),
-                callback = $elm.attr('data-callback'),
-                data;
-
-            data = $elm.data('dropDownTree');
-
-            if (!data) {
-                data = new DropDownTree($elm, {
-                    data: eval(array),
-                    url: url,
-                    width: width && width.length > 0 ? parseInt(width) : null,
-                    height: height && height.length > 0 ? parseInt(height) : 200,
-                    zIndex: zIndex && zIndex.length > 0 ? parseInt(zIndex) : 999,
-                    appendTo: $(appendTo || document.body),
-                    isTree: isTree && isTree == 'false' ? false : true,
-                    multiple: multiple && multiple == 'true' ? true : false,
-                    callback: callback && callback.length > 0 ? eval('(' + callback + ')') : null
-                });
-                $elm.data('dropDownTree', data);
-            }
-
-        });
-    };
-
-
-    return DropDownTree;
-
-});
-
 /**
  * 事件
  * @date :2014-12-01
@@ -4907,6 +4925,89 @@ define('kotenei/placeholder', ['jquery'], function($) {
     }
 });
 /*
+ * 弹出提示模块
+ * @date:2014-09-10
+ * @author:kotenei(kotenei@qq.com)
+ */
+define('kotenei/popTips', ['jquery'], function ($) {
+
+    /**
+     * 弹出提示模块
+     * @return {Object} 
+     */
+    var PopTips = (function () {
+
+        var _instance;
+
+        function init() {
+
+            var $tips, tm;
+
+            function build(status, content, delay, callback) {
+
+                if (tm) { clearTimeout(tm); }
+
+                if ($.isFunction(delay)) { callback = delay; delay = 3000; }
+
+                callback = callback || $.noop;
+                delay = delay || 3000;
+
+                if ($tips) { $tips.stop().remove(); }
+
+                $tips = $(getHtml(status, content))
+                        .appendTo(document.body).hide();
+
+                $tips.css({ marginLeft: -($tips.width() / 2), marginTop: -($tips.height() / 2) }).fadeIn('fase', function () {
+                    tm = setTimeout(function () {
+                        $tips.stop().remove();
+                        callback();
+                    }, delay);
+                })
+            }
+
+            function getHtml(status, content) {
+                var html = [];
+                switch (status) {
+                    case "success":
+                        html.push('<div class="k-pop-tips success"><span class="fa fa-check"></span>&nbsp;<span>' + content + '</span></div>');
+                        break;
+                    case "error":
+                        html.push('<div class="k-pop-tips error"><span class="fa fa-close"></span>&nbsp;<span>' + content + '</span></div>');
+                        break;
+                    case "warning":
+                        html.push('<div class="k-pop-tips warning"><span class="fa fa-exclamation"></span>&nbsp;<span>' + content + '</span></div>');
+                        break;
+                }
+                return html.join('');
+            }
+
+            return {
+                success: function (content, callback, delay) {
+                    build("success", content, callback, delay);
+                },
+                error: function (content, callback, delay) {
+                    build("error", content, callback, delay);
+                },
+                warning: function (content, callback, delay) {
+                    build("warning", content, callback, delay);
+                }
+            };
+        }
+
+        return {
+            getInstance: function () {
+                if (!_instance) {
+                    _instance = init();
+                }
+                return _instance;
+            }
+        }
+    })();
+
+    return PopTips.getInstance();
+});
+
+/*
  * 弹出框模块
  * @date:2014-11-05
  * @author:kotenei(kotenei@qq.com)
@@ -5008,89 +5109,6 @@ define('kotenei/popover', ['jquery', 'kotenei/tooltips', 'kotenei/util'], functi
 
     return Popover;
 });
-/*
- * 弹出提示模块
- * @date:2014-09-10
- * @author:kotenei(kotenei@qq.com)
- */
-define('kotenei/popTips', ['jquery'], function ($) {
-
-    /**
-     * 弹出提示模块
-     * @return {Object} 
-     */
-    var PopTips = (function () {
-
-        var _instance;
-
-        function init() {
-
-            var $tips, tm;
-
-            function build(status, content, delay, callback) {
-
-                if (tm) { clearTimeout(tm); }
-
-                if ($.isFunction(delay)) { callback = delay; delay = 3000; }
-
-                callback = callback || $.noop;
-                delay = delay || 3000;
-
-                if ($tips) { $tips.stop().remove(); }
-
-                $tips = $(getHtml(status, content))
-                        .appendTo(document.body).hide();
-
-                $tips.css({ marginLeft: -($tips.width() / 2), marginTop: -($tips.height() / 2) }).fadeIn('fase', function () {
-                    tm = setTimeout(function () {
-                        $tips.stop().remove();
-                        callback();
-                    }, delay);
-                })
-            }
-
-            function getHtml(status, content) {
-                var html = [];
-                switch (status) {
-                    case "success":
-                        html.push('<div class="k-pop-tips success"><span class="fa fa-check"></span>&nbsp;<span>' + content + '</span></div>');
-                        break;
-                    case "error":
-                        html.push('<div class="k-pop-tips error"><span class="fa fa-close"></span>&nbsp;<span>' + content + '</span></div>');
-                        break;
-                    case "warning":
-                        html.push('<div class="k-pop-tips warning"><span class="fa fa-exclamation"></span>&nbsp;<span>' + content + '</span></div>');
-                        break;
-                }
-                return html.join('');
-            }
-
-            return {
-                success: function (content, callback, delay) {
-                    build("success", content, callback, delay);
-                },
-                error: function (content, callback, delay) {
-                    build("error", content, callback, delay);
-                },
-                warning: function (content, callback, delay) {
-                    build("warning", content, callback, delay);
-                }
-            };
-        }
-
-        return {
-            getInstance: function () {
-                if (!_instance) {
-                    _instance = init();
-                }
-                return _instance;
-            }
-        }
-    })();
-
-    return PopTips.getInstance();
-});
-
 /*
  * 评级模块
  * @date:2015-07-17
@@ -7312,6 +7330,7 @@ define('kotenei/validate', ['jquery'], function ($) {
             if (!self.validFields.data[this.name]) {
                 self.validFields.data[this.name] = $(this);
                 self.validFields.count++;
+                this.form = self.$form[0];
             }
         });
     };
@@ -7375,7 +7394,7 @@ define('kotenei/validate', ['jquery'], function ($) {
             $element = $(element),
             rules = this.rules[element.name],
             result, val;
-        if (this.options.focusClear && e.type === "focusin"
+        if (this.options.focusClear && (e.type === "focusin" || e.type == 'click')
             || this.options.keyupClear && e.type === "keyup") {
             this.hideError($element);
             return;
@@ -8247,6 +8266,7 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
             iframe: false,
             appendTo: document.body,
             showFooter: true,
+            borderRadius:'6px',
             btns: []
         }, options);
 
@@ -8475,7 +8495,8 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
     Window.prototype.build = function () {
         this.$win = $(this.template).css({
             width: this.options.width,
-            height: this.options.height
+            height: this.options.height,
+            borderRadius: this.options.borderRadius
         });
         this.$backdrop = $(this.backdrop);
         this.$header = this.$win.find('.k-window-header');
@@ -8755,7 +8776,7 @@ define('kotenei/wordLimit', ['jquery'], function ($) {
     return WordLimit;
 });
 ;
-define("kotenei", ["kotenei/ajax", "kotenei/app", "kotenei/autoComplete", "kotenei/cache", "kotenei/clipZoom", "kotenei/contextMenu", "kotenei/datePicker", "kotenei/dragdrop", "kotenei/dropdown", "kotenei/dropdownDatepicker", "kotenei/dropDownTree", "kotenei/event", "kotenei/focusMap", "kotenei/highlight", "kotenei/imgPreview", "kotenei/infiniteScroll", "kotenei/lazyload", "kotenei/loading", "kotenei/magnifier", "kotenei/pager", "kotenei/placeholder", "kotenei/popover", "kotenei/popTips", "kotenei/rating", "kotenei/router", "kotenei/slider", "kotenei/switch", "kotenei/tooltips", "kotenei/tree", "kotenei/treeTable", "kotenei/util", "kotenei/validate", "kotenei/validateTooltips", "kotenei/waterfall", "kotenei/window", "kotenei/wordLimit"], function(_ajax, _app, _autoComplete, _cache, _clipZoom, _contextMenu, _datePicker, _dragdrop, _dropdown, _dropdownDatepicker, _dropDownTree, _event, _focusMap, _highlight, _imgPreview, _infiniteScroll, _lazyload, _loading, _magnifier, _pager, _placeholder, _popover, _popTips, _rating, _router, _slider, _switch, _tooltips, _tree, _treeTable, _util, _validate, _validateTooltips, _waterfall, _window, _wordLimit){
+define("kotenei", ["kotenei/ajax", "kotenei/app", "kotenei/autoComplete", "kotenei/cache", "kotenei/clipZoom", "kotenei/contextMenu", "kotenei/datepicker", "kotenei/dragdrop", "kotenei/dropdown", "kotenei/dropdownDatepicker", "kotenei/dropDownTree", "kotenei/event", "kotenei/focusMap", "kotenei/highlight", "kotenei/imgPreview", "kotenei/infiniteScroll", "kotenei/lazyload", "kotenei/loading", "kotenei/magnifier", "kotenei/pager", "kotenei/placeholder", "kotenei/popover", "kotenei/popTips", "kotenei/rating", "kotenei/router", "kotenei/slider", "kotenei/switch", "kotenei/tooltips", "kotenei/tree", "kotenei/treeTable", "kotenei/util", "kotenei/validate", "kotenei/validateTooltips", "kotenei/waterfall", "kotenei/window", "kotenei/wordLimit"], function(_ajax, _app, _autoComplete, _cache, _clipZoom, _contextMenu, _datepicker, _dragdrop, _dropdown, _dropdownDatepicker, _dropDownTree, _event, _focusMap, _highlight, _imgPreview, _infiniteScroll, _lazyload, _loading, _magnifier, _pager, _placeholder, _popover, _popTips, _rating, _router, _slider, _switch, _tooltips, _tree, _treeTable, _util, _validate, _validateTooltips, _waterfall, _window, _wordLimit){
     return {
         "ajax" : _ajax,
         "App" : _app,
@@ -8763,7 +8784,7 @@ define("kotenei", ["kotenei/ajax", "kotenei/app", "kotenei/autoComplete", "koten
         "cache" : _cache,
         "ClipZoom" : _clipZoom,
         "contextMenu" : _contextMenu,
-        "DatePicker" : _datePicker,
+        "Datepicker" : _datepicker,
         "Dragdrop" : _dragdrop,
         "Dropdown" : _dropdown,
         "DropdownDatepicker" : _dropdownDatepicker,

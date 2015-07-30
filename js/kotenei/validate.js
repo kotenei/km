@@ -64,6 +64,7 @@ define('kotenei/validate', ['jquery'], function ($) {
             if (!self.validFields.data[this.name]) {
                 self.validFields.data[this.name] = $(this);
                 self.validFields.count++;
+                this.form = self.$form[0];
             }
         });
     };
@@ -127,7 +128,7 @@ define('kotenei/validate', ['jquery'], function ($) {
             $element = $(element),
             rules = this.rules[element.name],
             result, val;
-        if (this.options.focusClear && e.type === "focusin"
+        if (this.options.focusClear && (e.type === "focusin" || e.type == 'click')
             || this.options.keyupClear && e.type === "keyup") {
             this.hideError($element);
             return;
