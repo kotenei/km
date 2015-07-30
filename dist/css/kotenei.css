@@ -183,23 +183,6 @@ label.k-error {
   padding: 0;
   box-sizing: border-box;
 }
-.k-upload-box {
-  position: relative;
-  overflow: hidden;
-  float: left;
-}
-.k-upload-box input[type='file'] {
-  position: absolute;
-  left: 0;
-  top: 0;
-  filter: alpha(opacity=0);
-  opacity: 0;
-  font-size: 40px;
-  height: 100%;
-  width: 100%;
-  cursor: pointer;
-  display: block;
-}
 .k-btn {
   display: inline-block;
   padding: 6px 12px;
@@ -1958,4 +1941,55 @@ table.k-treeTable tr.expanded.accept td span.indenter a {
 }
 .k-dropDownTree-list .k-tree > li {
   padding-left: 7px;
+}
+.k-input-group-upload {
+  position: relative;
+}
+.k-input-group-upload .fa-close {
+  position: absolute;
+  right: 80px;
+  top: 10px;
+  z-index: 10;
+  color: black;
+  cursor: pointer;
+  display: none;
+}
+.k-upload-box {
+  overflow: hidden;
+  font-size: 12px;
+}
+.k-upload-box .k-upload-result {
+  border: 1px solid #ddd;
+  float: left;
+  height: 35px;
+  line-height: 35px;
+  min-width: 200px;
+  position: relative;
+  border-radius: 4px;
+  padding-right: 20px;
+  padding-left: 10px;
+  display: none;
+}
+.k-upload-box .k-upload-result .fa {
+  position: absolute;
+  right: 5px;
+  top: 10px;
+  cursor: pointer;
+}
+.k-upload-box .button-box {
+  position: relative;
+  overflow: hidden;
+  float: left;
+}
+.k-upload-box .button-box input[type='file'] {
+  position: absolute;
+  left: 0;
+  top: 0;
+  filter: alpha(opacity=0);
+  opacity: 0;
+  font-size: 40px;
+  height: 100%;
+  width: 100%;
+  cursor: pointer;
+  display: block;
 }
