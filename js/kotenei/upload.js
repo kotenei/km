@@ -132,7 +132,7 @@ define('kotenei/upload', ['jquery', 'spin', 'kotenei/window', 'kotenei/ajax', 'k
             popTips: {
                 enable: this.options.popTips.enable,
                 delay: this.options.delay,
-                immediate: true
+                inCallback: false
             }
         }).done(function (ret) {
             self.showResult(ret.Data || ret.data || '');
@@ -159,7 +159,7 @@ define('kotenei/upload', ['jquery', 'spin', 'kotenei/window', 'kotenei/ajax', 'k
             popTips: {
                 enable: this.options.popTips.enable,
                 delay: this.options.delay,
-                immediate: true
+                inCallback: false
             }
         }).done(function (ret) {
             if (ret.ReturnStatus || ret.returnStatus) {

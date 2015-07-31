@@ -62,9 +62,10 @@ define('kotenei/validate', ['jquery'], function ($) {
             }
         }).each(function () {
             if (!self.validFields.data[this.name]) {
-                self.validFields.data[this.name] = $(this);
+                var $el = $(this);
+                $el.data('$form', self.$form);
+                self.validFields.data[this.name] = $el;
                 self.validFields.count++;
-                this.form = self.$form[0];
             }
         });
     };
