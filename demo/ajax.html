@@ -111,15 +111,17 @@ kotenei.ajax.ajaxForm($form,[config]);
                             <pre>
                                 <code>
 {
+    enable:true,
     delay: 600,
-    callback: true
+    immediate: false
 }
                                 </code>
                             </pre>
                         </td>
                         <td>
+                            <p><b>enable：</b>是否启用弹出提示模块。</p>
                             <p><b>delay：</b>弹出提示的显示时间，默认600毫秒。</p>
-                            <p><b>callback：</b>是否在弹出提示的回调函数中执行其它操作，如果想在提示隐藏后再执行其它操作，可以设置该值为true，如果不希望等待提示隐藏后再执行其它操作，可以设置为false，默认为true。</p>
+                            <p><b>immediate：</b>是否在弹出提示的回调函数中执行其它操作，如果想在提示隐藏后再执行其它操作，可以设置该值为true，如果不希望等待提示隐藏后再执行其它操作，可以设置为true，默认为false。</p>
                         </td>
                     </tr>
                 </tbody>

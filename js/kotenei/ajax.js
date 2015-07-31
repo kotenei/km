@@ -41,8 +41,9 @@ define('kotenei/ajax', ['jquery', 'kotenei/loading', 'kotenei/popTips', 'kotenei
                     },
                     loadingEnable: true,
                     popTips: {
+                        enable: true,
                         delay: 600,
-                        callback: true
+                        immediate: false
                     }
                 }, config);
 
@@ -90,8 +91,9 @@ define('kotenei/ajax', ['jquery', 'kotenei/loading', 'kotenei/popTips', 'kotenei
 
                     if (ret.Status) {
 
-                        if (ret.Message) {
-                            if (config.popTips.callback) {
+                        if (ret.Message && config.popTips.enable) {
+
+                            if (!config.popTips.immediate) {
                                 popTips.success(ret.Message, config.popTips.delay, function () {
                                     if (ret.Url && ret.Url.length > 0) {
                                         window.location.href = ret.Url;
@@ -117,9 +119,9 @@ define('kotenei/ajax', ['jquery', 'kotenei/loading', 'kotenei/popTips', 'kotenei
 
                     } else {
 
+                        if (ret.ErrorMessage && config.popTips.enable) {
 
-                        if (ret.ErrorMessage) {
-                            if (config.popTips.callback) {
+                            if (!config.popTips.immediate) {
                                 popTips.error(ret.ErrorMessage || "发生了未知错误", config.popTips.delay, function () {
                                     if (ret.Url && ret.Url.length > 0) {
                                         window.location.href = ret.Url;
@@ -129,22 +131,24 @@ define('kotenei/ajax', ['jquery', 'kotenei/loading', 'kotenei/popTips', 'kotenei
                                 });
                             } else {
                                 popTips.error(ret.ErrorMessage || "发生了未知错误", config.popTips.delay);
+
                                 if (ret.Url && ret.Url.length > 0) {
                                     window.location.href = ret.Url;
                                 } else {
                                     dtd.resolve(ret);
                                 }
                             }
+
                         } else if (ret.Url && ret.Url.length > 0) {
                             window.location.href = ret.Url;
                         } else {
                             dtd.resolve(ret);
                         }
-
-
                     }
                 }).fail(function () {
-                    popTips.error("服务器发生错误", config.popTips.delay);
+                    if (popTips.enable) {
+                        popTips.error("服务器发生错误", config.popTips.delay);
+                    }
                     dtd.reject();
                 }).always(function () {
                     Loading.hide();
@@ -152,6 +156,7 @@ define('kotenei/ajax', ['jquery', 'kotenei/loading', 'kotenei/popTips', 'kotenei
 
                 return dtd.promise();
             };
+
 
             return {
                 post: function (url, data, config) {

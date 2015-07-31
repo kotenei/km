@@ -27,9 +27,180 @@
         </script>
         <div class="demo-container">
             <h1 class="page-header">上传</h1>
+            <p>
+                <code>请部署后再测试使用</code>
+            </p>
             <div class="bs-example bs-example-padded-bottom">
-                <div id="uploadBox"></div>
+                <p>
+                    <input type="text"
+                        class="k-form-control"
+                        value=""
+                        placeholder="全局调用"
+                        data-module="upload"
+                        data-uploadurl="/"
+                        data-removeurl="/" />
+                </p>
+                <p>
+                    <button type="button"
+                        data-module="upload"
+                        data-uploadurl="/"
+                        data-removeurl="/"
+                        data-text="上传文件">
+                        上传
+                    </button>
+                </p>
             </div>
+            <h3>全局调用</h3>
+            <pre>
+                <code>
+//elms为带有data-module=upload的input和button元素，可不填（不填性能会低下）
+kotenei.Upload.Global($elms);
+                </code>
+            </pre>
+            <h3>HTML参数设置</h3>
+            <table class="table table-bordered table-striped js-options-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>设置值</th>
+                        <th style="width: 60%;">描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>data-module</td>
+                        <td>upload</td>
+                        <td>告诉程序当前html元素需要初始化为upload模块
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>data-uploadurl</td>
+                        <td></td>
+                        <td>上传url
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>data-removeurl</td>
+                        <td></td>
+                        <td>删除url，<code>删除时会把文件名传回后台，参数名是fileName，值则是已上传后返回的文件名</code></td>
+                    </tr>
+                    <tr>
+                        <td>data-name</td>
+                        <td></td>
+                        <td>上传控件的name属性值，默认是'file'</td>
+                    </tr>
+                    <tr>
+                        <td>data-text</td>
+                        <td></td>
+                        <td>上传按钮的文本值，默认是'上传'
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>data-loadingEnable</td>
+                        <td>'true' or 'false'</td>
+                        <td>上传或者删除时，是否显示Loading提示，默认为显示
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>data-popTips</td>
+                        <td>'{enable:true,delay:600}'</td>
+                        <td>
+                            <p>popTips设置</p>
+                            <p><b>enable：</b>是否启用弹出提示</p>
+                            <p><b>delay：</b>弹出提示的显示的时间，默认600毫秒</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3>示例代码
+            </h3>
+            <pre>
+                <code>
+//html参数设置
+&lt;button type="button"
+        data-module="upload"
+        data-uploadurl="/"
+        data-removeurl="/"
+        data-text="上传文件"&gt;上传&lt;/button&gt;
+                </code>
+            </pre>
+            <hr />
+            <br />
+            <h3>自定义</h3>
+            <div class="bs-example bs-example-padded-bottom">
+                <input type="text"
+                    class="k-form-control"
+                    id="txtUpload"
+                    value="" />
+            </div>
+            <h3>初始化</h3>
+            <pre>
+                <code>
+var upload = new kotenei.Upload($elm,options);
+                </code>
+            </pre>
+            <h3>参数 options</h3>
+            <table class="table table-bordered table-striped js-options-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>类型</th>
+                        <th style="width: 100px;">默认值</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>uploadUrl</td>
+                        <td>string</td>
+                        <td>''</td>
+                        <td>上传Url</td>
+                    </tr>
+                    <tr>
+                        <td>removeUrl</td>
+                        <td>string</td>
+                        <td>''</td>
+                        <td>删除Url</td>
+                    </tr>
+                    <tr>
+                        <td>text</td>
+                        <td>string</td>
+                        <td>'上传'</td>
+                        <td>上传按钮文本</td>
+                    </tr>
+                    <tr>
+                        <td>name</td>
+                        <td>string</td>
+                        <td>'file'</td>
+                        <td>上传控件的name属性值，默认为'file'</td>
+                    </tr>
+                    <tr>
+                        <td>loadingEnable</td>
+                        <td>boolean</td>
+                        <td>true</td>
+                        <td>上传或删除时，是否显示Loading提示，默认显示</td>
+                    </tr>
+                    <tr>
+                        <td>popTips</td>
+                        <td>object</td>
+                        <td>
+                            <pre>
+                                <code>
+{
+    enable: true,
+    delay: 600
+}
+                                </code>
+                            </pre>
+                        </td>
+                        <td>
+                            <p>popTips设置</p>
+                            <p><b>enable：</b>是否启用弹出提示</p>
+                            <p><b>delay：</b>弹出提示的显示的时间，默认600毫秒</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
@@ -37,9 +208,12 @@
     <script type="text/javascript" src="main.js"></script>
     <script type="text/javascript">
         require(['kotenei'], function (kotenei) {
-            var upload = new kotenei.Upload($('#uploadBox'),{
 
-            })
+            kotenei.Upload.Global();
+
+            var upload = new kotenei.Upload($('#txtUpload'), {
+                text: '自定义上传'
+            });
         });
     </script>
 </body>
