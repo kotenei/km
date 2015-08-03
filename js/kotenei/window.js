@@ -11,6 +11,7 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
      */
     var Window = function (options) {
         this.options = $.extend({}, {
+            id: null,
             url: null,
             params: null,
             title: '弹出框',
@@ -22,7 +23,7 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
             iframe: false,
             appendTo: document.body,
             showFooter: true,
-            borderRadius:'6px',
+            borderRadius: '6px',
             btns: []
         }, options);
 
@@ -33,7 +34,7 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
         };
 
         this.loading = false;
-        this.template = '<div class="k-window">' +
+        this.template = '<div class="k-window" id="k-window-' + (this.options.id || ids.get()) + '">' +
                             '<h4 class="k-window-header"><span class="k-window-title"></span><span class="k-window-close" role="KWINCLOSE">×</span></h4>' +
                             '<div class="k-window-container"></div>' +
                             '<div class="k-window-footer">' +
@@ -56,6 +57,7 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
         this.setTitle(this.options.title);
 
         if (this.options.iframe) {
+
             this.$container.css({
                 padding: 0,
                 overflowY: 'hidden'
@@ -93,7 +95,7 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
             for (var i = 0, item; i < this.options.btns.length; i++) {
                 item = this.options.btns[i];
                 this.$win.on('click', '[role=' + item.actionCode + ']', function () {
-                    item.func.call(self,self.$iframe);
+                    item.func.call(self, self.$iframe);
                 });
             }
         }
@@ -190,6 +192,15 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
         this.$win.hide();
         this.$backdrop.hide();
         zIndex.pop();
+        if (this.options.iframe) {
+            var url = this.options.url;
+            if (url.indexOf('?') != -1) {
+                url += '&rand=' + Math.random();
+            } else {
+                url += '?rand=' + Math.random();
+            }
+            this.$iframe.attr('src', url);
+        }
     };
 
 
@@ -253,7 +264,7 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
             width: this.options.width,
             height: this.options.height,
             borderRadius: this.options.borderRadius
-        });
+        }).data('window', this);
         this.$backdrop = $(this.backdrop);
         this.$header = this.$win.find('.k-window-header');
         this.$container = this.$win.find('.k-window-container');
@@ -266,8 +277,9 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
         if (this.options.btns && this.options.btns.length > 0) {
             this.$footer.find('.k-btn').hide();
             var html = [];
-            for (var i = 0,item; i < this.options.btns.length; i++) {
+            for (var i = 0, item; i < this.options.btns.length; i++) {
                 item = this.options.btns[i];
+
                 html.push('<button type="button" class="k-btn ' + (item.className || "k-btn-primary") + '" role="' + item.actionCode + '">' + item.text + '</button>');
 
             }
@@ -332,6 +344,33 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
     };
 
     /**
+     * 关闭窗体静态方法
+     * @param  {String|Int} id  - 窗体的ID号
+     * @return {Void}   
+     */
+    Window.close = function (id) {
+        $win = $('#k-window-' + id);
+        var win = $win.data('window');
+        if (win) {
+            win.close(true);
+        } else {
+            $("#" + id).hide();
+        }
+    };
+
+
+    /**
+     * 打开窗体静态方法
+     * @param  {Object} options  - 窗体参数
+     * @return {Object}   
+     */
+    Window.open = function (options) {
+        var win = new Window(options);
+        win.open();
+        return win;
+    };
+
+    /**
      * 全局调用
      * @return {void}
      */
@@ -366,9 +405,9 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
                     btns: buttons && buttons.length > 0 ? eval(buttons) : []
                 });
 
-                data.on('ok', function () {
+                data.on('ok.window', function () {
                     return onOk.call(this);
-                }).on('close', function () {
+                }).on('close.window', function () {
                     return onClose.call(this);
                 });
 
@@ -383,6 +422,8 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
 
         });
     };
+
+
 
     /**
      * 窗体堆叠顺序设置
@@ -407,6 +448,26 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
             pop: function () {
                 if (zIndex.length === 0) { return; }
                 zIndex.pop();
+            }
+        };
+
+    })();
+
+    var ids = (function () {
+        var ids = [];
+
+        return {
+            get: function () {
+                var id;
+                if (ids.length == 0) {
+                    id = 1;
+                    ids.push(id);
+                } else {
+                    id = ids[ids.length - 1];
+                    id += 1;
+                    ids.push(id);
+                }
+                return id;
             }
         };
 

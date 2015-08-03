@@ -1,233 +1,238 @@
-﻿/*
- * ajax 模块
- * @date:2014-12-05
- * @author:kotenei(kotenei@qq.com)
+﻿/**
+ * 上传
+ * @date :2015-07-30
+ * @author kotenei (kotenei@qq.com)
  */
-define('kotenei/ajax', ['jquery', 'kotenei/loading', 'kotenei/popTips', 'kotenei/validate', 'kotenei/validateTooltips'], function ($, Loading, popTips, Validate, ValidateTooltips) {
+define('kotenei/upload', ['jquery', 'spin', 'kotenei/window', 'kotenei/ajax', 'kotenei/event'], function ($, Spinner, Window, ajax, event) {
 
     /**
-     * ajax 通用操作封装
-     * @return {Object} 
+     * upload 上传模块
+     * @param {JQuery} $element - dom
+     * @param {Object} options - 参数
      */
-    var Ajax = (function () {
-
-        var _instance;
-
-        //完整路径
-        function getFullUrl(urlPath) {
-            var loc = window.location;
-            var url = "" + loc.protocol + "//" + loc.host + urlPath;
-            return url;
-        }
-
-        function init() {
-
-            /**
-            * ajax 返回数据类型约定： String([JSON,HTML]) || Object(JSON)
-            * json 字符串或json对象须包含以下参数，属性大写开头:
-            * {
-            *     Status:Boolean,           （操作成功与否）
-            *     Message:String|Null,      （操作成功提示信息）
-            *     ErrorMessage:String/Null, （操作失败错误信息）
-            *     Data:Object|Null          （返回的数据对象）
-            * }
-            */
-            var ajax = function (type, url, data, config) {
-
-                var config = $.extend(true, {
-                    returnUrl: {
-                        enable: true,
-                        url: location.href
-                    },
-                    loadingEnable: true,
-                    popTips: {
-                        enable: true,
-                        delay: 600,
-                        inCallback: true
-                    }
-                }, config);
-
-                data = data || {};
-
-
-                if (config.returnUrl.enable && typeof data == 'object') {
-                    var href = config.returnUrl.url;
-
-                    if (href.indexOf('#') != -1
-                        && href.lastIndexOf('?') != -1
-                        && href.lastIndexOf('?') > href.indexOf('#')) {
-                        href = href.substr(0, href.lastIndexOf('?'));
-                    }
-
-                    data.returnUrl = href;
-                }
-
-                var dtd = $.Deferred();
-
-                if (config.loadingEnable) {
-                    Loading.show();
-                }
-
-                $.ajax({
-                    url: url,
-                    type: type,
-                    data: data,
-                    dataType: 'json',
-                    traditional: true,
-                    cache: false
-                }).done(function (ret) {
-
-                    if (typeof ret === 'string') {
-                        try {
-                            ret = eval('(' + ret + ')');
-                        } catch (e) {
-                            dtd.resolve(ret);
-                            return dtd.promise();
-                        }
-                    }
-
-                    ret.Url = $.trim(ret.Url || '');
-
-
-                    if (ret.Status) {
-
-                        if (ret.Message && config.popTips.enable) {
-
-                            if (config.popTips.inCallback) {
-                                popTips.success(ret.Message, config.popTips.delay, function () {
-                                    if (ret.Url && ret.Url.length > 0) {
-                                        window.location.href = ret.Url;
-                                    } else {
-                                        dtd.resolve(ret);
-                                    }
-                                });
-                            } else {
-                                popTips.success(ret.Message, config.popTips.delay);
-                                if (ret.Url && ret.Url.length > 0) {
-                                    window.location.href = ret.Url;
-                                } else {
-
-                                    dtd.resolve(ret);
-                                }
-                            }
-
-                        } else if (ret.Url && ret.Url.length > 0) {
-                            window.location.href = ret.Url;
-                        } else {
-                            dtd.resolve(ret);
-                        }
-
-                    } else {
-
-                        if (ret.ErrorMessage && config.popTips.enable) {
-
-                            if (config.popTips.inCallback) {
-                                popTips.error(ret.ErrorMessage || "发生了未知错误", config.popTips.delay, function () {
-                                    if (ret.Url && ret.Url.length > 0) {
-                                        window.location.href = ret.Url;
-                                    } else {
-                                        dtd.resolve(ret);
-                                    }
-                                });
-                            } else {
-                                popTips.error(ret.ErrorMessage || "发生了未知错误", config.popTips.delay);
-
-                                if (ret.Url && ret.Url.length > 0) {
-                                    window.location.href = ret.Url;
-                                } else {
-                                    dtd.resolve(ret);
-                                }
-                            }
-
-                        } else if (ret.Url && ret.Url.length > 0) {
-                            window.location.href = ret.Url;
-                        } else {
-                            dtd.resolve(ret);
-                        }
-                    }
-                }).fail(function () {
-                    if (popTips.enable) {
-                        popTips.error("服务器发生错误", config.popTips.delay);
-                    }
-                    dtd.reject();
-                }).always(function () {
-                    Loading.hide();
-                });
-
-                return dtd.promise();
-            };
-
-
-            return {
-                post: function (url, data, config) {
-                    return ajax("POST", url, data, config);
-                },
-                get: function (url, data, config) {
-                    return ajax("GET", url, data, config);
-                },
-                ajaxForm: function ($form, config) {
-                    var validate, url, type, data;
-
-                    if (!$form.valid) {
-                        validate = $form.data('validate');
-                    }
-
-                    url = $form.attr('action');
-                    type = $form.attr('method');
-                    data = $form.serialize();
-
-
-                    var href = location.href;
-
-                    if (href.indexOf('#') != -1
-                        && href.lastIndexOf('?') != -1
-                        && href.lastIndexOf('?') > href.indexOf('#')) {
-                        href = href.substr(0, href.lastIndexOf('?'));
-                    }
-
-                    data += "&returnUrl=" + encodeURIComponent(href);
-
-                    var dtd = $.Deferred();
-                    var ret = {
-                        Status: false,
-                        ErrorMessage: '验证失败'
-                    };
-
-                    if (validate && validate.valid) {
-                        if (validate.valid()) {
-                            return ajax(type, url, data, config);
-                        } else {
-                            dtd.reject(ret);
-                            return dtd.promise();
-                        }
-                    } else if ($form.valid) {
-                        if ($form.valid()) {
-                            return ajax(type, url, data, config);
-                        } else {
-                            dtd.reject(ret);
-                            return dtd.promise();
-                        }
-                    } else {
-                        return ajax(type, url, data, config);
-                    }
-
-
-                }
-            };
-
-        };
-
-        return {
-            getInstance: function () {
-                if (!_instance) {
-                    _instance = init();
-                }
-
-                return _instance;
+    var Upload = function ($elm, options) {
+        this.$elm = $elm;
+        this.options = $.extend(true, {
+            uploadUrl: '',
+            removeUrl: '',
+            fontClassName: 'fa fa-upload',
+            text: '上传',
+            name: 'file',
+            loadingEnable: true,
+            popTips: {
+                enable: true,
+                delay: 600
             }
+        }, options);
+        this.isLoading = false;
+        this.isButton = this.$elm[0].type.toLowerCase() == 'text' ? false : true;
+        this.event = event;
+        this.init();
+    };
+
+    /**
+     * 初始化
+     * @return {Void}
+     */
+    Upload.prototype.init = function () {
+        //this.spinner = new Spinner({});
+        this.build();
+        this.watch();
+    };
+
+    /**
+     * 事件监控
+     * @return {Void}
+     */
+    Upload.prototype.watch = function () {
+        var self = this;
+
+        this.$uploadBox.on('change', 'input', function () {
+            self.upload();
+        }).on('click', '.fa-close', function () {
+            Window.confirm('您确认要删除该文件吗？', function () {
+                self.removeFile();
+            });
+        });
+    };
+
+    /**
+     * 构造上传HTML
+     * @return {Void}
+     */
+    Upload.prototype.build = function () {
+        var html = [],
+            groupHtml = [];
+
+        html.push('<div class="k-upload-box">');
+
+        if (this.isButton) {
+            html.push('<div class="k-upload-result">');
+            html.push('<span></span>');
+            html.push('<i class="fa fa-close"></i>');
+            html.push('</div>');
         }
 
-    })();
+        html.push('<div class="button-box">');
+        html.push('<button type="button" class="k-btn k-btn-default">');
+        html.push('<span class="' + this.options.fontClassName + '"></span>&nbsp;');
+        html.push(this.options.text);
+        html.push('</button>');
+        html.push('<form action="' + this.options.uploadUrl + '" enctype="multipart/form-data" method="post">');
+        html.push('<input type="file" name="' + this.options.name + '" />');
+        html.push('</form>');
+        html.push('</div>');
+        html.push('</div>');
 
-    return Ajax.getInstance();
+
+        if (!this.isButton) {
+            groupHtml.push('<div class="k-input-group k-input-group-upload">');
+            //groupHtml.push('<input type="text"  readonly="readonly"  class="k-form-control">');
+            groupHtml.push('<i class="fa fa-close"></i>');
+            groupHtml.push('<span class="k-input-group-btn">');
+            groupHtml.push(html.join(''));
+            groupHtml.push('</span>');
+            groupHtml.push('</div>');
+        }
+
+        this.$uploadBox = $(groupHtml.length == 0 ? html.join('') : groupHtml.join(''));
+        this.$buttonBox = this.$uploadBox.find('.button-box');
+        this.$button = this.$uploadBox.find('button');
+        this.$file = this.$uploadBox.find('input[type=file]');
+        this.$form = this.$uploadBox.find('form');
+        this.$resultBox = this.$uploadBox.find('.k-upload-result');
+        this.$txtResult = this.isButton ? null : this.$elm;
+        this.$close = this.$uploadBox.find('.fa-close');
+        this.$uploadBox.appendTo(this.$elm.parent());
+
+        if (this.isButton) {
+            this.$elm.hide();
+        } else {
+            this.$elm.attr({
+                'class': 'k-form-control',
+                'readonly': 'readonly'
+            }).prependTo(this.$uploadBox);
+            this.$close.css('right', this.$button.outerWidth() + 10);
+        }
+    };
+
+    /**
+     * 上传
+     * @return {Void}
+     */
+    Upload.prototype.upload = function () {
+        var self = this;
+        if (this.isLoading) {
+            return;
+        }
+
+        this.isLoading = true;
+        ajax.ajaxForm(this.$form, {
+            loadingEnable: this.options.loadingEnable,
+            redirectEnable: false,
+            popTips: {
+                enable: this.options.popTips.enable,
+                delay: this.options.delay,
+                inCallback: true
+            }
+        }).done(function (ret) {
+            self.showResult(ret.Url || '');
+        }).always(function () {
+            self.isLoading = false;
+        });
+    };
+
+    /**
+     * 删除
+     * @return {Void}
+     */
+    Upload.prototype.removeFile = function (data) {
+        var self = this;
+
+        if (this.isLoading) {
+            return;
+        }
+
+        this.isLoading = true;
+
+        ajax.post(this.options.removeUrl, data || { filePath: this.url }, {
+            redirectEnable: false,
+            loadingEnable: this.options.loadingEnable,
+            popTips: {
+                enable: this.options.popTips.enable,
+                delay: this.options.delay,
+                inCallback: true
+            }
+        }).done(function (ret) {
+            if (ret.ReturnStatus || ret.returnStatus) {
+                if (this.isButton) {
+                    self.$resultBox.hide();
+                    self.$buttonBox.fadeIn();
+                } else {
+                    self.$txtResult.val('');
+                    self.$close.fadeOut();
+                }
+            }
+        }).always(function () {
+            self.isLoading = false;
+        });
+    };
+
+    /**
+     * 显示结果
+     * @return {Void}
+     */
+    Upload.prototype.showResult = function (url) {
+        this.url = url;
+        if (this.isButton) {
+            this.$resultBox.children('span').text(url).end().fadeIn();
+            this.$buttonBox.hide();
+        } else {
+            this.$txtResult.val(url);
+            this.$close.fadeIn();
+        }
+    };
+
+    /**
+     * 事件添加
+     * @return {Void}
+     */
+    Upload.prototype.on = function (name, callback) {
+        var self = this;
+        this.event.on(name + '.upload', function (args) {
+            callback.apply(self, args);
+        });
+    };
+
+    /**
+     * 全局调用
+     * @return {Void}
+     */
+    Upload.Global = function ($elms) {
+        $elms = $elms || $('button[data-module=upload],input[data-module=upload]');
+        $elms.each(function () {
+            var $el = $(this),
+                uploadUrl = $el.attr('data-uploadurl'),
+                removeUrl = $el.attr('data-removeurl'),
+                name = $el.attr('data-name'),
+                text = $el.attr('data-text'),
+                loadingEnable = $el.attr('data-loadingEnable'),
+                popTips = $el.attr('data-popTips'),
+                data = $el.data('upload');
+
+            if (!data) {
+                data = new Upload($el, {
+                    uploadUrl: uploadUrl && uploadUrl.length > 0 ? uploadUrl : '',
+                    removeUrl: removeUrl && removeUrl.length > 0 ? removeUrl : '',
+                    name: name && name.length > 0 ? name : 'file',
+                    text: text && text.length > 0 ? text : '上传',
+                    loadingEnable: loadingEnable && loadingEnable == 'false' ? false : true,
+                    popTips: popTips && popTips.length > 0 ? eval('(' + popTips + ')') : {}
+                });
+                $el.data('upload', data);
+            }
+        });
+    };
+
+    return Upload;
 });

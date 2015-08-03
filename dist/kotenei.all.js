@@ -1,236 +1,242 @@
-/*
- * ajax 模块
- * @date:2014-12-05
- * @author:kotenei(kotenei@qq.com)
+/**
+ * 上传
+ * @date :2015-07-30
+ * @author kotenei (kotenei@qq.com)
  */
-define('kotenei/ajax', ['jquery', 'kotenei/loading', 'kotenei/popTips', 'kotenei/validate', 'kotenei/validateTooltips'], function ($, Loading, popTips, Validate, ValidateTooltips) {
+define('kotenei/upload', ['jquery', 'spin', 'kotenei/window', 'kotenei/ajax', 'kotenei/event'], function ($, Spinner, Window, ajax, event) {
 
     /**
-     * ajax 通用操作封装
-     * @return {Object} 
+     * upload 上传模块
+     * @param {JQuery} $element - dom
+     * @param {Object} options - 参数
      */
-    var Ajax = (function () {
-
-        var _instance;
-
-        //完整路径
-        function getFullUrl(urlPath) {
-            var loc = window.location;
-            var url = "" + loc.protocol + "//" + loc.host + urlPath;
-            return url;
-        }
-
-        function init() {
-
-            /**
-            * ajax 返回数据类型约定： String([JSON,HTML]) || Object(JSON)
-            * json 字符串或json对象须包含以下参数，属性大写开头:
-            * {
-            *     Status:Boolean,           （操作成功与否）
-            *     Message:String|Null,      （操作成功提示信息）
-            *     ErrorMessage:String/Null, （操作失败错误信息）
-            *     Data:Object|Null          （返回的数据对象）
-            * }
-            */
-            var ajax = function (type, url, data, config) {
-
-                var config = $.extend(true, {
-                    returnUrl: {
-                        enable: true,
-                        url: location.href
-                    },
-                    loadingEnable: true,
-                    popTips: {
-                        enable: true,
-                        delay: 600,
-                        inCallback: true
-                    }
-                }, config);
-
-                data = data || {};
-
-
-                if (config.returnUrl.enable && typeof data == 'object') {
-                    var href = config.returnUrl.url;
-
-                    if (href.indexOf('#') != -1
-                        && href.lastIndexOf('?') != -1
-                        && href.lastIndexOf('?') > href.indexOf('#')) {
-                        href = href.substr(0, href.lastIndexOf('?'));
-                    }
-
-                    data.returnUrl = href;
-                }
-
-                var dtd = $.Deferred();
-
-                if (config.loadingEnable) {
-                    Loading.show();
-                }
-
-                $.ajax({
-                    url: url,
-                    type: type,
-                    data: data,
-                    dataType: 'json',
-                    traditional: true,
-                    cache: false
-                }).done(function (ret) {
-
-                    if (typeof ret === 'string') {
-                        try {
-                            ret = eval('(' + ret + ')');
-                        } catch (e) {
-                            dtd.resolve(ret);
-                            return dtd.promise();
-                        }
-                    }
-
-                    ret.Url = $.trim(ret.Url || '');
-
-
-                    if (ret.Status) {
-
-                        if (ret.Message && config.popTips.enable) {
-
-                            if (config.popTips.inCallback) {
-                                popTips.success(ret.Message, config.popTips.delay, function () {
-                                    if (ret.Url && ret.Url.length > 0) {
-                                        window.location.href = ret.Url;
-                                    } else {
-                                        dtd.resolve(ret);
-                                    }
-                                });
-                            } else {
-                                popTips.success(ret.Message, config.popTips.delay);
-                                if (ret.Url && ret.Url.length > 0) {
-                                    window.location.href = ret.Url;
-                                } else {
-
-                                    dtd.resolve(ret);
-                                }
-                            }
-
-                        } else if (ret.Url && ret.Url.length > 0) {
-                            window.location.href = ret.Url;
-                        } else {
-                            dtd.resolve(ret);
-                        }
-
-                    } else {
-
-                        if (ret.ErrorMessage && config.popTips.enable) {
-
-                            if (config.popTips.inCallback) {
-                                popTips.error(ret.ErrorMessage || "发生了未知错误", config.popTips.delay, function () {
-                                    if (ret.Url && ret.Url.length > 0) {
-                                        window.location.href = ret.Url;
-                                    } else {
-                                        dtd.resolve(ret);
-                                    }
-                                });
-                            } else {
-                                popTips.error(ret.ErrorMessage || "发生了未知错误", config.popTips.delay);
-
-                                if (ret.Url && ret.Url.length > 0) {
-                                    window.location.href = ret.Url;
-                                } else {
-                                    dtd.resolve(ret);
-                                }
-                            }
-
-                        } else if (ret.Url && ret.Url.length > 0) {
-                            window.location.href = ret.Url;
-                        } else {
-                            dtd.resolve(ret);
-                        }
-                    }
-                }).fail(function () {
-                    if (popTips.enable) {
-                        popTips.error("服务器发生错误", config.popTips.delay);
-                    }
-                    dtd.reject();
-                }).always(function () {
-                    Loading.hide();
-                });
-
-                return dtd.promise();
-            };
-
-
-            return {
-                post: function (url, data, config) {
-                    return ajax("POST", url, data, config);
-                },
-                get: function (url, data, config) {
-                    return ajax("GET", url, data, config);
-                },
-                ajaxForm: function ($form, config) {
-                    var validate, url, type, data;
-
-                    if (!$form.valid) {
-                        validate = $form.data('validate');
-                    }
-
-                    url = $form.attr('action');
-                    type = $form.attr('method');
-                    data = $form.serialize();
-
-
-                    var href = location.href;
-
-                    if (href.indexOf('#') != -1
-                        && href.lastIndexOf('?') != -1
-                        && href.lastIndexOf('?') > href.indexOf('#')) {
-                        href = href.substr(0, href.lastIndexOf('?'));
-                    }
-
-                    data += "&returnUrl=" + encodeURIComponent(href);
-
-                    var dtd = $.Deferred();
-                    var ret = {
-                        Status: false,
-                        ErrorMessage: '验证失败'
-                    };
-
-                    if (validate && validate.valid) {
-                        if (validate.valid()) {
-                            return ajax(type, url, data, config);
-                        } else {
-                            dtd.reject(ret);
-                            return dtd.promise();
-                        }
-                    } else if ($form.valid) {
-                        if ($form.valid()) {
-                            return ajax(type, url, data, config);
-                        } else {
-                            dtd.reject(ret);
-                            return dtd.promise();
-                        }
-                    } else {
-                        return ajax(type, url, data, config);
-                    }
-
-
-                }
-            };
-
-        };
-
-        return {
-            getInstance: function () {
-                if (!_instance) {
-                    _instance = init();
-                }
-
-                return _instance;
+    var Upload = function ($elm, options) {
+        this.$elm = $elm;
+        this.options = $.extend(true, {
+            uploadUrl: '',
+            removeUrl: '',
+            fontClassName: 'fa fa-upload',
+            text: '上传',
+            name: 'file',
+            loadingEnable: true,
+            popTips: {
+                enable: true,
+                delay: 600
             }
+        }, options);
+        this.isLoading = false;
+        this.isButton = this.$elm[0].type.toLowerCase() == 'text' ? false : true;
+        this.event = event;
+        this.init();
+    };
+
+    /**
+     * 初始化
+     * @return {Void}
+     */
+    Upload.prototype.init = function () {
+        //this.spinner = new Spinner({});
+        this.build();
+        this.watch();
+    };
+
+    /**
+     * 事件监控
+     * @return {Void}
+     */
+    Upload.prototype.watch = function () {
+        var self = this;
+
+        this.$uploadBox.on('change', 'input', function () {
+            self.upload();
+        }).on('click', '.fa-close', function () {
+            Window.confirm('您确认要删除该文件吗？', function () {
+                self.removeFile();
+            });
+        });
+    };
+
+    /**
+     * 构造上传HTML
+     * @return {Void}
+     */
+    Upload.prototype.build = function () {
+        var html = [],
+            groupHtml = [];
+
+        html.push('<div class="k-upload-box">');
+
+        if (this.isButton) {
+            html.push('<div class="k-upload-result">');
+            html.push('<span></span>');
+            html.push('<i class="fa fa-close"></i>');
+            html.push('</div>');
         }
 
-    })();
+        html.push('<div class="button-box">');
+        html.push('<button type="button" class="k-btn k-btn-default">');
+        html.push('<span class="' + this.options.fontClassName + '"></span>&nbsp;');
+        html.push(this.options.text);
+        html.push('</button>');
+        html.push('<form action="' + this.options.uploadUrl + '" enctype="multipart/form-data" method="post">');
+        html.push('<input type="file" name="' + this.options.name + '" />');
+        html.push('</form>');
+        html.push('</div>');
+        html.push('</div>');
 
-    return Ajax.getInstance();
+
+        if (!this.isButton) {
+            groupHtml.push('<div class="k-input-group k-input-group-upload">');
+            //groupHtml.push('<input type="text"  readonly="readonly"  class="k-form-control">');
+            groupHtml.push('<i class="fa fa-close"></i>');
+            groupHtml.push('<span class="k-input-group-btn">');
+            groupHtml.push(html.join(''));
+            groupHtml.push('</span>');
+            groupHtml.push('</div>');
+        }
+
+        this.$uploadBox = $(groupHtml.length == 0 ? html.join('') : groupHtml.join(''));
+        this.$buttonBox = this.$uploadBox.find('.button-box');
+        this.$button = this.$uploadBox.find('button');
+        this.$file = this.$uploadBox.find('input[type=file]');
+        this.$form = this.$uploadBox.find('form');
+        this.$resultBox = this.$uploadBox.find('.k-upload-result');
+        this.$txtResult = this.isButton ? null : this.$elm;
+        this.$close = this.$uploadBox.find('.fa-close');
+        this.$uploadBox.appendTo(this.$elm.parent());
+
+        if (this.isButton) {
+            this.$elm.hide();
+        } else {
+            this.$elm.attr({
+                'class': 'k-form-control',
+                'readonly': 'readonly'
+            }).prependTo(this.$uploadBox);
+            this.$close.css('right', this.$button.outerWidth() + 10);
+        }
+    };
+
+    /**
+     * 上传
+     * @return {Void}
+     */
+    Upload.prototype.upload = function () {
+        var self = this;
+        if (this.isLoading) {
+            return;
+        }
+
+        this.isLoading = true;
+        ajax.ajaxForm(this.$form, {
+            loadingEnable: this.options.loadingEnable,
+            redirectEnable: false,
+            popTips: {
+                enable: this.options.popTips.enable,
+                delay: this.options.delay,
+                inCallback: true
+            }
+        }).done(function (ret) {
+            self.showResult(ret.Url || '');
+        }).always(function () {
+            self.isLoading = false;
+        });
+    };
+
+    /**
+     * 删除
+     * @return {Void}
+     */
+    Upload.prototype.removeFile = function (data) {
+        var self = this;
+
+        if (this.isLoading) {
+            return;
+        }
+
+        this.isLoading = true;
+
+        ajax.post(this.options.removeUrl, data || { filePath: this.url }, {
+            redirectEnable: false,
+            loadingEnable: this.options.loadingEnable,
+            popTips: {
+                enable: this.options.popTips.enable,
+                delay: this.options.delay,
+                inCallback: true
+            }
+        }).done(function (ret) {
+            if (ret.ReturnStatus || ret.returnStatus) {
+                if (this.isButton) {
+                    self.$resultBox.hide();
+                    self.$buttonBox.fadeIn();
+                } else {
+                    self.$txtResult.val('');
+                    self.$close.fadeOut();
+                }
+            }
+        }).always(function () {
+            self.isLoading = false;
+        });
+    };
+
+    /**
+     * 显示结果
+     * @return {Void}
+     */
+    Upload.prototype.showResult = function (url) {
+        this.url = url;
+        if (this.isButton) {
+            this.$resultBox.children('span').text(url).end().fadeIn();
+            this.$buttonBox.hide();
+        } else {
+            this.$txtResult.val(url);
+            this.$close.fadeIn();
+        }
+    };
+
+    /**
+     * 事件添加
+     * @return {Void}
+     */
+    Upload.prototype.on = function (name, callback) {
+        var self = this;
+        this.event.on(name + '.upload', function (args) {
+            callback.apply(self, args);
+        });
+    };
+
+    /**
+     * 全局调用
+     * @return {Void}
+     */
+    Upload.Global = function ($elms) {
+        $elms = $elms || $('button[data-module=upload],input[data-module=upload]');
+        $elms.each(function () {
+            var $el = $(this),
+                uploadUrl = $el.attr('data-uploadurl'),
+                removeUrl = $el.attr('data-removeurl'),
+                name = $el.attr('data-name'),
+                text = $el.attr('data-text'),
+                loadingEnable = $el.attr('data-loadingEnable'),
+                popTips = $el.attr('data-popTips'),
+                data = $el.data('upload');
+
+            if (!data) {
+                data = new Upload($el, {
+                    uploadUrl: uploadUrl && uploadUrl.length > 0 ? uploadUrl : '',
+                    removeUrl: removeUrl && removeUrl.length > 0 ? removeUrl : '',
+                    name: name && name.length > 0 ? name : 'file',
+                    text: text && text.length > 0 ? text : '上传',
+                    loadingEnable: loadingEnable && loadingEnable == 'false' ? false : true,
+                    popTips: popTips && popTips.length > 0 ? eval('(' + popTips + ')') : {}
+                });
+                $el.data('upload', data);
+            }
+        });
+    };
+
+    return Upload;
 });
+
 /**
  * @module kotenei/app 
  * @author kotenei (kotenei@qq.com)
@@ -7256,6 +7262,19 @@ define('kotenei/treeTable', ['jquery', 'kotenei/ajax'], function ($, ajax) {
  */
 define('kotenei/upload', ['jquery', 'spin', 'kotenei/window', 'kotenei/ajax', 'kotenei/event'], function ($, Spinner, Window, ajax, event) {
 
+    var method = {
+        showLoading: function () {
+            this.spinner.spin(this.$loadingBox.get(0));
+            this.$loadingBox.css('display', 'inline-block');
+            this.$uploadIcon.hide();
+        },
+        hideLoading: function () {
+            this.$loadingBox.hide();
+            this.spinner.stop();
+            this.$uploadIcon.show();
+        }
+    };
+
     /**
      * upload 上传模块
      * @param {JQuery} $element - dom
@@ -7269,7 +7288,7 @@ define('kotenei/upload', ['jquery', 'spin', 'kotenei/window', 'kotenei/ajax', 'k
             fontClassName: 'fa fa-upload',
             text: '上传',
             name: 'file',
-            loadingEnable: true,
+            //loadingEnable: true,
             popTips: {
                 enable: true,
                 delay: 600
@@ -7286,9 +7305,33 @@ define('kotenei/upload', ['jquery', 'spin', 'kotenei/window', 'kotenei/ajax', 'k
      * @return {Void}
      */
     Upload.prototype.init = function () {
-        //this.spinner = new Spinner({});
+        this.spinner = new Spinner({
+            lines: 9, // 花瓣数目
+            length: 3, // 花瓣长度
+            width: 2, // 花瓣宽度
+            radius: 2, // 花瓣距中心半径
+            scale: 0.2,
+            corners: 0.6, // 花瓣圆滑度 (0-1)
+            rotate: 4, // 花瓣旋转角度
+            direction: 1, // 花瓣旋转方向 1: 顺时针, -1: 逆时针    
+            color: '#222222', // 花瓣颜色
+            speed: 1, // 花瓣旋转速度
+            trail: 60, // 花瓣旋转时的拖影(百分比)
+            shadow: false, // 花瓣是否显示阴影
+            hwaccel: false, // 是否启用硬件加速及高速旋转            
+            className: 'spinner', // css 样式名称
+            zIndex: 2e9, // spinner的z轴 (默认是2000000000)
+            top: '5px', // spinner 相对父容器Top定位 单位 px
+            left: '10px'// spinner 相对父容器Left定位 单位 px
+        });
+
+
         this.build();
         this.watch();
+
+
+
+
     };
 
     /**
@@ -7301,6 +7344,9 @@ define('kotenei/upload', ['jquery', 'spin', 'kotenei/window', 'kotenei/ajax', 'k
         this.$uploadBox.on('change', 'input', function () {
             self.upload();
         }).on('click', '.fa-close', function () {
+            if (self.isLoading) {
+                return;
+            }
             Window.confirm('您确认要删除该文件吗？', function () {
                 self.removeFile();
             });
@@ -7326,7 +7372,8 @@ define('kotenei/upload', ['jquery', 'spin', 'kotenei/window', 'kotenei/ajax', 'k
 
         html.push('<div class="button-box">');
         html.push('<button type="button" class="k-btn k-btn-default">');
-        html.push('<span class="' + this.options.fontClassName + '"></span>&nbsp;');
+        html.push('<div class="loading-box"></div>');
+        html.push('<span class="k-upload-icon ' + this.options.fontClassName + '"></span>&nbsp;');
         html.push(this.options.text);
         html.push('</button>');
         html.push('<form action="' + this.options.uploadUrl + '" enctype="multipart/form-data" method="post">');
@@ -7335,10 +7382,8 @@ define('kotenei/upload', ['jquery', 'spin', 'kotenei/window', 'kotenei/ajax', 'k
         html.push('</div>');
         html.push('</div>');
 
-
         if (!this.isButton) {
             groupHtml.push('<div class="k-input-group k-input-group-upload">');
-            //groupHtml.push('<input type="text"  readonly="readonly"  class="k-form-control">');
             groupHtml.push('<i class="fa fa-close"></i>');
             groupHtml.push('<span class="k-input-group-btn">');
             groupHtml.push(html.join(''));
@@ -7355,6 +7400,9 @@ define('kotenei/upload', ['jquery', 'spin', 'kotenei/window', 'kotenei/ajax', 'k
         this.$txtResult = this.isButton ? null : this.$elm;
         this.$close = this.$uploadBox.find('.fa-close');
         this.$uploadBox.appendTo(this.$elm.parent());
+        this.$uploadIcon = this.$uploadBox.find('.k-upload-icon');
+        this.$loadingBox = this.$buttonBox.find('.loading-box');
+
 
         if (this.isButton) {
             this.$elm.hide();
@@ -7363,8 +7411,9 @@ define('kotenei/upload', ['jquery', 'spin', 'kotenei/window', 'kotenei/ajax', 'k
                 'class': 'k-form-control',
                 'readonly': 'readonly'
             }).prependTo(this.$uploadBox);
-            this.$close.css('right', this.$button.outerWidth()+10);
+            this.$close.css('right', this.$button.outerWidth() + 10);
         }
+
     };
 
     /**
@@ -7378,17 +7427,20 @@ define('kotenei/upload', ['jquery', 'spin', 'kotenei/window', 'kotenei/ajax', 'k
         }
 
         this.isLoading = true;
+        method.showLoading.call(this);
         ajax.ajaxForm(this.$form, {
-            loadingEnable: this.options.loadingEnable,
+            loadingEnable: false,
+            redirectEnable: false,
             popTips: {
                 enable: this.options.popTips.enable,
                 delay: this.options.delay,
                 inCallback: false
             }
         }).done(function (ret) {
-            self.showResult(ret.Data || ret.data || '');
+            self.showResult(ret.Url || '');
         }).always(function () {
             self.isLoading = false;
+            method.hideLoading.call(self);
         });
     };
 
@@ -7406,21 +7458,16 @@ define('kotenei/upload', ['jquery', 'spin', 'kotenei/window', 'kotenei/ajax', 'k
         this.isLoading = true;
 
         ajax.post(this.options.removeUrl, data || { filePath: this.url }, {
-            loadingEnable: this.options.loadingEnable,
+            redirectEnable: false,
+            loadingEnable: true,
             popTips: {
                 enable: this.options.popTips.enable,
                 delay: this.options.delay,
                 inCallback: false
             }
         }).done(function (ret) {
-            if (ret.ReturnStatus || ret.returnStatus) {
-                if (this.isButton) {
-                    self.$resultBox.hide();
-                    self.$buttonBox.fadeIn();
-                } else {
-                    self.$txtResult.val('');
-                    self.$close.fadeOut();
-                }
+            if (ret.Status || ret.status) {
+                self.hideResult();
             }
         }).always(function () {
             self.isLoading = false;
@@ -7441,6 +7488,21 @@ define('kotenei/upload', ['jquery', 'spin', 'kotenei/window', 'kotenei/ajax', 'k
             this.$close.fadeIn();
         }
     };
+
+    /**
+     * 隐藏结果
+     * @return {Void}
+     */
+    Upload.prototype.hideResult = function () {
+        if (this.isButton) {
+            this.$resultBox.children('span').text('').end().hide();
+            this.$buttonBox.fadeIn();
+        } else {
+            this.$txtResult.val('');
+            this.$close.hide();
+        }
+    }
+
 
     /**
      * 事件添加
@@ -8498,6 +8560,7 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
      */
     var Window = function (options) {
         this.options = $.extend({}, {
+            id: null,
             url: null,
             params: null,
             title: '弹出框',
@@ -8509,7 +8572,7 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
             iframe: false,
             appendTo: document.body,
             showFooter: true,
-            borderRadius:'6px',
+            borderRadius: '6px',
             btns: []
         }, options);
 
@@ -8520,7 +8583,7 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
         };
 
         this.loading = false;
-        this.template = '<div class="k-window">' +
+        this.template = '<div class="k-window" id="k-window-' + (this.options.id || ids.get()) + '">' +
                             '<h4 class="k-window-header"><span class="k-window-title"></span><span class="k-window-close" role="KWINCLOSE">×</span></h4>' +
                             '<div class="k-window-container"></div>' +
                             '<div class="k-window-footer">' +
@@ -8543,6 +8606,7 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
         this.setTitle(this.options.title);
 
         if (this.options.iframe) {
+
             this.$container.css({
                 padding: 0,
                 overflowY: 'hidden'
@@ -8580,7 +8644,7 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
             for (var i = 0, item; i < this.options.btns.length; i++) {
                 item = this.options.btns[i];
                 this.$win.on('click', '[role=' + item.actionCode + ']', function () {
-                    item.func.call(self,self.$iframe);
+                    item.func.call(self, self.$iframe);
                 });
             }
         }
@@ -8677,6 +8741,15 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
         this.$win.hide();
         this.$backdrop.hide();
         zIndex.pop();
+        if (this.options.iframe) {
+            var url = this.options.url;
+            if (url.indexOf('?') != -1) {
+                url += '&rand=' + Math.random();
+            } else {
+                url += '?rand=' + Math.random();
+            }
+            this.$iframe.attr('src', url);
+        }
     };
 
 
@@ -8740,7 +8813,7 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
             width: this.options.width,
             height: this.options.height,
             borderRadius: this.options.borderRadius
-        });
+        }).data('window', this);
         this.$backdrop = $(this.backdrop);
         this.$header = this.$win.find('.k-window-header');
         this.$container = this.$win.find('.k-window-container');
@@ -8753,8 +8826,9 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
         if (this.options.btns && this.options.btns.length > 0) {
             this.$footer.find('.k-btn').hide();
             var html = [];
-            for (var i = 0,item; i < this.options.btns.length; i++) {
+            for (var i = 0, item; i < this.options.btns.length; i++) {
                 item = this.options.btns[i];
+
                 html.push('<button type="button" class="k-btn ' + (item.className || "k-btn-primary") + '" role="' + item.actionCode + '">' + item.text + '</button>');
 
             }
@@ -8819,6 +8893,33 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
     };
 
     /**
+     * 关闭窗体静态方法
+     * @param  {String|Int} id  - 窗体的ID号
+     * @return {Void}   
+     */
+    Window.close = function (id) {
+        $win = $('#k-window-' + id);
+        var win = $win.data('window');
+        if (win) {
+            win.close(true);
+        } else {
+            $("#" + id).hide();
+        }
+    };
+
+
+    /**
+     * 打开窗体静态方法
+     * @param  {Object} options  - 窗体参数
+     * @return {Object}   
+     */
+    Window.open = function (options) {
+        var win = new Window(options);
+        win.open();
+        return win;
+    };
+
+    /**
      * 全局调用
      * @return {void}
      */
@@ -8853,9 +8954,9 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
                     btns: buttons && buttons.length > 0 ? eval(buttons) : []
                 });
 
-                data.on('ok', function () {
+                data.on('ok.window', function () {
                     return onOk.call(this);
-                }).on('close', function () {
+                }).on('close.window', function () {
                     return onClose.call(this);
                 });
 
@@ -8870,6 +8971,8 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
 
         });
     };
+
+
 
     /**
      * 窗体堆叠顺序设置
@@ -8894,6 +8997,26 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
             pop: function () {
                 if (zIndex.length === 0) { return; }
                 zIndex.pop();
+            }
+        };
+
+    })();
+
+    var ids = (function () {
+        var ids = [];
+
+        return {
+            get: function () {
+                var id;
+                if (ids.length == 0) {
+                    id = 1;
+                    ids.push(id);
+                } else {
+                    id = ids[ids.length - 1];
+                    id += 1;
+                    ids.push(id);
+                }
+                return id;
             }
         };
 

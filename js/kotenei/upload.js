@@ -5,6 +5,19 @@
  */
 define('kotenei/upload', ['jquery', 'spin', 'kotenei/window', 'kotenei/ajax', 'kotenei/event'], function ($, Spinner, Window, ajax, event) {
 
+    var method = {
+        showLoading: function () {
+            this.spinner.spin(this.$loadingBox.get(0));
+            this.$loadingBox.css('display', 'inline-block');
+            this.$uploadIcon.hide();
+        },
+        hideLoading: function () {
+            this.$loadingBox.hide();
+            this.spinner.stop();
+            this.$uploadIcon.show();
+        }
+    };
+
     /**
      * upload 上传模块
      * @param {JQuery} $element - dom
@@ -18,7 +31,7 @@ define('kotenei/upload', ['jquery', 'spin', 'kotenei/window', 'kotenei/ajax', 'k
             fontClassName: 'fa fa-upload',
             text: '上传',
             name: 'file',
-            loadingEnable: true,
+            //loadingEnable: true,
             popTips: {
                 enable: true,
                 delay: 600
@@ -35,9 +48,33 @@ define('kotenei/upload', ['jquery', 'spin', 'kotenei/window', 'kotenei/ajax', 'k
      * @return {Void}
      */
     Upload.prototype.init = function () {
-        //this.spinner = new Spinner({});
+        this.spinner = new Spinner({
+            lines: 9, // 花瓣数目
+            length: 3, // 花瓣长度
+            width: 2, // 花瓣宽度
+            radius: 2, // 花瓣距中心半径
+            scale: 0.2,
+            corners: 0.6, // 花瓣圆滑度 (0-1)
+            rotate: 4, // 花瓣旋转角度
+            direction: 1, // 花瓣旋转方向 1: 顺时针, -1: 逆时针    
+            color: '#222222', // 花瓣颜色
+            speed: 1, // 花瓣旋转速度
+            trail: 60, // 花瓣旋转时的拖影(百分比)
+            shadow: false, // 花瓣是否显示阴影
+            hwaccel: false, // 是否启用硬件加速及高速旋转            
+            className: 'spinner', // css 样式名称
+            zIndex: 2e9, // spinner的z轴 (默认是2000000000)
+            top: '5px', // spinner 相对父容器Top定位 单位 px
+            left: '10px'// spinner 相对父容器Left定位 单位 px
+        });
+
+
         this.build();
         this.watch();
+
+
+
+
     };
 
     /**
@@ -50,6 +87,9 @@ define('kotenei/upload', ['jquery', 'spin', 'kotenei/window', 'kotenei/ajax', 'k
         this.$uploadBox.on('change', 'input', function () {
             self.upload();
         }).on('click', '.fa-close', function () {
+            if (self.isLoading) {
+                return;
+            }
             Window.confirm('您确认要删除该文件吗？', function () {
                 self.removeFile();
             });
@@ -75,7 +115,8 @@ define('kotenei/upload', ['jquery', 'spin', 'kotenei/window', 'kotenei/ajax', 'k
 
         html.push('<div class="button-box">');
         html.push('<button type="button" class="k-btn k-btn-default">');
-        html.push('<span class="' + this.options.fontClassName + '"></span>&nbsp;');
+        html.push('<div class="loading-box"></div>');
+        html.push('<span class="k-upload-icon ' + this.options.fontClassName + '"></span>&nbsp;');
         html.push(this.options.text);
         html.push('</button>');
         html.push('<form action="' + this.options.uploadUrl + '" enctype="multipart/form-data" method="post">');
@@ -84,10 +125,8 @@ define('kotenei/upload', ['jquery', 'spin', 'kotenei/window', 'kotenei/ajax', 'k
         html.push('</div>');
         html.push('</div>');
 
-
         if (!this.isButton) {
             groupHtml.push('<div class="k-input-group k-input-group-upload">');
-            //groupHtml.push('<input type="text"  readonly="readonly"  class="k-form-control">');
             groupHtml.push('<i class="fa fa-close"></i>');
             groupHtml.push('<span class="k-input-group-btn">');
             groupHtml.push(html.join(''));
@@ -104,6 +143,9 @@ define('kotenei/upload', ['jquery', 'spin', 'kotenei/window', 'kotenei/ajax', 'k
         this.$txtResult = this.isButton ? null : this.$elm;
         this.$close = this.$uploadBox.find('.fa-close');
         this.$uploadBox.appendTo(this.$elm.parent());
+        this.$uploadIcon = this.$uploadBox.find('.k-upload-icon');
+        this.$loadingBox = this.$buttonBox.find('.loading-box');
+
 
         if (this.isButton) {
             this.$elm.hide();
@@ -112,8 +154,9 @@ define('kotenei/upload', ['jquery', 'spin', 'kotenei/window', 'kotenei/ajax', 'k
                 'class': 'k-form-control',
                 'readonly': 'readonly'
             }).prependTo(this.$uploadBox);
-            this.$close.css('right', this.$button.outerWidth()+10);
+            this.$close.css('right', this.$button.outerWidth() + 10);
         }
+
     };
 
     /**
@@ -127,17 +170,20 @@ define('kotenei/upload', ['jquery', 'spin', 'kotenei/window', 'kotenei/ajax', 'k
         }
 
         this.isLoading = true;
+        method.showLoading.call(this);
         ajax.ajaxForm(this.$form, {
-            loadingEnable: this.options.loadingEnable,
+            loadingEnable: false,
+            redirectEnable: false,
             popTips: {
                 enable: this.options.popTips.enable,
                 delay: this.options.delay,
                 inCallback: false
             }
         }).done(function (ret) {
-            self.showResult(ret.Data || ret.data || '');
+            self.showResult(ret.Url || '');
         }).always(function () {
             self.isLoading = false;
+            method.hideLoading.call(self);
         });
     };
 
@@ -155,21 +201,16 @@ define('kotenei/upload', ['jquery', 'spin', 'kotenei/window', 'kotenei/ajax', 'k
         this.isLoading = true;
 
         ajax.post(this.options.removeUrl, data || { filePath: this.url }, {
-            loadingEnable: this.options.loadingEnable,
+            redirectEnable: false,
+            loadingEnable: true,
             popTips: {
                 enable: this.options.popTips.enable,
                 delay: this.options.delay,
                 inCallback: false
             }
         }).done(function (ret) {
-            if (ret.ReturnStatus || ret.returnStatus) {
-                if (this.isButton) {
-                    self.$resultBox.hide();
-                    self.$buttonBox.fadeIn();
-                } else {
-                    self.$txtResult.val('');
-                    self.$close.fadeOut();
-                }
+            if (ret.Status || ret.status) {
+                self.hideResult();
             }
         }).always(function () {
             self.isLoading = false;
@@ -190,6 +231,21 @@ define('kotenei/upload', ['jquery', 'spin', 'kotenei/window', 'kotenei/ajax', 'k
             this.$close.fadeIn();
         }
     };
+
+    /**
+     * 隐藏结果
+     * @return {Void}
+     */
+    Upload.prototype.hideResult = function () {
+        if (this.isButton) {
+            this.$resultBox.children('span').text('').end().hide();
+            this.$buttonBox.fadeIn();
+        } else {
+            this.$txtResult.val('');
+            this.$close.hide();
+        }
+    }
+
 
     /**
      * 事件添加
