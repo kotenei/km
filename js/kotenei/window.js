@@ -80,14 +80,16 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
         });
         this.$backdrop.on('click', function () {
             if (self.options.backdropClose) {
-                self.hide();
+                self.close();
             }
         });
         this.$win.on('click', '[role=KWINCLOSE]', function () {
-            self.close();
+            if (self._event.close.call(self) !== false) {
+                self.close();
+            }
         }).on('click', '[role=KWINOK]', function () {
             if (self._event.ok.call(self) !== false) {
-                self.hide();
+                self.close();
             }
         });
 
@@ -156,15 +158,34 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
         $.when(
             this.remote()
         ).done(function () {
-            self.$win.show();
-            if (self.options.backdrop) { self.$backdrop.show(); }
-            self.layout();
-            self._event.open(self.$win);
 
-            var z = zIndex.get();
-            self.$win.css('zIndex', z);
-            self.$backdrop.css('zIndex', --z);
-            Loading.hide();
+            var show = function () {
+                self.$win.show();
+                if (self.options.backdrop) { self.$backdrop.show(); }
+                self.layout();
+                self._event.open(self.$win);
+
+                var z = zIndex.get();
+                self.$win.css('zIndex', z);
+                self.$backdrop.css('zIndex', --z);
+                Loading.hide();
+            };
+
+            if (self.options.iframe) {
+                var url = self.options.url;
+                if (url.indexOf('?') != -1) {
+                    url += '&rand=' + Math.random();
+                } else {
+                    url += '?rand=' + Math.random();
+                }
+                self.$iframe.attr('src', url).load(function () {
+                    show();
+                });
+
+            } else {
+                show();
+            }
+
         });
     };
 
@@ -174,33 +195,9 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
      * @return {Void}  
      */
     Window.prototype.close = function (enforce) {
-        if (enforce) {
-            this.hide()
-            return;
-        }
-
-        if (this._event.close() !== false) {
-            this.hide();
-        }
-    };
-
-    /**
-     * 隐藏窗体方法
-     * @return {Void}
-     */
-    Window.prototype.hide = function () {
         this.$win.hide();
         this.$backdrop.hide();
         zIndex.pop();
-        if (this.options.iframe) {
-            var url = this.options.url;
-            if (url.indexOf('?') != -1) {
-                url += '&rand=' + Math.random();
-            } else {
-                url += '?rand=' + Math.random();
-            }
-            this.$iframe.attr('src', url);
-        }
     };
 
 
@@ -306,7 +303,6 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
             win.$win.find(".window-cancel").hide();
             window.winAlert = win;
         }
-        //var win = new Window({ width: 400, backdropClose: false });
         win.$win.find(".k-window-cancel").hide();
         win.setTitle(title);
         win.setContent(content);
@@ -335,7 +331,6 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
             win = new Window({ width: 400, backdropClose: false });
             window.winConfirm = win;
         }
-        //var win = new Window({ width: 400, backdropClose: false });
         win.setTitle(title);
         win.setContent(content);
         win.on('ok', onOk || $.noop);
