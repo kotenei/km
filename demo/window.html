@@ -147,6 +147,7 @@ kotenei.Window.confirm('确认对话框xxx','您确认要XXXX吗？', function (
                     data-content="内容"
                     data-onok="ok"
                     data-onclose="close"
+                    data-onafterclose="afterClose"
                     data-btns="btns">
                     Launch demo modal
                 </button>
@@ -242,6 +243,13 @@ kotenei.Window.Global($elms);
                             关闭窗口的回调函数
                         </td>
                     </tr>
+                    <tr>
+                        <td>data-onafterclose</td>
+                        <td>函数的名称</td>
+                        <td>
+                            窗口关闭之后的回调函数
+                        </td>
+                    </tr>
                 </tbody>
             </table>
             <h3>示例代码</h3>
@@ -259,7 +267,8 @@ kotenei.Window.Global($elms);
         data-title="标题"
         data-content="内容"
         data-onok="ok"
-        data-onclose="close"&gt;
+        data-onclose="close"
+        data-onafterclose="afterClose"&gt;
         Launch demo modal
 &lt;/button&gt;
 
@@ -414,9 +423,14 @@ btns: [
                 <pre>
                     <code data-lang="js" class="language-js">
 win.on('ok', function () {
+    //确定的回调函数
     alert("ok");
 }).on('close',function(){
+    //关闭的回调函数
     alert('close');
+}).on('afterClose',function(){
+    //关闭之后的回调函数
+    alert('afterClose');                        
 });
                     </code>
                 </pre>
@@ -454,6 +468,10 @@ win.setContent('content');
 
         function close() {
             alert("close");
+        }
+
+        function afterClose() {
+            alert('afterClose');
         }
 
         var btns = [{

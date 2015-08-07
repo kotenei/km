@@ -8575,7 +8575,8 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
         this._event = {
             open: $.noop,
             ok: $.noop,
-            close: $.noop
+            close: $.noop,
+            afterClose: $.noop
         };
 
         this.loading = false;
@@ -8743,6 +8744,9 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
         this.$win.hide();
         this.$backdrop.hide();
         zIndex.pop();
+
+        this._event.afterClose.call(self);
+
     };
 
 
@@ -8928,10 +8932,12 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
                 buttons = $elm.attr('data-btns'),
                 onOk = $elm.attr('data-onOk'),
                 onClose = $elm.attr('data-onClose'),
+                onAfterClose=$elm.attr('data-onAfterClose'),
                 data = $elm.data('data');
 
             onOk = onOk && onOk.length > 0 ? eval(onOk) : $.noop;
             onClose = onClose && onClose.length > 0 ? eval(onClose) : $.noop;
+            onAfterClose = onAfterClose && onAfterClose.length > 0 ? eval(onAfterClose) : $.noop;
 
             if (!data) {
                 data = new Window({
@@ -8945,10 +8951,12 @@ define('kotenei/window', ['jquery', 'kotenei/dragdrop', 'kotenei/popTips', 'kote
                     btns: buttons && buttons.length > 0 ? eval(buttons) : []
                 });
 
-                data.on('ok.window', function () {
+                data.on('ok', function () {
                     return onOk.call(this);
-                }).on('close.window', function () {
+                }).on('close', function () {
                     return onClose.call(this);
+                }).on('afterClose', function () {
+                    return onAfterClose.call(this);
                 });
 
                 $elm.parent('.k-input-group').on('click.window', 'button', function () {
