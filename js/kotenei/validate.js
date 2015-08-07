@@ -129,13 +129,15 @@ define('kotenei/validate', ['jquery'], function ($) {
             $element = $(element),
             rules = this.rules[element.name],
             result, val;
+        
+
+        if (!rules) { return; }
+
         if (this.options.focusClear && (e.type === "focusin" || e.type == 'click')
             || this.options.keyupClear && e.type === "keyup") {
             this.hideError($element);
             return;
         }
-
-        if (!rules) { return; }
 
         val = this.elementValue($element);
 
