@@ -1250,11 +1250,13 @@ define('kotenei/datePicker', ['jquery'], function ($) {
                 minDate = $this.attr('data-minDate'),
                 maxDate = $this.attr('data-maxDate'),
                 position = $this.attr('data-position'),
-                appendTo = $this.attr('data-appendTo');
+                appendTo = $this.attr('data-appendTo'),
+                onSelected = $this.attr('data-onselected');
 
             var data = $this.data('datepicker');
 
             showTime = showTime ? showTime === "true" : false;
+            onSelected = onSelected && onSelected.length > 0 ? eval('(' + onSelected + ')') : null;
 
             if (!data) {
                 data = new DatePicker($this, {
@@ -1265,6 +1267,11 @@ define('kotenei/datePicker', ['jquery'], function ($) {
                     position: position || 'left',
                     appendTo: $(appendTo || document.body)
                 });
+
+                if (onSelected) {
+                    data.on('selected', onSelected);
+                }
+
                 $this.data('datepicker', data);
             }
         });

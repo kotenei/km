@@ -25,7 +25,8 @@ define('kotenei/dropDownTree', ['jquery', 'kotenei/tree'], function ($, Tree) {
             bindElement: null,
             callback: {
                 select: $.noop,
-                check: $.noop
+                check: $.noop,
+                hide: $.noop
             }
         }, options);
 
@@ -208,6 +209,9 @@ define('kotenei/dropDownTree', ['jquery', 'kotenei/tree'], function ($, Tree) {
      * @return {Void}
      */
     DropDownTree.prototype.hide = function () {
+        if (this.$treePanel[0].style.display == 'block') {
+            this.options.callback.hide();
+        }
         this.$treePanel.slideUp();
     };
 

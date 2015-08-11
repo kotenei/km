@@ -120,7 +120,7 @@ kotenei.DropDownTree.Global($elms);
                     </tr>
                     <tr>
                         <td>data-callback</td>
-                        <td>'{select:xxx,check:xxx}'</td>
+                        <td>'{select:xxx,check:xxx,hide:xxx}'</td>
                         <td>回调函数，使用json字符串，xxx为函数的名称
                         </td>
                     </tr>
@@ -248,13 +248,14 @@ var dropDownTree=new kotenei.DropDownTree($elm,options);
                         <pre>
                             <code>
 {
-    select: $.noop,
-    check: $.noop                        
+    select:$.noop,
+    check:$.noop,
+    hide:$.noop                        
 }
                             </code>
                         </pre>
                         </td>
-                        <td>单选和复选的回调函数</td>
+                        <td>单选、复选和隐藏的回调函数</td>
                     </tr>
                 </tbody>
             </table>

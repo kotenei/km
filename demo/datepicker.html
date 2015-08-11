@@ -19,8 +19,7 @@
         </div>
     </div>
     <div class="main wrap">
-        <ul class="demo-nav-list" id="navList"> 
-        </ul>
+        <ul class="demo-nav-list" id="navList"></ul>
         <script type="text/javascript" src="nav.js"></script>
         <script type="text/javascript">
             nav(document.getElementById('navList'), 'datepicker');
@@ -33,7 +32,7 @@
             </div>
             <h3>全局调用</h3>
             <pre>
-                <code data-lang="js" class="language-js">
+            <code data-lang="js" class="language-js">
 //$elms为带有data-module=datepicker属性的元素，可不填（不填性能会低下）
 kotenei.DatePicker.Global($elms);
                 </code>
@@ -52,7 +51,8 @@ kotenei.DatePicker.Global($elms);
                     <tr>
                         <td>data-module</td>
                         <td>datepicker</td>
-                        <td>告诉程序当前html元素需要初始化为datepicker模块
+                        <td>
+                            告诉程序当前html元素需要初始化为datepicker模块
                         </td>
                     </tr>
                     <tr>
@@ -95,11 +95,16 @@ kotenei.DatePicker.Global($elms);
                         <td>'1000'等数值</td>
                         <td>层叠顺序</td>
                     </tr>
+                    <tr>
+                        <td>data-onselected</td>
+                        <td>函数名称</td>
+                        <td>选择日期的回调函数</td>
+                    </tr>
                 </tbody>
             </table>
             <h3>示例代码</h3>
             <pre>
-                <code>
+            <code>
 //HTML属性设置
 &lt;input  type="text" 
         readonly="readonly" 
@@ -122,7 +127,7 @@ kotenei.DatePicker.Global($elms);
             <h3>初始化</h3>
             <div class="highlight">
                 <pre>
-                    <code data-lang="js" class="language-js">
+                <code data-lang="js" class="language-js">
 //创建datepicker对象
 var datePicker = new kotenei.DatePicker($elm,options);
                     </code>
@@ -196,25 +201,37 @@ var datePicker = new kotenei.DatePicker($elm,options);
                         <td>minDate</td>
                         <td>string</td>
                         <td>null</td>
-                        <td>最小日期，格式'2014-10-11'或'today'
+                        <td>
+                            最小日期，格式'2014-10-11'或'today'
                         </td>
                     </tr>
                     <tr>
                         <td>maxDate</td>
                         <td>string</td>
                         <td>null</td>
-                        <td>最大日期，格式同上
+                        <td>
+                            最大日期，格式同上
                         </td>
                     </tr>
                     <tr>
                         <td>zIndex</td>
                         <td>int</td>
                         <td>2000</td>
-                        <td>堆叠顺序
+                        <td>
+                            堆叠顺序
                         </td>
                     </tr>
                 </tbody>
             </table>
+            <h3>事件绑定</h3>
+            <pre>
+            <code>
+//绑定日期选中事件
+datePicker.on('selected',function(date){
+    console.log(date);
+});
+                </code>
+            </pre>
         </div>
     </div>
     <script type="text/javascript" src="vendor/require/require.js"></script>
@@ -233,7 +250,7 @@ var datePicker = new kotenei.DatePicker($elm,options);
             kotenei.DatePicker.Global();
         });
 
-        
+
     </script>
 </body>
 </html>
