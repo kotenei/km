@@ -77,7 +77,7 @@ define('kotenei/validate', ['jquery'], function ($) {
     */
     Validate.prototype.metaRules = function (element) {
         var meta = element.getAttribute('data-rules');
-        meta = eval('(' + meta + ')');
+        meta = eval('(0,' + meta + ')');
 
         if (!this.rules[element.name]) {
             this.rules[element.name] = meta.rules;

@@ -80,7 +80,7 @@ define('kotenei/ajax', ['jquery', 'kotenei/loading', 'kotenei/popTips', 'kotenei
 
                     if (typeof ret === 'string') {
                         try {
-                            ret = eval('(' + ret + ')');
+                            ret = eval('(0,' + ret + ')');
                         } catch (e) {
                             dtd.resolve(ret);
                             return dtd.promise();

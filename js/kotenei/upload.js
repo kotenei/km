@@ -281,7 +281,7 @@ define('kotenei/upload', ['jquery', 'spin', 'kotenei/window', 'kotenei/ajax', 'k
                     name: name && name.length > 0 ? name : 'file',
                     text: text && text.length > 0 ? text : '上传',
                     loadingEnable: loadingEnable && loadingEnable == 'false' ? false : true,
-                    popTips: popTips && popTips.length > 0 ? eval('(' + popTips + ')') : {}
+                    popTips: popTips && popTips.length > 0 ? eval('(0,' + popTips + ')') : {}
                 });
                 $el.data('upload', data);
             }

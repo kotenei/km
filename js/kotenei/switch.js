@@ -131,9 +131,9 @@ define('kotenei/switch', ['jquery'], function ($) {
 
             if (!data) {
                 data = new Switch($el, {
-                    values: values && values.length > 0 ? eval('(' + values + ')') : undefined,
+                    values: values && values.length > 0 ? eval('(0,' + values + ')') : undefined,
                     callback: {
-                        onclick: funcName && funcName.length > 0 ? eval('(' + funcName + ')') : $.noop
+                        onclick: funcName && funcName.length > 0 ? eval('(0,' + funcName + ')') : $.noop
                     }
                 });
                 $el.data('switch', data);
