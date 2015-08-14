@@ -249,7 +249,10 @@ validate.addMethod('complare', function (value, $element) {
 
 
 //给某个元素设置规则，elm为非jQuery对象
-validate.setRules(elm,{required:true,messages:'不能为空'});
+validate.setRules(elm,{
+    rules: { email: true },
+    messages: {email:'请输入正确的email'}
+});
 
 
 //移除某个元素已有的规则，elm为非jQuery对象，ruleName为规则的名称，如required,email等
