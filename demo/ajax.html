@@ -5,7 +5,7 @@
     <title>Ajax</title>
     <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="../dist/css/kotenei.min.css" rel="stylesheet" />
+    <link href="../dist/css/km.min.css" rel="stylesheet" />
     <link href="docs.min.css" rel="stylesheet" />
     <link href="demo.css" rel="stylesheet" />
 </head>
@@ -33,7 +33,7 @@
                     <code>
 
 //get提交
-kotenei.ajax.get(url,data,[config])
+KM.ajax.get(url,data,[config])
        .done(function(returnStatus){
             ... ajax success    
         })
@@ -46,11 +46,11 @@ kotenei.ajax.get(url,data,[config])
 
 
 //post提交，用法跟get相同
-kotenei.ajax.post(url,data,[config]);
+KM.ajax.post(url,data,[config]);
 
 
 //表单提交，回调函数跟get相同
-kotenei.ajax.ajaxForm($form,[config]);
+KM.ajax.ajaxForm($form,[config]);
 
 
 

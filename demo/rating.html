@@ -5,7 +5,7 @@
     <title>评级打分</title>
     <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="../dist/css/kotenei.min.css" rel="stylesheet" />
+    <link href="../dist/css/km.min.css" rel="stylesheet" />
     <link href="docs.min.css" rel="stylesheet" />
     <link href="demo.css" rel="stylesheet" />
 </head>
@@ -46,7 +46,7 @@
             <div class="highlight">
                 <pre>
                     <code data-lang="js" class="language-js">
-var rating = new kotenei.Rating($('.k-rating',options);
+var rating = new KM.Rating($('.k-rating',options);
                     </code>
                 </pre>
             </div>
@@ -155,9 +155,9 @@ rating.on('click', function (score, value) {
     <script type="text/javascript" src="main.js"></script>
     <script type="text/javascript">
 
-        require(['kotenei'], function (kotenei) {
+        require(['KM'], function (KM) {
             var $custom = $('#custom');
-            var rating = new kotenei.Rating($('.k-rating'), {
+            var rating = new KM.Rating($('.k-rating'), {
                 path: '../dist/images/star',
                 starOff: 'star-off-big.png',
                 starHalf: 'star-half-big.png',

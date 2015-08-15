@@ -5,7 +5,7 @@
     <title>无限滚动</title>
     <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="../dist/css/kotenei.min.css" rel="stylesheet" />
+    <link href="../dist/css/km.min.css" rel="stylesheet" />
     <link href="docs.min.css" rel="stylesheet" />
     <link href="demo.css" rel="stylesheet" />
     <style type="text/css">
@@ -39,7 +39,7 @@
             <div class="highlight">
                 <pre>
                     <code data-lang="js" class="language-js">
-var infiniteScroll = new kotenei.InfiniteScroll(options)
+var infiniteScroll = new KM.InfiniteScroll(options)
                     </code>
                 </pre>
             </div>
@@ -82,12 +82,12 @@ var infiniteScroll = new kotenei.InfiniteScroll(options)
     <script type="text/javascript" src="vendor/require/require.js"></script>
     <script type="text/javascript" src="main.js"></script>
     <script type="text/javascript">
-        require(['kotenei'], function (kotenei) {
+        require(['KM'], function (KM) {
             var arr = [];
             var $watch = $("#list"),
                 $scrollerContainer = $('#scrollerContainer');
 
-            var infiniteScroll = new kotenei.InfiniteScroll({
+            var infiniteScroll = new KM.InfiniteScroll({
                 $scrollElement: $scrollerContainer,
                 $watchElement: $watch,
                 callback: function () {

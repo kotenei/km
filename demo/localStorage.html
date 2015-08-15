@@ -5,7 +5,7 @@
     <title>本地存储</title>
     <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="../dist/css/kotenei.min.css" rel="stylesheet" />
+    <link href="../dist/css/km.min.css" rel="stylesheet" />
     <link href="docs.min.css" rel="stylesheet" />
     <link href="demo.css" rel="stylesheet" />
 </head>
@@ -37,26 +37,26 @@
  * @value  {Object} value - 缓存值，不设置则删除缓存内容
  * @duration  {Number} duration - 过期时间（秒），不设置或值小于1则为永久保存   
  */
-kotenei.cache.set(key,value,duration);
+KM.cache.set(key,value,duration);
 
 /**
  * 获取缓存
  * @key  {String} key - 缓存的key      
  */
-kotenei.cache.get(key);
+KM.cache.get(key);
 
 
 /**
  * 移除缓存
  * @key  {String} key - 缓存的key     
  */
-kotenei.cache.remove(key);
+KM.cache.remove(key);
 
 
 /**
  * 清空缓存      
  */
-kotenei.cache.clear();
+KM.cache.clear();
 
                     </code>
                 </pre>

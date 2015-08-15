@@ -5,7 +5,7 @@
     <title>焦点图</title>
     <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="../dist/css/kotenei.min.css" rel="stylesheet" />
+    <link href="../dist/css/km.min.css" rel="stylesheet" />
     <link href="docs.min.css" rel="stylesheet" />
     <link href="demo.css" rel="stylesheet" />
 </head>
@@ -76,7 +76,7 @@
             <div class="highlight">
                 <pre>
                     <code data-lang="js" class="language-js">
-kotenei.focusMap($('.k-focusmap'), options);
+KM.focusMap($('.k-focusmap'), options);
                     </code>
                 </pre>
             </div>
@@ -91,6 +91,12 @@ kotenei.focusMap($('.k-focusmap'), options);
                     </tr>
                 </thead>
                 <tbody>
+                    <tr>
+                        <td>containerWidth</td>
+                        <td>string</td>
+                        <td>null</td>
+                        <td>容器宽度，默认使用图片宽度，可设置'100%'</td>
+                    </tr>
                     <tr>
                         <td>width</td>
                         <td>int</td>
@@ -116,8 +122,8 @@ kotenei.focusMap($('.k-focusmap'), options);
     <script type="text/javascript" src="vendor/require/require.js"></script>
     <script type="text/javascript" src="main.js"></script>
     <script type="text/javascript">
-        require(['kotenei'], function (kotenei) {
-            kotenei.focusMap($('.k-focusmap'), {
+        require(['KM'], function (KM) {
+            KM.focusMap($('.k-focusmap'), {
                 width: 600,
                 height: 300
             });

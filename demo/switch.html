@@ -5,7 +5,7 @@
     <title>开关</title>
     <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="../dist/css/kotenei.min.css" rel="stylesheet" />
+    <link href="../dist/css/km.min.css" rel="stylesheet" />
     <link href="docs.min.css" rel="stylesheet" />
     <link href="demo.css" rel="stylesheet" />
 </head>
@@ -39,7 +39,7 @@
                 <pre>
                     <code data-lang="js" class="language-js">
 //$elms为带有data-module=switch属性的元素，可不填（不填性能会低下）
-kotenei.Switch.Global($elms);
+KM.Switch.Global($elms);
                     </code>
                 </pre>
             </div>
@@ -109,7 +109,7 @@ function test(value) {
             <div class="highlight">
                 <pre>
                     <code data-lang="js" class="language-js">
-var chkSwitch=new kotenei.Switch($elm,options);
+var chkSwitch=new KM.Switch($elm,options);
                     </code>
                 </pre>
             </div>
@@ -165,13 +165,13 @@ var chkSwitch=new kotenei.Switch($elm,options);
             alert(value)
         }
 
-        require(['kotenei'], function (kotenei) {
+        require(['KM'], function (KM) {
             
 
-            kotenei.Switch.Global();
+            KM.Switch.Global();
 
 
-            var chkSwitch = new kotenei.Switch($("#custom"), {
+            var chkSwitch = new KM.Switch($("#custom"), {
                 values: {
                     on: { text: '正确', value: 'right' },
                     off: { text: '错误', value: 'wrong' }

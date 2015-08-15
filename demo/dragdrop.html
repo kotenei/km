@@ -5,7 +5,7 @@
     <title>拖放</title>
     <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="../dist/css/kotenei.min.css" rel="stylesheet" />
+    <link href="../dist/css/km.min.css" rel="stylesheet" />
     <link href="docs.min.css" rel="stylesheet" />
     <link href="demo.css" rel="stylesheet" />
 </head>
@@ -36,7 +36,7 @@
             <h3>初始化</h3>
             <pre>
                 <code>
-var dragdrop=new kotenei.Dragdrop(options);
+var dragdrop=new KM.Dragdrop(options);
                 </code>
             </pre>
             <h3>参数 options</h3>
@@ -123,9 +123,9 @@ var dragdrop=new kotenei.Dragdrop(options);
     <script type="text/javascript" src="vendor/require/require.js"></script>
     <script type="text/javascript" src="main.js"></script>
     <script type="text/javascript">
-        require(['kotenei'], function (kotenei) {
+        require(['KM'], function (KM) {
             var $feedback = $('#feedback');
-            var dragdrop = new kotenei.Dragdrop({
+            var dragdrop = new KM.Dragdrop({
                 $range: $('#panel'),
                 $layer: $('#layer'),
                 resizable: true,

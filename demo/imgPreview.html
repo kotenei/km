@@ -5,7 +5,7 @@
     <title>图片预览</title>
     <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="../dist/css/kotenei.min.css" rel="stylesheet" />
+    <link href="../dist/css/km.min.css" rel="stylesheet" />
     <link href="docs.min.css" rel="stylesheet" />
     <link href="demo.css" rel="stylesheet" />
 </head>
@@ -53,7 +53,7 @@
             <div class="highlight">
                 <pre>
                     <code data-lang="js" class="language-js">
-kotenei.imgPreview($elms,options);
+KM.imgPreview($elms,options);
                     </code>
                 </pre>
             </div>
@@ -93,8 +93,8 @@ kotenei.imgPreview($elms,options);
     <script type="text/javascript" src="vendor/require/require.js"></script>
     <script type="text/javascript" src="main.js"></script>
     <script type="text/javascript">
-        require(['kotenei'], function (kotenei) {
-            kotenei.imgPreview($(".k-table").find('img'));
+        require(['KM'], function (KM) {
+            KM.imgPreview($(".k-table").find('img'));
         });
     </script>
 </body>

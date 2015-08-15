@@ -5,7 +5,7 @@
     <title>加载提示</title>
     <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="../dist/css/kotenei.min.css" rel="stylesheet" />
+    <link href="../dist/css/km.min.css" rel="stylesheet" />
     <link href="docs.min.css" rel="stylesheet" />
     <link href="demo.css" rel="stylesheet" />
 </head>
@@ -33,10 +33,10 @@
                 <pre>
                     <code data-lang="js" class="language-js">
 //显示
-kotenei.Loading.show();
+KM.Loading.show();
 
 //隐藏
-kotenei.Loading.hide();
+KM.Loading.hide();
                     </code>
                 </pre>
             </div>
@@ -47,11 +47,11 @@ kotenei.Loading.hide();
     <script type="text/javascript" src="main.js"></script>
     <script type="text/javascript">
 
-        require(['kotenei'], function (kotenei) {
-            kotenei.Loading.show();
+        require(['KM'], function (KM) {
+            KM.Loading.show();
 
             setTimeout(function () {
-                kotenei.Loading.hide();
+                KM.Loading.hide();
             }, 1000)
         });
 

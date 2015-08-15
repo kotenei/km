@@ -5,7 +5,7 @@
     <title>树型表格</title>
     <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="../dist/css/kotenei.min.css" rel="stylesheet" />
+    <link href="../dist/css/km.min.css" rel="stylesheet" />
     <link href="docs.min.css" rel="stylesheet" />
     <link href="demo.css" rel="stylesheet" />
 </head>
@@ -35,7 +35,7 @@
                 <pre>
                     <code data-lang="js" class="language-js">
 //创建treeTable对象
-var treeTable = new kotenei.TreeTable($elm,options);
+var treeTable = new KM.TreeTable($elm,options);
                     </code>
                 </pre>
             </div>
@@ -148,7 +148,7 @@ data:[
     <script type="text/javascript" src="main.js"></script>
     <script type="text/javascript">
 
-        require(['kotenei'], function (kotenei) {
+        require(['KM'], function (KM) {
 
             var data = [
                 { nodeId: 1, parentId: 0, id: 1, name: '信息管理' },
@@ -158,7 +158,7 @@ data:[
                 { nodeId: 4, parentId: 0, id: 4, name: '日程管理' },
                 { nodeId: 5, parentId: 4, id: 5, name: '日程列表' }
             ];
-            var treeTable = new kotenei.TreeTable($('#treetable'), {
+            var treeTable = new KM.TreeTable($('#treetable'), {
                 column: 1,
                 columns: [
                     {

@@ -15,11 +15,11 @@ var config     = JSON.parse(fs.readFileSync(configPath, 'utf8'));
 //将所有 kotenei 合成一份定义
 var build = function (defineName) {
 
-    defineName = defineName || 'kotenei';
+    defineName = defineName || 'km';
 
     return through2.obj(function (file, enc, callback) {
         var soure   = file.contents.toString('utf8');
-        var jsPath  = path.join(__dirname, 'js', 'kotenei');
+        var jsPath  = path.join(__dirname, 'js', 'km');
         var modules = [];
        
         //列出所有文件
@@ -32,7 +32,7 @@ var build = function (defineName) {
             }
         });
         var reqs = modules.map(function(v){
-            return '"kotenei/' + v + '"';
+            return '"km/' + v + '"';
         });
 
         var safeModules = modules.map(function(v){
@@ -44,7 +44,7 @@ var build = function (defineName) {
         def.push('    return {');
         var attr = [];
         modules.forEach(function(v){
-            if(config['function'].indexOf('kotenei/' + v) === -1){
+            if(config['function'].indexOf('km/' + v) === -1){
                 //首字母大写
                 var names = v.split('');
                 names[0] = names[0].toUpperCase(); 
@@ -71,22 +71,23 @@ gulp.task('less', function () {
     .pipe(less({
       paths: [path.join(__dirname, 'style')]
     }))
+    .pipe(concat('km.css'))
     .pipe(gulp.dest('./dist/css'))
     .pipe(minifyCSS())
-    .pipe(rename('kotenei.min.css'))
+    .pipe(rename('km.min.css'))
     .pipe(gulp.dest('./dist/css'))
 });
 
 gulp.task('scripts', function () {
 
     gulp.src([
-        './js/kotenei/*.js'
+        './js/km/*.js'
     ])
-    .pipe(concat('kotenei.all.js'))
-    .pipe(build())
+    .pipe(concat('km.js'))
+    .pipe(build('KM'))
     .pipe(gulp.dest('./dist'))
     .pipe(uglify())
-    .pipe(rename('kotenei.all.min.js'))
+    .pipe(rename('km.min.js'))
     .pipe(gulp.dest('./dist'));
 
     //gulp.src([
@@ -104,7 +105,7 @@ gulp.task('watch', function(){
     ], ['less']);
 
     gulp.watch([
-        './js/kotenei/*.js',
+        './js/km/*.js',
     ], ['scripts']);
 });
 

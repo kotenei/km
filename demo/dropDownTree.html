@@ -5,7 +5,7 @@
     <title>下拉树</title>
     <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="../dist/css/kotenei.min.css" rel="stylesheet" />
+    <link href="../dist/css/KM.min.css" rel="stylesheet" />
     <link href="docs.min.css" rel="stylesheet" />
     <link href="demo.css" rel="stylesheet" />
 </head>
@@ -54,7 +54,7 @@
             <pre>
                 <code>
 //$elms为带有data-module=dropdowntree属性的元素，可不填（不填性能会低下）
-kotenei.DropDownTree.Global($elms);
+KM.DropDownTree.Global($elms);
                 </code>
             </pre>
             <h3>HTML参数设置</h3>
@@ -179,7 +179,7 @@ function check(nodes) {
             <h3>初始化</h3>
             <pre>
                 <code>
-var dropDownTree=new kotenei.DropDownTree($elm,options);
+var dropDownTree=new KM.DropDownTree($elm,options);
                 </code>
             </pre>
             <h3>参数 options</h3>
@@ -293,7 +293,7 @@ dropDownTree.hide();
             alert('check')
         }
 
-        require(['kotenei'], function (kotenei) {
+        require(['KM'], function (KM) {
             var data = [
                 {
                     nodeId: 1, parentId: 0, rootId: 0, text: '父节点', value: 123, open: true, nodes: [
@@ -302,16 +302,16 @@ dropDownTree.hide();
                 }
 
             ];
-            var selectTree = new kotenei.DropDownTree($('#txtSelectTree'), {
+            var selectTree = new KM.DropDownTree($('#txtSelectTree'), {
                 data: data
             });
 
-            var multipleTree = new kotenei.DropDownTree($('#txtMultipleTree'), {
+            var multipleTree = new KM.DropDownTree($('#txtMultipleTree'), {
                 data: data,
                 multiple: true
             });
 
-            kotenei.DropDownTree.Global();
+            KM.DropDownTree.Global();
         });
 
     </script>

@@ -5,7 +5,7 @@
     <title>表单验证</title>
     <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="../dist/css/kotenei.min.css" rel="stylesheet" />
+    <link href="../dist/css/KM.min.css" rel="stylesheet" />
     <link href="docs.min.css" rel="stylesheet" />
     <link href="demo.css" rel="stylesheet" />
 </head>
@@ -98,10 +98,10 @@
                 <pre>
                     <code data-lang="js" class="language-js">
 //普通验证
-var validate=new kotenei.Validate($form,options);
+var validate=new KM.Validate($form,options);
 
 //带tooltips提示的验证
-var validate=new kotenei.ValidateTooltips($form,options);
+var validate=new KM.ValidateTooltips($form,options);
                     </code>
                 </pre>
             </div>
@@ -268,8 +268,8 @@ validate.removeRule(elm,ruleName);
     <script type="text/javascript" src="main.js"></script>
     <script type="text/javascript">
 
-        require(['kotenei'], function (kotenei) {
-            var validate1 = new kotenei.Validate($("#form"), {
+        require(['KM'], function (KM) {
+            var validate1 = new KM.Validate($("#form"), {
                 rules: {
                     //'userName': { required: true },
                     'password': { required: true },
@@ -284,7 +284,7 @@ validate.removeRule(elm,ruleName);
                 }
             });
 
-            var validate2 = new kotenei.ValidateTooltips($("#form2"), {
+            var validate2 = new KM.ValidateTooltips($("#form2"), {
                 rules: {
                     //'userName': { required: true },
                     'password': { required: true },

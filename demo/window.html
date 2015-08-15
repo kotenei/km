@@ -5,7 +5,7 @@
     <title>模态窗体</title>
     <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="../dist/css/kotenei.min.css" rel="stylesheet" />
+    <link href="../dist/css/km.min.css" rel="stylesheet" />
     <link href="docs.min.css" rel="stylesheet" />
     <link href="demo.css" rel="stylesheet" />
 </head>
@@ -37,7 +37,7 @@
             <div class="highlight">
                 <pre>
                     <code data-lang="js" class="language-js">
-kotenei.Window.alert('提示框', '警告提示', function () {
+KM.Window.alert('提示框', '警告提示', function () {
     alert('回调');
 });
                     </code>
@@ -86,7 +86,7 @@ kotenei.Window.alert('提示框', '警告提示', function () {
             <div class="highlight">
                 <pre>
                     <code data-lang="js" class="language-js">
-kotenei.Window.confirm('确认对话框xxx','您确认要XXXX吗？', function () {
+KM.Window.confirm('确认对话框xxx','您确认要XXXX吗？', function () {
     alert('确认');
 }, function () {
     alert('取消');
@@ -156,7 +156,7 @@ kotenei.Window.confirm('确认对话框xxx','您确认要XXXX吗？', function (
             <pre>
                 <code>
 //$elms为带有data-module=window属性的元素，可不填（不填性能会低下）
-kotenei.Window.Global($elms);
+KM.Window.Global($elms);
                 </code>
             </pre>
             <h3>HTML参数设置</h3>
@@ -297,7 +297,7 @@ function close() {
 }
 
 //全局调用
-kotenei.Window.Global($('#btnGlobal'));
+KM.Window.Global($('#btnGlobal'));
                 </code>
             </pre>
             <hr />
@@ -313,7 +313,7 @@ kotenei.Window.Global($('#btnGlobal'));
                 <pre>
                     <code data-lang="js" class="language-js">
 //创建win对象
-var win=new kotenei.Window(options);
+var win=new KM.Window(options);
                     </code>
                 </pre>
             </div>
@@ -484,11 +484,11 @@ win.setContent('content');
             }
         }];
 
-        require(['kotenei'], function (kotenei) {
+        require(['KM'], function (KM) {
 
-            kotenei.Window.Global();
+            KM.Window.Global();
 
-            var win = new kotenei.Window({
+            var win = new KM.Window({
                 width: 600,
                 title: '标题',
                 content: '<h4>Overflowing text to show scroll behavior</h4><p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p><p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p><p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p><p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p><p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p><p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p><p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p><p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p><p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>',
@@ -510,11 +510,11 @@ win.setContent('content');
             });
 
             $(document.body).on('click', '[role=alert]', function () {
-                kotenei.Window.alert('提示框', '警告提示', function () {
+                KM.Window.alert('提示框', '警告提示', function () {
                     alert('回调');
                 });
             }).on('click', '[role=confirm]', function () {
-                kotenei.Window.confirm('确认对话框xxx', '您确认要XXXX吗？', function () {
+                KM.Window.confirm('确认对话框xxx', '您确认要XXXX吗？', function () {
                     alert('确认');
                 }, function () {
                     alert('取消');

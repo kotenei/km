@@ -5,7 +5,7 @@
     <title>弹出框</title>
     <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="../dist/css/kotenei.min.css" rel="stylesheet" />
+    <link href="../dist/css/km.min.css" rel="stylesheet" />
     <link href="docs.min.css" rel="stylesheet" />
     <link href="demo.css" rel="stylesheet" />
 </head>
@@ -39,7 +39,7 @@
                 <pre>
                     <code data-lang="js" class="language-js">
 //$elms为带有data-module=popover属性的元素，可不填（不填性能会低下）
-kotenei.Popover.Global($elms);
+KM.Popover.Global($elms);
                     </code>
                 </pre>
             </div>
@@ -109,7 +109,7 @@ kotenei.Popover.Global($elms);
             <div class="highlight">
                 <pre>
                     <code data-lang="js" class="language-js">
-var popover = new kotenei.Popover($elm, options);
+var popover = new KM.Popover($elm, options);
                     </code>
                 </pre>
             </div>
@@ -175,13 +175,13 @@ popover.hide();
     <script type="text/javascript" src="vendor/require/require.js"></script>
     <script type="text/javascript" src="main.js"></script>
     <script type="text/javascript">
-        require(['kotenei'], function (kotenei) {
+        require(['KM'], function (KM) {
 
-            kotenei.Popover.Global();
+            KM.Popover.Global();
 
             var $custom = $("#custom");
 
-            var popover = new kotenei.Popover($custom, {
+            var popover = new KM.Popover($custom, {
                 placement: 'right',
                 title: '自定义标题',
                 content: '自定义内容',

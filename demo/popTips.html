@@ -5,7 +5,7 @@
     <title>弹出提示</title>
     <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="../dist/css/kotenei.min.css" rel="stylesheet" />
+    <link href="../dist/css/km.min.css" rel="stylesheet" />
     <link href="docs.min.css" rel="stylesheet" />
     <link href="demo.css" rel="stylesheet" />
 </head>
@@ -42,13 +42,13 @@
                 <pre>
                     <code data-lang="js" class="language-js">
 
-kotenei.popTips.success("成功！", function () {
+KM.popTips.success("成功！", function () {
     alert("回调函数");
 });
 
-kotenei.popTips.error("失败！", 1500);
+KM.popTips.error("失败！", 1500);
 
-kotenei.popTips.warning("警告！", 1500, function () {
+KM.popTips.warning("警告！", 1500, function () {
     alert("回调函数");
 });
                     </code>
@@ -91,19 +91,19 @@ kotenei.popTips.warning("警告！", 1500, function () {
     <script type="text/javascript" src="main.js"></script>
     <script type="text/javascript">
 
-        require(['kotenei'], function (kotenei) {
+        require(['KM'], function (KM) {
             $("#btnSuccess").click(function () {
-                kotenei.popTips.success("成功！", function () {
+                KM.popTips.success("成功！", function () {
                     alert("回调函数");
                 });
             });
 
             $("#btnError").click(function () {
-                kotenei.popTips.error("失败！", 1500);
+                KM.popTips.error("失败！", 1500);
             });
 
             $("#btnWarning").click(function () {
-                kotenei.popTips.warning("警告！", 1500, function () {
+                KM.popTips.warning("警告！", 1500, function () {
                     alert("回调函数");
                 });
             });

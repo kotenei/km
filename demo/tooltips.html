@@ -5,7 +5,7 @@
     <title>工具提示</title>
     <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="../dist/css/kotenei.min.css" rel="stylesheet" />
+    <link href="../dist/css/km.min.css" rel="stylesheet" />
     <link href="docs.min.css" rel="stylesheet" />
     <link href="demo.css" rel="stylesheet" />
 </head>
@@ -39,7 +39,7 @@
                 <pre>
                     <code data-lang="js" class="language-js">
 //$elms为带有data-module=tooltips属性的元素，可不填（不填性能会低下）
-kotenei.Tooltips.Global($elms);
+KM.Tooltips.Global($elms);
                     </code>
                 </pre>
             </div>
@@ -107,7 +107,7 @@ kotenei.Tooltips.Global($elms);
             <div class="highlight">
                 <pre>
                     <code data-lang="js" class="language-js">
-var tooltips = new kotenei.Tooltips($elm, options);
+var tooltips = new KM.Tooltips($elm, options);
                     </code>
                 </pre>
             </div>
@@ -169,11 +169,11 @@ tooltips.hide();
     <script type="text/javascript" src="vendor/require/require.js"></script>
     <script type="text/javascript" src="main.js"></script>
     <script type="text/javascript">
-        require(['kotenei'], function (kotenei) {
-            kotenei.Tooltips.Global();
+        require(['KM'], function (KM) {
+            KM.Tooltips.Global();
 
             var $custom = $("#custom");
-            var tooltips = new kotenei.Tooltips($custom, {
+            var tooltips = new KM.Tooltips($custom, {
                 tipClass: 'info',
                 placement: 'right',
                 content: '<h3>自定义内容</h3>',

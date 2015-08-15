@@ -5,7 +5,7 @@
     <title>自动完成</title>
     <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="../dist/css/kotenei.min.css" rel="stylesheet" />
+    <link href="../dist/css/KM.min.css" rel="stylesheet" />
     <link href="docs.min.css" rel="stylesheet" />
     <link href="demo.css" rel="stylesheet" />
 </head>
@@ -37,7 +37,7 @@
             <div class="highlight">
                 <pre>
                     <code data-lang="js" class="language-js">
-kotenei.autoComplete($elm,options);
+KM.autoComplete($elm,options);
                     </code>
                 </pre>
             </div>
@@ -127,7 +127,7 @@ callback: {
     <script type="text/javascript" src="vendor/require/require.js"></script>
     <script type="text/javascript" src="main.js"></script>
     <script type="text/javascript">
-        require(['kotenei'], function (kotenei) {
+        require(['KM'], function (KM) {
             var data = [
 	        "Aberdeen", "Ada", "Adamsville", "Addyston", "Adelphi", "Adena", "Adrian", "Akron",
 	        "Albany", "Alexandria", "Alger", "Alledonia", "Alliance", "Alpha", "Alvada",
@@ -332,7 +332,7 @@ callback: {
 	        "Zoar"
             ];
             
-            kotenei.autoComplete($("#txtAutoComplete"), {
+            KM.autoComplete($("#txtAutoComplete"), {
                 data: data,
                 callback: {
                     setValue: function (item) {

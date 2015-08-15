@@ -5,7 +5,7 @@
     <title>树型菜单</title>
     <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="../dist/css/kotenei.min.css" rel="stylesheet" />
+    <link href="../dist/css/km.min.css" rel="stylesheet" />
     <link href="docs.min.css" rel="stylesheet" />
     <link href="demo.css" rel="stylesheet" />
 </head>
@@ -39,7 +39,7 @@
                 <pre>
                     <code data-lang="js" class="language-js">
 //创建tree对象
-var tree = new kotenei.Tree($elm,options);
+var tree = new KM.Tree($elm,options);
                     </code>
                 </pre>
             </div>
@@ -156,7 +156,7 @@ tree.removeNode(node);
     <script type="text/javascript" src="main.js"></script>
     <script type="text/javascript">
 
-        require(['kotenei'], function (kotenei) {
+        require(['KM'], function (KM) {
             var nodes = [
             {
                 nodeId: 1, parentId: 0, rootId: 0, text: '父节点', value: 123, isParent: true, open: true, nodes:
@@ -183,7 +183,7 @@ tree.removeNode(node);
 
             var num = 10;
 
-            var tree = new kotenei.Tree($("#tree"), {
+            var tree = new KM.Tree($("#tree"), {
                 data: nodes,
                 check: {
                     enable: true,

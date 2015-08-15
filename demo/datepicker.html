@@ -5,7 +5,7 @@
     <title>日期选择</title>
     <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="../dist/css/kotenei.min.css" rel="stylesheet" />
+    <link href="../dist/css/KM.min.css" rel="stylesheet" />
     <link href="docs.min.css" rel="stylesheet" />
     <link href="demo.css" rel="stylesheet" />
 </head>
@@ -34,7 +34,7 @@
             <pre>
             <code data-lang="js" class="language-js">
 //$elms为带有data-module=datepicker属性的元素，可不填（不填性能会低下）
-kotenei.DatePicker.Global($elms);
+KM.DatePicker.Global($elms);
                 </code>
             </pre>
 
@@ -134,7 +134,7 @@ kotenei.DatePicker.Global($elms);
                 <pre>
                 <code data-lang="js" class="language-js">
 //创建datepicker对象
-var datePicker = new kotenei.DatePicker($elm,options);
+var datePicker = new KM.DatePicker($elm,options);
                     </code>
                 </pre>
             </div>
@@ -243,16 +243,16 @@ datePicker.on('selected',function(date){
     <script type="text/javascript" src="main.js"></script>
     <script type="text/javascript">
 
-        require(['kotenei'], function (kotenei) {
+        require(['KM'], function (KM) {
 
 
 
-            var datePicker = new kotenei.DatePicker($("#picker"), {
+            var datePicker = new KM.DatePicker($("#picker"), {
                 format: 'yyyy-MM-dd'
             });
 
             //全局
-            kotenei.DatePicker.Global();
+            KM.DatePicker.Global();
         });
 
 
