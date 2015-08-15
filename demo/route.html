@@ -1,0 +1,117 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>路由</title>
+    <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../dist/css/km.min.css" rel="stylesheet" />
+    <link href="docs.min.css" rel="stylesheet" />
+    <link href="demo.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="header">
+        <div class="wrap">
+            <ul class="nav-list">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="###" class="active">demo</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="main wrap">
+        <ul class="demo-nav-list" id="navList"></ul>
+        <script type="text/javascript" src="nav.js"></script>
+        <script type="text/javascript">
+            nav(document.getElementById('navList'), 'route');
+        </script>
+        <div class="demo-container">
+            <h1 class="page-header">路由</h1>
+            <p><code>使用此路由配合mv*框架，可以实现现今流行的单页应用程序</code></p>
+
+            <div class="bs-example bs-example-padded-bottom">
+
+                <p id="log" style="font-size:14px;font-weight:bold;margin-bottom:10px;"></p>
+
+                <p><a href="#/">首页</a></p>
+
+                <p><a href="#/booklist">/booklist</a></p>
+
+                <p><a href="#/book/1">/book/1</a></p>
+
+                <p><a href="#/book/1?date=20140506&sn=U201A">/book/1?date=20140506&sn=U201A</a></p>
+
+                <button type="button" class="k-btn k-btn-default" id="btnBack">后退</button>
+                <button type="button" class="k-btn k-btn-default" id="btnGo">前进</button>
+            </div>
+
+            <h3>使用</h3>
+            <div class="highlight">
+                <pre>
+                <code>
+//创建router对象
+var router = new KM.Router();
+
+//配置路由表
+router.map('/', function (context) {
+    $log.text('首页')
+}).map('/booklist', function () {
+    $log.text('列表页');
+}).map('/book/{id}', { id: '^\\d+$' }, function (context) {
+    var str = '详情页：参数：'
+    for (var k in context) {
+        str += k + '=' + context[k] + '；';
+    }
+    $log.text(str);
+});
+
+//路由初始化执行
+router.init();
+
+
+/**
+ * 设置路由表函数
+ * @param  {String} routeUrl  - 路由地址
+ * @param  {Object} constraints - 正则约束（类似.NET的路由规则写法，如{id:'正则规则'}）
+ * @param  {Function} callback - 回调函数（返回参数context：路由地址中的参数和值组成的的对象，详情请看源码）
+ * @return {Object}     
+*/
+router.map(routerUrl,constraints,callback);
+                    </code>
+                </pre>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="vendor/require/require.js"></script>
+    <script type="text/javascript" src="main.js"></script>
+    <script type="text/javascript">
+        require(['jquery', 'KM'], function ($, KM) {
+            var $log = $('#log');
+            var router = new KM.Router();
+            router.map('/', function (context) {
+                $log.text('首页')
+            }).map('/booklist', function () {
+                $log.text('列表页');
+            }).map('/book/{id}', { id: '^\\d+$' }, function (context) {
+
+                var str = '详情页：参数：'
+
+                for (var k in context) {
+                    str += k + '=' + context[k] + '；';
+                }
+
+                $log.text(str);
+            });
+            router.init();
+
+            $('#btnBack').on('click', function () {
+                history.go(-1);
+            });
+
+            $('#btnGo').on('click', function () {
+                history.go(+1);
+            });
+        });
+    </script>
+</body>
+</html>

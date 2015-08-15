@@ -102,8 +102,8 @@ define('km/router', [], function () {
     /**
      * 设置路由
      * @param  {String} routeUrl  - 路由地址
-     * @param  {String} templateUrl - 模板地址
-     * @param  {Object} constraints - 正则约束
+     * @param  {String} constraints - 正则约束
+     * @param  {Function} callback - 回调函数
      * @return {Object}     
      */
     Router.prototype.map = function (routeUrl, constraints, callback) {
