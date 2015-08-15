@@ -41,7 +41,7 @@ var build = function (defineName) {
 
         var def = [];
         def.push('define("'+defineName+'", [' + reqs.join(', ') + '], function(' + safeModules.join(', ') + '){');
-        def.push('    return {');
+        def.push('    return window.KM={');
         var attr = [];
         modules.forEach(function(v){
             if(config['function'].indexOf('km/' + v) === -1){

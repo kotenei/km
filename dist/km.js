@@ -4434,7 +4434,7 @@ define('km/loading', ['jquery', 'spin'], function ($, Spinner) {
             trail: 60, // 花瓣旋转时的拖影(百分比)
             shadow: false, // 花瓣是否显示阴影
             hwaccel: false, // 是否启用硬件加速及高速旋转            
-            className: 'spinner', // css 样式名称
+            className: 'k-spinner', // css 样式名称
             zIndex: 2e9, // spinner的z轴 (默认是2000000000)
             top: '70px', // spinner 相对父容器Top定位 单位 px
             left: '70px'// spinner 相对父容器Left定位 单位 px
@@ -9148,7 +9148,7 @@ define('km/wordLimit', ['jquery'], function ($) {
 });
 ;
 define("KM", ["km/ajax", "km/app", "km/autoComplete", "km/cache", "km/clipZoom", "km/contextMenu", "km/datePicker", "km/dragdrop", "km/dropdown", "km/dropdownDatepicker", "km/dropDownTree", "km/event", "km/focusMap", "km/highlight", "km/imgPreview", "km/infiniteScroll", "km/lazyload", "km/loading", "km/magnifier", "km/pager", "km/placeholder", "km/popover", "km/popTips", "km/rating", "km/router", "km/slider", "km/switch", "km/tooltips", "km/tree", "km/treeTable", "km/upload", "km/util", "km/validate", "km/validateTooltips", "km/waterfall", "km/window", "km/wordLimit"], function(_ajax, _app, _autoComplete, _cache, _clipZoom, _contextMenu, _datePicker, _dragdrop, _dropdown, _dropdownDatepicker, _dropDownTree, _event, _focusMap, _highlight, _imgPreview, _infiniteScroll, _lazyload, _loading, _magnifier, _pager, _placeholder, _popover, _popTips, _rating, _router, _slider, _switch, _tooltips, _tree, _treeTable, _upload, _util, _validate, _validateTooltips, _waterfall, _window, _wordLimit){
-    return {
+    return window.KM={
         "ajax" : _ajax,
         "App" : _app,
         "autoComplete" : _autoComplete,

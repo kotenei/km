@@ -21,7 +21,7 @@ define('km/loading', ['jquery', 'spin'], function ($, Spinner) {
             trail: 60, // 花瓣旋转时的拖影(百分比)
             shadow: false, // 花瓣是否显示阴影
             hwaccel: false, // 是否启用硬件加速及高速旋转            
-            className: 'spinner', // css 样式名称
+            className: 'k-spinner', // css 样式名称
             zIndex: 2e9, // spinner的z轴 (默认是2000000000)
             top: '70px', // spinner 相对父容器Top定位 单位 px
             left: '70px'// spinner 相对父容器Left定位 单位 px

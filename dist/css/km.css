@@ -1981,6 +1981,14 @@ table.k-treeTable tr.expanded.accept td span.indenter a {
   overflow: hidden;
   float: left;
 }
+.k-upload-box .button-box .loading-box {
+  position: relative;
+  width: 15px;
+  height: 15px;
+  display: inline-block;
+  vertical-align: middle;
+  display: none;
+}
 .k-upload-box .button-box input[type='file'] {
   position: absolute;
   left: 0;
