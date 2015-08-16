@@ -19,6 +19,7 @@
         { text: '弹出提示', activeCode: 'popTips', link: 'poptips.html' },
         { text: '工具提示', activeCode: 'tooltips', link: 'tooltips.html' },
         { text: '弹出框', activeCode: 'popover', link: 'popover.html' },
+        { text: '标签选择', activeCode: 'tagselector', link: 'tagselector.html' },
         { text: '开关', activeCode: 'switch', link: 'switch.html' },
         { text: '分页', activeCode: 'pager', link: 'pager.html' },
         { text: '加载提示', activeCode: 'loading', link: 'loading.html' },

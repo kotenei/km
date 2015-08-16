@@ -5460,8 +5460,8 @@ define('km/router', [], function () {
     /**
      * 设置路由
      * @param  {String} routeUrl  - 路由地址
-     * @param  {String} templateUrl - 模板地址
-     * @param  {Object} constraints - 正则约束
+     * @param  {String} constraints - 正则约束
+     * @param  {Function} callback - 回调函数
      * @return {Object}     
      */
     Router.prototype.map = function (routeUrl, constraints, callback) {
@@ -5865,6 +5865,124 @@ define('km/switch', ['jquery'], function ($) {
 
 });
 
+/*
+ * 标签选择模块
+ * @date:2015-08-16
+ * @author:kotenei(kotenei@qq.com)
+ */
+define('km/tagSelector', ['jquery'], function ($) {
+
+    var $selector,
+        $layer,
+        $left, $top, $right, $bottom;
+
+    var method = {
+        setSidePosition: function ($target) {
+
+            var info = {
+                width: $target.outerWidth(),
+                height: $target.outerHeight(),
+                top: $target.offset().top,
+                left: $target.offset().left
+            };
+
+            var offset = 0;
+
+            $left.css({ left: info.left - offset, top: info.top, height: info.height }).show();
+            $top.css({ left: info.left, top: info.top - offset, width: info.width + offset * 2 }).show();
+            $right.css({ left: info.left + info.width + offset, top: info.top, height: info.height }).show();
+            $bottom.css({ left: info.left, top: info.top + info.height + offset, width: info.width + offset * 2 }).show();
+
+        },
+        sideHide: function () {
+            $left.hide();
+            $top.hide();
+            $right.hide();
+            $bottom.hide();
+        },
+        showLayer: function ($target) {
+            var info = {
+                width: $target.outerWidth(),
+                height: $target.outerHeight(),
+                top: $target.offset().top,
+                left: $target.offset().left
+            };
+
+            $layer.show().css(info);
+        },
+        hideLayer: function () {
+            $layer.hide();
+        }
+    };
+
+    return function ($elms, options) {
+
+        if ($elms && ! ($elms instanceof $)) {
+            options = $elms;
+            $elms = $('[data-module=tagselector]');
+        }
+
+        options = $.extend(true, {
+            callback: {
+                onClick: $.noop
+            }
+        }, options || {});
+
+        $elms = $elms || $('[data-module=tagselector]');
+
+        if (!$elms || $elms.length == 0) {
+            return;
+        }
+
+        if (!$selector) {
+            var html = '<div class="k-tagSelector-layer"></div>' +
+                        '<div class="k-tagSelector-leftside"></div>' +
+                        '<div class="k-tagSelector-topside"></div>' +
+                        '<div class="k-tagSelector-rightside"></div>' +
+                        '<div class="k-tagSelector-bottomside"></div>';
+
+            $selector = $(html).appendTo(document.body);
+            $layer = $selector.filter('div.k-tagSelector-layer');
+            $left = $selector.filter('div.k-tagSelector-leftside');
+            $top = $selector.filter('div.k-tagSelector-topside');
+            $right = $selector.filter('div.k-tagSelector-rightside');
+            $bottom = $selector.filter('div.k-tagSelector-bottomside');
+        }
+
+        $elms.on('mouseover', function () {
+            method.setSidePosition($(this).addClass('k-tagSelector-curr'));
+            return false;
+        }).on('mouseout', function () {
+            $(this).removeClass('k-tagSelector-curr');
+            method.sideHide();
+        }).on('click', function () {
+            var $el = $(this),
+                onclick = $el.attr('data-onclick');
+
+            method.showLayer($el, $layer);
+
+            if (onclick && onclick.length > 0) {
+                onclick = eval('(0,' + onclick + ')');
+                onclick($el);
+            } else {
+                options.callback.onClick($el, $layer);
+            }
+
+            return false;
+        });
+
+        $layer.on('click', function () {
+            $layer.hide();
+            return false;
+        });
+
+        $(document).on('click', function () {
+            $layer.hide();
+        });
+
+    };
+
+});
 /*
  * 消息提示模块
  * @date:2014-09-05
@@ -9147,7 +9265,7 @@ define('km/wordLimit', ['jquery'], function ($) {
     return WordLimit;
 });
 ;
-define("KM", ["km/ajax", "km/app", "km/autoComplete", "km/cache", "km/clipZoom", "km/contextMenu", "km/datePicker", "km/dragdrop", "km/dropdown", "km/dropdownDatepicker", "km/dropDownTree", "km/event", "km/focusMap", "km/highlight", "km/imgPreview", "km/infiniteScroll", "km/lazyload", "km/loading", "km/magnifier", "km/pager", "km/placeholder", "km/popover", "km/popTips", "km/rating", "km/router", "km/slider", "km/switch", "km/tooltips", "km/tree", "km/treeTable", "km/upload", "km/util", "km/validate", "km/validateTooltips", "km/waterfall", "km/window", "km/wordLimit"], function(_ajax, _app, _autoComplete, _cache, _clipZoom, _contextMenu, _datePicker, _dragdrop, _dropdown, _dropdownDatepicker, _dropDownTree, _event, _focusMap, _highlight, _imgPreview, _infiniteScroll, _lazyload, _loading, _magnifier, _pager, _placeholder, _popover, _popTips, _rating, _router, _slider, _switch, _tooltips, _tree, _treeTable, _upload, _util, _validate, _validateTooltips, _waterfall, _window, _wordLimit){
+define("KM", ["km/ajax", "km/app", "km/autoComplete", "km/cache", "km/clipZoom", "km/contextMenu", "km/datePicker", "km/dragdrop", "km/dropdown", "km/dropdownDatepicker", "km/dropDownTree", "km/event", "km/focusMap", "km/highlight", "km/imgPreview", "km/infiniteScroll", "km/lazyload", "km/loading", "km/magnifier", "km/pager", "km/placeholder", "km/popover", "km/popTips", "km/rating", "km/router", "km/slider", "km/switch", "km/tagSelector", "km/tooltips", "km/tree", "km/treeTable", "km/upload", "km/util", "km/validate", "km/validateTooltips", "km/waterfall", "km/window", "km/wordLimit"], function(_ajax, _app, _autoComplete, _cache, _clipZoom, _contextMenu, _datePicker, _dragdrop, _dropdown, _dropdownDatepicker, _dropDownTree, _event, _focusMap, _highlight, _imgPreview, _infiniteScroll, _lazyload, _loading, _magnifier, _pager, _placeholder, _popover, _popTips, _rating, _router, _slider, _switch, _tagSelector, _tooltips, _tree, _treeTable, _upload, _util, _validate, _validateTooltips, _waterfall, _window, _wordLimit){
     return window.KM={
         "ajax" : _ajax,
         "App" : _app,
@@ -9176,6 +9294,7 @@ define("KM", ["km/ajax", "km/app", "km/autoComplete", "km/cache", "km/clipZoom",
         "Router" : _router,
         "slider" : _slider,
         "Switch" : _switch,
+        "tagSelector" : _tagSelector,
         "Tooltips" : _tooltips,
         "Tree" : _tree,
         "TreeTable" : _treeTable,

@@ -1,0 +1,136 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>标签选择</title>
+    <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../dist/css/km.min.css" rel="stylesheet" />
+    <link href="docs.min.css" rel="stylesheet" />
+    <link href="demo.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="header">
+        <div class="wrap">
+            <ul class="nav-list">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="###" class="active">demo</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="main wrap">
+        <ul class="demo-nav-list" id="navList"></ul>
+        <script type="text/javascript" src="nav.js"></script>
+        <script type="text/javascript">
+            nav(document.getElementById('navList'), 'tagSelector');
+        </script>
+        <div class="demo-container">
+            <h1 class="page-header">标签选择</h1>
+            
+
+            <div class="bs-example bs-example-padded-bottom">
+                <p>试试使用鼠标移动到下方元素</p>
+
+                <div style="padding:10px;" data-module="tagselector">
+
+                    <p>
+                        <input type="text" 
+                               style="width: 300px;"
+                               class="form-control" id="picker"
+                               placeholder="输入框"
+                               data-module="tagselector">
+                    </p>
+
+                    <p>
+                        <textarea class="k-form-control" 
+                                  style="width:500px;height:120px;"
+                                  placeholder="文本域"
+                                  data-module="tagselector"></textarea>
+                    </p>
+
+                </div>
+
+            </div>
+
+            <h3>使用</h3>
+            <div class="highlight">
+                <pre>
+                    <code>
+//elms:不填会从页面上获取带有data-module="tagselector"属性的元素
+KM.tagSelector($elms, options);
+                    </code>
+                </pre>
+            </div>
+            <h3>HTML属性设置</h3>
+            <table class="table table-bordered table-striped js-options-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>设置值</th>
+                        <th style="width:60%;">描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>data-module</td>
+                        <td>tagselector</td>
+                        <td>
+                            告诉程序当前html元素需要初始化为tagselector模块
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>data-onclick</td>
+                        <td>函数名称</td>
+                        <td>
+                            点击时回调函数
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3>参数 options</h3>
+            <table class="table table-bordered table-striped js-options-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>类型</th>
+                        <th style="width: 100px;">默认值</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>callback</td>
+                        <td>object</td>
+                        <td>{onClick:&.noop}</td>
+                        <td>
+                            点击时的回调函数
+                            <pre>
+                                <code>
+onClick:function($el,$layer){
+    $el:当前被点击的元素
+    $layer：遮罩层元素
+}
+                                </code>
+                            </pre>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="vendor/require/require.js"></script>
+    <script type="text/javascript" src="main.js"></script>
+    <script type="text/javascript">
+        require(['jquery', 'KM'], function ($, KM) {
+            KM.tagSelector($('div[data-module=tagselector],input[data-module=tagselector],textarea[data-module=tagselector]'), {
+                callback: {
+                    onClick: function ($el, $layer) {
+                        
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

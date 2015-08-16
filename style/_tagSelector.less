@@ -1,0 +1,60 @@
+.k-tagSelector-curr{
+    cursor:pointer;
+}
+
+.k-tagSelector-layer
+{
+    position: absolute;
+    display: none;
+    background: black;
+    opacity: 0.5;
+    filter: alpha(opacity=50);
+    border: 2px solid #ccc;
+    left:-100px;
+    top:-100px;
+    z-index:99999;
+}
+
+.k-tagSelector-leftside,
+.k-tagSelector-topside,
+.k-tagSelector-rightside,
+.k-tagSelector-bottomside
+{
+    border-color:black;
+    position:absolute;
+    display:none;
+    background: #facd93;
+    z-index:99998;
+}
+
+.k-tagSelector-leftside,
+.k-tagSelector-rightside
+{
+    width: 2px;
+}
+
+.k-tagSelector-topside,
+.k-tagSelector-bottomside
+{
+    height: 2px;
+}
+
+.k-tagSelector-leftside
+{
+    border-left: 1px dashed ;
+}
+
+.k-tagSelector-rightside
+{
+    border-right: 1px dashed ;
+}
+
+.k-tagSelector-topside
+{
+    border-top: 1px dashed ;
+}
+
+.k-tagSelector-bottomside
+{
+    border-bottom: 1px dashed ;
+}
