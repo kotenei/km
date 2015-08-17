@@ -134,6 +134,16 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
     };
 
     /**
+     * 设置大小
+     * @param {Object} size - 尺寸
+     */
+    Window.prototype.setSize = function (size) {
+        this.options.width = size.width;
+        this.options.height = size.height;
+        this.$win.css(size);
+    };
+
+    /**
      * 远程取内容
      * @return {Object} 
      */
@@ -196,14 +206,13 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
      * @return {Void}  
      */
     Window.prototype.close = function (enforce) {
-        this.$win.hide();
+        this.$win.css({ left: '-999px', top: '-900px' });
         this.$backdrop.hide();
         zIndex.pop();
 
         this._event.afterClose.call(self);
 
     };
-
 
     /**
      * 设置窗体高度
@@ -250,8 +259,10 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
             this.$container.find('iframe').height(containerHeight);
         }
         this.$win.css({
+            left: '50%',
+            top: '50%',
             height: newHeight,
-            marginLeft: -this.$win.width() / 2,
+            marginLeft: -this.options.width / 2,
             marginTop: -newHeight / 2
         });
     };
@@ -353,10 +364,9 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
         if (win) {
             win.close(true);
         } else {
-            $("#" + id).hide();
+            $("#" + id).css({ left: '-999px', top: '-900px' });
         }
     };
-
 
     /**
      * 打开窗体静态方法
@@ -387,7 +397,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
                 buttons = $elm.attr('data-btns'),
                 onOk = $elm.attr('data-onOk'),
                 onClose = $elm.attr('data-onClose'),
-                onAfterClose=$elm.attr('data-onAfterClose'),
+                onAfterClose = $elm.attr('data-onAfterClose'),
                 data = $elm.data('data');
 
             onOk = onOk && onOk.length > 0 ? eval(onOk) : $.noop;
@@ -425,8 +435,6 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
 
         });
     };
-
-
 
     /**
      * 窗体堆叠顺序设置

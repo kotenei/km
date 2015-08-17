@@ -63,6 +63,14 @@ define('km/tagSelector', ['jquery'], function ($) {
 
         $elms = $elms || $('[data-module=tagselector]');
 
+        $elms = $elms.map(function () {
+            if (!this.getAttribute('data-isInit')) {
+                this.setAttribute('data-isInit', true);
+                return this;
+            }
+        });
+
+
         if (!$elms || $elms.length == 0) {
             return;
         }
