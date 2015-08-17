@@ -31,8 +31,12 @@ define('km/focusMap', ['jquery'], function ($) {
      * @return {Void}   
      */
     FocusMap.prototype.init = function () {
+        var tmpLength;
         this.$el.width(this.options.containerWidth || this.options.width).height(this.options.height);
         this.$ul = this.$el.find('ul');
+        if (this.$ul.length==1) {
+            return;
+        }
         this.$lis = this.$ul.find('li');
         this.$ul.append(this.$lis.eq(0).clone(true));
         this.$ul.prepend(this.$lis.eq(this.$lis.length - 1).clone(true));

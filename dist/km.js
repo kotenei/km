@@ -3679,8 +3679,12 @@ define('km/focusMap', ['jquery'], function ($) {
      * @return {Void}   
      */
     FocusMap.prototype.init = function () {
+        var tmpLength;
         this.$el.width(this.options.containerWidth || this.options.width).height(this.options.height);
         this.$ul = this.$el.find('ul');
+        if (this.$ul.length==1) {
+            return;
+        }
         this.$lis = this.$ul.find('li');
         this.$ul.append(this.$lis.eq(0).clone(true));
         this.$ul.prepend(this.$lis.eq(this.$lis.length - 1).clone(true));
@@ -8771,6 +8775,12 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
             }
         });
 
+        if (this.options.iframe) {
+            this.$iframe.on('load', function () {
+                self.show();
+            });
+        }
+
         if (this.options.btns && this.options.btns.length > 0) {
             for (var i = 0, item; i < this.options.btns.length; i++) {
                 item = this.options.btns[i];
@@ -8847,18 +8857,6 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
             this.remote()
         ).done(function () {
 
-            var show = function () {
-                self.$win.show();
-                if (self.options.backdrop) { self.$backdrop.show(); }
-                self.layout();
-                self._event.open(self.$win);
-
-                var z = zIndex.get();
-                self.$win.css('zIndex', z);
-                self.$backdrop.css('zIndex', --z);
-                Loading.hide();
-            };
-
             if (self.options.iframe) {
                 var url = self.options.url;
                 if (url.indexOf('?') != -1) {
@@ -8866,12 +8864,10 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
                 } else {
                     url += '?rand=' + Math.random();
                 }
-                self.$iframe.attr('src', url).load(function () {
-                    show();
-                });
+                self.$iframe.attr('src', url);
 
             } else {
-                show();
+                self.show();
             }
 
         });
@@ -8889,6 +8885,21 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
 
         this._event.afterClose.call(self);
 
+    };
+
+    /**
+    * 打开窗体
+    * @return {Void}
+    */
+    Window.prototype.show = function () {
+        this.$win.show();
+        if (this.options.backdrop) { this.$backdrop.show(); }
+        this.layout();
+        this._event.open(this.$win);
+        var z = zIndex.get();
+        this.$win.css('zIndex', z);
+        this.$backdrop.css('zIndex', --z);
+        Loading.hide();
     };
 
     /**
@@ -9041,7 +9052,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
         if (win) {
             win.close(true);
         } else {
-            $("#" + id).css({ left: '-999px', top: '-900px' });
+            $("#" + id).css({ left: '-900px', top: '-900px' });
         }
     };
 
