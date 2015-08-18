@@ -32,18 +32,29 @@ define('km/focusMap', ['jquery'], function ($) {
      */
     FocusMap.prototype.init = function () {
         var tmpLength;
-        this.$el.width(this.options.containerWidth || this.options.width).height(this.options.height);
-        this.$ul = this.$el.find('ul');
-        if (this.$ul.length==1) {
+        this.winWidth = $(window).width();
+
+        if (this.winWidth<this.options.width) {
+            this.options.width = this.winWidth;
+            this.options.height='auto';
+        }
+
+        this.$el.css({
+            width: this.options.containerWidth || this.options.width,
+            height:this.options.height
+        })
+
+        this.$ul = this.$el.find('ul'); 
+        this.$lis = this.$ul.find('li');
+        if (this.$lis.length == 1) {
             return;
         }
-        this.$lis = this.$ul.find('li');
         this.$ul.append(this.$lis.eq(0).clone(true));
         this.$ul.prepend(this.$lis.eq(this.$lis.length - 1).clone(true));
-        this.$lis = this.$ul.find('li');
+        this.$lis = this.$ul.find('li').width(this.options.width);
         this.total = this.$lis.length;
         this.max = this.total - 2;
-        this.$ul.width(this.total * this.options.width).css("left", -(this.index + 1) * this.options.width);
+        this.$ul.width(this.total * this.options.width).css("marginLeft", -(this.index + 1) * this.options.width);
         this.create();
         this.watch();
         if (this.max > 1) {
@@ -74,6 +85,10 @@ define('km/focusMap', ['jquery'], function ($) {
      */
     FocusMap.prototype.watch = function () {
         var self = this;
+        if (this.isWatch) {
+            return;
+        }
+        this.isWatch = true;
         this.$el.on('mouseenter', function () {
             self.stop();
         }).on('mouseleave', function () {
@@ -138,15 +153,15 @@ define('km/focusMap', ['jquery'], function ($) {
         }
 
         this.$ul.stop().animate({
-            left: -tmpIndex * this.options.width
+            marginLeft: -tmpIndex * this.options.width
         }, function () {
 
             if (tmpIndex == self.total - 1) {
-                self.$ul.css('left', -1 * self.options.width);
+                self.$ul.css('marginLeft', -1 * self.options.width);
             }
 
             if (tmpIndex==0) {
-                self.$ul.css('left', -(self.max) * self.options.width);
+                self.$ul.css('marginLeft', -(self.max) * self.options.width);
             }
 
             self.$dots.removeClass('current').eq(self.index).addClass('current');

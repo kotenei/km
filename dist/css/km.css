@@ -1606,7 +1606,7 @@ label.k-error {
 .k-table > thead > tr > td,
 .k-table > tbody > tr > td,
 .k-table > tfoot > tr > td {
-  vertical-align: top;
+  vertical-align: middle;
   border-top: 1px solid #ddd;
   line-height: 1.42857;
   padding: 8px;
@@ -1853,15 +1853,16 @@ table.k-treeTable tr.expanded.accept td span.indenter a {
   overflow: hidden;
   padding: 0;
   margin: 0;
-  position: absolute;
 }
 .k-focusmap .k-focusmap-list li {
   float: left;
   display: inline;
+  overflow: hidden;
 }
 .k-focusmap .k-focusmap-list li img {
   display: block;
   border: none;
+  width: 100%;
 }
 .k-focusmap:hover .k-focusmap-prev,
 .k-focusmap:hover .k-focusmap-next {

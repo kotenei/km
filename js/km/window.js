@@ -33,7 +33,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
             close: $.noop,
             afterClose: $.noop
         };
-
+        this.isClose = true;
         this.loading = false;
         this.template = '<div class="k-window" id="k-window-' + (this.options.id || ids.get()) + '">' +
                             '<h4 class="k-window-header"><span class="k-window-title"></span><span class="k-window-close" role="KWINCLOSE">×</span></h4>' +
@@ -198,12 +198,11 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
      * @return {Void}  
      */
     Window.prototype.close = function (enforce) {
-        this.$win.css({ left: '-999px', top: '-900px' });
+        this.isClose = true;
+        this.$win.css({ left: '-900px', top: '-900px' });
         this.$backdrop.hide();
         zIndex.pop();
-
         this._event.afterClose.call(self);
-
     };
 
     /**
@@ -211,6 +210,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
     * @return {Void}
     */
     Window.prototype.show = function () {
+        this.isClose = false;
         this.$win.show();
         if (this.options.backdrop) { this.$backdrop.show(); }
         this.layout();
@@ -226,6 +226,11 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
      * @return {Void}
      */
     Window.prototype.layout = function () {
+
+        if (this.isClose) {
+            return;
+        }
+
         //屏幕高度
         var screenHeight = this.$window.height();
         //最大弹窗高度
@@ -265,6 +270,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
         if (this.options.iframe) {
             this.$container.find('iframe').height(containerHeight);
         }
+
         this.$win.css({
             left: '50%',
             top: '50%',
@@ -370,9 +376,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
         var win = $win.data('window');
         if (win) {
             win.close(true);
-        } else {
-            $("#" + id).css({ left: '-900px', top: '-900px' });
-        }
+        } 
     };
 
     /**
@@ -405,7 +409,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
                 onOk = $elm.attr('data-onOk'),
                 onClose = $elm.attr('data-onClose'),
                 onAfterClose = $elm.attr('data-onAfterClose'),
-                data = $elm.data('data');
+                data = $elm.data('window');
 
             onOk = onOk && onOk.length > 0 ? eval(onOk) : $.noop;
             onClose = onClose && onClose.length > 0 ? eval(onClose) : $.noop;
@@ -435,7 +439,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
                     data.open();
                 });
 
-                $elm.data('data', data).on('click', function () {
+                $elm.data('window', data).on('click', function () {
                     data.open();
                 });
             }
