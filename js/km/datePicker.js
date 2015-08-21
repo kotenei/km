@@ -1257,7 +1257,7 @@ define('km/datePicker', ['jquery'], function ($) {
             var data = $this.data('datepicker');
 
             showTime = showTime ? showTime === "true" : false;
-            onSelected = onSelected && onSelected.length > 0 ? eval('(' + onSelected + ')') : null;
+            onSelected = onSelected && onSelected.length > 0 ? eval('(0,' + onSelected + ')') : null;
             onClean = onClean && onClean.length > 0 ? eval('(0,' + onClean + ')') : null;
 
             if (!data) {

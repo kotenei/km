@@ -2510,7 +2510,7 @@ define('km/datePicker', ['jquery'], function ($) {
             var data = $this.data('datepicker');
 
             showTime = showTime ? showTime === "true" : false;
-            onSelected = onSelected && onSelected.length > 0 ? eval('(' + onSelected + ')') : null;
+            onSelected = onSelected && onSelected.length > 0 ? eval('(0,' + onSelected + ')') : null;
             onClean = onClean && onClean.length > 0 ? eval('(0,' + onClean + ')') : null;
 
             if (!data) {
@@ -3110,7 +3110,7 @@ define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
             $.get(this.options.url, { rand: Math.random() }, function (data) {
 
                 if (typeof data === 'string') {
-                    data = eval(data);
+                    data = eval('(0,'+data+')');
                 }
 
                 self.options.data = data;

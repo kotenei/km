@@ -91,7 +91,7 @@ define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
             $.get(this.options.url, { rand: Math.random() }, function (data) {
 
                 if (typeof data === 'string') {
-                    data = eval(data);
+                    data = eval('(0,'+data+')');
                 }
 
                 self.options.data = data;
