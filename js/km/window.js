@@ -94,11 +94,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
             }
         });
 
-        if (this.options.iframe) {
-            this.$iframe.on('load', function () {
-                self.show();
-            });
-        }
+       
 
         if (this.options.btns && this.options.btns.length > 0) {
             for (var i = 0, item; i < this.options.btns.length; i++) {
@@ -184,6 +180,13 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
                     url += '?rand=' + Math.random();
                 }
                 self.$iframe.attr('src', url);
+
+                if (!self.bindIframeLoad) {
+                    self.$iframe.on('load', function () {
+                        self.show();
+                        self.bindIframeLoad = true;
+                    });
+                } 
 
             } else {
                 self.show();
@@ -411,21 +414,24 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
                 onAfterClose = $elm.attr('data-onAfterClose'),
                 data = $elm.data('window');
 
-            onOk = onOk && onOk.length > 0 ? eval(onOk) : $.noop;
-            onClose = onClose && onClose.length > 0 ? eval(onClose) : $.noop;
-            onAfterClose = onAfterClose && onAfterClose.length > 0 ? eval(onAfterClose) : $.noop;
+            onOk = onOk && onOk.length > 0 ? eval('(0,'+onOk+')') : $.noop;
+            onClose = onClose && onClose.length > 0 ? eval('(0,' + onClose + ')') : $.noop;
+            onAfterClose = onAfterClose && onAfterClose.length > 0 ? eval('(0,'+onAfterClose+')') : $.noop;
+
+            var options = {
+                url: url,
+                title: title,
+                content: content,
+                width: width && width.length > 0 ? parseInt(width) : 680,
+                height: height && height.length > 0 ? parseInt(height) : 480,
+                showFooter: showFooter && showFooter == 'false' ? false : true,
+                iframe: iframe && iframe == 'false' ? false : true,
+                btns: buttons && buttons.length > 0 ? eval('(0,' + buttons + ')') : []
+            }
+
 
             if (!data) {
-                data = new Window({
-                    url: url,
-                    title: title,
-                    content: content,
-                    width: width && width.length > 0 ? parseInt(width) : 680,
-                    height: height && height.length > 0 ? parseInt(height) : 480,
-                    showFooter: showFooter && showFooter == 'false' ? false : true,
-                    iframe: iframe && iframe == 'false' ? false : true,
-                    btns: buttons && buttons.length > 0 ? eval(buttons) : []
-                });
+                data = new Window(options);
 
                 data.on('ok', function () {
                     return onOk.call(this);
