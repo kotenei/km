@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>面板</title>
+    <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../dist/css/km.min.css" rel="stylesheet" />
+    <link href="docs.min.css" rel="stylesheet" />
+    <link href="demo.css" rel="stylesheet" />
+</head>
+<body>
+    <!--<div class="k-layout">
+        <div class="k-panel k-panel-top" ></div>
+        <div class="k-panel k-panel-left"></div>
+        <div class="k-panel k-panel-center"></div>
+        <div class="k-panel k-panel-right"></div>
+        <div class="k-panel k-panel-bottom"></div>
+    </div>-->
+
+
+    <div class="k-panel">
+
+       
+        <div class="k-panel-head">
+            <h3 class="k-panel-title ">
+                这是面板
+                <span class="fa fa-angle-double-up" role="collapse"></span>
+            </h3>
+        </div>
+        <div class="k-panel-body">
+            sdfgsdfgsdgdsgdsg
+        </div>
+    </div>
+
+    <script type="text/javascript" src="vendor/require/require.js"></script>
+    <script type="text/javascript" src="main.js"></script>
+    <script type="text/javascript">
+        require(['KM'], function (KM) {
+            var panel = new KM.Panel($('.k-panel'), {
+                resizable:true
+            });
+        });
+    </script>
+</body>
+</html>

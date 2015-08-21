@@ -2046,3 +2046,77 @@ table.k-treeTable tr.expanded.accept td span.indenter a {
 .k-tagSelector-bottomside {
   border-bottom: 1px dashed ;
 }
+.k-panel {
+  border: 1px solid #ebebeb;
+  margin: 10px;
+}
+.k-panel .k-panel-head {
+  border-bottom: 1px solid #ebebeb;
+}
+.k-panel .k-panel-head .k-panel-title {
+  margin: 0;
+  font-size: 14px;
+  padding-left: 15px;
+  height: 35px;
+  line-height: 35px;
+  position: relative;
+}
+.k-panel .k-panel-head .k-panel-title.pointer {
+  cursor: pointer;
+}
+.k-panel .k-panel-head .k-panel-title .fa {
+  position: absolute;
+  right: 10px;
+  top: 12px;
+  cursor: pointer;
+}
+.k-panel .k-panel-body {
+  padding: 10px;
+  overflow: hidden;
+}
+.k-resizable-container {
+  position: relative;
+  border: 1px solid #ebebeb;
+}
+.k-resizable-container .k-resizable-handle {
+  position: absolute;
+  background: #ebebeb;
+  z-index: 10;
+  display: none;
+}
+.k-resizable-container .k-resizable-handle.k-resizable-handle-left,
+.k-resizable-container .k-resizable-handle.k-resizable-handle-right {
+  left: -1px;
+  top: 0;
+  width: 1px;
+  bottom: 0;
+  cursor: ew-resize;
+}
+.k-resizable-container .k-resizable-handle.k-resizable-handle-right {
+  cursor: ew-resize;
+  right: -1px;
+  left: auto;
+}
+.k-resizable-container .k-resizable-handle.k-resizable-handle-top,
+.k-resizable-container .k-resizable-handle.k-resizable-handle-bottom {
+  top: -1px;
+  height: 1px;
+  cursor: n-resize;
+  left: 0;
+  right: 0;
+}
+.k-resizable-container .k-resizable-handle.k-resizable-handle-bottom {
+  top: auto;
+  bottom: -1px;
+}
+.k-resizable-container .k-resizable-handle-minbar {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  background: url('../images/resizable/rzbar.png');
+  z-index: 10;
+  cursor: se-resize;
+  display: none;
+}

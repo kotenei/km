@@ -1,0 +1,59 @@
+.k-resizable-container
+{
+    position: relative;
+    border: 1px solid #ebebeb;
+
+    .k-resizable-handle
+    {
+        position: absolute;
+        background: #ebebeb;
+        z-index: 10;
+        display: none;
+
+        &.k-resizable-handle-left,
+        &.k-resizable-handle-right
+        {
+            left: -1px;
+            top: 0;
+            width: 1px;
+            bottom: 0;
+            cursor: ew-resize;
+        }
+
+        &.k-resizable-handle-right
+        {
+            cursor: ew-resize;
+            right: -1px;
+            left: auto;
+        }
+
+        &.k-resizable-handle-top,
+        &.k-resizable-handle-bottom
+        {
+            top: -1px;
+            height: 1px;
+            cursor: n-resize;
+            left: 0;
+            right: 0;
+        }
+
+        &.k-resizable-handle-bottom
+        {
+            top: auto;
+            bottom: -1px;
+        }
+    }
+
+    .k-resizable-handle-minbar
+    {
+        position:absolute;
+        bottom:0;
+        right:0;
+        width:10px;
+        height:10px;
+        background:url('../images/resizable/rzbar.png');
+        z-index:10;
+        cursor:se-resize;
+        display:none;
+    }
+}
