@@ -2048,7 +2048,6 @@ table.k-treeTable tr.expanded.accept td span.indenter a {
 }
 .k-panel {
   border: 1px solid #ebebeb;
-  margin: 10px;
 }
 .k-panel .k-panel-head {
   border-bottom: 1px solid #ebebeb;
@@ -2080,7 +2079,6 @@ table.k-treeTable tr.expanded.accept td span.indenter a {
 }
 .k-resizable-container .k-resizable-handle {
   position: absolute;
-  background: #ebebeb;
   z-index: 10;
   display: none;
 }
@@ -2088,26 +2086,32 @@ table.k-treeTable tr.expanded.accept td span.indenter a {
 .k-resizable-container .k-resizable-handle.k-resizable-handle-right {
   left: -1px;
   top: 0;
-  width: 1px;
+  width: 5px;
   bottom: 0;
   cursor: ew-resize;
+  border-left: 1px solid #ebebeb;
 }
 .k-resizable-container .k-resizable-handle.k-resizable-handle-right {
   cursor: ew-resize;
   right: -1px;
   left: auto;
+  border-right: 1px solid #ebebeb;
+  border-left: none;
 }
 .k-resizable-container .k-resizable-handle.k-resizable-handle-top,
 .k-resizable-container .k-resizable-handle.k-resizable-handle-bottom {
   top: -1px;
-  height: 1px;
+  height: 5px;
   cursor: n-resize;
   left: 0;
   right: 0;
+  border-top: 1px solid #ebebeb;
 }
 .k-resizable-container .k-resizable-handle.k-resizable-handle-bottom {
   top: auto;
   bottom: -1px;
+  border-top: 0;
+  border-bottom: 1px solid #ebebeb;
 }
 .k-resizable-container .k-resizable-handle-minbar {
   position: absolute;

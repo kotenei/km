@@ -5,7 +5,7 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
         this.options = $.extend(true, {
             width: 400,
             height: 'auto',
-            resizable:false
+            resizable: false
         }, options);
         this.init();
     };
@@ -22,7 +22,14 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
 
         if (this.options.resizable) {
             this.resizable = new Resizable(this.$panel, {
+                border: {
+                    left: false,
+                    top: false
+                }
+            });
 
+            this.resizable.on('move', function (css) {
+                console.log(css)
             });
         }
 
