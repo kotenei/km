@@ -38,8 +38,14 @@
     <script type="text/javascript">
         require(['KM'], function (KM) {
             var panel = new KM.Panel($('.k-panel'), {
-                resizable:true
+                resizable: true,
+                border: {
+                    right: true,
+                    bottom:true
+                }
             });
+
+          
         });
     </script>
 </body>

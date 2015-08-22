@@ -149,6 +149,8 @@ define('km/resizable', ['jquery'], function ($) {
 
         switch (this.resizeParams.type) {
             case 'left':
+                css.top=resizeParams.top;
+                css.height=resizeParams.height;
                 if (moveCoord.x <= 0) {
                     css.left = 0;
                     css.width = resizeParams.width + resizeParams.left;
@@ -180,7 +182,8 @@ define('km/resizable', ['jquery'], function ($) {
                 break;
             case 'right':
                 css.width = resizeParams.width - (this.originalCoord.x - mouseCoord.x);
-
+                css.height = resizeParams.height;
+                css.top = resizeParams.top;
                 if ((css.width + resizeParams.left) >= rw) {
                     css.width = rw ;
                 }
@@ -190,7 +193,9 @@ define('km/resizable', ['jquery'], function ($) {
                 break;
             case 'bottom':
                 css.height = resizeParams.height - (this.originalCoord.y - mouseCoord.y);
-
+                css.width = resizeParams.width;
+                css.left = resizeParams.left;
+                css.top = resizeParams.top;
                 if (css.height >= rh) {
                     css.height = rh;
                 }
@@ -220,7 +225,7 @@ define('km/resizable', ['jquery'], function ($) {
 
         this.$elm.css(css);
 
-        this._event.move.call(this, css);
+        this._event.move.call(this,css);
     };
 
     Resizable.prototype.stop = function () {
