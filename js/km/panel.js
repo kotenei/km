@@ -15,6 +15,8 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
         this.options = $.extend(true, {
             width: 400,
             height: 'auto',
+            minWidth: 100,
+            minHeight:100,
             resizable: false,
             resizeBorder:{
                 left: false,
@@ -51,6 +53,10 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
             });
         }
 
+        this._event = {
+            resize:$.noop
+        };
+
         this.watch();
     };
 
@@ -69,9 +75,19 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
         if (this.resizable) {
             this.resizable.on('move', function (css) {
                 self.setHeight(css.height);
+                self._event.resize.call(self, css);
             });
         }
 
+    };
+
+    /**
+     * 添加自定义事件
+     * @return {Void}
+     */
+    Panel.prototype.on = function (type, callback) {
+        this._event[type] = callback || $.noop;
+        return this;
     };
 
     /**

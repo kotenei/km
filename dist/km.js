@@ -4288,6 +4288,51 @@ define('km/infiniteScroll', ['jquery'], function ($) {
 });
 
 /*
+ * ����ģ��
+ * @date:2015-08-23
+ * @author:kotenei(kotenei@qq.com)
+ */
+define('km/layout', ['jquery', 'km/panel'], function ($, Panel) {
+
+    var Layout = function ($elm, options) {
+        this.$layout = $elm;
+        this.options = $.extend(true, {
+
+        }, options);
+        this.init();
+    };
+
+    Layout.prototype.init = function () {
+        this.$win = $(window);
+        this.$panels = this.$layout.find('.k-panel');
+        this.setSize();
+        this.watch();
+    };
+
+    Layout.prototype.watch = function () {
+        var self = this;
+        this.$win.on('resize.layout', function () {
+            self.setSize();
+        });
+    };
+
+    Layout.prototype.setSize = function () {
+        var $parent = this.$layout.parent(),
+            width = $parent.width(),
+            height = $parent.height();
+
+        if ($parent[0].tagName.toLowerCase() == 'body') {
+            width = this.$win.width();
+            height = this.$win.height();
+        }
+
+        this.$layout.css({ width: width, height: height });
+    };
+
+    return Layout;
+
+});
+/*
  * 图片延迟加载模块
  * @date:2014-09-01
  * @author:kotenei(kotenei@qq.com)
@@ -4842,6 +4887,8 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
         this.options = $.extend(true, {
             width: 400,
             height: 'auto',
+            minWidth: 100,
+            minHeight:100,
             resizable: false,
             resizeBorder:{
                 left: false,
@@ -4878,6 +4925,10 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
             });
         }
 
+        this._event = {
+            resize:$.noop
+        };
+
         this.watch();
     };
 
@@ -4896,9 +4947,19 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
         if (this.resizable) {
             this.resizable.on('move', function (css) {
                 self.setHeight(css.height);
+                self._event.resize.call(self, css);
             });
         }
 
+    };
+
+    /**
+     * �����Զ����¼�
+     * @return {Void}
+     */
+    Panel.prototype.on = function (type, callback) {
+        this._event[type] = callback || $.noop;
+        return this;
     };
 
     /**
@@ -5554,7 +5615,7 @@ define('km/resizable', ['jquery'], function ($) {
         this.minWidth = this.options.minWidth;
         this.minHeight = this.options.minHeight;
         this._event = {
-            move:$.noop
+            resize:$.noop
         };
         this.init();
     };
@@ -5783,7 +5844,7 @@ define('km/resizable', ['jquery'], function ($) {
 
         this.$elm.css(css);
 
-        this._event.move.call(this,css);
+        this._event.resize.call(this, css);
     };
 
     /**
@@ -9803,7 +9864,7 @@ define('km/wordLimit', ['jquery'], function ($) {
     return WordLimit;
 });
 ;
-define("KM", ["km/ajax", "km/app", "km/autoComplete", "km/cache", "km/clipZoom", "km/contextMenu", "km/datePicker", "km/dragdrop", "km/dropdown", "km/dropdownDatepicker", "km/dropDownTree", "km/event", "km/focusMap", "km/highlight", "km/imgPreview", "km/infiniteScroll", "km/lazyload", "km/loading", "km/magnifier", "km/pager", "km/panel", "km/placeholder", "km/popover", "km/popTips", "km/rating", "km/resizable", "km/router", "km/slider", "km/switch", "km/tagSelector", "km/tooltips", "km/tree", "km/treeTable", "km/upload", "km/util", "km/validate", "km/validateTooltips", "km/waterfall", "km/window", "km/wordLimit"], function(_ajax, _app, _autoComplete, _cache, _clipZoom, _contextMenu, _datePicker, _dragdrop, _dropdown, _dropdownDatepicker, _dropDownTree, _event, _focusMap, _highlight, _imgPreview, _infiniteScroll, _lazyload, _loading, _magnifier, _pager, _panel, _placeholder, _popover, _popTips, _rating, _resizable, _router, _slider, _switch, _tagSelector, _tooltips, _tree, _treeTable, _upload, _util, _validate, _validateTooltips, _waterfall, _window, _wordLimit){
+define("KM", ["km/ajax", "km/app", "km/autoComplete", "km/cache", "km/clipZoom", "km/contextMenu", "km/datePicker", "km/dragdrop", "km/dropdown", "km/dropdownDatepicker", "km/dropDownTree", "km/event", "km/focusMap", "km/highlight", "km/imgPreview", "km/infiniteScroll", "km/layout", "km/lazyload", "km/loading", "km/magnifier", "km/pager", "km/panel", "km/placeholder", "km/popover", "km/popTips", "km/rating", "km/resizable", "km/router", "km/slider", "km/switch", "km/tagSelector", "km/tooltips", "km/tree", "km/treeTable", "km/upload", "km/util", "km/validate", "km/validateTooltips", "km/waterfall", "km/window", "km/wordLimit"], function(_ajax, _app, _autoComplete, _cache, _clipZoom, _contextMenu, _datePicker, _dragdrop, _dropdown, _dropdownDatepicker, _dropDownTree, _event, _focusMap, _highlight, _imgPreview, _infiniteScroll, _layout, _lazyload, _loading, _magnifier, _pager, _panel, _placeholder, _popover, _popTips, _rating, _resizable, _router, _slider, _switch, _tagSelector, _tooltips, _tree, _treeTable, _upload, _util, _validate, _validateTooltips, _waterfall, _window, _wordLimit){
     return window.KM={
         "ajax" : _ajax,
         "App" : _app,
@@ -9821,6 +9882,7 @@ define("KM", ["km/ajax", "km/app", "km/autoComplete", "km/cache", "km/clipZoom",
         "highlight" : _highlight,
         "imgPreview" : _imgPreview,
         "InfiniteScroll" : _infiniteScroll,
+        "Layout" : _layout,
         "lazyload" : _lazyload,
         "Loading" : _loading,
         "magnifier" : _magnifier,

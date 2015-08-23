@@ -5,6 +5,11 @@
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
 .k-resizable {
   width: 8px;
   height: 8px;
@@ -2123,4 +2128,7 @@ table.k-treeTable tr.expanded.accept td span.indenter a {
   z-index: 10;
   cursor: se-resize;
   display: none;
+}
+.k-layout {
+  position: relative;
 }

@@ -36,7 +36,7 @@ define('km/resizable', ['jquery'], function ($) {
         this.minWidth = this.options.minWidth;
         this.minHeight = this.options.minHeight;
         this._event = {
-            move:$.noop
+            resize:$.noop
         };
         this.init();
     };
@@ -265,7 +265,7 @@ define('km/resizable', ['jquery'], function ($) {
 
         this.$elm.css(css);
 
-        this._event.move.call(this,css);
+        this._event.resize.call(this, css);
     };
 
     /**
