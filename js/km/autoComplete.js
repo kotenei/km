@@ -85,7 +85,7 @@ define('km/autoComplete', ['jquery'], function ($) {
             }
         });
 
-        this.$listBox.on('click', 'li', function () {
+        this.$listBox.on('click.autocomplete', 'li', function () {
             var text = $(this).text();
             self.$element.val(text).focus();
             if ($.isFunction(self.options.callback.setValue)) {

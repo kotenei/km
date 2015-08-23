@@ -191,7 +191,7 @@ define('km/datePicker', ['jquery'], function ($) {
             return false;
         });
 
-        this.$datepicker.on('click', function (e) {
+        this.$datepicker.on('click.datepicker', function (e) {
             var target = e.target,
                 $target = $(target);
 
@@ -204,7 +204,7 @@ define('km/datePicker', ['jquery'], function ($) {
             self.monthBoxToggle(false);
             self.timePanelHide();
             return false;
-        }).on('click', '[role=prev]', function () {
+        }).on('click.datepicker', '[role=prev]', function () {
             //向前
             self.month--;
             self.prevToggle();
@@ -216,7 +216,7 @@ define('km/datePicker', ['jquery'], function ($) {
             self.$next.show();
             self.createDays();
             self.change();
-        }).on('click', '[role=next]', function () {
+        }).on('click.datepicker', '[role=next]', function () {
             //向后
             self.month++;
             self.nextToggle();
@@ -227,12 +227,12 @@ define('km/datePicker', ['jquery'], function ($) {
             self.$prev.show();
             self.createDays();
             self.change();
-        }).on('click', '#month', function () {
+        }).on('click.datepicker', '#month', function () {
             //点击月份
             self.monthBoxToggle(true);
             self.yearBoxToggle(false);
             self.timePanelHide();
-        }).on('click', '.month-box li', function () {
+        }).on('click.datepicker', '.month-box li', function () {
             //选择月份
             var $this = $(this),
                 month = $this.attr("data-month");
@@ -247,12 +247,12 @@ define('km/datePicker', ['jquery'], function ($) {
             self.prevToggle();
             self.nextToggle();
             self.change();
-        }).on('click', '#year', function () {
+        }).on('click.datepicker', '#year', function () {
             //点击年份
             self.yearBoxToggle(true);
             self.monthBoxToggle(false);
             self.timePanelHide();
-        }).on('click', '.year-box li', function () {
+        }).on('click.datepicker', '.year-box li', function () {
             //选择年份
             var $this = $(this),
                 text = Number($.trim($this.text()));
@@ -267,7 +267,7 @@ define('km/datePicker', ['jquery'], function ($) {
             self.prevToggle();
             self.nextToggle();
             self.change();
-        }).on('click', '[role=yearPrev]', function () {
+        }).on('click.datepicker', '[role=yearPrev]', function () {
             //向前选择年份
             if (self.index === 0) {
                 return;
@@ -275,14 +275,14 @@ define('km/datePicker', ['jquery'], function ($) {
             self.index--;
             self.toCurYearPanel();
 
-        }).on('click', '[role=yearNext]', function () {
+        }).on('click.datepicker', '[role=yearNext]', function () {
             //向后选择年份
             if (self.index === self.$yearItems.length - 1) {
                 return;
             }
             self.index++;
             self.toCurYearPanel();
-        }).on('click', '[role=clear]', function () {
+        }).on('click.datepicker', '[role=clear]', function () {
             //清空
             if (self.isInput) {
                 self.$element.val('');
@@ -300,14 +300,14 @@ define('km/datePicker', ['jquery'], function ($) {
                 v();
             });
 
-        }).on('click', '[role=today]', function () {
+        }).on('click.datepicker', '[role=today]', function () {
             //今天
             self.setTodayInfo();
             self.createDays();
             self.hide();
             self.set(true);
             self.setTime();
-        }).on('click', 'tbody td', function () {
+        }).on('click.datepicker', 'tbody td', function () {
             //点击天
             var $this = $(this),
                 year = $this.attr('data-year'),
@@ -333,19 +333,19 @@ define('km/datePicker', ['jquery'], function ($) {
                 self.hide();
             }
 
-        }).on('click', 'span.hours', function () {
+        }).on('click.datepicker', 'span.hours', function () {
             //点击小时
             self.setTimePanelPosition($(this), self.$hoursBox);
             return false;
-        }).on('click', 'span.minutes', function () {
+        }).on('click.datepicker', 'span.minutes', function () {
             //点击分种
             self.setTimePanelPosition($(this), self.$minutesBox);
             return false;
-        }).on('click', 'span.seconds', function () {
+        }).on('click.datepicker', 'span.seconds', function () {
             //点击秒
             self.setTimePanelPosition($(this), self.$secondsBox);
             return false;
-        }).on('click', '.time-box li', function () {
+        }).on('click.datepicker', '.time-box li', function () {
             //选择时、分、秒
             var $this = $(this),
                 value = $this.attr('data-value'),
@@ -365,7 +365,7 @@ define('km/datePicker', ['jquery'], function ($) {
                     self.$seconds.text(text);
                     break;
             }
-        }).on('click', '[role=confirm]', function () {
+        }).on('click.datepicker', '[role=confirm]', function () {
             //点击确定
 
             var $curDay = self.$datepicker.find('td span.active'),

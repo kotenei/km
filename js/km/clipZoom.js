@@ -77,19 +77,19 @@ define('km/clipZoom', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
     ClipZoom.prototype.eventBind = function () {
         var self = this;
 
-        this.$element.on('click', '[role="clip"]', function () {
+        this.$element.on('click.clipzoom', '[role="clip"]', function () {
             //裁剪
             self.clip();
-        }).on('click', '[role="center"]', function () {
+        }).on('click.clipzoom', '[role="center"]', function () {
             //居中
             self.center();
-        }).on('click', '[role="reset"]', function () {
+        }).on('click.clipzoom', '[role="reset"]', function () {
             //重置
             self.reset();
-        }).on('click', '[role="plus"]', function () {
+        }).on('click.clipzoom', '[role="plus"]', function () {
             //放大
             self.zoom(true);
-        }).on('click', '[role="minus"]', function () {
+        }).on('click.clipzoom', '[role="minus"]', function () {
             //缩小
             self.zoom(false);
         });

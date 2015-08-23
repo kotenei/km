@@ -465,7 +465,7 @@ define('km/autoComplete', ['jquery'], function ($) {
             }
         });
 
-        this.$listBox.on('click', 'li', function () {
+        this.$listBox.on('click.autocomplete', 'li', function () {
             var text = $(this).text();
             self.$element.val(text).focus();
             if ($.isFunction(self.options.callback.setValue)) {
@@ -875,19 +875,19 @@ define('km/clipZoom', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
     ClipZoom.prototype.eventBind = function () {
         var self = this;
 
-        this.$element.on('click', '[role="clip"]', function () {
+        this.$element.on('click.clipzoom', '[role="clip"]', function () {
             //裁剪
             self.clip();
-        }).on('click', '[role="center"]', function () {
+        }).on('click.clipzoom', '[role="center"]', function () {
             //居中
             self.center();
-        }).on('click', '[role="reset"]', function () {
+        }).on('click.clipzoom', '[role="reset"]', function () {
             //重置
             self.reset();
-        }).on('click', '[role="plus"]', function () {
+        }).on('click.clipzoom', '[role="plus"]', function () {
             //放大
             self.zoom(true);
-        }).on('click', '[role="minus"]', function () {
+        }).on('click.clipzoom', '[role="minus"]', function () {
             //缩小
             self.zoom(false);
         });
@@ -1183,7 +1183,7 @@ define('km/contextMenu', ['jquery'], function ($) {
     ContextMenu.prototype.watch = function () {
         var self = this;
 
-        this.$el.on('contextmenu',this.options.target, function (e) {
+        this.$el.on('contextmenu.contextmenu', this.options.target, function (e) {
             var left = e.pageX,
                 top = e.pageY;
 
@@ -1203,7 +1203,7 @@ define('km/contextMenu', ['jquery'], function ($) {
             return false;
         });
 
-        this.$contextMenu.on('click', 'li', function () {
+        this.$contextMenu.on('click.contextmenu', 'li', function () {
             var $el = $(this),
                 text = $el.text(),
                 item = self.items[text];
@@ -1212,7 +1212,7 @@ define('km/contextMenu', ['jquery'], function ($) {
             }
         });
 
-        $(document.body).on('click', function () {
+        $(document.body).on('click.contextmenu', function () {
             self.$contextMenu.hide();
             self.$curTarget = null;
         });
@@ -1444,7 +1444,7 @@ define('km/datePicker', ['jquery'], function ($) {
             return false;
         });
 
-        this.$datepicker.on('click', function (e) {
+        this.$datepicker.on('click.datepicker', function (e) {
             var target = e.target,
                 $target = $(target);
 
@@ -1457,7 +1457,7 @@ define('km/datePicker', ['jquery'], function ($) {
             self.monthBoxToggle(false);
             self.timePanelHide();
             return false;
-        }).on('click', '[role=prev]', function () {
+        }).on('click.datepicker', '[role=prev]', function () {
             //向前
             self.month--;
             self.prevToggle();
@@ -1469,7 +1469,7 @@ define('km/datePicker', ['jquery'], function ($) {
             self.$next.show();
             self.createDays();
             self.change();
-        }).on('click', '[role=next]', function () {
+        }).on('click.datepicker', '[role=next]', function () {
             //向后
             self.month++;
             self.nextToggle();
@@ -1480,12 +1480,12 @@ define('km/datePicker', ['jquery'], function ($) {
             self.$prev.show();
             self.createDays();
             self.change();
-        }).on('click', '#month', function () {
+        }).on('click.datepicker', '#month', function () {
             //点击月份
             self.monthBoxToggle(true);
             self.yearBoxToggle(false);
             self.timePanelHide();
-        }).on('click', '.month-box li', function () {
+        }).on('click.datepicker', '.month-box li', function () {
             //选择月份
             var $this = $(this),
                 month = $this.attr("data-month");
@@ -1500,12 +1500,12 @@ define('km/datePicker', ['jquery'], function ($) {
             self.prevToggle();
             self.nextToggle();
             self.change();
-        }).on('click', '#year', function () {
+        }).on('click.datepicker', '#year', function () {
             //点击年份
             self.yearBoxToggle(true);
             self.monthBoxToggle(false);
             self.timePanelHide();
-        }).on('click', '.year-box li', function () {
+        }).on('click.datepicker', '.year-box li', function () {
             //选择年份
             var $this = $(this),
                 text = Number($.trim($this.text()));
@@ -1520,7 +1520,7 @@ define('km/datePicker', ['jquery'], function ($) {
             self.prevToggle();
             self.nextToggle();
             self.change();
-        }).on('click', '[role=yearPrev]', function () {
+        }).on('click.datepicker', '[role=yearPrev]', function () {
             //向前选择年份
             if (self.index === 0) {
                 return;
@@ -1528,14 +1528,14 @@ define('km/datePicker', ['jquery'], function ($) {
             self.index--;
             self.toCurYearPanel();
 
-        }).on('click', '[role=yearNext]', function () {
+        }).on('click.datepicker', '[role=yearNext]', function () {
             //向后选择年份
             if (self.index === self.$yearItems.length - 1) {
                 return;
             }
             self.index++;
             self.toCurYearPanel();
-        }).on('click', '[role=clear]', function () {
+        }).on('click.datepicker', '[role=clear]', function () {
             //清空
             if (self.isInput) {
                 self.$element.val('');
@@ -1553,14 +1553,14 @@ define('km/datePicker', ['jquery'], function ($) {
                 v();
             });
 
-        }).on('click', '[role=today]', function () {
+        }).on('click.datepicker', '[role=today]', function () {
             //今天
             self.setTodayInfo();
             self.createDays();
             self.hide();
             self.set(true);
             self.setTime();
-        }).on('click', 'tbody td', function () {
+        }).on('click.datepicker', 'tbody td', function () {
             //点击天
             var $this = $(this),
                 year = $this.attr('data-year'),
@@ -1586,19 +1586,19 @@ define('km/datePicker', ['jquery'], function ($) {
                 self.hide();
             }
 
-        }).on('click', 'span.hours', function () {
+        }).on('click.datepicker', 'span.hours', function () {
             //点击小时
             self.setTimePanelPosition($(this), self.$hoursBox);
             return false;
-        }).on('click', 'span.minutes', function () {
+        }).on('click.datepicker', 'span.minutes', function () {
             //点击分种
             self.setTimePanelPosition($(this), self.$minutesBox);
             return false;
-        }).on('click', 'span.seconds', function () {
+        }).on('click.datepicker', 'span.seconds', function () {
             //点击秒
             self.setTimePanelPosition($(this), self.$secondsBox);
             return false;
-        }).on('click', '.time-box li', function () {
+        }).on('click.datepicker', '.time-box li', function () {
             //选择时、分、秒
             var $this = $(this),
                 value = $this.attr('data-value'),
@@ -1618,7 +1618,7 @@ define('km/datePicker', ['jquery'], function ($) {
                     self.$seconds.text(text);
                     break;
             }
-        }).on('click', '[role=confirm]', function () {
+        }).on('click.datepicker', '[role=confirm]', function () {
             //点击确定
 
             var $curDay = self.$datepicker.find('td span.active'),
@@ -2651,13 +2651,13 @@ define('km/dragdrop', ['jquery'], function ($) {
     DragDrop.prototype.eventBind = function () {
         var self = this;
 
-        this.$handle.on('mousedown', function (e) {
+        this.$handle.on('mousedown.dragdrop', function (e) {
             e.stopPropagation();
             e.preventDefault();
             self.start(e);
             //禁止文档选择事件
             document.onselectstart = function () { return false };
-        }).on('mousedown', '.k-resizable', function () {
+        }).on('mousedown.dragdrop', '.k-resizable', function () {
             self.isResize = true;
             self.resizeParams.type = $(this).attr("data-type");
             self.resizeParams.left = parseInt(self.$layer.position().left);
@@ -2677,7 +2677,7 @@ define('km/dragdrop', ['jquery'], function ($) {
         var self = this;
 
         //给文档绑定事件
-        this.$document.on('mousemove', function (e) {
+        this.$document.on('mousemove.dragdrop', function (e) {
             if (self.isMoving) {
                 if (self.isResize) {
                     self.resize(e);
@@ -2686,7 +2686,7 @@ define('km/dragdrop', ['jquery'], function ($) {
                     self.move(e);
                 }
             }
-        }).on('mouseup', function (e) {
+        }).on('mouseup.dragdrop', function (e) {
             self.stop(e);
             $(this).off();
         });
@@ -3737,17 +3737,17 @@ define('km/focusMap', ['jquery'], function ($) {
             return;
         }
         this.isWatch = true;
-        this.$el.on('mouseenter', function () {
+        this.$el.on('mouseenter.focusmap', function () {
             self.stop();
-        }).on('mouseleave', function () {
+        }).on('mouseleave.focusmap', function () {
             self.run();
-        }).on('click', '.k-focusmap-prev', function () {
+        }).on('click.focusmap', '.k-focusmap-prev', function () {
             self.index--;
             self.active();
-        }).on('click', '.k-focusmap-next', function () {
+        }).on('click.focusmap', '.k-focusmap-next', function () {
             self.index++;
             self.active();
-        }).on('click', 'span', function () {
+        }).on('click.focusmap', 'span', function () {
             var $el = $(this),
                 index = $el.index();
             self.index = index;
@@ -3988,22 +3988,22 @@ define('km/imgPreview', ['jquery', 'km/loading', 'km/popTips'], function ($, Loa
     ImgPreview.prototype.eventBind = function () {
         var self = this;
 
-        this.$elements.on('click', function () {
+        this.$elements.on('click.imgpreview', function () {
             var $this = $(this);
             self.index = Number($this.attr('data-index'));
             self.show();
         });
 
-        this.$backdrop.on('click', function () {
+        this.$backdrop.on('click.imgpreview', function () {
             if (self.options.backdropClose) {
                 self.hide();
             }
         });
 
-        this.$imgPreview.on('click', '[role=close]', function () {
+        this.$imgPreview.on('click.imgpreview', '[role=close]', function () {
             //关闭
             self.hide();
-        }).on('click', '[role=prev]', function () {
+        }).on('click.imgpreview', '[role=prev]', function () {
             if (self.isLoading) {
                 return;
             }
@@ -4014,7 +4014,7 @@ define('km/imgPreview', ['jquery', 'km/loading', 'km/popTips'], function ($, Loa
             self.index--;
             self.showControls();
             self.show();
-        }).on('click', '[role=next]', function () {
+        }).on('click.imgpreview', '[role=next]', function () {
 
             if (self.isLoading) {
                 return;
@@ -4027,14 +4027,14 @@ define('km/imgPreview', ['jquery', 'km/loading', 'km/popTips'], function ($, Loa
             self.index++;
             self.showControls();
             self.show();
-        }).on('mouseenter', function () {
+        }).on('mouseenter.imgpreview', function () {
             self.showControls();
-        }).on('mouseleave', function () {
+        }).on('mouseleave.imgpreview', function () {
             self.$prev.hide();
             self.$next.hide();
         });
 
-        this.$win.on('resize', function () {
+        this.$win.on('resize.imgpreview', function () {
             var width = self.$img.attr('data-width'),
                 height = self.$img.attr('data-height');
             self.setPosition({width:width,height:height});
@@ -4544,7 +4544,7 @@ define('km/magnifier', ['jquery'], function ($) {
         var self = this;
        
 
-        this.$el.on('mousemove', function (e) {
+        this.$el.on('mousemove.magnifier', function (e) {
             var src = self.$img.attr('data-big-img');
 
             self.$view.show();
@@ -4580,7 +4580,7 @@ define('km/magnifier', ['jquery'], function ($) {
             }
 
 
-        }).on('mouseleave', function (e) {
+        }).on('mouseleave.magnifier', function (e) {
             self.$view.hide();
             self.$selector.hide();
         });
@@ -4733,7 +4733,7 @@ define('km/pager', ['jquery', 'km/event'], function ($, event) {
         var self = this;
         this.$pager = $(this.template).appendTo(this.$element);
         this.build();
-        this.$pager.on('click', 'li', function () {
+        this.$pager.on('click.pager', 'li', function () {
             var $this = $(this),
                 page = $this.attr('data-page');
             if ($this.hasClass("disabled") || $this.hasClass("active")) { return; }
@@ -4825,15 +4825,25 @@ define('km/pager', ['jquery', 'km/event'], function ($, event) {
     return Pager;
 });
 
+/*
+ * ����ģ��
+ * @date:2015-08-21
+ * @author:kotenei(kotenei@qq.com)
+ */
 define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
 
+    /**
+     * ������
+     * @param {JQuery} $elm - dom
+     * @param {Object} options - ����
+     */
     var Panel = function ($elm, options) {
         this.$panel = $elm;
         this.options = $.extend(true, {
             width: 400,
             height: 'auto',
             resizable: false,
-            border: {
+            resizeBorder:{
                 left: false,
                 top: false,
                 right: false,
@@ -4843,7 +4853,10 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
         this.init();
     };
 
-    //��ʼ��
+    /**
+     * ��ʼ��
+     * @return {Void}
+     */
     Panel.prototype.init = function () {
         var self = this;
         this.$panel.css({
@@ -4855,28 +4868,28 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
         this.$body = this.$panel.find('.k-panel-body');
         this.$body.css('height', this.$panel.height() - this.$title.height());
 
-        this.headHeight=this.$header.outerHeight(true);
+        this.headHeight = this.$header.outerHeight(true);
 
         if (this.options.resizable) {
             this.resizable = new Resizable(this.$panel, {
-                border: self.options.border,
+                border: self.options.resizeBorder,
                 minWidth: self.options.minWidth,
-                minHeight:self.options.minHeight
+                minHeight: self.options.minHeight
             });
         }
 
         this.watch();
     };
 
-
-
-
-    //�¼�����
+    /**
+     * �¼�����
+     * @return {Void}
+     */
     Panel.prototype.watch = function () {
         var self = this;
-        this.$panel.on('click', '[role=collapse]', function () {
+        this.$panel.on('click.panel', '[role=collapse]', function () {
             self.collapse($(this));
-        }).on('click', '[role=expand]', function () {
+        }).on('click.panel', '[role=expand]', function () {
             self.expand($(this));
         });
 
@@ -4888,30 +4901,45 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
 
     };
 
+    /**
+     * ���ø߶�
+     * @return {Void}
+     */
     Panel.prototype.setHeight = function (height) {
-        var h = this.$title.height();
-        h = height - h;
+        var h = height - this.headHeight-1;
 
         this.$body.css('height', h);
     };
 
-    //չ��
+    /**
+     * չ��
+     * @return {Void}
+     */
     Panel.prototype.expand = function ($el) {
+        var self = this;
         $el.attr('role', 'collapse');
         if ($el.hasClass('fa-angle-double-down')) {
             $el.removeClass('fa-angle-double-down').addClass('fa-angle-double-up');
-            
+
             this.$panel.stop().animate({
                 height: this.orgHeight
             });
-            this.$body.stop().show().animate({
-                height: this.orgHeight-this.headHeight
-            })
+            this.$body.stop().animate({
+                height: this.orgHeight - this.headHeight-1,
+                display: 'block'
+            }, function () {
+                if (self.resizable) {
+                    self.resizable.$bottomHandle.show();
+                }
+            });
             return;
         }
     };
 
-    //�۵�
+    /**
+     * �۵�
+     * @return {Void}
+     */
     Panel.prototype.collapse = function ($el) {
         var h, self = this;
 
@@ -4920,14 +4948,17 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
         $el.attr('role', 'expand');
         if ($el.hasClass('fa-angle-double-up')) {
             $el.removeClass('fa-angle-double-up').addClass('fa-angle-double-down');
-            
+
             this.$panel.stop().animate({
-                height: this.headHeight
+                height: this.headHeight+1
             });
             this.$body.stop().animate({
-                height:0
+                height: 0
             }, function () {
                 self.$body.hide();
+                if (self.resizable) {
+                    self.resizable.$bottomHandle.hide();
+                }
             });
             return;
         }
@@ -5402,7 +5433,7 @@ define('km/rating', ['jquery', 'km/event'], function ($, event) {
      */
     Rating.prototype.watch = function () {
         var self = this;
-        this.$el.on('mousemove', 'img', function (e) {
+        this.$el.on('mousemove.rating', 'img', function (e) {
             var $el = $(this),
                 score = parseInt($el.attr('alt')),
                 left = $el.offset().left,
@@ -5433,7 +5464,7 @@ define('km/rating', ['jquery', 'km/event'], function ($, event) {
 
             self.event.trigger('mousemove.rating', [score, value]);
 
-        }).on('mouseleave', '.k-rating-star', function () {
+        }).on('mouseleave.rating', '.k-rating-star', function () {
             var icon,
                 value;
 
@@ -5458,7 +5489,7 @@ define('km/rating', ['jquery', 'km/event'], function ($, event) {
 
             self.event.trigger('mouseleave.rating', [self.options.score, value]);
 
-        }).on('click', 'img', function () {
+        }).on('click.rating', 'img', function () {
             var value;
             self.options.score = self._tmpScore;
             method._setStar.call(self, self.options.score);
@@ -5485,11 +5516,22 @@ define('km/rating', ['jquery', 'km/event'], function ($, event) {
     return Rating;
 });
 
+/*
+ * ����ģ��
+ * @date:2015-08-21
+ * @author:kotenei(kotenei@qq.com)
+ */
 define('km/resizable', ['jquery'], function ($) {
 
+    /**
+     * ������
+     * @param {JQuery} $elm - dom
+     * @param {Object} options - ����
+     */
     var Resizable = function ($elm, options) {
         this.$elm = $elm;
         this.options = $.extend(true, {
+            $range:null,
             minBar: false,
             scale: false,
             minWidth: 100,
@@ -5517,6 +5559,10 @@ define('km/resizable', ['jquery'], function ($) {
         this.init();
     };
 
+    /**
+     * ��ʼ��
+     * @return {Void}
+     */
     Resizable.prototype.init = function () {
         var html = [];
         html.push('<div class="k-resizable-handle k-resizable-handle-left" role="resizable" data-type="left"></div>');
@@ -5553,9 +5599,19 @@ define('km/resizable', ['jquery'], function ($) {
             this.$minbar.show();
         }
 
+        //this.resizeParams.top = parseInt(this.$elm.offset().top);
+        //this.resizeParams.left = this.$elm.offset().left;
+        //this.resizeParams.width = parseInt(this.$elm.outerWidth(true));
+        //this.resizeParams.height = parseInt(this.$elm.outerHeight(true));
+        //this.resizeParams.ratio = this.resizeParams.width >= this.resizeParams.height ? this.resizeParams.width / this.resizeParams.height : this.resizeParams.height / this.resizeParams.width;
+
         this.watch();
     };
 
+    /**
+     * �¼�����
+     * @return {Void}
+     */
     Resizable.prototype.watch = function () {
         var self = this;
 
@@ -5573,21 +5629,32 @@ define('km/resizable', ['jquery'], function ($) {
             self.start(e, $el);
         });
 
-
+        //this.$win.on('resize.resizable', function () {
+        //    self.resize();
+        //});
     };
 
+    /**
+     * �����Զ����¼�
+     * @return {Void}
+     */
     Resizable.prototype.on = function (type, callback) {
         this._event[type] = callback || $.noop;
         return this;
     };
 
+    /**
+     * ��ʼ����
+     * @return {Void}
+     */
     Resizable.prototype.start = function (e, $handle) {
         var self = this;
 
-        this.$doc.on('mousemove', function (e) {
-            self.move(e)
-        }).on('mouseup', function () {
-            self.$doc.off();
+        this.$doc.on('mousemove.resizable', function (e) {
+            self.resize(e)
+        }).on('mouseup.resizable', function () {
+            self.$doc.off('mousemove.resizable');
+            self.$doc.off('mouseup.resizable');
         });
 
 
@@ -5614,7 +5681,11 @@ define('km/resizable', ['jquery'], function ($) {
         return false;
     };
 
-    Resizable.prototype.move = function (e) {
+    /**
+     * ����
+     * @return {Void}
+     */
+    Resizable.prototype.resize = function (e) {
 
         var mouseCoord = this.getMouseCoord(e),
             moveCoord = {
@@ -5715,10 +5786,33 @@ define('km/resizable', ['jquery'], function ($) {
         this._event.move.call(this,css);
     };
 
+    /**
+     * ֹͣ����
+     * @return {Void}
+     */
     Resizable.prototype.stop = function () {
         this.moving = false;
     };
 
+    //Resizable.prototype.resize = function () {
+    //    var $range = this.options.$range,
+    //        rw,
+    //        rh;
+
+    //    if ($range) {
+    //        rw = $range.width();
+    //        rh = $range.height();
+    //    } else {
+    //        rw = this.$win.width() + this.$doc.scrollLeft();
+    //        rh = this.$win.height() + this.$doc.scrollTop();
+    //    }
+
+    //};
+
+    /**
+     * ȡ��������
+     * @return {Object}
+     */
     Resizable.prototype.getMouseCoord = function (e) {
         return {
             x: parseInt(e.pageX || e.clientX + document.body.scrollLeft - document.body.clientLeft),
@@ -5726,6 +5820,10 @@ define('km/resizable', ['jquery'], function ($) {
         };
     };
 
+    /**
+     * ȡ���ſ���
+     * @return {Int}
+     */
     Resizable.prototype.getScaleWidth = function (height, ratio) {
         ratio = ratio || this.resizeParams.ratio;
         if (this.resizeParams.width >= this.resizeParams.height) {
@@ -5735,6 +5833,10 @@ define('km/resizable', ['jquery'], function ($) {
         }
     };
 
+    /**
+    * ȡ���Ÿ߶�
+    * @return {Int}
+    */
     Resizable.prototype.getScaleHeight = function (width, ratio) {
         ratio = ratio || this.resizeParams.ratio;
         if (this.resizeParams.width >= this.resizeParams.height) {
@@ -6006,19 +6108,19 @@ define('km/slider', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
         var self = this;
 
         if (type.indexOf('select') !== -1) {
-            this.$bindElement.on('change', function () {
+            this.$bindElement.on('change.slider', function () {
                 var $this = $(this),
                     val = $.trim(self.getFilterValue($this.val()));
                 self.setValue(val);
             });
         } else {
-            this.$bindElement.on('keyup', function (e) {
+            this.$bindElement.on('keyup.slider', function (e) {
                 var $this = $(this),
                     val = $.trim(self.getFilterValue($this.val()));
                 if (e.keyCode === 13) {
                     self.setValue(val);
                 }
-            }).on('blur', function () {
+            }).on('blur.slider', function () {
                 var $this = $(this),
                     val = $.trim(self.getFilterValue($this.val()));
                 self.setValue(val);
@@ -6149,7 +6251,7 @@ define('km/switch', ['jquery'], function ($) {
         this.moveLeft = this.$switch.find('.k-switch-left').width();
         if (this.checked) { this.on(); } else { this.off(); }
         if (this.disabled) { this.$switch.addClass("disabled"); }
-        this.$switch.on('click', $.proxy(this.toggle, this));
+        this.$switch.on('click.switch', $.proxy(this.toggle, this));
     };
 
     /**
@@ -6883,7 +6985,7 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
     Tree.prototype.eventBind = function () {
         var self = this;
 
-        this.$element.on('click', "." + _consts.className.SWITCH, function () {
+        this.$element.on('click.tree', "." + _consts.className.SWITCH, function () {
             //展开或收缩
             var $this = $(this),
                 id = $this.attr('nId'),
@@ -6896,7 +6998,7 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
                 view.replaceSwitchClass($icon, $children[0].style.display === "none" ? _consts.floder.CLOSE : _consts.floder.OPEN);
             });
 
-        }).on('click', '.chk', function () {
+        }).on('click.tree', '.chk', function () {
             //复选或单选
             var $this = $(this),
                 id = $this.attr('nId'),
@@ -6927,7 +7029,7 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
 
             self.options.callback.onCheck(node);
 
-        }).on('click', 'a', function () {
+        }).on('click.tree', 'a', function () {
             //选择
             var $this = $(this);
 
@@ -6941,13 +7043,13 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
 
             self.options.callback.onSelect(self.getSelectedNode());
 
-        }).on('click', '.add', function () {
+        }).on('click.tree', '.add', function () {
             //添加
             var $this = $(this);
-        }).on('click', '.edit', function () {
+        }).on('click.tree', '.edit', function () {
             //编辑
             var $this = $(this);
-        }).on('click', '.remove', function () {
+        }).on('click.tree', '.remove', function () {
             //删除
             var $this = $(this);
         });
@@ -7360,7 +7462,7 @@ define('km/treeTable', ['jquery', 'km/ajax'], function ($, ajax) {
     //事件监控
     TreeTable.prototype.watch = function () {
         var self = this;
-        this.$elm.on('click', '.indenter a', function () {
+        this.$elm.on('click.treetable', '.indenter a', function () {
             var id = $(this).attr('data-nodeId'),
                 $row = $('#treeRow_' + id),
                 children = self.getChildren(self.objData[id]);
@@ -7374,7 +7476,7 @@ define('km/treeTable', ['jquery', 'km/ajax'], function ($, ajax) {
             }
 
             return false;
-        }).on('click', 'tbody tr', function () {
+        }).on('click.treetable', 'tbody tr', function () {
             var $row = $(this),
                 id = $row.attr('data-nodeId'),
                 node = self.objData[id];
@@ -7394,7 +7496,7 @@ define('km/treeTable', ['jquery', 'km/ajax'], function ($, ajax) {
                 node.checked = true;
                 self.check(node, true);
             }
-        }).on('click', '[role=checkall]', function () {
+        }).on('click.treetable', '[role=checkall]', function () {
             var $el = $(this),
                 $rows = self.$elm.find('tbody tr'),
                 isChecked = $el.prop('checked');
@@ -7870,9 +7972,9 @@ define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event'], func
     Upload.prototype.watch = function () {
         var self = this;
 
-        this.$uploadBox.on('change', 'input', function () {
+        this.$uploadBox.on('change.upload', 'input', function () {
             self.upload();
-        }).on('click', '.fa-close', function () {
+        }).on('click.upload', '.fa-close', function () {
             if (self.isLoading) {
                 return;
             }
@@ -8205,14 +8307,14 @@ define('km/validate', ['jquery'], function ($) {
         var self = this;
         this.$form.on('submit', function (e) {
             return self.validateFrom(e);
-        }).on('focus blur keyup',
+        }).on('focus.validate blur.validate keyup.validate',
         ':text, [type="password"], [type="file"], select, textarea, ' +
         '[type="number"], [type="search"] ,[type="tel"], [type="url"], ' +
         '[type="email"], [type="datetime"], [type="date"], [type="month"], ' +
         '[type="week"], [type="time"], [type="datetime-local"], ' +
         '[type="range"], [type="color"]', function (e) {
             self.validate(e);
-        }).on('click', '[type="radio"], [type="checkbox"], select, option', function (e) {
+        }).on('click.validate', '[type="radio"], [type="checkbox"], select, option', function (e) {
             self.validate(e);
         });
     };
@@ -9159,16 +9261,16 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
         this.$window.on('resize.window', function () {
             self.layout();
         });
-        this.$backdrop.on('click', function () {
+        this.$backdrop.on('click.window', function () {
             if (self.options.backdropClose) {
                 self.close();
             }
         });
-        this.$win.on('click', '[role=KWINCLOSE]', function () {
+        this.$win.on('click.window', '[role=KWINCLOSE]', function () {
             if (self._event.close.call(self) !== false) {
                 self.close();
             }
-        }).on('click', '[role=KWINOK]', function () {
+        }).on('click.window', '[role=KWINOK]', function () {
             if (self._event.ok.call(self) !== false) {
                 self.close();
             }
@@ -9179,7 +9281,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
         if (this.options.btns && this.options.btns.length > 0) {
             for (var i = 0, item; i < this.options.btns.length; i++) {
                 item = this.options.btns[i];
-                this.$win.on('click', '[role=' + item.actionCode + ']', function () {
+                this.$win.on('click.window', '[role=' + item.actionCode + ']', function () {
                     item.func.call(self, self.$iframe);
                 });
             }
@@ -9613,7 +9715,7 @@ define('km/wordLimit', ['jquery'], function ($) {
         var self = this;
         this.maxLength = parseInt(this.$element.attr('maxLength') || this.options.maxLength);
         this.$feedback = $(this.options.feedback);
-        this.$element.on('keyup', function () {
+        this.$element.on('keyup.wordlimit', function () {
             var val = $.trim($(this).val());
             self.update(val);
         });

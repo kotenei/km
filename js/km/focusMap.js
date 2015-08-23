@@ -89,17 +89,17 @@ define('km/focusMap', ['jquery'], function ($) {
             return;
         }
         this.isWatch = true;
-        this.$el.on('mouseenter', function () {
+        this.$el.on('mouseenter.focusmap', function () {
             self.stop();
-        }).on('mouseleave', function () {
+        }).on('mouseleave.focusmap', function () {
             self.run();
-        }).on('click', '.k-focusmap-prev', function () {
+        }).on('click.focusmap', '.k-focusmap-prev', function () {
             self.index--;
             self.active();
-        }).on('click', '.k-focusmap-next', function () {
+        }).on('click.focusmap', '.k-focusmap-next', function () {
             self.index++;
             self.active();
-        }).on('click', 'span', function () {
+        }).on('click.focusmap', 'span', function () {
             var $el = $(this),
                 index = $el.index();
             self.index = index;

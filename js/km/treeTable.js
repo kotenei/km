@@ -42,7 +42,7 @@ define('km/treeTable', ['jquery', 'km/ajax'], function ($, ajax) {
     //事件监控
     TreeTable.prototype.watch = function () {
         var self = this;
-        this.$elm.on('click', '.indenter a', function () {
+        this.$elm.on('click.treetable', '.indenter a', function () {
             var id = $(this).attr('data-nodeId'),
                 $row = $('#treeRow_' + id),
                 children = self.getChildren(self.objData[id]);
@@ -56,7 +56,7 @@ define('km/treeTable', ['jquery', 'km/ajax'], function ($, ajax) {
             }
 
             return false;
-        }).on('click', 'tbody tr', function () {
+        }).on('click.treetable', 'tbody tr', function () {
             var $row = $(this),
                 id = $row.attr('data-nodeId'),
                 node = self.objData[id];
@@ -76,7 +76,7 @@ define('km/treeTable', ['jquery', 'km/ajax'], function ($, ajax) {
                 node.checked = true;
                 self.check(node, true);
             }
-        }).on('click', '[role=checkall]', function () {
+        }).on('click.treetable', '[role=checkall]', function () {
             var $el = $(this),
                 $rows = self.$elm.find('tbody tr'),
                 isChecked = $el.prop('checked');

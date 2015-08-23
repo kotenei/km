@@ -259,7 +259,7 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
     Tree.prototype.eventBind = function () {
         var self = this;
 
-        this.$element.on('click', "." + _consts.className.SWITCH, function () {
+        this.$element.on('click.tree', "." + _consts.className.SWITCH, function () {
             //展开或收缩
             var $this = $(this),
                 id = $this.attr('nId'),
@@ -272,7 +272,7 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
                 view.replaceSwitchClass($icon, $children[0].style.display === "none" ? _consts.floder.CLOSE : _consts.floder.OPEN);
             });
 
-        }).on('click', '.chk', function () {
+        }).on('click.tree', '.chk', function () {
             //复选或单选
             var $this = $(this),
                 id = $this.attr('nId'),
@@ -303,7 +303,7 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
 
             self.options.callback.onCheck(node);
 
-        }).on('click', 'a', function () {
+        }).on('click.tree', 'a', function () {
             //选择
             var $this = $(this);
 
@@ -317,13 +317,13 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
 
             self.options.callback.onSelect(self.getSelectedNode());
 
-        }).on('click', '.add', function () {
+        }).on('click.tree', '.add', function () {
             //添加
             var $this = $(this);
-        }).on('click', '.edit', function () {
+        }).on('click.tree', '.edit', function () {
             //编辑
             var $this = $(this);
-        }).on('click', '.remove', function () {
+        }).on('click.tree', '.remove', function () {
             //删除
             var $this = $(this);
         });

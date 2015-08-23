@@ -1,8 +1,19 @@
+/*
+ * 缩放模块
+ * @date:2015-08-21
+ * @author:kotenei(kotenei@qq.com)
+ */
 define('km/resizable', ['jquery'], function ($) {
 
+    /**
+     * 缩放类
+     * @param {JQuery} $elm - dom
+     * @param {Object} options - 参数
+     */
     var Resizable = function ($elm, options) {
         this.$elm = $elm;
         this.options = $.extend(true, {
+            $range:null,
             minBar: false,
             scale: false,
             minWidth: 100,
@@ -30,6 +41,10 @@ define('km/resizable', ['jquery'], function ($) {
         this.init();
     };
 
+    /**
+     * 初始化
+     * @return {Void}
+     */
     Resizable.prototype.init = function () {
         var html = [];
         html.push('<div class="k-resizable-handle k-resizable-handle-left" role="resizable" data-type="left"></div>');
@@ -66,9 +81,19 @@ define('km/resizable', ['jquery'], function ($) {
             this.$minbar.show();
         }
 
+        //this.resizeParams.top = parseInt(this.$elm.offset().top);
+        //this.resizeParams.left = this.$elm.offset().left;
+        //this.resizeParams.width = parseInt(this.$elm.outerWidth(true));
+        //this.resizeParams.height = parseInt(this.$elm.outerHeight(true));
+        //this.resizeParams.ratio = this.resizeParams.width >= this.resizeParams.height ? this.resizeParams.width / this.resizeParams.height : this.resizeParams.height / this.resizeParams.width;
+
         this.watch();
     };
 
+    /**
+     * 事件监控
+     * @return {Void}
+     */
     Resizable.prototype.watch = function () {
         var self = this;
 
@@ -86,21 +111,32 @@ define('km/resizable', ['jquery'], function ($) {
             self.start(e, $el);
         });
 
-
+        //this.$win.on('resize.resizable', function () {
+        //    self.resize();
+        //});
     };
 
+    /**
+     * 添加自定义事件
+     * @return {Void}
+     */
     Resizable.prototype.on = function (type, callback) {
         this._event[type] = callback || $.noop;
         return this;
     };
 
+    /**
+     * 开始缩放
+     * @return {Void}
+     */
     Resizable.prototype.start = function (e, $handle) {
         var self = this;
 
-        this.$doc.on('mousemove', function (e) {
-            self.move(e)
-        }).on('mouseup', function () {
-            self.$doc.off();
+        this.$doc.on('mousemove.resizable', function (e) {
+            self.resize(e)
+        }).on('mouseup.resizable', function () {
+            self.$doc.off('mousemove.resizable');
+            self.$doc.off('mouseup.resizable');
         });
 
 
@@ -127,7 +163,11 @@ define('km/resizable', ['jquery'], function ($) {
         return false;
     };
 
-    Resizable.prototype.move = function (e) {
+    /**
+     * 缩放
+     * @return {Void}
+     */
+    Resizable.prototype.resize = function (e) {
 
         var mouseCoord = this.getMouseCoord(e),
             moveCoord = {
@@ -228,10 +268,33 @@ define('km/resizable', ['jquery'], function ($) {
         this._event.move.call(this,css);
     };
 
+    /**
+     * 停止缩放
+     * @return {Void}
+     */
     Resizable.prototype.stop = function () {
         this.moving = false;
     };
 
+    //Resizable.prototype.resize = function () {
+    //    var $range = this.options.$range,
+    //        rw,
+    //        rh;
+
+    //    if ($range) {
+    //        rw = $range.width();
+    //        rh = $range.height();
+    //    } else {
+    //        rw = this.$win.width() + this.$doc.scrollLeft();
+    //        rh = this.$win.height() + this.$doc.scrollTop();
+    //    }
+
+    //};
+
+    /**
+     * 取鼠标坐标
+     * @return {Object}
+     */
     Resizable.prototype.getMouseCoord = function (e) {
         return {
             x: parseInt(e.pageX || e.clientX + document.body.scrollLeft - document.body.clientLeft),
@@ -239,6 +302,10 @@ define('km/resizable', ['jquery'], function ($) {
         };
     };
 
+    /**
+     * 取缩放宽度
+     * @return {Int}
+     */
     Resizable.prototype.getScaleWidth = function (height, ratio) {
         ratio = ratio || this.resizeParams.ratio;
         if (this.resizeParams.width >= this.resizeParams.height) {
@@ -248,6 +315,10 @@ define('km/resizable', ['jquery'], function ($) {
         }
     };
 
+    /**
+    * 取缩放高度
+    * @return {Int}
+    */
     Resizable.prototype.getScaleHeight = function (width, ratio) {
         ratio = ratio || this.resizeParams.ratio;
         if (this.resizeParams.width >= this.resizeParams.height) {

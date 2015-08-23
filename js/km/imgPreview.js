@@ -67,22 +67,22 @@ define('km/imgPreview', ['jquery', 'km/loading', 'km/popTips'], function ($, Loa
     ImgPreview.prototype.eventBind = function () {
         var self = this;
 
-        this.$elements.on('click', function () {
+        this.$elements.on('click.imgpreview', function () {
             var $this = $(this);
             self.index = Number($this.attr('data-index'));
             self.show();
         });
 
-        this.$backdrop.on('click', function () {
+        this.$backdrop.on('click.imgpreview', function () {
             if (self.options.backdropClose) {
                 self.hide();
             }
         });
 
-        this.$imgPreview.on('click', '[role=close]', function () {
+        this.$imgPreview.on('click.imgpreview', '[role=close]', function () {
             //关闭
             self.hide();
-        }).on('click', '[role=prev]', function () {
+        }).on('click.imgpreview', '[role=prev]', function () {
             if (self.isLoading) {
                 return;
             }
@@ -93,7 +93,7 @@ define('km/imgPreview', ['jquery', 'km/loading', 'km/popTips'], function ($, Loa
             self.index--;
             self.showControls();
             self.show();
-        }).on('click', '[role=next]', function () {
+        }).on('click.imgpreview', '[role=next]', function () {
 
             if (self.isLoading) {
                 return;
@@ -106,14 +106,14 @@ define('km/imgPreview', ['jquery', 'km/loading', 'km/popTips'], function ($, Loa
             self.index++;
             self.showControls();
             self.show();
-        }).on('mouseenter', function () {
+        }).on('mouseenter.imgpreview', function () {
             self.showControls();
-        }).on('mouseleave', function () {
+        }).on('mouseleave.imgpreview', function () {
             self.$prev.hide();
             self.$next.hide();
         });
 
-        this.$win.on('resize', function () {
+        this.$win.on('resize.imgpreview', function () {
             var width = self.$img.attr('data-width'),
                 height = self.$img.attr('data-height');
             self.setPosition({width:width,height:height});

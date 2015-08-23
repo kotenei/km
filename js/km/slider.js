@@ -70,19 +70,19 @@ define('km/slider', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
         var self = this;
 
         if (type.indexOf('select') !== -1) {
-            this.$bindElement.on('change', function () {
+            this.$bindElement.on('change.slider', function () {
                 var $this = $(this),
                     val = $.trim(self.getFilterValue($this.val()));
                 self.setValue(val);
             });
         } else {
-            this.$bindElement.on('keyup', function (e) {
+            this.$bindElement.on('keyup.slider', function (e) {
                 var $this = $(this),
                     val = $.trim(self.getFilterValue($this.val()));
                 if (e.keyCode === 13) {
                     self.setValue(val);
                 }
-            }).on('blur', function () {
+            }).on('blur.slider', function () {
                 var $this = $(this),
                     val = $.trim(self.getFilterValue($this.val()));
                 self.setValue(val);

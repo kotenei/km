@@ -106,14 +106,14 @@ define('km/validate', ['jquery'], function ($) {
         var self = this;
         this.$form.on('submit', function (e) {
             return self.validateFrom(e);
-        }).on('focus blur keyup',
+        }).on('focus.validate blur.validate keyup.validate',
         ':text, [type="password"], [type="file"], select, textarea, ' +
         '[type="number"], [type="search"] ,[type="tel"], [type="url"], ' +
         '[type="email"], [type="datetime"], [type="date"], [type="month"], ' +
         '[type="week"], [type="time"], [type="datetime-local"], ' +
         '[type="range"], [type="color"]', function (e) {
             self.validate(e);
-        }).on('click', '[type="radio"], [type="checkbox"], select, option', function (e) {
+        }).on('click.validate', '[type="radio"], [type="checkbox"], select, option', function (e) {
             self.validate(e);
         });
     };

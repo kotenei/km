@@ -46,7 +46,7 @@ define('km/contextMenu', ['jquery'], function ($) {
     ContextMenu.prototype.watch = function () {
         var self = this;
 
-        this.$el.on('contextmenu',this.options.target, function (e) {
+        this.$el.on('contextmenu.contextmenu', this.options.target, function (e) {
             var left = e.pageX,
                 top = e.pageY;
 
@@ -66,7 +66,7 @@ define('km/contextMenu', ['jquery'], function ($) {
             return false;
         });
 
-        this.$contextMenu.on('click', 'li', function () {
+        this.$contextMenu.on('click.contextmenu', 'li', function () {
             var $el = $(this),
                 text = $el.text(),
                 item = self.items[text];
@@ -75,7 +75,7 @@ define('km/contextMenu', ['jquery'], function ($) {
             }
         });
 
-        $(document.body).on('click', function () {
+        $(document.body).on('click.contextmenu', function () {
             self.$contextMenu.hide();
             self.$curTarget = null;
         });

@@ -84,9 +84,9 @@ define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event'], func
     Upload.prototype.watch = function () {
         var self = this;
 
-        this.$uploadBox.on('change', 'input', function () {
+        this.$uploadBox.on('change.upload', 'input', function () {
             self.upload();
-        }).on('click', '.fa-close', function () {
+        }).on('click.upload', '.fa-close', function () {
             if (self.isLoading) {
                 return;
             }

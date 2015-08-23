@@ -79,16 +79,16 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
         this.$window.on('resize.window', function () {
             self.layout();
         });
-        this.$backdrop.on('click', function () {
+        this.$backdrop.on('click.window', function () {
             if (self.options.backdropClose) {
                 self.close();
             }
         });
-        this.$win.on('click', '[role=KWINCLOSE]', function () {
+        this.$win.on('click.window', '[role=KWINCLOSE]', function () {
             if (self._event.close.call(self) !== false) {
                 self.close();
             }
-        }).on('click', '[role=KWINOK]', function () {
+        }).on('click.window', '[role=KWINOK]', function () {
             if (self._event.ok.call(self) !== false) {
                 self.close();
             }
@@ -99,7 +99,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
         if (this.options.btns && this.options.btns.length > 0) {
             for (var i = 0, item; i < this.options.btns.length; i++) {
                 item = this.options.btns[i];
-                this.$win.on('click', '[role=' + item.actionCode + ']', function () {
+                this.$win.on('click.window', '[role=' + item.actionCode + ']', function () {
                     item.func.call(self, self.$iframe);
                 });
             }

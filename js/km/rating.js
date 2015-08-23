@@ -139,7 +139,7 @@ define('km/rating', ['jquery', 'km/event'], function ($, event) {
      */
     Rating.prototype.watch = function () {
         var self = this;
-        this.$el.on('mousemove', 'img', function (e) {
+        this.$el.on('mousemove.rating', 'img', function (e) {
             var $el = $(this),
                 score = parseInt($el.attr('alt')),
                 left = $el.offset().left,
@@ -170,7 +170,7 @@ define('km/rating', ['jquery', 'km/event'], function ($, event) {
 
             self.event.trigger('mousemove.rating', [score, value]);
 
-        }).on('mouseleave', '.k-rating-star', function () {
+        }).on('mouseleave.rating', '.k-rating-star', function () {
             var icon,
                 value;
 
@@ -195,7 +195,7 @@ define('km/rating', ['jquery', 'km/event'], function ($, event) {
 
             self.event.trigger('mouseleave.rating', [self.options.score, value]);
 
-        }).on('click', 'img', function () {
+        }).on('click.rating', 'img', function () {
             var value;
             self.options.score = self._tmpScore;
             method._setStar.call(self, self.options.score);

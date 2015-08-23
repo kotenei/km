@@ -43,7 +43,7 @@ define('km/magnifier', ['jquery'], function ($) {
         var self = this;
        
 
-        this.$el.on('mousemove', function (e) {
+        this.$el.on('mousemove.magnifier', function (e) {
             var src = self.$img.attr('data-big-img');
 
             self.$view.show();
@@ -79,7 +79,7 @@ define('km/magnifier', ['jquery'], function ($) {
             }
 
 
-        }).on('mouseleave', function (e) {
+        }).on('mouseleave.magnifier', function (e) {
             self.$view.hide();
             self.$selector.hide();
         });

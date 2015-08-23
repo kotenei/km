@@ -109,13 +109,13 @@ define('km/dragdrop', ['jquery'], function ($) {
     DragDrop.prototype.eventBind = function () {
         var self = this;
 
-        this.$handle.on('mousedown', function (e) {
+        this.$handle.on('mousedown.dragdrop', function (e) {
             e.stopPropagation();
             e.preventDefault();
             self.start(e);
             //禁止文档选择事件
             document.onselectstart = function () { return false };
-        }).on('mousedown', '.k-resizable', function () {
+        }).on('mousedown.dragdrop', '.k-resizable', function () {
             self.isResize = true;
             self.resizeParams.type = $(this).attr("data-type");
             self.resizeParams.left = parseInt(self.$layer.position().left);
@@ -135,7 +135,7 @@ define('km/dragdrop', ['jquery'], function ($) {
         var self = this;
 
         //给文档绑定事件
-        this.$document.on('mousemove', function (e) {
+        this.$document.on('mousemove.dragdrop', function (e) {
             if (self.isMoving) {
                 if (self.isResize) {
                     self.resize(e);
@@ -144,7 +144,7 @@ define('km/dragdrop', ['jquery'], function ($) {
                     self.move(e);
                 }
             }
-        }).on('mouseup', function (e) {
+        }).on('mouseup.dragdrop', function (e) {
             self.stop(e);
             $(this).off();
         });
