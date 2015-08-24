@@ -10,14 +10,67 @@ define('km/layout', ['jquery', 'km/panel'], function ($, Panel) {
         this.options = $.extend(true, {
 
         }, options);
+        this.$parent = this.$layout.parent();
         this.init();
     };
 
     Layout.prototype.init = function () {
         this.$win = $(window);
-        this.$panels = this.$layout.find('.k-panel');
+        this.$panels = this.$layout.children('.k-panel');
+        this.$leftPanel = this.$panels.filter('.k-panel-left');
+        this.$topPanel = this.$panels.filter('.k-panel-top');
+        this.$rightPanel = this.$panels.filter('.k-panel-right');
+        this.$bottomPanel = this.$panels.filter('.k-panel-bottom');
+        this.$centerPanel = this.$panels.filter('.k-panel-center');
         this.setSize();
+        this.panelInit();
         this.watch();
+    };
+
+    Layout.prototype.panelInit = function () {
+        var self = this;
+
+        this.$panels.each(function () {
+
+            var $panel = $(this),
+                type = $panel.attr('data-type'),
+                options = { resizable: true, width: $panel.width(), height: $panel.height() },
+                min = 40;
+
+
+            switch (type) {
+                case 'top':
+                    options.minHeight = min;
+                    options.resizeBorder = {
+                        bottom: true
+                    };
+                    break;
+                case 'left':
+                    options.minWidth = min;
+                    options.resizeBorder = {
+                        right: true
+                    };
+                    break;
+                case 'right':
+                    options.minWidth = min;
+                    options.resizeBorder = {
+                        left: true
+                    };
+                    break;
+                case 'bottom':
+                    options.minHeight = min;
+                    options.resizeBorder = {
+                        top: true
+                    };
+                    break;
+            }
+
+            var panel = new Panel($panel, options);
+            panel.on('resize', function () {
+                //self.setSize();
+            })
+            $panel.data('panel', panel);
+        });
     };
 
     Layout.prototype.watch = function () {
@@ -28,16 +81,81 @@ define('km/layout', ['jquery', 'km/panel'], function ($, Panel) {
     };
 
     Layout.prototype.setSize = function () {
-        var $parent = this.$layout.parent(),
+        var $parent = this.$parent,
             width = $parent.width(),
             height = $parent.height();
 
         if ($parent[0].tagName.toLowerCase() == 'body') {
-            width = this.$win.width();
+            $parent.addClass('k-layout-body');
             height = this.$win.height();
         }
 
         this.$layout.css({ width: width, height: height });
+
+        //panel³ß´çÉèÖÃ
+
+        var t = 0, w = '100%', h;
+
+        this.$topPanel.css({
+            left: 0,
+            top: 0,
+            width: '100%',
+            height: this.$topPanel.height() == 0 ? 100 : this.$topPanel.outerHeight()
+        });
+
+        this.$bottomPanel.css({
+            left: 0,
+            height: this.$bottomPanel.height() == 0 ? 100 : this.$bottomPanel.outerHeight(),
+            width: '100%'
+        });
+
+        if (this.$topPanel.length > 0 && this.$bottomPanel.length > 0) {
+            h = this.$layout.height() - this.$topPanel.height() - this.$bottomPanel.height() - 2;
+        } else if (this.$topPanel.length > 0 && this.$bottomPanel.length == 0) {
+            h = this.$layout.height() - this.$topPanel.height() - 1;
+        } else if (this.$topPanel.length == 0 && this.$bottomPanel.length > 0) {
+            h = this.$layout.height() - this.$bottomPanel.height() - 1;
+        } else {
+            h = this.$layout.height();
+        }
+
+        if (this.$topPanel.length > 0) {
+            t = this.$topPanel.height() + 1
+        }
+
+        this.$leftPanel.css({
+            width: 150,
+            left: 0,
+            top: t,
+            height: h
+        });
+
+
+        this.$rightPanel.css({
+            width: 150,
+            right: 0,
+            top: t,
+            height: h
+        });
+
+
+        if (this.$leftPanel.length > 0 && this.$rightPanel.length > 0) {
+            w = width - this.$leftPanel.width() - this.$rightPanel.width() - 2;
+        } else if (this.$leftPanel.length > 0 && this.$rightPanel.length == 0) {
+            w = width - this.$leftPanel.width() - 1;
+        } else if (this.$leftPanel.length == 0 && this.$rightPanel.length > 0) {
+            w = width - this.$rightPanel.width() - 1;
+        }
+
+        this.$centerPanel.css({
+            top: t,
+            left: this.$leftPanel.length > 0 ? this.$leftPanel.width() + 1 : 0,
+            width: w,
+            height: h
+        });
+
+        this.$bottomPanel.css('top', this.$topPanel.height() + h);
+
     };
 
     return Layout;

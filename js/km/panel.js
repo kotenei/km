@@ -13,7 +13,7 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
     var Panel = function ($elm, options) {
         this.$panel = $elm;
         this.options = $.extend(true, {
-            width: 400,
+            width: 'auto',
             height: 'auto',
             minWidth: 100,
             minHeight:100,
@@ -73,7 +73,7 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
         });
 
         if (this.resizable) {
-            this.resizable.on('move', function (css) {
+            this.resizable.on('resize', function (css) {
                 self.setHeight(css.height);
                 self._event.resize.call(self, css);
             });
@@ -98,6 +98,14 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
         var h = height - this.headHeight-1;
 
         this.$body.css('height', h);
+    };
+
+    Panel.prototype.setSize = function (size) {
+        this.$panel.css({
+            width: size.width,
+            height: size.height
+        });
+        this.setHeight(size.height);
     };
 
     /**

@@ -81,8 +81,8 @@ define('km/resizable', ['jquery'], function ($) {
             this.$minbar.show();
         }
 
-        //this.resizeParams.top = parseInt(this.$elm.offset().top);
-        //this.resizeParams.left = this.$elm.offset().left;
+        //this.resizeParams.top = parseInt(this.$elm.position().top);
+        //this.resizeParams.left = this.$elm.position().left;
         //this.resizeParams.width = parseInt(this.$elm.outerWidth(true));
         //this.resizeParams.height = parseInt(this.$elm.outerHeight(true));
         //this.resizeParams.ratio = this.resizeParams.width >= this.resizeParams.height ? this.resizeParams.width / this.resizeParams.height : this.resizeParams.height / this.resizeParams.width;
@@ -99,8 +99,8 @@ define('km/resizable', ['jquery'], function ($) {
 
         this.$elm.on('mousedown.resizable', '[role=resizable]', function (e) {
             var $el = $(this);
-            self.resizeParams.top = parseInt(self.$elm.offset().top);
-            self.resizeParams.left = self.$elm.offset().left;
+            self.resizeParams.top = parseInt(self.$elm.position().top);
+            self.resizeParams.left = self.$elm.position().left;
             self.resizeParams.width = parseInt(self.$elm.outerWidth(true));
             self.resizeParams.height = parseInt(self.$elm.outerHeight(true));
             self.resizeParams.ratio = self.resizeParams.width >= self.resizeParams.height ? self.resizeParams.width / self.resizeParams.height : self.resizeParams.height / self.resizeParams.width;
@@ -144,8 +144,8 @@ define('km/resizable', ['jquery'], function ($) {
         var mouseCoord = this.getMouseCoord(e);
 
         //记录鼠标在拖动层的坐标位置
-        this.offset.x = mouseCoord.x - this.$elm.offset().left;
-        this.offset.y = mouseCoord.y - this.$elm.offset().top;
+        this.offset.x = mouseCoord.x - this.$elm.position().left;
+        this.offset.y = mouseCoord.y - this.$elm.position().top;
 
         //记录鼠标点击后的坐标
         this.originalCoord.x = mouseCoord.x;

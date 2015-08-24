@@ -5,10 +5,10 @@
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
-html,
+/*html, body{ margin:0; height:100%; }*/
 body {
   margin: 0;
-  height: 100%;
+  padding: 0;
 }
 .k-resizable {
   width: 8px;
@@ -2052,10 +2052,12 @@ table.k-treeTable tr.expanded.accept td span.indenter a {
   border-bottom: 1px dashed ;
 }
 .k-panel {
-  border: 1px solid #ebebeb;
+  border: 1px solid #ddd;
+  overflow: hidden;
+  background: white;
 }
 .k-panel .k-panel-head {
-  border-bottom: 1px solid #ebebeb;
+  border-bottom: 1px solid #ddd;
 }
 .k-panel .k-panel-head .k-panel-title {
   margin: 0;
@@ -2129,6 +2131,26 @@ table.k-treeTable tr.expanded.accept td span.indenter a {
   cursor: se-resize;
   display: none;
 }
+.k-layout-body {
+  height: 100%;
+  overflow: hidden;
+}
 .k-layout {
   position: relative;
+}
+.k-layout .k-panel {
+  position: absolute;
+  border: none;
+}
+.k-layout .k-panel.k-panel-top {
+  border-bottom: 1px solid #ddd;
+}
+.k-layout .k-panel.k-panel-left {
+  border-right: 1px solid #ddd;
+}
+.k-layout .k-panel.k-panel-right {
+  border-left: 1px solid #ddd;
+}
+.k-layout .k-panel.k-panel-bottom {
+  border-top: 1px solid #ddd;
 }

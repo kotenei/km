@@ -1,3 +1,36 @@
-.k-layout {
-    position:relative;
+.k-layout-body
+{
+    height:100%;
+    overflow:hidden;
+}
+
+.k-layout
+{
+    position: relative;
+
+    .k-panel
+    {
+        position: absolute;
+        border: none;
+
+        &.k-panel-top
+        {
+            border-bottom: 1px solid #ddd;
+        }
+
+        &.k-panel-left
+        {
+            border-right:1px solid #ddd;
+        }
+
+        &.k-panel-right
+        {
+            border-left:1px solid #ddd;
+        }
+
+        &.k-panel-bottom
+        {
+            border-top:1px solid #ddd;
+        }
+    }
 }
