@@ -66,11 +66,12 @@ define('km/layout', ['jquery', 'km/panel'], function ($, Panel) {
             }
 
             var panel = new Panel($panel, options);
-            panel.on('resize', function () {
-                //self.setSize();
+            panel.on('resize', function (css) {
+                self.setSize();
             })
             $panel.data('panel', panel);
         });
+
     };
 
     Layout.prototype.watch = function () {
@@ -110,21 +111,21 @@ define('km/layout', ['jquery', 'km/panel'], function ($, Panel) {
         });
 
         if (this.$topPanel.length > 0 && this.$bottomPanel.length > 0) {
-            h = this.$layout.height() - this.$topPanel.height() - this.$bottomPanel.height() - 2;
+            h = this.$layout.height() - this.$topPanel.outerHeight() - this.$bottomPanel.outerHeight();
         } else if (this.$topPanel.length > 0 && this.$bottomPanel.length == 0) {
-            h = this.$layout.height() - this.$topPanel.height() - 1;
+            h = this.$layout.height() - this.$topPanel.outerHeight() ;
         } else if (this.$topPanel.length == 0 && this.$bottomPanel.length > 0) {
-            h = this.$layout.height() - this.$bottomPanel.height() - 1;
+            h = this.$layout.height() - this.$bottomPanel.outerHeight() ;
         } else {
             h = this.$layout.height();
         }
 
         if (this.$topPanel.length > 0) {
-            t = this.$topPanel.height() + 1
+            t = this.$topPanel.outerHeight()
         }
 
         this.$leftPanel.css({
-            width: 150,
+            width: this.$leftPanel.width() == 0 ? 150 : this.$leftPanel.outerWidth(),
             left: 0,
             top: t,
             height: h
@@ -132,29 +133,34 @@ define('km/layout', ['jquery', 'km/panel'], function ($, Panel) {
 
 
         this.$rightPanel.css({
-            width: 150,
-            right: 0,
+            width: this.$rightPanel.width() == 0 ? 150 : this.$rightPanel.outerWidth(),
             top: t,
-            height: h
+            height: h,
+            right: 0
         });
 
 
         if (this.$leftPanel.length > 0 && this.$rightPanel.length > 0) {
-            w = width - this.$leftPanel.width() - this.$rightPanel.width() - 2;
+            w = width - this.$leftPanel.outerWidth() - this.$rightPanel.outerWidth();
         } else if (this.$leftPanel.length > 0 && this.$rightPanel.length == 0) {
-            w = width - this.$leftPanel.width() - 1;
+            w = width - this.$leftPanel.outerWidth();
         } else if (this.$leftPanel.length == 0 && this.$rightPanel.length > 0) {
-            w = width - this.$rightPanel.width() - 1;
+            w = width - this.$rightPanel.outerWidth();
         }
 
         this.$centerPanel.css({
             top: t,
-            left: this.$leftPanel.length > 0 ? this.$leftPanel.width() + 1 : 0,
+            left: this.$leftPanel.length > 0 ? this.$leftPanel.outerWidth() : 0,
             width: w,
             height: h
         });
 
-        this.$bottomPanel.css('top', this.$topPanel.height() + h);
+        this.$rightPanel.css({
+            'left': this.$leftPanel.outerWidth() + this.$centerPanel.outerWidth(),
+            'right':'none'
+        });
+
+        this.$bottomPanel.css('top', this.$topPanel.outerHeight() + h);
 
     };
 
