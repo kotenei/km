@@ -13,7 +13,7 @@ define('km/resizable', ['jquery'], function ($) {
     var Resizable = function ($elm, options) {
         this.$elm = $elm;
         this.options = $.extend(true, {
-            $range:null,
+            $range: null,
             minBar: false,
             scale: false,
             minWidth: 100,
@@ -36,7 +36,8 @@ define('km/resizable', ['jquery'], function ($) {
         this.minWidth = this.options.minWidth;
         this.minHeight = this.options.minHeight;
         this._event = {
-            resize:$.noop
+            resize: $.noop,
+            stop: $.noop
         };
         this.init();
     };
@@ -189,8 +190,8 @@ define('km/resizable', ['jquery'], function ($) {
 
         switch (this.resizeParams.type) {
             case 'left':
-                css.top=resizeParams.top;
-                css.height=resizeParams.height;
+                css.top = resizeParams.top;
+                css.height = resizeParams.height;
                 if (moveCoord.x <= 0) {
                     css.left = 0;
                     css.width = resizeParams.width + resizeParams.left;
@@ -225,7 +226,7 @@ define('km/resizable', ['jquery'], function ($) {
                 css.height = resizeParams.height;
                 css.top = resizeParams.top;
                 if ((css.width + resizeParams.left) >= rw) {
-                    css.width = rw ;
+                    css.width = rw;
                 }
                 if (css.width <= this.minWidth) {
                     css.width = this.minWidth;
@@ -263,6 +264,8 @@ define('km/resizable', ['jquery'], function ($) {
                 break;
         }
 
+        this.css = css;
+
         this.$elm.css(css);
 
         this._event.resize.call(this, css);
@@ -274,6 +277,7 @@ define('km/resizable', ['jquery'], function ($) {
      */
     Resizable.prototype.stop = function () {
         this.moving = false;
+        this._event.stop.call(this, this.css);
     };
 
     //Resizable.prototype.resize = function () {

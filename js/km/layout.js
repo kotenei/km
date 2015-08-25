@@ -68,7 +68,8 @@ define('km/layout', ['jquery', 'km/panel'], function ($, Panel) {
             var panel = new Panel($panel, options);
             panel.on('resize', function (css) {
                 self.setSize();
-            })
+                self.$centerPanel.resize();
+            });
             $panel.data('panel', panel);
         });
 
