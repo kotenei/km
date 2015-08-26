@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>面板</title>
+    <title>布局</title>
     <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
     <link href="../dist/css/km.min.css" rel="stylesheet" />
@@ -12,20 +12,92 @@
 <body class="">
     <div class="k-layout" id="l1">
         <div class="k-panel k-panel-top" data-type="top">
-        </div>
-        <div class="k-panel k-panel-left" data-type="left"></div>
-        <div class="k-panel k-panel-center" data-type="center">
-            <div class="k-layout" id="l2">
-                <div class="k-panel k-panel-top" data-type="top"></div>
-                <div class="k-panel k-panel-left" data-type="left"></div>
-                <div class="k-panel k-panel-center" data-type="center">
-                </div>
-                <div class="k-panel k-panel-right" data-type="right"></div>
-                <div class="k-panel k-panel-bottom" data-type="bottom"></div>
+            <div class="k-panel-head">
+                <h3 class="k-panel-title ">这是标题
+                    <span class="fa fa-angle-double-up" role="hide" data-type="top"></span>
+                </h3>
+            </div>
+            <div class="k-panel-body">
+                这是内容
             </div>
         </div>
-        <div class="k-panel k-panel-right" data-type="right"></div>
-        <div class="k-panel k-panel-bottom" data-type="bottom"></div>
+        <div class="k-panel k-panel-left" data-type="left">
+            <div class="k-panel-head">
+                <h3 class="k-panel-title ">这是标题
+                    <span class="fa fa-angle-double-left" role="hide" data-type="left"></span>
+                </h3>
+            </div>
+            <div class="k-panel-body">
+                这是内容
+            </div>
+        </div>
+        <div class="k-panel k-panel-center" data-type="center">
+            <!--<div class="k-layout" id="l2">
+                <div class="k-panel k-panel-top" data-type="top">
+                    <div class="k-panel-head">
+                        <h3 class="k-panel-title ">这是标题
+                    <span class="fa fa-angle-double-up" role="toggle" data-type="top"></span>
+                        </h3>
+                    </div>
+                    <div class="k-panel-body">
+                        这是内容
+                    </div>
+
+                </div>
+                <div class="k-panel k-panel-left" data-type="left">
+                    <div class="k-panel-head">
+                        <h3 class="k-panel-title ">这是标题
+                    <span class="fa fa-angle-double-up" role="toggle" data-type="top"></span>
+                        </h3>
+                    </div>
+                    <div class="k-panel-body">
+                        这是内容
+                    </div>
+                </div>
+                <div class="k-panel k-panel-center" data-type="center">
+                </div>
+                <div class="k-panel k-panel-right" data-type="right">
+                    <div class="k-panel-head">
+                        <h3 class="k-panel-title ">这是标题
+                    <span class="fa fa-angle-double-up" role="toggle" data-type="top"></span>
+                        </h3>
+                    </div>
+                    <div class="k-panel-body">
+                        这是内容
+                    </div>
+                </div>
+                <div class="k-panel k-panel-bottom" data-type="bottom">
+                    <div class="k-panel-head">
+                        <h3 class="k-panel-title ">这是标题
+                    <span class="fa fa-angle-double-up" role="toggle" data-type="top"></span>
+                        </h3>
+                    </div>
+                    <div class="k-panel-body">
+                        这是内容
+                    </div>
+                </div>
+            </div>-->
+        </div>
+        <div class="k-panel k-panel-right" data-type="right">
+            <div class="k-panel-head">
+                <h3 class="k-panel-title ">这是标题
+                    <span class="fa fa-angle-double-right" role="hide" data-type="right"></span>
+                </h3>
+            </div>
+            <div class="k-panel-body">
+                这是内容
+            </div>
+        </div>
+        <div class="k-panel k-panel-bottom" data-type="bottom">
+            <div class="k-panel-head">
+                <h3 class="k-panel-title ">这是标题
+                    <span class="fa fa-angle-double-down" role="hide" data-type="bottom"></span>
+                </h3>
+            </div>
+            <div class="k-panel-body">
+                这是内容
+            </div>
+        </div>
     </div>
 
 
@@ -35,7 +107,7 @@
         require(['KM'], function (KM) {
             var layout = new KM.Layout($('#l1'), {});
 
-            var layout2 = new KM.Layout($('#l2'), {});
+            //var layout2 = new KM.Layout($('#l2'), {});
         });
     </script>
 </body>

@@ -2058,21 +2058,23 @@ table.k-treeTable tr.expanded.accept td span.indenter a {
 }
 .k-panel .k-panel-head {
   border-bottom: 1px solid #ddd;
+  background: #FBFBFB;
 }
 .k-panel .k-panel-head .k-panel-title {
   margin: 0;
   font-size: 14px;
   padding-left: 10px;
-  height: 35px;
-  line-height: 35px;
+  height: 40px;
+  line-height: 40px;
   position: relative;
+  overflow: hidden;
 }
 .k-panel .k-panel-head .k-panel-title.pointer {
   cursor: pointer;
 }
 .k-panel .k-panel-head .k-panel-title .fa {
   position: absolute;
-  right: 10px;
+  right: 15px;
   top: 12px;
   cursor: pointer;
 }
@@ -2166,16 +2168,74 @@ table.k-treeTable tr.expanded.accept td span.indenter a {
 .k-layout .k-panel {
   position: absolute;
   border: none;
+  display: none;
 }
 .k-layout .k-panel.k-panel-top {
   border-bottom: 1px solid #ddd;
+  z-index: 3;
+  height: 100px;
+  width: 100%;
+  left: 0;
+  top: 0;
 }
 .k-layout .k-panel.k-panel-left {
   border-right: 1px solid #ddd;
+  z-index: 2;
+  width: 150px;
+  left: 0;
+  top: 99px;
 }
 .k-layout .k-panel.k-panel-right {
   border-left: 1px solid #ddd;
+  z-index: 2;
+  width: 150px;
+  top: 99px;
+}
+.k-layout .k-panel.k-panel-center {
+  top: 99px;
 }
 .k-layout .k-panel.k-panel-bottom {
   border-top: 1px solid #ddd;
+  z-index: 3;
+  height: 100px;
+  width: 100%;
+}
+.k-layout .panel-expand {
+  position: absolute;
+  background: #FBFBFB;
+  display: none;
+}
+.k-layout .panel-expand .fa {
+  position: absolute;
+  right: 15px;
+  top: 15px;
+  cursor: pointer;
+}
+.k-layout .panel-expand.panel-expand-top {
+  border-bottom: 1px solid #ddd;
+  height: 40px;
+  left: 0;
+  top: 0;
+  width: 100%;
+}
+.k-layout .panel-expand.panel-expand-left {
+  border-right: 1px solid #ddd;
+  width: 40px;
+  top: 40px;
+  left: 0;
+  bottom: 0;
+}
+.k-layout .panel-expand.panel-expand-right {
+  border-left: 1px solid #ddd;
+  width: 40px;
+  right: 0;
+  top: 40px;
+  bottom: 0;
+}
+.k-layout .panel-expand.panel-expand-bottom {
+  border-top: 1px solid #ddd;
+  height: 40px;
+  bottom: 0;
+  left: 0;
+  width: 100%;
 }

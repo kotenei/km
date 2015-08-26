@@ -4322,7 +4322,7 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
 
         this.$panels.each(function () {
 
-            var $panel = $(this),
+            var $panel = $(this).show(),
                 type = $panel.attr('data-type'),
                 min = 40,
                 options = {
@@ -4380,12 +4380,154 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
         this.$win.on('resize.layout', function () {
             self.setSize();
         });
+        this.$panels.on('click.layout', 'span[role=hide]', function () {
+            self.hide($(this));
+        });
+        this.$layout.on('click.layout', 'span[role=show]', function () {
+            self.show($(this).attr('data-type'));
+        });
+    };
+
+    Layout.prototype.show = function (type) {
+        var self = this,
+            panelsInfo = this.getPanelsInfo(),
+            info = panelsInfo[type],
+            $panel = info.$panel.attr('ishide', false),
+            $expand = $panel.data('expand');
+
+
+        $expand.hide();
+        $panel.stop();
+
+        switch (type) {
+            case 'top':
+                $panel.animate({ top: 0 }, function () {
+                    self.setSize();
+                });
+                break;
+            case 'left':
+                $panel.animate({ left: 0 }, function () {
+                    self.setSize();
+                });
+                break;
+            case 'right':
+                $panel.animate({ left: info.left - info.width }, function () {
+                    self.setSize();
+                });
+                break;
+            case 'bottom':
+                $panel.animate({ top: info.top - info.height }, function () {
+                    self.setSize();
+                });
+                break;
+        }
+    };
+
+    Layout.prototype.hide = function ($el) {
+        var self = this,
+            type = $el.attr('data-type'),
+            $panel = $el.parents('.k-panel:eq(0)'),
+            $expand = $panel.data('expand'),
+            w = $panel.outerWidth(),
+            h = $panel.outerHeight(),
+            t = $panel.position().top,
+            l = $panel.position().left,
+            min = 40,
+            p_w = this.$parent[0].tagName.toLowerCase() == 'body' ? this.$win.width() : this.$parent.width(),
+            css;
+
+        $panel.attr('isHide', true);
+
+        if (!$expand) {
+            $expand = $(this.getExpandHtml(type));
+            $expand.appendTo(this.$layout);
+            //$expand.on('mouseover.layout', function () { });
+            $panel.data('expand', $expand);
+        }
+
+        switch (type) {
+            case 'top':
+                css = { top: t + min, height: this.$leftPanel.height() + h - min };
+                this.$leftPanel.css(css);
+                this.$centerPanel.css(css);
+                this.$rightPanel.css(css);
+                this.$topPanel.stop().animate({ top: -h }, function () {
+                    $expand.show();
+                });
+                break;
+            case 'left':
+                this.$centerPanel.css({
+                    left: min,
+                    width: this.$centerPanel.outerWidth() + w - min
+                });
+                this.$leftPanel.stop().animate({ left: -w }, function () {
+                    $expand.css({
+                        top: t,
+                        height: h
+                    }).show();
+                });
+                break;
+            case 'right':
+                this.$rightPanel.stop().animate({
+                    left: l + w
+                }, function () {
+                    $expand.css({
+                        top: t,
+                        height: h
+                    }).show();
+                });
+                break;
+            case 'bottom':
+                css = { height: t - h };
+                this.$bottomPanel.stop().animate({
+                    top: h + t
+                }, function () {
+                    $expand.show();
+                });
+                break;
+        }
+    };
+
+    Layout.prototype.getExpandHtml = function (type) {
+        var ret = '',
+            className = '',
+            faClassName = '',
+            dataType = '';
+
+        switch (type) {
+            case 'left':
+                className = "panel-expand panel-expand-left";
+                faClassName = "fa fa-angle-double-right";
+                dataType = 'left';
+                break;
+            case 'top':
+                className = "panel-expand panel-expand-top";
+                faClassName = "fa fa-angle-double-down";
+                dataType = 'top';
+                break;
+            case 'right':
+                className = "panel-expand panel-expand-right";
+                faClassName = "fa fa-angle-double-left";
+                dataType = 'right';
+                break;
+            case 'bottom':
+                className = "panel-expand panel-expand-bottom";
+                faClassName = "fa fa-angle-double-up";
+                dataType = 'bottom'
+                break;
+        }
+        return '<div class="' + className + '"><span class="' + faClassName + '" role="show" data-type="' + dataType + '"></span></div>';
+    };
+
+    Layout.prototype.resize = function () {
+
     };
 
     Layout.prototype.setSize = function () {
         var $parent = this.$parent,
             width = $parent.width(),
-            height = $parent.height();
+            height = $parent.height(),
+            info = this.getPanelsInfo();
 
         if ($parent[0].tagName.toLowerCase() == 'body') {
             $parent.addClass('k-layout-body');
@@ -4394,7 +4536,6 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
 
         this.$layout.css({ width: width, height: height });
 
-        //panel�ߴ�����
 
         var t = 0, w = '100%', h;
 
@@ -4464,9 +4605,29 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
 
         }
 
-
         this.$bottomPanel.css('top', this.$topPanel.outerHeight() + h);
 
+    };
+
+    Layout.prototype.getPanelsInfo = function () {
+        var ret = {};
+
+        this.$panels.each(function () {
+            var $panel = $(this),
+                type = $panel.attr('data-type');
+
+            ret[type] = {
+                left: $panel.position().left,
+                top: $panel.position().top,
+                width: $panel.outerWidth(),
+                height: $panel.outerHeight(),
+                isHide: $panel.attr('data-isHide') == 'true',
+                $panel: $panel
+            };
+
+        });
+
+        return ret;
     };
 
     return Layout;
@@ -5057,6 +5218,7 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
             width: this.options.width,
             height: this.options.height
         });
+
         this.$header = this.$panel.find('.k-panel-head');
         this.$title = this.$header.find('.k-panel-title');
         this.$body = this.$panel.find('.k-panel-body');
@@ -5073,10 +5235,10 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
             });
         }
 
-        //this._event = {
-        //    resize: $.noop,
-        //    stop: $.noop
-        //};
+        this._event = {
+            slideDown: $.noop,
+            slideUp: $.noop
+        };
 
         this.watch();
     };
@@ -5087,9 +5249,9 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
      */
     Panel.prototype.watch = function () {
         var self = this;
-        this.$panel.on('click.panel', '[role=slideup]', function () {
+        this.$panel.on('click.panel', 'span[role=slideup]', function () {
             self.slideUp($(this));
-        }).on('click.panel', '[role=slidedown]', function () {
+        }).on('click.panel', 'span[role=slidedown]', function () {
             self.slideDown($(this));
         });
 
@@ -5152,6 +5314,9 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
                     self.resizable.$bottomHandle.show();
                 }
             });
+
+            this._event.slideDown.call();
+
             return;
         }
     };
@@ -5180,6 +5345,9 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
                     self.resizable.$bottomHandle.hide();
                 }
             });
+
+            this._event.slideUp.call();
+
             return;
         }
     };

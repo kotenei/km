@@ -45,6 +45,7 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
             width: this.options.width,
             height: this.options.height
         });
+
         this.$header = this.$panel.find('.k-panel-head');
         this.$title = this.$header.find('.k-panel-title');
         this.$body = this.$panel.find('.k-panel-body');
@@ -61,10 +62,10 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
             });
         }
 
-        //this._event = {
-        //    resize: $.noop,
-        //    stop: $.noop
-        //};
+        this._event = {
+            slideDown: $.noop,
+            slideUp: $.noop
+        };
 
         this.watch();
     };
@@ -75,9 +76,9 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
      */
     Panel.prototype.watch = function () {
         var self = this;
-        this.$panel.on('click.panel', '[role=slideup]', function () {
+        this.$panel.on('click.panel', 'span[role=slideup]', function () {
             self.slideUp($(this));
-        }).on('click.panel', '[role=slidedown]', function () {
+        }).on('click.panel', 'span[role=slidedown]', function () {
             self.slideDown($(this));
         });
 
@@ -140,6 +141,9 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
                     self.resizable.$bottomHandle.show();
                 }
             });
+
+            this._event.slideDown.call();
+
             return;
         }
     };
@@ -168,6 +172,9 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
                     self.resizable.$bottomHandle.hide();
                 }
             });
+
+            this._event.slideUp.call();
+
             return;
         }
     };

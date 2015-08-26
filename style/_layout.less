@@ -1,7 +1,7 @@
 .k-layout-body
 {
-    height:100%;
-    overflow:hidden;
+    height: 100%;
+    overflow: hidden;
 }
 
 .k-layout
@@ -12,25 +12,99 @@
     {
         position: absolute;
         border: none;
+        display:none;
 
         &.k-panel-top
         {
             border-bottom: 1px solid #ddd;
+            z-index: 3;
+            height: 100px;
+            width: 100%;
+            left: 0;
+            top: 0;
         }
 
         &.k-panel-left
         {
-            border-right:1px solid #ddd;
+            border-right: 1px solid #ddd;
+            z-index: 2;
+            width: 150px;
+            left: 0;
+            top: 99px;
         }
 
         &.k-panel-right
         {
-            border-left:1px solid #ddd;
+            border-left: 1px solid #ddd;
+            z-index: 2;
+            width: 150px;
+            top: 99px;
+        }
+
+        &.k-panel-center
+        {
+            top: 99px;
         }
 
         &.k-panel-bottom
         {
-            border-top:1px solid #ddd;
+            border-top: 1px solid #ddd;
+            z-index: 3;
+            height: 100px;
+            width: 100%;
+        }
+    }
+
+    .panel-expand
+    {
+        position: absolute;
+        background: #FBFBFB;
+        display: none;
+
+
+        .fa
+        {
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            cursor: pointer;
+        }
+
+        &.panel-expand-top
+        {
+            border-bottom: 1px solid #ddd;
+            height: 40px;
+            left: 0;
+            top: 0;
+            width: 100%;
+        }
+
+        &.panel-expand-left
+        {
+            border-right: 1px solid #ddd;
+            width: 40px;
+            top: 40px;
+            left: 0;
+            bottom: 0;
+
+        }
+
+        &.panel-expand-right
+        {
+            border-left: 1px solid #ddd;
+            width: 40px;
+            right: 0;
+            top: 40px;
+            bottom: 0;
+        }
+
+        &.panel-expand-bottom
+        {
+            border-top: 1px solid #ddd;
+            height: 40px;
+            bottom: 0;
+            left: 0;
+            width: 100%;
         }
     }
 }
