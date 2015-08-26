@@ -16,14 +16,21 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
             width: 'auto',
             height: 'auto',
             minWidth: 100,
-            minHeight:100,
-            resizable: false,
-            resizeBorder:{
-                left: false,
-                top: false,
-                right: false,
-                bottom: false
-            }
+            minHeight: 100,
+            resizable: {
+                enabled: false,
+                cover: false,
+                border: {
+                    left: true,
+                    top: true,
+                    right: true,
+                    bottom: true
+                },
+                callback: {
+                    resize: $.noop,
+                    stop: $.noop
+                }
+            },
         }, options);
         this.init();
     };
@@ -43,19 +50,21 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
         this.$body = this.$panel.find('.k-panel-body');
         this.$body.css('height', this.$panel.height() - this.$title.height());
 
-        this.headHeight = this.$header.outerHeight(true);
+        this.headHeight = this.$header.outerHeight();
 
-        if (this.options.resizable) {
+        if (this.options.resizable.enabled) {
             this.resizable = new Resizable(this.$panel, {
-                border: self.options.resizeBorder,
-                minWidth: self.options.minWidth,
-                minHeight: self.options.minHeight
+                border: this.options.resizable.border,
+                cover: this.options.resizable.cover,
+                minWidth: this.options.minWidth,
+                minHeight: this.options.minHeight
             });
         }
 
-        this._event = {
-            resize:$.noop
-        };
+        //this._event = {
+        //    resize: $.noop,
+        //    stop: $.noop
+        //};
 
         this.watch();
     };
@@ -75,7 +84,9 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
         if (this.resizable) {
             this.resizable.on('resize', function (css) {
                 self.setHeight(css.height);
-                self._event.resize.call(self, css);
+                self.options.resizable.callback.resize.call(self, css);
+            }).on('stop', function (css) {
+                self.options.resizable.callback.stop.call(self, css);
             });
         }
 
@@ -95,7 +106,7 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
      * @return {Void}
      */
     Panel.prototype.setHeight = function (height) {
-        var h = height - this.headHeight-1;
+        var h = height - this.headHeight;
 
         this.$body.css('height', h);
     };
@@ -122,7 +133,7 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
                 height: this.orgHeight
             });
             this.$body.stop().animate({
-                height: this.orgHeight - this.headHeight-1,
+                height: this.orgHeight - this.headHeight,
                 display: 'block'
             }, function () {
                 if (self.resizable) {
@@ -147,7 +158,7 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
             $el.removeClass('fa-angle-double-up').addClass('fa-angle-double-down');
 
             this.$panel.stop().animate({
-                height: this.headHeight+1
+                height: this.headHeight
             });
             this.$body.stop().animate({
                 height: 0

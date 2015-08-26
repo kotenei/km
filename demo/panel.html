@@ -9,27 +9,17 @@
     <link href="docs.min.css" rel="stylesheet" />
     <link href="demo.css" rel="stylesheet" />
 </head>
-<body>
-    <!--<div class="k-layout">
-        <div class="k-panel k-panel-top" ></div>
-        <div class="k-panel k-panel-left"></div>
-        <div class="k-panel k-panel-center"></div>
-        <div class="k-panel k-panel-right"></div>
-        <div class="k-panel k-panel-bottom"></div>
-    </div>-->
-
+<body style="margin:30px;">
 
     <div class="k-panel">
-
-       
         <div class="k-panel-head">
             <h3 class="k-panel-title ">
-                这是面板
+                这是标题
                 <span class="fa fa-angle-double-up" role="collapse"></span>
             </h3>
         </div>
         <div class="k-panel-body">
-            sdfgsdfgsdgdsgdsg
+            这是内容
         </div>
     </div>
 
@@ -38,11 +28,20 @@
     <script type="text/javascript">
         require(['KM'], function (KM) {
             var panel = new KM.Panel($('.k-panel'), {
-                resizable: true,
-                resizeBorder: {
-                    right: true,
-                    bottom:true
-                }
+                width: 400,
+                height: 100,
+                resizable:{
+                    enabled: true,
+                    cover:false,
+                    callback: {
+                        resize: function (css) {
+                            //console.log(css)
+                        },
+                        stop: function (css) {
+                            //console.log(css)
+                        }
+                    }
+                },
             });
 
           

@@ -3,7 +3,7 @@
  * @date:2015-08-23
  * @author:kotenei(kotenei@qq.com)
  */
-define('km/layout', ['jquery', 'km/panel'], function ($, Panel) {
+define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cache) {
 
     var Layout = function ($elm, options) {
         this.$layout = $elm;
@@ -34,42 +34,52 @@ define('km/layout', ['jquery', 'km/panel'], function ($, Panel) {
 
             var $panel = $(this),
                 type = $panel.attr('data-type'),
-                options = { resizable: true, width: $panel.width(), height: $panel.height() },
-                min = 40;
+                min = 40,
+                options = {
+                    resizable: {
+                        enabled: true,
+                        cover: true,
+                        border: {
+                            left: false,
+                            top: false,
+                            right: false,
+                            bottom: false
+                        },
+                        callback: {
+                            stop: function () {
+                                if (self.$centerPanel.length > 0) {
+                                    self.$centerPanel.resize();
+                                } else {
+                                    self.setSize();
+                                }
+                            }
+                        }
+                    },
+                    width: $panel.width(),
+                    height: $panel.height()
+                };
 
 
             switch (type) {
                 case 'top':
                     options.minHeight = min;
-                    options.resizeBorder = {
-                        bottom: true
-                    };
+                    options.resizable.border.bottom = true;
                     break;
                 case 'left':
                     options.minWidth = min;
-                    options.resizeBorder = {
-                        right: true
-                    };
+                    options.resizable.border.right = true;
                     break;
                 case 'right':
                     options.minWidth = min;
-                    options.resizeBorder = {
-                        left: true
-                    };
+                    options.resizable.border.left = true;
                     break;
                 case 'bottom':
                     options.minHeight = min;
-                    options.resizeBorder = {
-                        top: true
-                    };
+                    options.resizable.border.top = true;
                     break;
             }
 
             var panel = new Panel($panel, options);
-            panel.on('resize', function (css) {
-                self.setSize();
-                self.$centerPanel.resize();
-            });
             $panel.data('panel', panel);
         });
 
@@ -114,9 +124,9 @@ define('km/layout', ['jquery', 'km/panel'], function ($, Panel) {
         if (this.$topPanel.length > 0 && this.$bottomPanel.length > 0) {
             h = this.$layout.height() - this.$topPanel.outerHeight() - this.$bottomPanel.outerHeight();
         } else if (this.$topPanel.length > 0 && this.$bottomPanel.length == 0) {
-            h = this.$layout.height() - this.$topPanel.outerHeight() ;
+            h = this.$layout.height() - this.$topPanel.outerHeight();
         } else if (this.$topPanel.length == 0 && this.$bottomPanel.length > 0) {
-            h = this.$layout.height() - this.$bottomPanel.outerHeight() ;
+            h = this.$layout.height() - this.$bottomPanel.outerHeight();
         } else {
             h = this.$layout.height();
         }
@@ -156,10 +166,14 @@ define('km/layout', ['jquery', 'km/panel'], function ($, Panel) {
             height: h
         });
 
-        this.$rightPanel.css({
-            'left': this.$leftPanel.outerWidth() + this.$centerPanel.outerWidth(),
-            'right':'none'
-        });
+        if (this.$centerPanel.length > 0) {
+            this.$rightPanel.css({
+                'left': this.$leftPanel.outerWidth() + this.$centerPanel.outerWidth(),
+                'right': 'none'
+            });
+
+        }
+
 
         this.$bottomPanel.css('top', this.$topPanel.outerHeight() + h);
 

@@ -11,17 +11,18 @@
 </head>
 <body class="">
     <div class="k-layout" id="l1">
-        <div class="k-panel k-panel-top" data-type="top"></div>
+        <div class="k-panel k-panel-top" data-type="top">
+        </div>
         <div class="k-panel k-panel-left" data-type="left"></div>
         <div class="k-panel k-panel-center" data-type="center">
-            <div class="k-layout" id="l2">
+            <!--<div class="k-layout" id="l2">
                 <div class="k-panel k-panel-top" data-type="top"></div>
                 <div class="k-panel k-panel-left" data-type="left"></div>
                 <div class="k-panel k-panel-center" data-type="center">
                 </div>
                 <div class="k-panel k-panel-right" data-type="right"></div>
                 <div class="k-panel k-panel-bottom" data-type="bottom"></div>
-            </div>
+            </div>-->
         </div>
         <div class="k-panel k-panel-right" data-type="right"></div>
         <div class="k-panel k-panel-bottom" data-type="bottom"></div>
@@ -34,7 +35,7 @@
         require(['KM'], function (KM) {
             var layout = new KM.Layout($('#l1'), {});
 
-            var layout2 = new KM.Layout($('#l2'), {});
+           // var layout2 = new KM.Layout($('#l2'), {});
         });
     </script>
 </body>

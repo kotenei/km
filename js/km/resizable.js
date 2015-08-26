@@ -5,6 +5,8 @@
  */
 define('km/resizable', ['jquery'], function ($) {
 
+    var $cover = $('<div class="k-resizable-cover"></div>').appendTo(document.body);
+
     /**
      * Ëõ·ÅÀà
      * @param {JQuery} $elm - dom
@@ -16,6 +18,7 @@ define('km/resizable', ['jquery'], function ($) {
             $range: null,
             minBar: false,
             scale: false,
+            cover: true,
             minWidth: 100,
             minHeight: 100,
             border: {
@@ -106,15 +109,12 @@ define('km/resizable', ['jquery'], function ($) {
             self.resizeParams.height = parseInt(self.$elm.outerHeight(true));
             self.resizeParams.ratio = self.resizeParams.width >= self.resizeParams.height ? self.resizeParams.width / self.resizeParams.height : self.resizeParams.height / self.resizeParams.width;
             self.resizeParams.type = $el.attr('data-type');
+            self.showCover();
             e.stopPropagation();
             e.preventDefault();
             document.onselectstart = function () { return false };
             self.start(e, $el);
         });
-
-        //this.$win.on('resize.resizable', function () {
-        //    self.resize();
-        //});
     };
 
     /**
@@ -138,6 +138,7 @@ define('km/resizable', ['jquery'], function ($) {
         }).on('mouseup.resizable', function () {
             self.$doc.off('mousemove.resizable');
             self.$doc.off('mouseup.resizable');
+            self.stop();
         });
 
 
@@ -266,7 +267,11 @@ define('km/resizable', ['jquery'], function ($) {
 
         this.css = css;
 
-        this.$elm.css(css);
+        if (this.options.cover) {
+            $cover.css(css);
+        } else {
+            this.$elm.css(css);
+        }
 
         this._event.resize.call(this, css);
     };
@@ -277,7 +282,43 @@ define('km/resizable', ['jquery'], function ($) {
      */
     Resizable.prototype.stop = function () {
         this.moving = false;
+        this.hideCover();
+
+        if (this.options.cover && this.css) {
+            this.$elm.css(this.css);
+            this.css = null;
+        }
+
         this._event.stop.call(this, this.css);
+    };
+
+    /**
+     * ÏÔÊ¾¸²¸Ç²ã
+     * @return {Void}
+     */
+    Resizable.prototype.showCover = function () {
+
+        if (!this.options.cover) {
+            return;
+        }
+
+        var $el = this.$elm;
+
+        $cover.insertAfter(this.$elm).show().css({
+            width: $el.outerWidth(),
+            height: $el.outerHeight(),
+            left: $el.position().left,
+            top: $el.position().top
+        });
+    };
+
+
+    /**
+     * Òþ²Ø¸²¸Ç²ã
+     * @return {Void}
+     */
+    Resizable.prototype.hideCover = function () {
+        $cover.hide();
     };
 
     //Resizable.prototype.resize = function () {

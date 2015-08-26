@@ -1,7 +1,7 @@
 .k-resizable-container
 {
     position: relative;
-    border: 1px solid #ebebeb;
+    border: 1px solid #ddd;
 
     .k-resizable-handle
     {
@@ -17,16 +17,28 @@
             width: 5px;
             bottom: 0;
             cursor: ew-resize;
-            border-left:1px solid #ebebeb;
+            border-left: 1px solid #ddd;
+
+            &.active
+            {
+                border-left: 1px dashed #ddd;
+            }
         }
+
 
         &.k-resizable-handle-right
         {
             cursor: ew-resize;
             right: -1px;
             left: auto;
-            border-right:1px solid #ebebeb;
-            border-left:none;
+            border-right: 1px solid #ddd;
+            border-left: none;
+
+            &.active
+            {
+                border-left: none;
+                border-right: 1px dashed #ddd;
+            }
         }
 
         &.k-resizable-handle-top,
@@ -37,28 +49,51 @@
             cursor: n-resize;
             left: 0;
             right: 0;
-            border-top:1px solid #ebebeb;
+            border-top: 1px solid #ddd;
+
+             &.active
+            {
+                border-top: 1px dashed #ddd;
+            }
+
         }
 
         &.k-resizable-handle-bottom
         {
             top: auto;
             bottom: -1px;
-            border-top:0;
-            border-bottom:1px solid #ebebeb;
+            border-top: none;
+            border-bottom: 1px solid #ddd;
+
+             &.active
+            {
+                 border-top:none;
+                border-bottom: 1px dashed #ddd;
+            }
         }
     }
 
     .k-resizable-handle-minbar
     {
-        position:absolute;
-        bottom:0;
-        right:0;
-        width:10px;
-        height:10px;
-        background:url('../images/resizable/rzbar.png');
-        z-index:10;
-        cursor:se-resize;
-        display:none;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 10px;
+        height: 10px;
+        background: url('../images/resizable/rzbar.png');
+        z-index: 10;
+        cursor: se-resize;
+        display: none;
     }
+}
+
+.k-resizable-cover
+{
+    position:absolute;
+    left:0;
+    top:0;
+    z-index:200;
+    overflow:hidden;
+    border:1px dashed #3b5a82;
+    display:none;
 }
