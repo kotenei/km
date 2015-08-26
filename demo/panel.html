@@ -9,13 +9,13 @@
     <link href="docs.min.css" rel="stylesheet" />
     <link href="demo.css" rel="stylesheet" />
 </head>
-<body style="margin:30px;">
+<body style="">
 
     <div class="k-panel">
         <div class="k-panel-head">
             <h3 class="k-panel-title ">
                 这是标题
-                <span class="fa fa-angle-double-up" role="collapse"></span>
+                <span class="fa fa-angle-double-up" role="slideup"></span>
             </h3>
         </div>
         <div class="k-panel-body">
@@ -32,7 +32,7 @@
                 height: 100,
                 resizable:{
                     enabled: true,
-                    cover:false,
+                    cover:true,
                     callback: {
                         resize: function (css) {
                             //console.log(css)

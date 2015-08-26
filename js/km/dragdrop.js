@@ -146,7 +146,8 @@ define('km/dragdrop', ['jquery'], function ($) {
             }
         }).on('mouseup.dragdrop', function (e) {
             self.stop(e);
-            $(this).off();
+            self.$document.off('mousemove.dragdrop');
+            self.$document.off('mouseup.dragdrop');
         });
 
 

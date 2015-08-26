@@ -75,10 +75,10 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
      */
     Panel.prototype.watch = function () {
         var self = this;
-        this.$panel.on('click.panel', '[role=collapse]', function () {
-            self.collapse($(this));
-        }).on('click.panel', '[role=expand]', function () {
-            self.expand($(this));
+        this.$panel.on('click.panel', '[role=slideup]', function () {
+            self.slideUp($(this));
+        }).on('click.panel', '[role=slidedown]', function () {
+            self.slideDown($(this));
         });
 
         if (this.resizable) {
@@ -123,9 +123,9 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
      * Õ¹¿ª
      * @return {Void}
      */
-    Panel.prototype.expand = function ($el) {
+    Panel.prototype.slideDown = function ($el) {
         var self = this;
-        $el.attr('role', 'collapse');
+        $el.attr('role', 'slideup');
         if ($el.hasClass('fa-angle-double-down')) {
             $el.removeClass('fa-angle-double-down').addClass('fa-angle-double-up');
 
@@ -148,12 +148,12 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
      * ÕÛµþ
      * @return {Void}
      */
-    Panel.prototype.collapse = function ($el) {
+    Panel.prototype.slideUp = function ($el) {
         var h, self = this;
 
         this.orgHeight = this.$panel.outerHeight();
 
-        $el.attr('role', 'expand');
+        $el.attr('role', 'slidedown');
         if ($el.hasClass('fa-angle-double-up')) {
             $el.removeClass('fa-angle-double-up').addClass('fa-angle-double-down');
 
