@@ -29,7 +29,14 @@
             <h1 class="page-header">开关</h1>
             <div class="bs-example bs-example-padded-bottom">
                 <p>
-                    <input type="checkbox" checked="checked" data-module="switch" data-values="{on:{text:'是',value:'1'},off:{text:'否',value:'0'}}" data-onclick="test" />
+                    <input type="checkbox" checked="checked" 
+                        data-module="switch" 
+                        data-options="{
+                            values:{on:{text:'是',value:'1'},off:{text:'否',value:'0'}},
+                            callback:{
+                                onclick:test
+                            }
+                        }" />
                 </p>
             </div>
 
@@ -60,24 +67,13 @@ KM.Switch.Global($elms);
                         </td>
                     </tr>
                     <tr>
-                        <td>data-values</td>
+                        <td>data-options</td>
                         <td>
-                            <pre>
-                                <code>
-"{
-    on:{text:'是',value:'1'},
-    off:{text:'否',value:'0'}
-}"
-                                </code>
-                            </pre>
+                            "{ values:xxxx,callback:xxx ... }"
                         </td>
-                        <td>json字符串格式
+                        <td>
+                            初始化参数，参照下表 options 说明
                         </td>
-                    </tr>
-                    <tr>
-                        <td>data-onClick</td>
-                        <td>函数的名称</td>
-                        <td>点击开关时触发的回调函数，这个属性填函数名就可以</td>
                     </tr>
                 </tbody>
             </table>
@@ -87,9 +83,13 @@ KM.Switch.Global($elms);
 //html属性设置
 &lt;input  type="checkbox" 
         checked="checked" 
-        data-module="switch" 
-        data-values="{on:{text:'是',value:'1'},off:{text:'否',value:'0'}}"
-        data-onClick="test" /&gt;
+        data-module="switch"
+        data-options="{
+            values:{on:{text:'是',value:'1'},off:{text:'否',value:'0'}},
+            callback:{
+                onclick:test
+            }            
+        }" /&gt;
 
 //声明回调函数
 function test(value) {

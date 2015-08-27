@@ -30,7 +30,12 @@
             <div class="bs-example bs-example-padded-bottom">
                 <div style="">
                     <p>您还可以输入：<span id="feedback1">140</span> 字符</p>
-                    <textarea rows="4" cols="50" data-module="wordlimit" data-feedback="#feedback1" maxlength="140"></textarea>
+                    <textarea rows="4" cols="50" 
+                        data-module="wordlimit"
+                        data-options="{
+                            feedback:'#feedback1',
+                            maxLength:140
+                        }" ></textarea>
                 </div>
             </div>
             <h3>全局调用</h3>
@@ -60,16 +65,11 @@ KM.WordLimit.Global($elms);
                         </td>
                     </tr>
                     <tr>
-                        <td>data-feedback</td>
-                        <td>jQuery selector</td>
+                        <td>data-options</td>
+                        <td>{ feedback:xxx,maxLength:xxx }</td>
                         <td>
-                            剩余字数反馈，值设置jQuery选择器，如'#id'
+                            初始化参数，参照下表 options 说明
                         </td>
-                    </tr>
-                    <tr>
-                        <td>data-maxlength</td>
-                        <td></td>
-                        <td>最大字符数</td>
                     </tr>
                 </tbody>
             </table>
@@ -80,8 +80,10 @@ KM.WordLimit.Global($elms);
 &lt;textarea rows="4" 
           cols="50" 
           data-module="wordlimit" 
-          data-feedback="#feedback1" 
-          maxlength="140"&gt;&lt;/textarea&gt;
+          data-options="{
+            feedback:'#feedback1',
+            maxLength:140
+          }" &gt;&lt;/textarea&gt;
                 </code>
             </pre>
             <hr />

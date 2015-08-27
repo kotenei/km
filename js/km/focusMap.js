@@ -14,7 +14,7 @@ define('km/focusMap', ['jquery'], function ($) {
      */
     var FocusMap = function ($el, options) {
         this.$el = $el;
-        this.options = $.extend({}, {
+        this.options = $.extend(true, {
             containerWidth: null,
             width: 600,
             height: 300,

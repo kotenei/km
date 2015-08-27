@@ -11,7 +11,7 @@ define('km/popover', ['jquery', 'km/tooltips', 'km/util'], function ($, Tooltips
      * @param {Object} options - 参数
      */
     var Popover = function ($element, options) {
-        options = $.extend({}, {
+        options = $.extend(true, {
             type:'popover',
             title: '标题',
             tpl: '<div class="k-popover">' +
@@ -69,13 +69,22 @@ define('km/popover', ['jquery', 'km/tooltips', 'km/util'], function ($, Tooltips
             var $this = $(this);
             var popover = Popover.Get($this);
             if (!popover) {
-                popover = new Popover($this, {
-                    title: $this.attr('data-title'),
-                    content: $this.attr('data-content'),
-                    placement: $this.attr('data-placement'),
-                    tipClass: $this.attr('data-tipClass'),
-                    trigger: $this.attr('data-trigger')
-                });
+
+                var options = $this.attr('data-options');
+
+                if (options && options.length > 0) {
+                    options = eval('(0,' + options + ')');
+                } else {
+                    options = {
+                        title: $this.attr('data-title'),
+                        content: $this.attr('data-content'),
+                        placement: $this.attr('data-placement'),
+                        tipClass: $this.attr('data-tipClass'),
+                        trigger: $this.attr('data-trigger')
+                    };
+                }
+
+                popover = new Popover($this, options);
                 Popover.Set($this, popover);
             }
         });

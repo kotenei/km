@@ -266,6 +266,7 @@ define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event'], func
         $elms = $elms || $('button[data-module=upload],input[data-module=upload]');
         $elms.each(function () {
             var $el = $(this),
+                options=$el.attr('data-options'),
                 uploadUrl = $el.attr('data-uploadurl'),
                 removeUrl = $el.attr('data-removeurl'),
                 name = $el.attr('data-name'),
@@ -274,15 +275,21 @@ define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event'], func
                 popTips = $el.attr('data-popTips'),
                 data = $el.data('upload');
 
-            if (!data) {
-                data = new Upload($el, {
+            if (options && options.length > 0) {
+                options = eval('(0,' + options + ')');
+            } else {
+                options = {
                     uploadUrl: uploadUrl && uploadUrl.length > 0 ? uploadUrl : '',
                     removeUrl: removeUrl && removeUrl.length > 0 ? removeUrl : '',
                     name: name && name.length > 0 ? name : 'file',
                     text: text && text.length > 0 ? text : '上传',
                     loadingEnable: loadingEnable && loadingEnable == 'false' ? false : true,
                     popTips: popTips && popTips.length > 0 ? eval('(0,' + popTips + ')') : {}
-                });
+                };
+            }
+
+            if (!data) {
+                data = new Upload($el, options);
                 $el.data('upload', data);
             }
         });

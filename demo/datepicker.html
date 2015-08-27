@@ -28,7 +28,17 @@
             <h1 class="page-header">日期选择</h1>
 
             <div class="bs-example bs-example-padded-bottom">
-                <input type="text" readonly="readonly" placeholder="全局" data-module="datepicker" data-format="yyyy-MM-dd hh:mm:ss" data-showtime="true" data-mindate="2013-01-11" data-maxDate="today" data-position="right" data-zIndex="1200" class="form-control" style="width: 300px;" />
+                <input type="text" readonly="readonly" placeholder="全局"
+                    data-module="datepicker"
+                    data-options="{
+                            format:'yyyy-MM-dd hh:mm:ss',
+                            showTime:true,
+                            minDate:'2013-01-11',
+                            maxDate:'today',
+                            position:'right',
+                            zIndex:1200
+                        }"
+                    class="form-control" style="width: 300px;" />
             </div>
             <h3>全局调用</h3>
             <pre>
@@ -44,56 +54,21 @@ KM.DatePicker.Global($elms);
                     <tr>
                         <th>名称</th>
                         <th>设置值</th>
-                        <th style="width:60%;">描述</th>
+                        <th style="width: 60%;">描述</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td>data-module</td>
                         <td>datepicker</td>
-                        <td>
-                            告诉程序当前html元素需要初始化为datepicker模块
+                        <td>告诉程序当前html元素需要初始化为datepicker模块
                         </td>
                     </tr>
                     <tr>
-                        <td>data-format</td>
-                        <td>'yyyy-MM-dd hh:mm:ss'<br />'yyyy-MM-dd'等</td>
-                        <td>
-                            <p><b>日期格式化</b></p>
-                            <p><b>yyyy：</b>年</p>
-                            <p><b>MM：</b>月</p>
-                            <p><b>dd：</b>日</p>
-                            <p><b>hh：</b>小时</p>
-                            <p><b>mm：</b>分钟</p>
-                            <p><b>ss：</b>秒</p>
+                        <td>data-options</td>
+                        <td>"{ format:xxx,showTime:xxx ... }"</td>
+                        <td>初始化参数，参照下表 options 说明
                         </td>
-                    </tr>
-                    <tr>
-                        <td>data-showTime</td>
-                        <td>true or false</td>
-                        <td>是否显示时间选择</td>
-                    </tr>
-                    <tr>
-                        <td>data-minDate</td>
-                        <td>'2014-10-01'日期格式或者'today'</td>
-                        <td>最小日期</td>
-                    </tr>
-                    <tr>
-                        <td>data-maxDate</td>
-                        <td>'2014-10-01'日期格式或者'today'</td>
-                        <td>
-                            最大日期
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>data-position</td>
-                        <td>'left' 或者 'right'</td>
-                        <td>日期选择器定位</td>
-                    </tr>
-                    <tr>
-                        <td>data-zIndex</td>
-                        <td>'1000'等数值</td>
-                        <td>层叠顺序</td>
                     </tr>
                     <tr>
                         <td>data-onselected</td>
@@ -115,12 +90,14 @@ KM.DatePicker.Global($elms);
         readonly="readonly" 
         placeholder="全局" 
         data-module="datepicker" 
-        data-format="yyyy-MM-dd hh:mm:ss" 
-        data-showTime="true" 
-        data-minDate="2013-01-11" 
-        data-maxDate="today" 
-        data-position="right"
-        data-zIndex="1000" /&gt;
+        data-options="{
+            format:'yyyy-MM-dd hh:mm:ss',
+            showTime:true,
+            minDate:'2013-01-11',
+            maxDate:'today',
+            position:'right',
+            zIndex:1200
+        }" /&gt;
                 </code>
             </pre>
 
@@ -206,24 +183,21 @@ var datePicker = new KM.DatePicker($elm,options);
                         <td>minDate</td>
                         <td>string</td>
                         <td>null</td>
-                        <td>
-                            最小日期，格式'2014-10-11'或'today'
+                        <td>最小日期，格式'2014-10-11'或'today'
                         </td>
                     </tr>
                     <tr>
                         <td>maxDate</td>
                         <td>string</td>
                         <td>null</td>
-                        <td>
-                            最大日期，格式同上
+                        <td>最大日期，格式同上
                         </td>
                     </tr>
                     <tr>
                         <td>zIndex</td>
                         <td>int</td>
                         <td>2000</td>
-                        <td>
-                            堆叠顺序
+                        <td>堆叠顺序
                         </td>
                     </tr>
                 </tbody>

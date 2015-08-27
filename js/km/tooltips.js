@@ -13,7 +13,7 @@ define('km/tooltips', ['jquery'], function ($) {
      */
     function Tooltips($element, options) {
         this.$element = $element;
-        this.options = $.extend({}, {
+        this.options = $.extend(true, {
             delay: 0,
             content: '',
             tipClass: '',
@@ -195,13 +195,22 @@ define('km/tooltips', ['jquery'], function ($) {
             var $this = $(this);
             var tooltips = Tooltips.Get($this);
             if (!tooltips) {
-                tooltips = new Tooltips($this, {
-                    title: $this.attr('data-title'),
-                    content: $this.attr('data-content'),
-                    placement: $this.attr('data-placement'),
-                    tipClass: $this.attr('data-tipClass'),
-                    trigger: $this.attr('data-trigger')
-                });
+
+                var options = $this.attr('data-options');
+
+                if (options && options.length > 0) {
+                    options = eval('(0,' + options + ')');
+                } else {
+                    options = {
+                        title: $this.attr('data-title'),
+                        content: $this.attr('data-content'),
+                        placement: $this.attr('data-placement'),
+                        tipClass: $this.attr('data-tipClass'),
+                        trigger: $this.attr('data-trigger')
+                    };
+                }
+
+                tooltips = new Tooltips($this, options);
                 Tooltips.Set($this, tooltips);
             }
         });

@@ -13,7 +13,7 @@ define('km/dragdrop', ['jquery'], function ($) {
      */
     var DragDrop = function (options) {
 
-        this.options = $.extend({}, {
+        this.options = $.extend(true, {
             $layer: null,
             $handle: null,
             $range: null,

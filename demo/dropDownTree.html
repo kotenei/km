@@ -32,21 +32,29 @@
                     <tr>
                         <td style="width:150px;">下拉单选列表：</td>
                         <td>
-                            <input type="text" class="k-form-control" placeholder="下拉单选列表"
-                                data-module="dropdowntree"
-                                data-data="nodes"
-                                data-istree="false"
-                                data-callback="{select:select,check:check}" /></td>
+                            <input  type="text" class="k-form-control" placeholder="下拉单选列表"
+                                    data-module="dropdowntree"
+                                    data-options="{
+                                        data:nodes,
+                                        isTree:false,
+                                        callback:{
+                                            select:select
+                                        }
+                                    }" /></td>
                     </tr>
                     <tr>
                         <td>下拉多选列表：</td>
                         <td>
-                            <input type="text" class="k-form-control" placeholder="下拉多选列表"
-                                data-module="dropdowntree"
-                                data-data="nodes"
-                                data-istree="false"
-                                data-multiple="true"
-                                data-callback="{select:select,check:check}" /></td>
+                            <input  type="text" class="k-form-control" placeholder="下拉多选列表"
+                                    data-module="dropdowntree"
+                                    data-options="{
+                                        data:nodes,
+                                        isTree:false,
+                                        multiple:true,
+                                        callback:{
+                                            check:check
+                                        }
+                                    }"/></td>
                     </tr>
                 </table>
             </div>
@@ -74,55 +82,11 @@ KM.DropDownTree.Global($elms);
                         </td>
                     </tr>
                     <tr>
-                        <td>data-data</td>
-                        <td>数据变量的名称
+                        <td>data-options</td>
+                        <td>
+                            "{data:xxxx,url:xxxx ... }"
                         </td>
-                        <td>节点数据</td>
-                    </tr>
-                    <tr>
-                        <td>data-url</td>
-                        <td></td>
-                        <td>远程数据地址</td>
-                    </tr>
-                    <tr>
-                        <td>data-width</td>
-                        <td>'1~N' 数字</td>
-                        <td>宽度</td>
-                    </tr>
-                    <tr>
-                        <td>data-height</td>
-                        <td>'1~N' 数字</td>
-                        <td>高度
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>data-zIndex</td>
-                        <td>'1~N' 数字</td>
-                        <td>层叠顺序
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>data-isTree</td>
-                        <td>'true' or 'false'</td>
-                        <td>是否树模式，默认为是
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>data-multiple</td>
-                        <td>'true' or false</td>
-                        <td>是否多选，默认为否
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>data-bindelement</td>
-                        <td>jQuery selector</td>
-                        <td>设置值的关联元素，用jQuery选择器表示，如 '.className' , '#id' 等</td>
-                    </tr>
-                    <tr>
-                        <td>data-callback</td>
-                        <td>'{select:xxx,check:xxx,hide:xxx}'</td>
-                        <td>回调函数，使用json字符串，xxx为函数的名称
-                        </td>
+                        <td>初始化参数，参照下表 options 说明</td>
                     </tr>
                 </tbody>
             </table>
@@ -153,10 +117,15 @@ function check(nodes) {
         class="k-form-control" 
         placeholder="下拉多选列表"
         data-module="dropdowntree"
-        data-data="nodes"
-        data-istree="false"
-        data-multiple="true"
-        data-callback="{select:select,check:check}" /&gt;
+        data-options="{
+            data:nodes,
+            isTree:false,
+            multiple:true,
+            callback:{
+                check:check,
+                select:select
+            }
+        }" /&gt;
 
                 </code>
             </pre>

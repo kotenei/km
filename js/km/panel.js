@@ -186,7 +186,7 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
      * 全局初始化调用
      * @return {Void}
      */
-    Panel.GLOBAL = function ($elms) {
+    Panel.Global = function ($elms) {
         $elms = $elms || $('div[data-module=panel]');
         $elms.each(function () {
             var $el = $(this),

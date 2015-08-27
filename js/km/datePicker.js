@@ -21,7 +21,7 @@ define('km/datePicker', ['jquery'], function ($) {
     var DatePicker = function ($element, options) {
         var self = this;
         this.$element = $element;
-        this.options = $.extend({}, {
+        this.options = $.extend(true, {
             position: 'left',
             desktop: false,
             data: [],
@@ -1245,6 +1245,7 @@ define('km/datePicker', ['jquery'], function ($) {
         $elements = $elements || $(document.body).find('input[data-module="datepicker"]');
         $elements.each(function () {
             var $this = $(this),
+                options = $this.attr('data-options'),
                 format = $this.attr('data-format'),
                 showTime = $this.attr('data-showTime'),
                 minDate = $this.attr('data-minDate'),
@@ -1260,15 +1261,24 @@ define('km/datePicker', ['jquery'], function ($) {
             onSelected = onSelected && onSelected.length > 0 ? eval('(0,' + onSelected + ')') : null;
             onClean = onClean && onClean.length > 0 ? eval('(0,' + onClean + ')') : null;
 
-            if (!data) {
-                data = new DatePicker($this, {
+
+            if (options && options.length > 0) {
+                options = eval('(0,' + options + ')');
+            } else {
+                options = {
                     format: format,
                     showTime: showTime,
                     minDate: minDate,
                     maxDate: maxDate,
                     position: position || 'left',
                     appendTo: $(appendTo || document.body)
-                });
+                };
+            }
+
+            console.log(options)
+
+            if (!data) {
+                data = new DatePicker($this, options);
 
                 if (onSelected) {
                     data.on('selected', onSelected);

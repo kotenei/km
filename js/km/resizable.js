@@ -368,7 +368,7 @@ define('km/resizable', ['jquery'], function ($) {
      * 全局初始化调用
      * @return {Void}
      */
-    Resizable.GLOBAL = function ($elms) {
+    Resizable.Global = function ($elms) {
         $elms = $elms || $('[data-module=resizable]');
         $elms.each(function () {
             var $el = $(this),

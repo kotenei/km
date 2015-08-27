@@ -14,7 +14,7 @@ define('km/contextMenu', ['jquery'], function ($) {
      */
     var ContextMenu = function ($el, options) {
         this.$el = $el;
-        this.options = $.extend({}, {
+        this.options = $.extend(true, {
             target: '',
             className: 'k-contextMenu',
             items: [],

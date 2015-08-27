@@ -390,7 +390,7 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
      * 全局初始化调用
      * @return {Void}
      */
-    Layout.GLOBAL = function ($elms) {
+    Layout.Global = function ($elms) {
         $elms = $elms || $('div[data-module=layout]');
         $elms.each(function () {
             var $el = $(this),

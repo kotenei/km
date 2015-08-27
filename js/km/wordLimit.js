@@ -12,7 +12,7 @@ define('km/wordLimit', ['jquery'], function ($) {
      */
     var WordLimit = function ($element, options) {
         this.$element = $element;
-        this.options = $.extend({}, {
+        this.options = $.extend(true, {
             maxLength: 140,
             feedback: '.chars'
         }, options);
@@ -67,14 +67,22 @@ define('km/wordLimit', ['jquery'], function ($) {
         $elements = $elements || $("input,textarea").filter('[data-module="wordlimit"]');
         $elements.each(function () {
             var $this = $(this),
+                options = $this.attr('data-options'),
                 maxLength = $this.attr('maxLength'),
                 wordLimit = WordLimit.Get($this);
-            if (!maxLength) { return; }
-            if (!wordLimit) {
-                wordLimit = new WordLimit($this, {
+            //if (!maxLength) { return; }
+
+            if (options && options.length > 0) {
+                options = eval('(0,' + options + ')');
+            } else {
+                options = {
                     maxLength: maxLength,
                     feedback: $this.attr('data-feedback')
-                });
+                };
+            }
+
+            if (!wordLimit) {
+                wordLimit = new WordLimit($this, options);
                 WordLimit.Set($this, wordLimit);
             }
         });

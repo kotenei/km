@@ -11,7 +11,7 @@ define('km/infiniteScroll', ['jquery'], function ($) {
      */
     var InfiniteScroll = function (options) {
         var self = this;
-        this.options = $.extend({}, {
+        this.options = $.extend(true, {
             $scrollElement: $(window),
             $watchElement: null,
             scrollDistance:0.3,

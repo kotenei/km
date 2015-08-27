@@ -1,4 +1,4 @@
-/*
+﻿/*
  * 滑块模块
  * @date:2014-09-15
  * @author:kotenei(kotenei@qq.com)
@@ -12,7 +12,7 @@ define('km/slider', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
      */
     var Slider = function ($element, options) {
         this.$element = $element;
-        this.options = $.extend({}, {
+        this.options = $.extend(true, {
             min: 1,
             max: 10,
             step: 1,

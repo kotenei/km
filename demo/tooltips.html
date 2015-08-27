@@ -28,10 +28,34 @@
         <div class="demo-container">
             <h1 class="page-header">工具提示</h1>
             <div class="bs-example bs-example-padded-bottom" style="text-align: center;">
-                <a href="###" style="font-size: 18px; margin-right: 10px;" data-module="tooltips" data-tipclass="" data-content="左则显示" data-placement="left">左</a>
-                <a href="###" style="font-size: 18px; margin-right: 10px;" data-module="tooltips" data-tipclass="warning" data-content="上则显示" data-placement="top">上</a>
-                <a href="###" style="font-size: 18px; margin-right: 10px;" data-module="tooltips" data-tipclass="success" data-content="右则显示" data-placement="right">右</a>
-                <a href="###" style="font-size: 18px; margin-right: 10px;" data-module="tooltips" data-tipclass="danger" data-content="下则显示" data-placement="bottom">下</a>
+                <a href="###" style="font-size: 18px; margin-right: 10px;" 
+                    data-module="tooltips" 
+                    data-options="{
+                        content:'左则显示',
+                        placement:'left',
+                        tipClass:''
+                    }">左</a>
+                <a href="###" style="font-size: 18px; margin-right: 10px;" 
+                    data-module="tooltips" 
+                    data-options="{
+                        content:'上则显示',
+                        placement:'top',
+                        tipClass:'warning'
+                    }">上</a>
+                <a href="###" style="font-size: 18px; margin-right: 10px;" 
+                    data-module="tooltips" 
+                    data-options="{
+                        content:'右则显示',
+                        placement:'right',
+                        tipClass:'success'
+                    }">右</a>
+                <a href="###" style="font-size: 18px; margin-right: 10px;" 
+                    data-module="tooltips" 
+                    data-options="{
+                        content:'下则显示',
+                        placement:'bottom',
+                        tipClass:'danger'
+                    }">下</a>
 
             </div>
             <h3>全局调用</h3>
@@ -61,26 +85,12 @@ KM.Tooltips.Global($elms);
                         </td>
                     </tr>
                     <tr>
-                        <td>data-tipClass</td>
-                        <td>'success' , 'warning' , 'info' , 'danger'
+                        <td>data-options</td>
+                        <td>
+                            "{tipClass:'success',content:'内容' ... }"
                         </td>
-                        <td>提示的颜色
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>data-content</td>
-                        <td></td>
-                        <td>提示内容</td>
-                    </tr>
-                    <tr>
-                        <td>data-placement</td>
-                        <td>left,top,right,bottom</td>
-                        <td>弹出框显示的位置</td>
-                    </tr>
-                    <tr>
-                        <td>data-trigger</td>
-                        <td>hover,click</td>
-                        <td>触发tips显示和隐藏的事件
+                        <td>
+                            初始化参数，参照下表 options 说明
                         </td>
                     </tr>
                 </tbody>
@@ -91,9 +101,11 @@ KM.Tooltips.Global($elms);
 &lt;a  href="javascript:void(0);" 
     style="font-size: 18px; margin-right: 10px;" 
     data-module="tooltips" 
-    data-tipclass="" 
-    data-content="左则显示" 
-    data-placement="left"&gt;左&lt;/a&gt;
+    data-options="{
+        content:'下则显示',
+        placement:'bottom',
+        tipClass:'danger'
+    }"&gt;下&lt;/a&gt;
                 </code>
             </pre>
             <hr />

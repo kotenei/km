@@ -25,7 +25,7 @@ define('km/autoComplete', ['jquery'], function ($) {
      */
     var AutoComplete = function ($element, options) {
         this.$element = $element;
-        this.options = $.extend({}, {
+        this.options = $.extend(true, {
             url: null,
             zIndex: 1000,
             data: [],

@@ -224,6 +224,7 @@ define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
 
         $elms.each(function () {
             var $elm = $(this),
+                options=$elm.attr('data-options'),
                 url = $elm.attr('data-url'),
                 width = $elm.attr('data-width'),
                 height = $elm.attr('data-height'),
@@ -238,8 +239,10 @@ define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
 
             data = $elm.data('dropDownTree');
 
-            if (!data) {
-                data = new DropDownTree($elm, {
+            if (options && options.length > 0) {
+                options = eval('(0,' + options + ')');
+            } else {
+                options = {
                     data: eval(array),
                     url: url,
                     width: width && width.length > 0 ? parseInt(width) : null,
@@ -249,8 +252,14 @@ define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
                     isTree: isTree && isTree == 'false' ? false : true,
                     multiple: multiple && multiple == 'true' ? true : false,
                     bindElement: bindElm,
-                    callback: callback && callback.length > 0 ? eval('(' + callback + ')') : {}
-                });
+                    callback: callback && callback.length > 0 ? eval('(0,' + callback + ')') : {}
+                };
+            }
+
+
+
+            if (!data) {
+                data = new DropDownTree($elm, options);
                 $elm.data('dropDownTree', data);
             }
 

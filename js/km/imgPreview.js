@@ -15,7 +15,7 @@ define('km/imgPreview', ['jquery', 'km/loading', 'km/popTips'], function ($, Loa
      */
     var ImgPreview = function ($elements, options) {
         this.$elements = $elements;
-        this.options = $.extend({}, {
+        this.options = $.extend(true, {
             delay:500,
             showButtons: true,
             backdrop: true,

@@ -8,7 +8,7 @@ define('km/loading', ['jquery', 'spin'], function ($, Spinner) {
     var global;
 
     var Loading = function (options) {
-        this.options = $.extend({}, {
+        this.options = $.extend(true, {
             lines: 12, // 花瓣数目
             length: 10, // 花瓣长度
             width: 4, // 花瓣宽度

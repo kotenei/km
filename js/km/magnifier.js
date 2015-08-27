@@ -13,7 +13,7 @@ define('km/magnifier', ['jquery'], function ($) {
      * @param {Object} options - 参数设置
      */
     var Magnifier = function ($el, options) {
-        this.options = $.extend({}, {
+        this.options = $.extend(true, {
             offset: 10,
             width: 400,
             height: 250,

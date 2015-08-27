@@ -14,7 +14,7 @@ define('km/clipZoom', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
      */
     var ClipZoom = function ($element, options) {
         this.$element = $element;
-        this.options = $.extend({}, {
+        this.options = $.extend(true, {
             imgUrl: '',
             scale: true,
             width: 400,

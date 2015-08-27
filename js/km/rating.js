@@ -91,7 +91,7 @@ define('km/rating', ['jquery', 'km/event'], function ($, event) {
      */
     var Rating = function ($el, options) {
         this.$el = $el;
-        this.options = $.extend({}, {
+        this.options = $.extend(true, {
             path: '../images/star',
             starOff: 'star-off.png',
             starHalf: 'star-half.png',

@@ -12,7 +12,7 @@ define('km/switch', ['jquery'], function ($) {
     */
     var Switch = function ($element, options) {
         this.$element = $element;
-        this.options = $.extend({}, {
+        this.options = $.extend(true, {
             values: {
                 on: { text: '是', value: true, className: '' },
                 off: { text: '否', value: false, className: '' }
@@ -124,18 +124,26 @@ define('km/switch', ['jquery'], function ($) {
         $elms = $elms || $('input[data-module="switch"]');
         $elms.each(function () {
             var $el = $(this),
+                options=$el.attr('data-options'),
                 values = $el.attr('data-values'),
                 funcName = $el.attr('data-onClick');
 
             var data = $el.data('switch');
 
-            if (!data) {
-                data = new Switch($el, {
+            if (options && options.length > 0) {
+                options = eval('(0,' + options + ')');
+            } else {
+                options = {
                     values: values && values.length > 0 ? eval('(0,' + values + ')') : undefined,
                     callback: {
                         onclick: funcName && funcName.length > 0 ? eval('(0,' + funcName + ')') : $.noop
                     }
-                });
+                };
+            }
+
+
+            if (!data) {
+                data = new Switch($el, options);
                 $el.data('switch', data);
             }
 

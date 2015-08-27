@@ -12,7 +12,7 @@ define('km/pager', ['jquery', 'km/event'], function ($, event) {
      */
     var Pager = function ($element, options) {
         this.$element = $element;
-        this.options = $.extend({}, {
+        this.options = $.extend(true, {
             curPage: 1,
             totalCount: 0,
             pageSize: 20,

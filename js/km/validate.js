@@ -12,7 +12,7 @@ define('km/validate', ['jquery'], function ($) {
      */
     function Validate($form, options) {
         this.$form = $form;
-        this.options = $.extend({}, {
+        this.options = $.extend(true, {
             errorClass: 'k-error',
             errorElement: 'label',
             rules: {},

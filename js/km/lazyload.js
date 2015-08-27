@@ -12,7 +12,7 @@ define('km/lazyload', ['jquery'], function ($) {
  */
     function LazyLoad($elements, options) {
         this.$elements = $elements;
-        this.options = $.extend({}, {
+        this.options = $.extend(true, {
             placeholder: null,
             $container: $(window),
             callback: $.noop

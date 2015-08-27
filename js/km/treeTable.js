@@ -8,7 +8,7 @@ define('km/treeTable', ['jquery', 'km/ajax'], function ($, ajax) {
     //树型表格
     function TreeTable($elm, options) {
         this.$elm = $elm;
-        this.options = $.extend({}, {
+        this.options = $.extend(true, {
             expanded: true,
             className: 'k-treeTable',
             url: '',

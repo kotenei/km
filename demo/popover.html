@@ -28,10 +28,34 @@
         <div class="demo-container">
             <h1 class="page-header">弹出框</h1>
             <div class="bs-example bs-example-padded-bottom" style="text-align:center;">
-                <a href="###" style="font-size: 18px; margin-right: 10px;" data-module="popover" data-title="标题" data-content="左则显示" data-placement="left">左</a>
-                <a href="###" style="font-size: 18px; margin-right: 10px;" data-module="popover" data-title="标题" data-content="上则显示" data-placement="top">上</a>
-                <a href="###" style="font-size: 18px; margin-right: 10px;" data-module="popover" data-title="标题" data-content="右则显示" data-placement="right">右</a>
-                <a href="###" style="font-size: 18px; margin-right: 10px;" data-module="popover" data-title="标题" data-content="下则显示" data-placement="bottom" >下</a>
+                <a href="###" style="font-size: 18px; margin-right: 10px;" 
+                    data-module="popover"
+                    data-options="{
+                        title:'标题',
+                        content:'左侧显示',
+                        placement:'left'
+                    }" >左</a>
+                <a href="###" style="font-size: 18px; margin-right: 10px;" 
+                    data-module="popover" 
+                    data-options="{
+                        title:'标题',
+                        content:'上侧显示',
+                        placement:'top'
+                    }" >上</a>
+                <a href="###" style="font-size: 18px; margin-right: 10px;" 
+                    data-module="popover" 
+                    data-options="{
+                        title:'标题',
+                        content:'右侧显示',
+                        placement:'right'
+                    }">右</a>
+                <a href="###" style="font-size: 18px; margin-right: 10px;" 
+                    data-module="popover" 
+                    data-options="{
+                        title:'标题',
+                        content:'下侧显示',
+                        placement:'right'
+                    }">下</a>
                 
             </div>
             <h3>全局调用</h3>
@@ -61,28 +85,12 @@ KM.Popover.Global($elms);
                         </td>
                     </tr>
                     <tr>
-                        <td>data-title</td>
+                        <td>data-options</td>
                         <td>
+                            "{title:'标题',content:'内容' ... }"
                         </td>
                         <td>
-                            弹出框标题
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>data-content</td>
-                        <td></td>
-                        <td>弹出框内容</td>
-                    </tr>
-                    <tr>
-                        <td>data-placement</td>
-                        <td>left,top,right,bottom</td>
-                        <td>弹出框显示的位置</td>
-                    </tr>
-                    <tr>
-                        <td>data-trigger</td>
-                        <td>hover,click</td>
-                        <td>
-                            触发tips显示和隐藏的事件
+                            初始化参数，参照下表 options 说明
                         </td>
                     </tr>
                 </tbody>
@@ -93,10 +101,11 @@ KM.Popover.Global($elms);
 //HTML属性设置
 &lt;a  href="javascript:void(0);"  
     data-module="popover" 
-    data-title="标题" 
-    data-content="上则显示" 
-    data-placement="top"
-    data-trigger="click">上&lt;/a&gt;
+    data-options="{
+        title:'标题',
+        content:'下侧显示',
+        placement:'right'
+    }"&gt;下&lt;/a&gt;
                 </code>
             </pre>
             <hr />

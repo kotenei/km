@@ -37,15 +37,19 @@
                         value=""
                         placeholder="全局调用"
                         data-module="upload"
-                        data-uploadurl="/"
-                        data-removeurl="/" />
+                        data-options="{
+                            uploadUrl:'/',
+                            removeUrl:'/'
+                        }" />
                 </p>
                 <p>
                     <button type="button"
                         data-module="upload"
-                        data-uploadurl="/"
-                        data-removeurl="/"
-                        data-text="上传文件">
+                        data-options="{
+                            uploadUrl:'/',
+                            removeUrl:'/',
+                            text:'上传文件'
+                        }">
                         上传
                     </button>
                 </p>
@@ -74,34 +78,10 @@ KM.Upload.Global($elms);
                         </td>
                     </tr>
                     <tr>
-                        <td>data-uploadurl</td>
-                        <td></td>
-                        <td>上传url
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>data-removeurl</td>
-                        <td></td>
-                        <td>删除url，<code>删除时会把文件名传回后台，参数名是fileName，值则是已上传后返回的文件名</code></td>
-                    </tr>
-                    <tr>
-                        <td>data-name</td>
-                        <td></td>
-                        <td>上传控件的name属性值，默认是'file'</td>
-                    </tr>
-                    <tr>
-                        <td>data-text</td>
-                        <td></td>
-                        <td>上传按钮的文本值，默认是'上传'
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>data-popTips</td>
-                        <td>'{enable:true,delay:600}'</td>
+                        <td>data-options</td>
+                        <td>"{uploadUrl:xxx,removeUrl:xxx ... }"</td>
                         <td>
-                            <p>popTips设置</p>
-                            <p><b>enable：</b>是否启用弹出提示</p>
-                            <p><b>delay：</b>弹出提示的显示的时间，默认600毫秒</p>
+                            初始化参数，参照下表 options 说明
                         </td>
                     </tr>
                 </tbody>
@@ -113,9 +93,11 @@ KM.Upload.Global($elms);
 //html参数设置
 &lt;button type="button"
         data-module="upload"
-        data-uploadurl="/"
-        data-removeurl="/"
-        data-text="上传文件"&gt;上传&lt;/button&gt;
+        data-options="{
+            uploadUrl:'/',
+            removeUrl:'/',
+            text:'上传文件'
+        }"&gt;上传&lt;/button&gt;
                 </code>
             </pre>
             <hr />

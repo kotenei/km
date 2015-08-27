@@ -12,7 +12,7 @@ define('km/waterfall', ['jquery', 'km/infiniteScroll', 'km/popTips'], function (
      */
     var Waterfall = function ($element, options) {
         this.$element = $element;
-        this.options = $.extend({}, {
+        this.options = $.extend(true, {
             $scrollElement: $(window),
             scrollDistance: 0,
             width: 200,

@@ -405,7 +405,7 @@ define('km/autoComplete', ['jquery'], function ($) {
      */
     var AutoComplete = function ($element, options) {
         this.$element = $element;
-        this.options = $.extend({}, {
+        this.options = $.extend(true, {
             url: null,
             zIndex: 1000,
             data: [],
@@ -812,7 +812,7 @@ define('km/clipZoom', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
      */
     var ClipZoom = function ($element, options) {
         this.$element = $element;
-        this.options = $.extend({}, {
+        this.options = $.extend(true, {
             imgUrl: '',
             scale: true,
             width: 400,
@@ -1151,7 +1151,7 @@ define('km/contextMenu', ['jquery'], function ($) {
      */
     var ContextMenu = function ($el, options) {
         this.$el = $el;
-        this.options = $.extend({}, {
+        this.options = $.extend(true, {
             target: '',
             className: 'k-contextMenu',
             items: [],
@@ -1274,7 +1274,7 @@ define('km/datePicker', ['jquery'], function ($) {
     var DatePicker = function ($element, options) {
         var self = this;
         this.$element = $element;
-        this.options = $.extend({}, {
+        this.options = $.extend(true, {
             position: 'left',
             desktop: false,
             data: [],
@@ -2498,6 +2498,7 @@ define('km/datePicker', ['jquery'], function ($) {
         $elements = $elements || $(document.body).find('input[data-module="datepicker"]');
         $elements.each(function () {
             var $this = $(this),
+                options = $this.attr('data-options'),
                 format = $this.attr('data-format'),
                 showTime = $this.attr('data-showTime'),
                 minDate = $this.attr('data-minDate'),
@@ -2513,15 +2514,24 @@ define('km/datePicker', ['jquery'], function ($) {
             onSelected = onSelected && onSelected.length > 0 ? eval('(0,' + onSelected + ')') : null;
             onClean = onClean && onClean.length > 0 ? eval('(0,' + onClean + ')') : null;
 
-            if (!data) {
-                data = new DatePicker($this, {
+
+            if (options && options.length > 0) {
+                options = eval('(0,' + options + ')');
+            } else {
+                options = {
                     format: format,
                     showTime: showTime,
                     minDate: minDate,
                     maxDate: maxDate,
                     position: position || 'left',
                     appendTo: $(appendTo || document.body)
-                });
+                };
+            }
+
+            console.log(options)
+
+            if (!data) {
+                data = new DatePicker($this, options);
 
                 if (onSelected) {
                     data.on('selected', onSelected);
@@ -2555,7 +2565,7 @@ define('km/dragdrop', ['jquery'], function ($) {
      */
     var DragDrop = function (options) {
 
-        this.options = $.extend({}, {
+        this.options = $.extend(true, {
             $layer: null,
             $handle: null,
             $range: null,
@@ -3018,270 +3028,6 @@ define('km/dragdrop', ['jquery'], function ($) {
 
 });
 
-/*
- * 下拉树模块
- * @date:2015-07-28
- * @author:kotenei(kotenei@qq.com)
- */
-define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
-
-    /**
-     * 下拉树类
-     * @param {JQuery} $element - dom
-     * @param {Object} options - 参数
-     */
-    var DropDownTree = function ($elm, options) {
-        this.$elm = $elm;
-        this.options = $.extend(true, {
-            data: [],
-            url: null,
-            width: null,
-            height: 200,
-            zIndex: 999,
-            appendTo: $(document.body),
-            isTree: true,
-            multiple: false,
-            inputGroup: '.k-input-group',
-            bindElement: null,
-            callback: {
-                select: $.noop,
-                check: $.noop,
-                hide: $.noop
-            }
-        }, options);
-
-        this.$treePanel = $('<div class="k-dropDownTree k-pop-panel"></div>');
-        this.init();
-    };
-
-    /**
-     * 初始化
-     * @return {Void}
-     */
-    DropDownTree.prototype.init = function () {
-
-        var self = this;
-
-        if ((!this.options.url || this.options.url.length == 0) &&
-            (!this.options.data || this.options.data.length == 0)) {
-            return;
-        }
-
-        this.options.bindElement = $(this.options.bindElement);
-
-        this.$inputGroup = this.$elm.parent(this.options.inputGroup);
-
-        this.$elm.attr('readonly', 'readonly');
-
-        this.elmWidth = this.$elm.outerWidth();
-
-        this.$treePanel.css({
-            width: this.options.width || this.$inputGroup.outerWidth() || this.elmWidth,
-            height: this.options.height,
-            zIndex: this.options.zIndex
-        }).appendTo(this.options.appendTo);
-
-        if (!this.options.isTree) {
-            this.options.view = {
-                showLine: false,
-                showIcon: false
-            }
-
-            this.$treePanel.addClass('k-dropDownTree-list');
-        }
-
-        if (this.options.multiple) {
-            this.options.check = {
-                enable: true,
-                chkType: 'checkbox',
-                chkBoxType: { Y: "", N: "" }
-            };
-        }
-
-        this.options.callback.onCheck = function (nodes) {
-            self.check(nodes);
-        };
-
-        this.options.callback.onSelect = function (node) {
-            self.select(node);
-        };
-
-
-        if (this.options.url) {
-            $.get(this.options.url, { rand: Math.random() }, function (data) {
-
-                if (typeof data === 'string') {
-                    data = eval('(0,'+data+')');
-                }
-
-                self.options.data = data;
-                self.tree = new Tree(self.$treePanel, self.options);
-                self.watch();
-            });
-        } else {
-            this.tree = new Tree(this.$treePanel, this.options);
-            this.watch();
-        }
-
-    };
-
-    /**
-     * 事件监控
-     * @return {Void}
-     */
-    DropDownTree.prototype.watch = function () {
-        var self = this;
-
-        this.$elm.on('click.dropDownTree', function (e) {
-            self.show();
-            return false;
-        });
-
-        this.$inputGroup.on('click.dropDownTree', 'button', function (e) {
-            self.show();
-            return false;
-        });
-
-        $(document).on('click.dropDownTree', function (e) {
-            var $target = $(e.target);
-            if ($target.hasClass('k-dropDownTree') ||
-                $target.parents('.k-dropDownTree').length > 0) {
-                return;
-            }
-            self.hide();
-        });
-
-        $(window).on('resize.dropDownTree', function () {
-            self.setPosition();
-        });
-    };
-
-    /**
-     * 单选操作
-     * @return {Void}
-     */
-    DropDownTree.prototype.select = function (node) {
-        if (this.options.multiple) {
-            this.tree.$tree.find('a.selected').removeClass('selected');
-            return;
-        }
-
-        if (this.options.bindElement) {
-            this.options.bindElement.val(node.value || node.nodeId || node.text);
-        }
-
-        this.$elm.val(node.text).attr('title', node.text).focus().blur();
-
-        this.options.callback.select(node);
-
-    };
-
-    /**
-     * 复选操作
-     * @return {Void}
-     */
-    DropDownTree.prototype.check = function (node) {
-
-        var nodes = this.tree.getCheckedNodes();
-        var arrValue = [],
-            arrText = [];
-
-        for (var i = 0; i < nodes.length; i++) {
-            arrText.push(nodes[i].text);
-            arrValue.push(nodes[i].value || nodes[i].nodeId || nodes[i].text);
-        }
-
-        if (this.options.bindElement) {
-            this.options.bindElement.val(arrValue.join(','));
-        }
-
-        this.$elm.val(arrText.join(',')).attr('title', arrText.join(',')).focus().blur();
-        this.options.callback.check(nodes);
-    };
-
-    /**
-     * 设置位置
-     * @return {Void}
-     */
-    DropDownTree.prototype.setPosition = function () {
-        this.$treePanel.css({
-            left: this.$elm.offset().left,
-            top: this.$elm.offset().top + this.$elm.outerHeight() + 2
-        });
-    };
-
-    /**
-     * 显示
-     * @return {Void}
-     */
-    DropDownTree.prototype.show = function () {
-
-        if (this.$treePanel[0].style.display == 'block') {
-            return;
-        }
-        $('div.k-pop-panel').hide();
-        this.$treePanel.slideDown();
-        this.setPosition();
-    };
-
-    /**
-     * 隐藏
-     * @return {Void}
-     */
-    DropDownTree.prototype.hide = function () {
-        if (this.$treePanel[0].style.display == 'block') {
-            this.options.callback.hide();
-        }
-        this.$treePanel.slideUp();
-    };
-
-    /**
-     * 全局调用
-     * @return {Void}
-     */
-    DropDownTree.Global = function ($elms) {
-        $elms = $elms || $('input[data-module=dropdowntree]');
-
-        $elms.each(function () {
-            var $elm = $(this),
-                url = $elm.attr('data-url'),
-                width = $elm.attr('data-width'),
-                height = $elm.attr('data-height'),
-                zIndex = $elm.attr('data-zIndex'),
-                appendTo = $elm.attr('data-appendTo'),
-                isTree = $elm.attr('data-isTree') || true,
-                multiple = $elm.attr('data-multiple') || false,
-                array = $elm.attr('data-data'),
-                callback = $elm.attr('data-callback'),
-                bindElm = $elm.attr('data-bindelement') || null,
-                data;
-
-            data = $elm.data('dropDownTree');
-
-            if (!data) {
-                data = new DropDownTree($elm, {
-                    data: eval(array),
-                    url: url,
-                    width: width && width.length > 0 ? parseInt(width) : null,
-                    height: height && height.length > 0 ? parseInt(height) : 200,
-                    zIndex: zIndex && zIndex.length > 0 ? parseInt(zIndex) : 999,
-                    appendTo: $(appendTo || document.body),
-                    isTree: isTree && isTree == 'false' ? false : true,
-                    multiple: multiple && multiple == 'true' ? true : false,
-                    bindElement: bindElm,
-                    callback: callback && callback.length > 0 ? eval('(' + callback + ')') : {}
-                });
-                $elm.data('dropDownTree', data);
-            }
-
-        });
-    };
-
-
-    return DropDownTree;
-
-});
-
 /**
  * 下拉框
  * @author vfasky (vfasky@gmail.com)
@@ -3582,6 +3328,279 @@ function ($, Dropdown, DatePicker, util) {
     return DropdownDatePicker;
 
 });
+/*
+ * 下拉树模块
+ * @date:2015-07-28
+ * @author:kotenei(kotenei@qq.com)
+ */
+define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
+
+    /**
+     * 下拉树类
+     * @param {JQuery} $element - dom
+     * @param {Object} options - 参数
+     */
+    var DropDownTree = function ($elm, options) {
+        this.$elm = $elm;
+        this.options = $.extend(true, {
+            data: [],
+            url: null,
+            width: null,
+            height: 200,
+            zIndex: 999,
+            appendTo: $(document.body),
+            isTree: true,
+            multiple: false,
+            inputGroup: '.k-input-group',
+            bindElement: null,
+            callback: {
+                select: $.noop,
+                check: $.noop,
+                hide: $.noop
+            }
+        }, options);
+
+        this.$treePanel = $('<div class="k-dropDownTree k-pop-panel"></div>');
+        this.init();
+    };
+
+    /**
+     * 初始化
+     * @return {Void}
+     */
+    DropDownTree.prototype.init = function () {
+
+        var self = this;
+
+        if ((!this.options.url || this.options.url.length == 0) &&
+            (!this.options.data || this.options.data.length == 0)) {
+            return;
+        }
+
+        this.options.bindElement = $(this.options.bindElement);
+
+        this.$inputGroup = this.$elm.parent(this.options.inputGroup);
+
+        this.$elm.attr('readonly', 'readonly');
+
+        this.elmWidth = this.$elm.outerWidth();
+
+        this.$treePanel.css({
+            width: this.options.width || this.$inputGroup.outerWidth() || this.elmWidth,
+            height: this.options.height,
+            zIndex: this.options.zIndex
+        }).appendTo(this.options.appendTo);
+
+        if (!this.options.isTree) {
+            this.options.view = {
+                showLine: false,
+                showIcon: false
+            }
+
+            this.$treePanel.addClass('k-dropDownTree-list');
+        }
+
+        if (this.options.multiple) {
+            this.options.check = {
+                enable: true,
+                chkType: 'checkbox',
+                chkBoxType: { Y: "", N: "" }
+            };
+        }
+
+        this.options.callback.onCheck = function (nodes) {
+            self.check(nodes);
+        };
+
+        this.options.callback.onSelect = function (node) {
+            self.select(node);
+        };
+
+
+        if (this.options.url) {
+            $.get(this.options.url, { rand: Math.random() }, function (data) {
+
+                if (typeof data === 'string') {
+                    data = eval('(0,'+data+')');
+                }
+
+                self.options.data = data;
+                self.tree = new Tree(self.$treePanel, self.options);
+                self.watch();
+            });
+        } else {
+            this.tree = new Tree(this.$treePanel, this.options);
+            this.watch();
+        }
+
+    };
+
+    /**
+     * 事件监控
+     * @return {Void}
+     */
+    DropDownTree.prototype.watch = function () {
+        var self = this;
+
+        this.$elm.on('click.dropDownTree', function (e) {
+            self.show();
+            return false;
+        });
+
+        this.$inputGroup.on('click.dropDownTree', 'button', function (e) {
+            self.show();
+            return false;
+        });
+
+        $(document).on('click.dropDownTree', function (e) {
+            var $target = $(e.target);
+            if ($target.hasClass('k-dropDownTree') ||
+                $target.parents('.k-dropDownTree').length > 0) {
+                return;
+            }
+            self.hide();
+        });
+
+        $(window).on('resize.dropDownTree', function () {
+            self.setPosition();
+        });
+    };
+
+    /**
+     * 单选操作
+     * @return {Void}
+     */
+    DropDownTree.prototype.select = function (node) {
+        if (this.options.multiple) {
+            this.tree.$tree.find('a.selected').removeClass('selected');
+            return;
+        }
+
+        if (this.options.bindElement) {
+            this.options.bindElement.val(node.value || node.nodeId || node.text);
+        }
+
+        this.$elm.val(node.text).attr('title', node.text).focus().blur();
+
+        this.options.callback.select(node);
+
+    };
+
+    /**
+     * 复选操作
+     * @return {Void}
+     */
+    DropDownTree.prototype.check = function (node) {
+
+        var nodes = this.tree.getCheckedNodes();
+        var arrValue = [],
+            arrText = [];
+
+        for (var i = 0; i < nodes.length; i++) {
+            arrText.push(nodes[i].text);
+            arrValue.push(nodes[i].value || nodes[i].nodeId || nodes[i].text);
+        }
+
+        if (this.options.bindElement) {
+            this.options.bindElement.val(arrValue.join(','));
+        }
+
+        this.$elm.val(arrText.join(',')).attr('title', arrText.join(',')).focus().blur();
+        this.options.callback.check(nodes);
+    };
+
+    /**
+     * 设置位置
+     * @return {Void}
+     */
+    DropDownTree.prototype.setPosition = function () {
+        this.$treePanel.css({
+            left: this.$elm.offset().left,
+            top: this.$elm.offset().top + this.$elm.outerHeight() + 2
+        });
+    };
+
+    /**
+     * 显示
+     * @return {Void}
+     */
+    DropDownTree.prototype.show = function () {
+
+        if (this.$treePanel[0].style.display == 'block') {
+            return;
+        }
+        $('div.k-pop-panel').hide();
+        this.$treePanel.slideDown();
+        this.setPosition();
+    };
+
+    /**
+     * 隐藏
+     * @return {Void}
+     */
+    DropDownTree.prototype.hide = function () {
+        if (this.$treePanel[0].style.display == 'block') {
+            this.options.callback.hide();
+        }
+        this.$treePanel.slideUp();
+    };
+
+    /**
+     * 全局调用
+     * @return {Void}
+     */
+    DropDownTree.Global = function ($elms) {
+        $elms = $elms || $('input[data-module=dropdowntree]');
+
+        $elms.each(function () {
+            var $elm = $(this),
+                options=$elm.attr('data-options'),
+                url = $elm.attr('data-url'),
+                width = $elm.attr('data-width'),
+                height = $elm.attr('data-height'),
+                zIndex = $elm.attr('data-zIndex'),
+                appendTo = $elm.attr('data-appendTo'),
+                isTree = $elm.attr('data-isTree') || true,
+                multiple = $elm.attr('data-multiple') || false,
+                array = $elm.attr('data-data'),
+                callback = $elm.attr('data-callback'),
+                bindElm = $elm.attr('data-bindelement') || null,
+                data;
+
+            data = $elm.data('dropDownTree');
+
+            if (options && options.length > 0) {
+                options = eval('(0,' + options + ')');
+            } else {
+                options = {
+                    data: eval(array),
+                    url: url,
+                    width: width && width.length > 0 ? parseInt(width) : null,
+                    height: height && height.length > 0 ? parseInt(height) : 200,
+                    zIndex: zIndex && zIndex.length > 0 ? parseInt(zIndex) : 999,
+                    appendTo: $(appendTo || document.body),
+                    isTree: isTree && isTree == 'false' ? false : true,
+                    multiple: multiple && multiple == 'true' ? true : false,
+                    bindElement: bindElm,
+                    callback: callback && callback.length > 0 ? eval('(0,' + callback + ')') : {}
+                };
+            }
+
+
+
+            if (!data) {
+                data = new DropDownTree($elm, options);
+                $elm.data('dropDownTree', data);
+            }
+
+        });
+    };
+
+
+    return DropDownTree;
+
+});
+
 /**
  * 事件
  * @date :2014-12-01
@@ -3663,7 +3682,7 @@ define('km/focusMap', ['jquery'], function ($) {
      */
     var FocusMap = function ($el, options) {
         this.$el = $el;
-        this.options = $.extend({}, {
+        this.options = $.extend(true, {
             containerWidth: null,
             width: 600,
             height: 300,
@@ -3937,7 +3956,7 @@ define('km/imgPreview', ['jquery', 'km/loading', 'km/popTips'], function ($, Loa
      */
     var ImgPreview = function ($elements, options) {
         this.$elements = $elements;
-        this.options = $.extend({}, {
+        this.options = $.extend(true, {
             delay:500,
             showButtons: true,
             backdrop: true,
@@ -4240,7 +4259,7 @@ define('km/infiniteScroll', ['jquery'], function ($) {
      */
     var InfiniteScroll = function (options) {
         var self = this;
-        this.options = $.extend({}, {
+        this.options = $.extend(true, {
             $scrollElement: $(window),
             $watchElement: null,
             scrollDistance:0.3,
@@ -4680,7 +4699,7 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
      * ȫ�ֳ�ʼ������
      * @return {Void}
      */
-    Layout.GLOBAL = function ($elms) {
+    Layout.Global = function ($elms) {
         $elms = $elms || $('div[data-module=layout]');
         $elms.each(function () {
             var $el = $(this),
@@ -4728,7 +4747,7 @@ define('km/lazyload', ['jquery'], function ($) {
  */
     function LazyLoad($elements, options) {
         this.$elements = $elements;
-        this.options = $.extend({}, {
+        this.options = $.extend(true, {
             placeholder: null,
             $container: $(window),
             callback: $.noop
@@ -4867,7 +4886,7 @@ define('km/loading', ['jquery', 'spin'], function ($, Spinner) {
     var global;
 
     var Loading = function (options) {
-        this.options = $.extend({}, {
+        this.options = $.extend(true, {
             lines: 12, // 花瓣数目
             length: 10, // 花瓣长度
             width: 4, // 花瓣宽度
@@ -4941,7 +4960,7 @@ define('km/magnifier', ['jquery'], function ($) {
      * @param {Object} options - 参数设置
      */
     var Magnifier = function ($el, options) {
-        this.options = $.extend({}, {
+        this.options = $.extend(true, {
             offset: 10,
             width: 400,
             height: 250,
@@ -5136,7 +5155,7 @@ define('km/pager', ['jquery', 'km/event'], function ($, event) {
      */
     var Pager = function ($element, options) {
         this.$element = $element;
-        this.options = $.extend({}, {
+        this.options = $.extend(true, {
             curPage: 1,
             totalCount: 0,
             pageSize: 20,
@@ -5440,7 +5459,7 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
      * ȫ�ֳ�ʼ������
      * @return {Void}
      */
-    Panel.GLOBAL = function ($elms) {
+    Panel.Global = function ($elms) {
         $elms = $elms || $('div[data-module=panel]');
         $elms.each(function () {
             var $el = $(this),
@@ -5616,6 +5635,117 @@ define('km/placeholder', ['jquery'], function($) {
     }
 });
 /*
+ * 弹出框模块
+ * @date:2014-11-05
+ * @author:kotenei(kotenei@qq.com)
+ */
+define('km/popover', ['jquery', 'km/tooltips', 'km/util'], function ($, Tooltips, util) {
+
+    /**
+     * 弹出框模块
+     * @param {JQuery} $element - dom
+     * @param {Object} options - 参数
+     */
+    var Popover = function ($element, options) {
+        options = $.extend(true, {
+            type:'popover',
+            title: '标题',
+            tpl: '<div class="k-popover">' +
+                       '<div class="k-popover-arrow"></div>' +
+                       '<div class="k-popover-title"></div>' +
+                       '<div class="k-popover-inner"></div>' +
+                   '</div>'
+        }, options);
+        Tooltips.call(this, $element, options);
+
+        this.setTitle();
+    };
+
+    /**
+     * 继承tooltips
+     * @param {String} title - 标题
+     */
+    Popover.prototype = util.createProto(Tooltips.prototype);
+
+    /**
+     * 设置标题
+     * @param {String} title - 标题
+     */
+    Popover.prototype.setTitle = function (title) {
+        title = $.trim(title || this.options.title);
+        if (title.length === 0) {
+            title = this.$element.attr('data-title') || "";
+        }
+        var $tips = this.$tips;
+        $tips.find('.k-popover-title').text(title);
+    };
+
+   
+    /**
+     * 设置内容
+     * @param {String} content - 内容
+     */
+    Popover.prototype.setContent = function (content) {
+        content = $.trim(content || this.options.content);
+        if (content.length === 0) {
+            content = this.$element.attr('data-content') || "";
+        }
+        var $tips = this.$tips;
+        $tips.find('.k-popover-inner').html(content);
+    };
+
+
+    /**
+     * 全局popover
+     * @param {JQuery} $elements - dom
+     */
+    Popover.Global = function ($elements) {
+        var $elements = $elements || $('[data-module="popover"]');
+        $elements.each(function () {
+            var $this = $(this);
+            var popover = Popover.Get($this);
+            if (!popover) {
+
+                var options = $this.attr('data-options');
+
+                if (options && options.length > 0) {
+                    options = eval('(0,' + options + ')');
+                } else {
+                    options = {
+                        title: $this.attr('data-title'),
+                        content: $this.attr('data-content'),
+                        placement: $this.attr('data-placement'),
+                        tipClass: $this.attr('data-tipClass'),
+                        trigger: $this.attr('data-trigger')
+                    };
+                }
+
+                popover = new Popover($this, options);
+                Popover.Set($this, popover);
+            }
+        });
+    };
+
+    /**
+     * 从缓存获取对象
+     * @param {JQuery} $element - dom
+     */
+    Popover.Get = function ($element) {
+        return $element.data("popover");
+    };
+
+    /**
+     * 设置缓存
+     * @param {JQuery} $element - dom
+     * @param {Object} popover - 缓存对象
+     */
+    Popover.Set = function ($element, popover) {
+        $element.data("popover", popover);
+    };
+
+    return Popover;
+});
+/*
  * 弹出提示模块
  * @date:2014-09-10
  * @author:kotenei(kotenei@qq.com)
@@ -5698,108 +5828,6 @@ define('km/popTips', ['jquery'], function ($) {
     return PopTips.getInstance();
 });
 
-/*
- * 弹出框模块
- * @date:2014-11-05
- * @author:kotenei(kotenei@qq.com)
- */
-define('km/popover', ['jquery', 'km/tooltips', 'km/util'], function ($, Tooltips, util) {
-
-    /**
-     * 弹出框模块
-     * @param {JQuery} $element - dom
-     * @param {Object} options - 参数
-     */
-    var Popover = function ($element, options) {
-        options = $.extend({}, {
-            type:'popover',
-            title: '标题',
-            tpl: '<div class="k-popover">' +
-                       '<div class="k-popover-arrow"></div>' +
-                       '<div class="k-popover-title"></div>' +
-                       '<div class="k-popover-inner"></div>' +
-                   '</div>'
-        }, options);
-        Tooltips.call(this, $element, options);
-
-        this.setTitle();
-    };
-
-    /**
-     * 继承tooltips
-     * @param {String} title - 标题
-     */
-    Popover.prototype = util.createProto(Tooltips.prototype);
-
-    /**
-     * 设置标题
-     * @param {String} title - 标题
-     */
-    Popover.prototype.setTitle = function (title) {
-        title = $.trim(title || this.options.title);
-        if (title.length === 0) {
-            title = this.$element.attr('data-title') || "";
-        }
-        var $tips = this.$tips;
-        $tips.find('.k-popover-title').text(title);
-    };
-
-   
-    /**
-     * 设置内容
-     * @param {String} content - 内容
-     */
-    Popover.prototype.setContent = function (content) {
-        content = $.trim(content || this.options.content);
-        if (content.length === 0) {
-            content = this.$element.attr('data-content') || "";
-        }
-        var $tips = this.$tips;
-        $tips.find('.k-popover-inner').html(content);
-    };
-
-
-    /**
-     * 全局popover
-     * @param {JQuery} $elements - dom
-     */
-    Popover.Global = function ($elements) {
-        var $elements = $elements || $('[data-module="popover"]');
-        $elements.each(function () {
-            var $this = $(this);
-            var popover = Popover.Get($this);
-            if (!popover) {
-                popover = new Popover($this, {
-                    title: $this.attr('data-title'),
-                    content: $this.attr('data-content'),
-                    placement: $this.attr('data-placement'),
-                    tipClass: $this.attr('data-tipClass'),
-                    trigger: $this.attr('data-trigger')
-                });
-                Popover.Set($this, popover);
-            }
-        });
-    };
-
-    /**
-     * 从缓存获取对象
-     * @param {JQuery} $element - dom
-     */
-    Popover.Get = function ($element) {
-        return $element.data("popover");
-    };
-
-    /**
-     * 设置缓存
-     * @param {JQuery} $element - dom
-     * @param {Object} popover - 缓存对象
-     */
-    Popover.Set = function ($element, popover) {
-        $element.data("popover", popover);
-    };
-
-    return Popover;
-});
 /*
  * 评级模块
  * @date:2015-07-17
@@ -5893,7 +5921,7 @@ define('km/rating', ['jquery', 'km/event'], function ($, event) {
      */
     var Rating = function ($el, options) {
         this.$el = $el;
-        this.options = $.extend({}, {
+        this.options = $.extend(true, {
             path: '../images/star',
             starOff: 'star-off.png',
             starHalf: 'star-half.png',
@@ -6394,7 +6422,7 @@ define('km/resizable', ['jquery'], function ($) {
      * ȫ�ֳ�ʼ������
      * @return {Void}
      */
-    Resizable.GLOBAL = function ($elms) {
+    Resizable.Global = function ($elms) {
         $elms = $elms || $('[data-module=resizable]');
         $elms.each(function () {
             var $el = $(this),
@@ -6630,7 +6658,7 @@ define('km/slider', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
      */
     var Slider = function ($element, options) {
         this.$element = $element;
-        this.options = $.extend({}, {
+        this.options = $.extend(true, {
             min: 1,
             max: 10,
             step: 1,
@@ -6804,7 +6832,7 @@ define('km/switch', ['jquery'], function ($) {
     */
     var Switch = function ($element, options) {
         this.$element = $element;
-        this.options = $.extend({}, {
+        this.options = $.extend(true, {
             values: {
                 on: { text: '是', value: true, className: '' },
                 off: { text: '否', value: false, className: '' }
@@ -6916,18 +6944,26 @@ define('km/switch', ['jquery'], function ($) {
         $elms = $elms || $('input[data-module="switch"]');
         $elms.each(function () {
             var $el = $(this),
+                options=$el.attr('data-options'),
                 values = $el.attr('data-values'),
                 funcName = $el.attr('data-onClick');
 
             var data = $el.data('switch');
 
-            if (!data) {
-                data = new Switch($el, {
+            if (options && options.length > 0) {
+                options = eval('(0,' + options + ')');
+            } else {
+                options = {
                     values: values && values.length > 0 ? eval('(0,' + values + ')') : undefined,
                     callback: {
                         onclick: funcName && funcName.length > 0 ? eval('(0,' + funcName + ')') : $.noop
                     }
-                });
+                };
+            }
+
+
+            if (!data) {
+                data = new Switch($el, options);
                 $el.data('switch', data);
             }
 
@@ -7091,7 +7127,7 @@ define('km/tooltips', ['jquery'], function ($) {
      */
     function Tooltips($element, options) {
         this.$element = $element;
-        this.options = $.extend({}, {
+        this.options = $.extend(true, {
             delay: 0,
             content: '',
             tipClass: '',
@@ -7273,13 +7309,22 @@ define('km/tooltips', ['jquery'], function ($) {
             var $this = $(this);
             var tooltips = Tooltips.Get($this);
             if (!tooltips) {
-                tooltips = new Tooltips($this, {
-                    title: $this.attr('data-title'),
-                    content: $this.attr('data-content'),
-                    placement: $this.attr('data-placement'),
-                    tipClass: $this.attr('data-tipClass'),
-                    trigger: $this.attr('data-trigger')
-                });
+
+                var options = $this.attr('data-options');
+
+                if (options && options.length > 0) {
+                    options = eval('(0,' + options + ')');
+                } else {
+                    options = {
+                        title: $this.attr('data-title'),
+                        content: $this.attr('data-content'),
+                        placement: $this.attr('data-placement'),
+                        tipClass: $this.attr('data-tipClass'),
+                        trigger: $this.attr('data-trigger')
+                    };
+                }
+
+                tooltips = new Tooltips($this, options);
                 Tooltips.Set($this, tooltips);
             }
         });
@@ -8008,7 +8053,7 @@ define('km/treeTable', ['jquery', 'km/ajax'], function ($, ajax) {
     //树型表格
     function TreeTable($elm, options) {
         this.$elm = $elm;
-        this.options = $.extend({}, {
+        this.options = $.extend(true, {
             expanded: true,
             className: 'k-treeTable',
             url: '',
@@ -8734,6 +8779,7 @@ define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event'], func
         $elms = $elms || $('button[data-module=upload],input[data-module=upload]');
         $elms.each(function () {
             var $el = $(this),
+                options=$el.attr('data-options'),
                 uploadUrl = $el.attr('data-uploadurl'),
                 removeUrl = $el.attr('data-removeurl'),
                 name = $el.attr('data-name'),
@@ -8742,15 +8788,21 @@ define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event'], func
                 popTips = $el.attr('data-popTips'),
                 data = $el.data('upload');
 
-            if (!data) {
-                data = new Upload($el, {
+            if (options && options.length > 0) {
+                options = eval('(0,' + options + ')');
+            } else {
+                options = {
                     uploadUrl: uploadUrl && uploadUrl.length > 0 ? uploadUrl : '',
                     removeUrl: removeUrl && removeUrl.length > 0 ? removeUrl : '',
                     name: name && name.length > 0 ? name : 'file',
                     text: text && text.length > 0 ? text : '上传',
                     loadingEnable: loadingEnable && loadingEnable == 'false' ? false : true,
                     popTips: popTips && popTips.length > 0 ? eval('(0,' + popTips + ')') : {}
-                });
+                };
+            }
+
+            if (!data) {
+                data = new Upload($el, options);
                 $el.data('upload', data);
             }
         });
@@ -8793,7 +8845,7 @@ define('km/validate', ['jquery'], function ($) {
      */
     function Validate($form, options) {
         this.$form = $form;
-        this.options = $.extend({}, {
+        this.options = $.extend(true, {
             errorClass: 'k-error',
             errorElement: 'label',
             rules: {},
@@ -9482,7 +9534,7 @@ define('km/waterfall', ['jquery', 'km/infiniteScroll', 'km/popTips'], function (
      */
     var Waterfall = function ($element, options) {
         this.$element = $element;
-        this.options = $.extend({}, {
+        this.options = $.extend(true, {
             $scrollElement: $(window),
             scrollDistance: 0,
             width: 200,
@@ -10286,7 +10338,7 @@ define('km/wordLimit', ['jquery'], function ($) {
      */
     var WordLimit = function ($element, options) {
         this.$element = $element;
-        this.options = $.extend({}, {
+        this.options = $.extend(true, {
             maxLength: 140,
             feedback: '.chars'
         }, options);
@@ -10341,14 +10393,22 @@ define('km/wordLimit', ['jquery'], function ($) {
         $elements = $elements || $("input,textarea").filter('[data-module="wordlimit"]');
         $elements.each(function () {
             var $this = $(this),
+                options = $this.attr('data-options'),
                 maxLength = $this.attr('maxLength'),
                 wordLimit = WordLimit.Get($this);
-            if (!maxLength) { return; }
-            if (!wordLimit) {
-                wordLimit = new WordLimit($this, {
+            //if (!maxLength) { return; }
+
+            if (options && options.length > 0) {
+                options = eval('(0,' + options + ')');
+            } else {
+                options = {
                     maxLength: maxLength,
                     feedback: $this.attr('data-feedback')
-                });
+                };
+            }
+
+            if (!wordLimit) {
+                wordLimit = new WordLimit($this, options);
                 WordLimit.Set($this, wordLimit);
             }
         });
