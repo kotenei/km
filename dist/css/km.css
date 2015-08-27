@@ -2193,6 +2193,7 @@ table.k-treeTable tr.expanded.accept td span.indenter a {
 }
 .k-layout .k-panel.k-panel-center {
   top: 99px;
+  z-index: 1;
 }
 .k-layout .k-panel.k-panel-bottom {
   border-top: 1px solid #ddd;
@@ -2208,7 +2209,7 @@ table.k-treeTable tr.expanded.accept td span.indenter a {
 .k-layout .panel-expand .fa {
   position: absolute;
   right: 15px;
-  top: 15px;
+  top: 12px;
   cursor: pointer;
 }
 .k-layout .panel-expand.panel-expand-top {

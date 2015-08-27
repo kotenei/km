@@ -84,13 +84,12 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
 
         if (this.resizable) {
             this.resizable.on('resize', function (css) {
-                self.setHeight(css.height);
+                self.setBodyHeight(css.height);
                 self.options.resizable.callback.resize.call(self, css);
             }).on('stop', function (css) {
                 self.options.resizable.callback.stop.call(self, css);
             });
         }
-
     };
 
     /**
@@ -103,21 +102,25 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
     };
 
     /**
-     * 设置高度
+     * 设置内容高度
      * @return {Void}
      */
-    Panel.prototype.setHeight = function (height) {
+    Panel.prototype.setBodyHeight = function (height) {
+        height = height || this.$panel.height();
         var h = height - this.headHeight;
-
         this.$body.css('height', h);
     };
 
+    /**
+     * 设置面板尺寸
+     * @return {Void}
+     */
     Panel.prototype.setSize = function (size) {
         this.$panel.css({
             width: size.width,
             height: size.height
         });
-        this.setHeight(size.height);
+        this.setBodyHeight(size.height);
     };
 
     /**
@@ -178,6 +181,42 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
             return;
         }
     };
+
+    /**
+     * 全局初始化调用
+     * @return {Void}
+     */
+    Panel.GLOBAL = function ($elms) {
+        $elms = $elms || $('div[data-module=panel]');
+        $elms.each(function () {
+            var $el = $(this),
+                options = $el.attr('data-options'),
+                slideDown = $el.attr('data-onslidedown'),
+                slideUp = $el.attr('data-onslideup'),
+                data = $el.data('panel');
+
+            if (options && options.length > 0) {
+                options = eval('(0,' + options + ')');
+            }
+
+
+            slideDown = slideDown && slideDown.length > 0 ? eval('(0,' + slideDown + ')') : $.noop;
+            slideUp = slideUp && slideUp.length > 0 ? eval('(0,' + slideUp + ')') : $.noop;
+
+            if (!data) {
+                data = new Panel($el, options);
+
+                data.on('slideDown', function () {
+                    slideDown.call(this);
+                }).on('slideUp', function () {
+                    slideUp.call(this);
+                });
+
+                $el.data('panel', data);
+            }
+
+        });
+    }
 
     return Panel;
 });

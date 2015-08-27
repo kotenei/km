@@ -85,12 +85,6 @@ define('km/resizable', ['jquery'], function ($) {
             this.$minbar.show();
         }
 
-        //this.resizeParams.top = parseInt(this.$elm.position().top);
-        //this.resizeParams.left = this.$elm.position().left;
-        //this.resizeParams.width = parseInt(this.$elm.outerWidth(true));
-        //this.resizeParams.height = parseInt(this.$elm.outerHeight(true));
-        //this.resizeParams.ratio = this.resizeParams.width >= this.resizeParams.height ? this.resizeParams.width / this.resizeParams.height : this.resizeParams.height / this.resizeParams.width;
-
         this.watch();
     };
 
@@ -109,7 +103,7 @@ define('km/resizable', ['jquery'], function ($) {
             self.resizeParams.height = parseInt(self.$elm.outerHeight(true));
             self.resizeParams.ratio = self.resizeParams.width >= self.resizeParams.height ? self.resizeParams.width / self.resizeParams.height : self.resizeParams.height / self.resizeParams.width;
             self.resizeParams.type = $el.attr('data-type');
-            self.showCover();   
+            self.showCover();
             e.stopPropagation();
             e.preventDefault();
             self.start(e, $el);
@@ -119,6 +113,8 @@ define('km/resizable', ['jquery'], function ($) {
 
     /**
      * 添加自定义事件
+     * @param {String} type - 事件类别
+     * @param {Function} options - 事件回调
      * @return {Void}
      */
     Resizable.prototype.on = function (type, callback) {
@@ -136,7 +132,7 @@ define('km/resizable', ['jquery'], function ($) {
         this.$doc.on('mousemove.resizable', function (e) {
             self.resize(e)
         }).on('mouseup.resizable', function (e) {
-            self.stop(e,$handle);
+            self.stop(e, $handle);
             self.$doc.off('mousemove.resizable');
             self.$doc.off('mouseup.resizable');
         });
@@ -161,6 +157,13 @@ define('km/resizable', ['jquery'], function ($) {
         if ($handle[0].setCapture) {
             $handle[0].setCapture();
         }
+
+        this.css = {
+            left: this.resizeParams.left,
+            top: this.resizeParams.top,
+            width: this.resizeParams.width,
+            height:this.resizeParams.height
+        };
 
     };
 
@@ -266,6 +269,7 @@ define('km/resizable', ['jquery'], function ($) {
 
         this.css = css;
 
+
         if (this.options.cover) {
             $cover.css(css);
         } else {
@@ -279,13 +283,13 @@ define('km/resizable', ['jquery'], function ($) {
      * 停止缩放
      * @return {Void}
      */
-    Resizable.prototype.stop = function (e,$handle) {
+    Resizable.prototype.stop = function (e, $handle) {
+
         this.moving = false;
         this.hideCover();
 
-        if (this.options.cover && this.css) {
+        if (this.options.cover) {
             this.$elm.css(this.css);
-            this.css = null;
         }
 
         if ($handle[0].releaseCapture) {
@@ -315,7 +319,6 @@ define('km/resizable', ['jquery'], function ($) {
         });
     };
 
-
     /**
      * 隐藏覆盖层
      * @return {Void}
@@ -323,21 +326,6 @@ define('km/resizable', ['jquery'], function ($) {
     Resizable.prototype.hideCover = function () {
         $cover.hide();
     };
-
-    //Resizable.prototype.resize = function () {
-    //    var $range = this.options.$range,
-    //        rw,
-    //        rh;
-
-    //    if ($range) {
-    //        rw = $range.width();
-    //        rh = $range.height();
-    //    } else {
-    //        rw = this.$win.width() + this.$doc.scrollLeft();
-    //        rh = this.$win.height() + this.$doc.scrollTop();
-    //    }
-
-    //};
 
     /**
      * 取鼠标坐标
@@ -375,6 +363,42 @@ define('km/resizable', ['jquery'], function ($) {
             return width * ratio;
         }
     };
+
+    /**
+     * 全局初始化调用
+     * @return {Void}
+     */
+    Resizable.GLOBAL = function ($elms) {
+        $elms = $elms || $('[data-module=resizable]');
+        $elms.each(function () {
+            var $el = $(this),
+                options = $el.attr('data-options'),
+                resize = $el.attr('data-onresize'),
+                stop = $el.attr('data-onstop'),
+                data = $el.data('resizable');
+
+            if (options && options.length > 0) {
+                options = eval('(0,' + options + ')');
+            }
+
+            resize = resize && resize.length > 0 ? eval('(0,' + resize + ')') : $.noop;
+            stop = stop && stop.length > 0 ? eval('(0,' + stop + ')') : $.noop;
+
+            if (!data) {
+
+                data = new Resizable($el, options);
+
+                data.on('resize', function (css) {
+                    resize.call(this, css);
+                }).on('stop', function (css) {
+                    stop.call(this, css);
+                });
+
+                $el.data('resizable', data);
+            }
+
+        });
+    }
 
     return Resizable;
 

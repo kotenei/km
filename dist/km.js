@@ -3018,6 +3018,270 @@ define('km/dragdrop', ['jquery'], function ($) {
 
 });
 
+/*
+ * 下拉树模块
+ * @date:2015-07-28
+ * @author:kotenei(kotenei@qq.com)
+ */
+define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
+
+    /**
+     * 下拉树类
+     * @param {JQuery} $element - dom
+     * @param {Object} options - 参数
+     */
+    var DropDownTree = function ($elm, options) {
+        this.$elm = $elm;
+        this.options = $.extend(true, {
+            data: [],
+            url: null,
+            width: null,
+            height: 200,
+            zIndex: 999,
+            appendTo: $(document.body),
+            isTree: true,
+            multiple: false,
+            inputGroup: '.k-input-group',
+            bindElement: null,
+            callback: {
+                select: $.noop,
+                check: $.noop,
+                hide: $.noop
+            }
+        }, options);
+
+        this.$treePanel = $('<div class="k-dropDownTree k-pop-panel"></div>');
+        this.init();
+    };
+
+    /**
+     * 初始化
+     * @return {Void}
+     */
+    DropDownTree.prototype.init = function () {
+
+        var self = this;
+
+        if ((!this.options.url || this.options.url.length == 0) &&
+            (!this.options.data || this.options.data.length == 0)) {
+            return;
+        }
+
+        this.options.bindElement = $(this.options.bindElement);
+
+        this.$inputGroup = this.$elm.parent(this.options.inputGroup);
+
+        this.$elm.attr('readonly', 'readonly');
+
+        this.elmWidth = this.$elm.outerWidth();
+
+        this.$treePanel.css({
+            width: this.options.width || this.$inputGroup.outerWidth() || this.elmWidth,
+            height: this.options.height,
+            zIndex: this.options.zIndex
+        }).appendTo(this.options.appendTo);
+
+        if (!this.options.isTree) {
+            this.options.view = {
+                showLine: false,
+                showIcon: false
+            }
+
+            this.$treePanel.addClass('k-dropDownTree-list');
+        }
+
+        if (this.options.multiple) {
+            this.options.check = {
+                enable: true,
+                chkType: 'checkbox',
+                chkBoxType: { Y: "", N: "" }
+            };
+        }
+
+        this.options.callback.onCheck = function (nodes) {
+            self.check(nodes);
+        };
+
+        this.options.callback.onSelect = function (node) {
+            self.select(node);
+        };
+
+
+        if (this.options.url) {
+            $.get(this.options.url, { rand: Math.random() }, function (data) {
+
+                if (typeof data === 'string') {
+                    data = eval('(0,'+data+')');
+                }
+
+                self.options.data = data;
+                self.tree = new Tree(self.$treePanel, self.options);
+                self.watch();
+            });
+        } else {
+            this.tree = new Tree(this.$treePanel, this.options);
+            this.watch();
+        }
+
+    };
+
+    /**
+     * 事件监控
+     * @return {Void}
+     */
+    DropDownTree.prototype.watch = function () {
+        var self = this;
+
+        this.$elm.on('click.dropDownTree', function (e) {
+            self.show();
+            return false;
+        });
+
+        this.$inputGroup.on('click.dropDownTree', 'button', function (e) {
+            self.show();
+            return false;
+        });
+
+        $(document).on('click.dropDownTree', function (e) {
+            var $target = $(e.target);
+            if ($target.hasClass('k-dropDownTree') ||
+                $target.parents('.k-dropDownTree').length > 0) {
+                return;
+            }
+            self.hide();
+        });
+
+        $(window).on('resize.dropDownTree', function () {
+            self.setPosition();
+        });
+    };
+
+    /**
+     * 单选操作
+     * @return {Void}
+     */
+    DropDownTree.prototype.select = function (node) {
+        if (this.options.multiple) {
+            this.tree.$tree.find('a.selected').removeClass('selected');
+            return;
+        }
+
+        if (this.options.bindElement) {
+            this.options.bindElement.val(node.value || node.nodeId || node.text);
+        }
+
+        this.$elm.val(node.text).attr('title', node.text).focus().blur();
+
+        this.options.callback.select(node);
+
+    };
+
+    /**
+     * 复选操作
+     * @return {Void}
+     */
+    DropDownTree.prototype.check = function (node) {
+
+        var nodes = this.tree.getCheckedNodes();
+        var arrValue = [],
+            arrText = [];
+
+        for (var i = 0; i < nodes.length; i++) {
+            arrText.push(nodes[i].text);
+            arrValue.push(nodes[i].value || nodes[i].nodeId || nodes[i].text);
+        }
+
+        if (this.options.bindElement) {
+            this.options.bindElement.val(arrValue.join(','));
+        }
+
+        this.$elm.val(arrText.join(',')).attr('title', arrText.join(',')).focus().blur();
+        this.options.callback.check(nodes);
+    };
+
+    /**
+     * 设置位置
+     * @return {Void}
+     */
+    DropDownTree.prototype.setPosition = function () {
+        this.$treePanel.css({
+            left: this.$elm.offset().left,
+            top: this.$elm.offset().top + this.$elm.outerHeight() + 2
+        });
+    };
+
+    /**
+     * 显示
+     * @return {Void}
+     */
+    DropDownTree.prototype.show = function () {
+
+        if (this.$treePanel[0].style.display == 'block') {
+            return;
+        }
+        $('div.k-pop-panel').hide();
+        this.$treePanel.slideDown();
+        this.setPosition();
+    };
+
+    /**
+     * 隐藏
+     * @return {Void}
+     */
+    DropDownTree.prototype.hide = function () {
+        if (this.$treePanel[0].style.display == 'block') {
+            this.options.callback.hide();
+        }
+        this.$treePanel.slideUp();
+    };
+
+    /**
+     * 全局调用
+     * @return {Void}
+     */
+    DropDownTree.Global = function ($elms) {
+        $elms = $elms || $('input[data-module=dropdowntree]');
+
+        $elms.each(function () {
+            var $elm = $(this),
+                url = $elm.attr('data-url'),
+                width = $elm.attr('data-width'),
+                height = $elm.attr('data-height'),
+                zIndex = $elm.attr('data-zIndex'),
+                appendTo = $elm.attr('data-appendTo'),
+                isTree = $elm.attr('data-isTree') || true,
+                multiple = $elm.attr('data-multiple') || false,
+                array = $elm.attr('data-data'),
+                callback = $elm.attr('data-callback'),
+                bindElm = $elm.attr('data-bindelement') || null,
+                data;
+
+            data = $elm.data('dropDownTree');
+
+            if (!data) {
+                data = new DropDownTree($elm, {
+                    data: eval(array),
+                    url: url,
+                    width: width && width.length > 0 ? parseInt(width) : null,
+                    height: height && height.length > 0 ? parseInt(height) : 200,
+                    zIndex: zIndex && zIndex.length > 0 ? parseInt(zIndex) : 999,
+                    appendTo: $(appendTo || document.body),
+                    isTree: isTree && isTree == 'false' ? false : true,
+                    multiple: multiple && multiple == 'true' ? true : false,
+                    bindElement: bindElm,
+                    callback: callback && callback.length > 0 ? eval('(' + callback + ')') : {}
+                });
+                $elm.data('dropDownTree', data);
+            }
+
+        });
+    };
+
+
+    return DropDownTree;
+
+});
+
 /**
  * 下拉框
  * @author vfasky (vfasky@gmail.com)
@@ -3318,270 +3582,6 @@ function ($, Dropdown, DatePicker, util) {
     return DropdownDatePicker;
 
 });
-/*
- * 下拉树模块
- * @date:2015-07-28
- * @author:kotenei(kotenei@qq.com)
- */
-define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
-
-    /**
-     * 下拉树类
-     * @param {JQuery} $element - dom
-     * @param {Object} options - 参数
-     */
-    var DropDownTree = function ($elm, options) {
-        this.$elm = $elm;
-        this.options = $.extend(true, {
-            data: [],
-            url: null,
-            width: null,
-            height: 200,
-            zIndex: 999,
-            appendTo: $(document.body),
-            isTree: true,
-            multiple: false,
-            inputGroup: '.k-input-group',
-            bindElement: null,
-            callback: {
-                select: $.noop,
-                check: $.noop,
-                hide: $.noop
-            }
-        }, options);
-
-        this.$treePanel = $('<div class="k-dropDownTree k-pop-panel"></div>');
-        this.init();
-    };
-
-    /**
-     * 初始化
-     * @return {Void}
-     */
-    DropDownTree.prototype.init = function () {
-
-        var self = this;
-
-        if ((!this.options.url || this.options.url.length == 0) &&
-            (!this.options.data || this.options.data.length == 0)) {
-            return;
-        }
-
-        this.options.bindElement = $(this.options.bindElement);
-
-        this.$inputGroup = this.$elm.parent(this.options.inputGroup);
-
-        this.$elm.attr('readonly', 'readonly');
-
-        this.elmWidth = this.$elm.outerWidth();
-
-        this.$treePanel.css({
-            width: this.options.width || this.$inputGroup.outerWidth() || this.elmWidth,
-            height: this.options.height,
-            zIndex: this.options.zIndex
-        }).appendTo(this.options.appendTo);
-
-        if (!this.options.isTree) {
-            this.options.view = {
-                showLine: false,
-                showIcon: false
-            }
-
-            this.$treePanel.addClass('k-dropDownTree-list');
-        }
-
-        if (this.options.multiple) {
-            this.options.check = {
-                enable: true,
-                chkType: 'checkbox',
-                chkBoxType: { Y: "", N: "" }
-            };
-        }
-
-        this.options.callback.onCheck = function (nodes) {
-            self.check(nodes);
-        };
-
-        this.options.callback.onSelect = function (node) {
-            self.select(node);
-        };
-
-
-        if (this.options.url) {
-            $.get(this.options.url, { rand: Math.random() }, function (data) {
-
-                if (typeof data === 'string') {
-                    data = eval('(0,'+data+')');
-                }
-
-                self.options.data = data;
-                self.tree = new Tree(self.$treePanel, self.options);
-                self.watch();
-            });
-        } else {
-            this.tree = new Tree(this.$treePanel, this.options);
-            this.watch();
-        }
-
-    };
-
-    /**
-     * 事件监控
-     * @return {Void}
-     */
-    DropDownTree.prototype.watch = function () {
-        var self = this;
-
-        this.$elm.on('click.dropDownTree', function (e) {
-            self.show();
-            return false;
-        });
-
-        this.$inputGroup.on('click.dropDownTree', 'button', function (e) {
-            self.show();
-            return false;
-        });
-
-        $(document).on('click.dropDownTree', function (e) {
-            var $target = $(e.target);
-            if ($target.hasClass('k-dropDownTree') ||
-                $target.parents('.k-dropDownTree').length > 0) {
-                return;
-            }
-            self.hide();
-        });
-
-        $(window).on('resize.dropDownTree', function () {
-            self.setPosition();
-        });
-    };
-
-    /**
-     * 单选操作
-     * @return {Void}
-     */
-    DropDownTree.prototype.select = function (node) {
-        if (this.options.multiple) {
-            this.tree.$tree.find('a.selected').removeClass('selected');
-            return;
-        }
-
-        if (this.options.bindElement) {
-            this.options.bindElement.val(node.value || node.nodeId || node.text);
-        }
-
-        this.$elm.val(node.text).attr('title', node.text).focus().blur();
-
-        this.options.callback.select(node);
-
-    };
-
-    /**
-     * 复选操作
-     * @return {Void}
-     */
-    DropDownTree.prototype.check = function (node) {
-
-        var nodes = this.tree.getCheckedNodes();
-        var arrValue = [],
-            arrText = [];
-
-        for (var i = 0; i < nodes.length; i++) {
-            arrText.push(nodes[i].text);
-            arrValue.push(nodes[i].value || nodes[i].nodeId || nodes[i].text);
-        }
-
-        if (this.options.bindElement) {
-            this.options.bindElement.val(arrValue.join(','));
-        }
-
-        this.$elm.val(arrText.join(',')).attr('title', arrText.join(',')).focus().blur();
-        this.options.callback.check(nodes);
-    };
-
-    /**
-     * 设置位置
-     * @return {Void}
-     */
-    DropDownTree.prototype.setPosition = function () {
-        this.$treePanel.css({
-            left: this.$elm.offset().left,
-            top: this.$elm.offset().top + this.$elm.outerHeight() + 2
-        });
-    };
-
-    /**
-     * 显示
-     * @return {Void}
-     */
-    DropDownTree.prototype.show = function () {
-
-        if (this.$treePanel[0].style.display == 'block') {
-            return;
-        }
-        $('div.k-pop-panel').hide();
-        this.$treePanel.slideDown();
-        this.setPosition();
-    };
-
-    /**
-     * 隐藏
-     * @return {Void}
-     */
-    DropDownTree.prototype.hide = function () {
-        if (this.$treePanel[0].style.display == 'block') {
-            this.options.callback.hide();
-        }
-        this.$treePanel.slideUp();
-    };
-
-    /**
-     * 全局调用
-     * @return {Void}
-     */
-    DropDownTree.Global = function ($elms) {
-        $elms = $elms || $('input[data-module=dropdowntree]');
-
-        $elms.each(function () {
-            var $elm = $(this),
-                url = $elm.attr('data-url'),
-                width = $elm.attr('data-width'),
-                height = $elm.attr('data-height'),
-                zIndex = $elm.attr('data-zIndex'),
-                appendTo = $elm.attr('data-appendTo'),
-                isTree = $elm.attr('data-isTree') || true,
-                multiple = $elm.attr('data-multiple') || false,
-                array = $elm.attr('data-data'),
-                callback = $elm.attr('data-callback'),
-                bindElm = $elm.attr('data-bindelement') || null,
-                data;
-
-            data = $elm.data('dropDownTree');
-
-            if (!data) {
-                data = new DropDownTree($elm, {
-                    data: eval(array),
-                    url: url,
-                    width: width && width.length > 0 ? parseInt(width) : null,
-                    height: height && height.length > 0 ? parseInt(height) : 200,
-                    zIndex: zIndex && zIndex.length > 0 ? parseInt(zIndex) : 999,
-                    appendTo: $(appendTo || document.body),
-                    isTree: isTree && isTree == 'false' ? false : true,
-                    multiple: multiple && multiple == 'true' ? true : false,
-                    bindElement: bindElm,
-                    callback: callback && callback.length > 0 ? eval('(' + callback + ')') : {}
-                });
-                $elm.data('dropDownTree', data);
-            }
-
-        });
-    };
-
-
-    return DropDownTree;
-
-});
-
 /**
  * 事件
  * @date :2014-12-01
@@ -4295,15 +4295,29 @@ define('km/infiniteScroll', ['jquery'], function ($) {
  */
 define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cache) {
 
+    /**
+     * ������
+     * @param {JQuery} $elm - dom
+     * @param {Object} options - ����
+     */
     var Layout = function ($elm, options) {
         this.$layout = $elm;
         this.options = $.extend(true, {
-
+            cache: false,
+            resizeMin: 5
         }, options);
         this.$parent = this.$layout.parent();
         this.init();
+        this._event = {
+            show: $.noop,
+            hide: $.noop
+        };
     };
 
+    /**
+     * ��ʼ��
+     * @return {Void}
+     */
     Layout.prototype.init = function () {
         var self = this;
         this.$win = $(window);
@@ -4325,13 +4339,17 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
         this.watch();
     };
 
+    /**
+     * ������ʼ��
+     * @return {Void}
+     */
     Layout.prototype.panelInit = function () {
         var self = this;
         this.$panels.each(function () {
 
             var $panel = $(this).show(),
                 type = $panel.attr('data-type'),
-                min = 40,
+                min = self.options.resizeMin,
                 options = {
                     resizable: {
                         enabled: true,
@@ -4379,159 +4397,163 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
         });
     };
 
+    /**
+     * �¼�����
+     * @return {Void}
+     */
     Layout.prototype.watch = function () {
         var self = this;
         this.$win.on('resize.layout', function () {
             self.setSize();
         });
         this.$panels.on('click.layout', 'span[role=hide]', function () {
-            self.hide($(this));
+            self.hide($(this).attr('data-type'));
+            return false;
         });
         this.$layout.on('click.layout', 'span[role=show]', function () {
             self.show($(this).attr('data-type'));
+            return false;
         });
     };
 
+    /**
+     * �����Զ����¼�
+     * @return {Void}
+     */
+    Layout.prototype.on = function (type, callback) {
+        this._event[type] = callback || $.noop;
+        return this;
+    };
+
+    /**
+     * ��ʾ����
+     * @param {String} type - ��������
+     * @return {Void}
+     */
     Layout.prototype.show = function (type) {
         var self = this,
             panelsInfo = this.getPanelsInfo(),
             info = panelsInfo[type],
             $panel = info.$panel.attr('data-isHide', false),
-            $expand = $panel.data('expand');
-
-
-        $expand.hide();
-        $panel.stop();
-
-        switch (type) {
-            case 'top':
-                $panel.animate({ top: 0 }, function () {
-                    self.setSize();
-                });
-                break;
-            case 'left':
-                $panel.animate({ left: 0 }, function () {
-                    self.setSize();
-                });
-                break;
-            case 'right':
-                $panel.animate({ left: info.left - info.width }, function () {
-                    self.setSize();
-                });
-                break;
-            case 'bottom':
-                $panel.animate({ top: info.top - info.height }, function () {
-                    self.setSize();
-                });
-                break;
-        }
-    };
-
-    Layout.prototype.hide = function ($el) {
-        var self = this,
-            type = $el.attr('data-type'),
-            $panel = $el.parents('.k-panel:eq(0)'),
-            $expand = $panel.data('expand'),
-            w = $panel.outerWidth(),
-            h = $panel.outerHeight(),
-            t = $panel.position().top,
-            l = $panel.position().left,
-            min = 40,
-            p_w = this.$parent[0].tagName.toLowerCase() == 'body' ? this.$win.width() : this.$parent.width(),
+            $expand = info.$expand,
             css;
 
-        $panel.attr('data-isHide', true);
+        $expand.hide();
+        $panel.show();
 
-        if (!$expand) {
-            $expand = $(this.getExpandHtml(type));
-            $expand.appendTo(this.$layout);
-            $panel.data('expand', $expand);
+        switch (type) {
+            case 'top':
+                css = { top: 0 };
+                break;
+            case 'left':
+                css = { left: 0 };
+                break;
+            case 'right':
+                css = { right: 0 };
+                break;
+            case 'bottom':
+                css = { bottom: 0 };
+                break;
+        }
+
+        $panel.stop().animate(css, function () {
+            self.setSize();
+            if (self.$centerPanel) {
+                self.$centerPanel.resize();
+            }
+        });
+
+        this._event.show.call(this, info);
+    };
+
+    /**
+     * ��������
+     * @param {String} type - ��������
+     * @return {Void}
+     */
+    Layout.prototype.hide = function (type) {
+
+        var self = this,
+            panelsInfo = this.getPanelsInfo(),
+            info = panelsInfo[type],
+            css;
+
+        info.$panel.attr('data-isHide', true);
+
+        self.setSize();
+        if (self.$centerPanel) {
+            self.$centerPanel.resize();
         }
 
         switch (type) {
             case 'top':
-                css = { top: t + min, height: this.$leftPanel.height() + h - min };
-                this.$leftPanel.css(css);
-                this.$centerPanel.css(css);
-                this.$rightPanel.css(css);
-                this.$topPanel.stop().animate({ top: -h }, function () {
-                    $expand.show();
-                });
+                css = { top: -info.height };
                 break;
             case 'left':
-                this.$centerPanel.css({
-                    left: min,
-                    width: this.$centerPanel.outerWidth() + w - min
-                });
-                this.$leftPanel.stop().animate({ left: -w }, function () {
-                    $expand.css({
-                        top: t,
-                        height: h
-                    }).show();
-                });
+                css = { left: -info.width };
                 break;
             case 'right':
-                this.$rightPanel.stop().animate({
-                    left: l + w
-                }, function () {
-                    $expand.css({
-                        top: t,
-                        height: h
-                    }).show();
-                });
+                css = { right: -info.width };
+                info.$panel.css('right', 0);
                 break;
             case 'bottom':
-                css = { height: t - h };
-                this.$bottomPanel.stop().animate({
-                    top: h + t
-                }, function () {
-                    $expand.show();
-                });
+                css = { bottom: -info.height };
+                info.$panel.css('bottom', 0);
                 break;
         }
+
+        info.$panel.stop().animate(css, function () {
+            info.$panel.hide();
+            info.$expand.show();
+            self._event.hide.call(self, info);
+        });
     };
 
+    /**
+     * ��ȡ�������غ�ռλͼ��HTML
+     * @param {String} type - ��������
+     * @return {String}
+     */
     Layout.prototype.getExpandHtml = function (type) {
         var ret = '',
             className = '',
-            faClassName = '',
-            dataType = '';
+            faClassName = '';
 
         switch (type) {
             case 'left':
                 className = "panel-expand panel-expand-left";
                 faClassName = "fa fa-angle-double-right";
-                dataType = 'left';
                 break;
             case 'top':
                 className = "panel-expand panel-expand-top";
                 faClassName = "fa fa-angle-double-down";
-                dataType = 'top';
                 break;
             case 'right':
                 className = "panel-expand panel-expand-right";
                 faClassName = "fa fa-angle-double-left";
-                dataType = 'right';
                 break;
             case 'bottom':
                 className = "panel-expand panel-expand-bottom";
                 faClassName = "fa fa-angle-double-up";
-                dataType = 'bottom'
                 break;
         }
-        return '<div class="' + className + '"><span class="' + faClassName + '" role="show" data-type="' + dataType + '"></span></div>';
+        return '<div class="' + className + '"><span class="' + faClassName + '" role="show" data-type="' + type + '"></span></div>';
     };
 
-    Layout.prototype.resize = function () {
-
-    };
-
+    /**
+     * �������������ߴ�
+     * @return {Void}
+     */
     Layout.prototype.setSize = function () {
         var $parent = this.$parent,
             width = $parent.width(),
             height = $parent.height(),
             info = this.getPanelsInfo(),
-            t = 0, w = '100%', h = 0, outerWidth = 0, outerHeight = 0;
+            t = 0,
+            l = 0,
+            w = 0,
+            h = 0;
+
 
         if ($parent[0].tagName.toLowerCase() == 'body') {
             $parent.addClass('k-layout-body');
@@ -4542,92 +4564,89 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
         this.$layout.css({ width: width, height: height });
 
 
-        if (!info.top.isHide) {
-            outerHeight = this.$topPanel.height() == 0 ? 100 : this.$topPanel.outerHeight();
-            this.$topPanel.css({
-                left: 0,
-                top: 0,
-                width: '100%',
-                height: outerHeight
-            });
-            h += outerHeight;
-        } else {
-            h += this.$topPanel.data('expand').outerHeight();
+        if (info.top) {
+
+            info.top.$panel.css({ height: info.top.height, width: '100%' });
+            info.top.setBodyHeight();
+
+            if (!info.top.isHide) {
+                h += info.top.height;
+            } else {
+                h += info.top.expandHeight;
+            }
         }
 
 
-
+        //�����м��������붥������
         t += h;
 
-        if (!info.bottom.isHide) {
-            outerHeight = this.$bottomPanel.height() == 0 ? 100 : this.$bottomPanel.outerHeight();
-            this.$bottomPanel.css({
-                left: 0,
-                height: outerHeight,
-                width: '100%'
-            });
-            h += outerHeight;
-        } else {
-            h += this.$bottomPanel.data('expand').outerHeight();
+        if (info.bottom) {
+            info.bottom.$panel.css({ height: info.bottom.height, width: '100%', top: 'none' });
+            info.bottom.setBodyHeight();
+
+            if (!info.bottom.isHide) {
+                info.bottom.$panel.css("bottom", 0);
+                h += info.bottom.height;
+            } else {
+                info.bottom.$panel.css("bottom", -info.bottom.height);
+                h += info.bottom.expandHeight;
+            }
         }
 
+        //�����м������ĸ߶�
         h = height - h;
 
-        if (!info.left.isHide) {
-            this.$leftPanel.css({
-                width: this.$leftPanel.width() == 0 ? 150 : this.$leftPanel.outerWidth(),
-                left: 0,
-                top: t,
-                height: h
-            });
-        } else {
-            this.$leftPanel.data('expand').css({
-                top: t,
-                height: h
-            });
+        if (info.left) {
+
+            info.left.$panel.css({ width: info.left.width, top: t, height: h });
+            info.left.setBodyHeight();
+            info.left.$expand.css({ top: t, height: h });
+
+            if (!info.left.isHide) {
+                w += info.left.width;
+                l += w;
+            } else {
+                w += info.left.expandWidth;
+                l += w;
+            }
         }
 
 
-        this.$rightPanel.css({
-            width: this.$rightPanel.width() == 0 ? 150 : this.$rightPanel.outerWidth(),
-            top: t,
-            height: h,
-            right: 0
-        });
+        if (info.right) {
 
+            info.right.$panel.css({ width: info.right.width, top: t, height: h, left: 'none' });
+            info.right.setBodyHeight();
+            info.right.$expand.css({ top: t, height: h });
 
-        if (this.$leftPanel.length > 0 && this.$rightPanel.length > 0) {
-            w = width - this.$leftPanel.outerWidth() - this.$rightPanel.outerWidth();
-        } else if (this.$leftPanel.length > 0 && this.$rightPanel.length == 0) {
-            w = width - this.$leftPanel.outerWidth();
-        } else if (this.$leftPanel.length == 0 && this.$rightPanel.length > 0) {
-            w = width - this.$rightPanel.outerWidth();
+            if (!info.right.isHide) {
+                info.right.$panel.css('right', 0);
+                w += info.right.width;
+            } else {
+                info.right.$panel.css('right', -info.right.width);
+                w += info.right.expandWidth;
+            }
         }
 
-        this.$centerPanel.css({
-            top: t,
-            left: this.$leftPanel.length > 0 ? this.$leftPanel.outerWidth() : 0,
-            width: w,
-            height: h
-        });
-
-        if (this.$centerPanel.length > 0) {
-            this.$rightPanel.css({
-                'left': this.$leftPanel.outerWidth() + this.$centerPanel.outerWidth(),
-                'right': 'none'
-            });
-
+        if (info.center) {
+            w = width - w;
+            info.center.$panel.css({ top: t, left: l, width: w, height: h });
+            info.center.setBodyHeight();
         }
-
-        this.$bottomPanel.css('top', this.$topPanel.outerHeight() + h);
 
     };
 
-    Layout.prototype.getPanelsInfo = function () {
+    /**
+    * ��ȡ��������������Ϣ
+    * @param {String} type - ��������
+    * @return {Object}
+    */
+    Layout.prototype.getPanelsInfo = function (type) {
         var ret = {};
 
         this.$panels.each(function () {
             var $panel = $(this),
+                $expand = $panel.data('expand'),
+                panel = $panel.data('panel'),
                 type = $panel.attr('data-type');
 
             ret[type] = {
@@ -4636,12 +4655,60 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
                 width: $panel.outerWidth(),
                 height: $panel.outerHeight(),
                 isHide: $panel.attr('data-ishide') == 'true',
-                $panel: $panel
+                $panel: $panel,
+                $expand: $expand,
+                panel: panel,
+                expandWidth: $expand.outerWidth(),
+                expandHeight: $expand.outerHeight(),
+                setBodyHeight: function () {
+                    if (panel) {
+                        panel.setBodyHeight();
+                    }
+                }
             };
 
         });
 
+        if (type) {
+            return ret[type];
+        }
+
         return ret;
+    };
+
+    /**
+     * ȫ�ֳ�ʼ������
+     * @return {Void}
+     */
+    Layout.GLOBAL = function ($elms) {
+        $elms = $elms || $('div[data-module=layout]');
+        $elms.each(function () {
+            var $el = $(this),
+                options = $el.attr('data-options'),
+                show = $el.attr('data-onshow'),
+                hide=$el.attr('data-onhide'),
+                data = $el.data('layout');
+
+            if (options && options.length > 0) {
+                options = eval('(0,' + options + ')');
+            }
+
+            show = show && show.length > 0 ? eval('(0,' + show + ')') : $.noop;
+            hide = hide && hide.length > 0 ? eval('(0,' + hide + ')') : $.noop;
+
+            if (!data) {
+                data = new Layout($el, options);
+
+                data.on('show', function (info) {
+                    show.call(this, info);
+                }).on('hide', function (info) {
+                    hide.call(this, info);
+                });
+
+                $el.data('layout', data);
+            }
+
+        });
     };
 
     return Layout;
@@ -5271,13 +5338,12 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
 
         if (this.resizable) {
             this.resizable.on('resize', function (css) {
-                self.setHeight(css.height);
+                self.setBodyHeight(css.height);
                 self.options.resizable.callback.resize.call(self, css);
             }).on('stop', function (css) {
                 self.options.resizable.callback.stop.call(self, css);
             });
         }
-
     };
 
     /**
@@ -5290,21 +5356,25 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
     };
 
     /**
-     * ���ø߶�
+     * �������ݸ߶�
      * @return {Void}
      */
-    Panel.prototype.setHeight = function (height) {
+    Panel.prototype.setBodyHeight = function (height) {
+        height = height || this.$panel.height();
         var h = height - this.headHeight;
-
         this.$body.css('height', h);
     };
 
+    /**
+     * ���������ߴ�
+     * @return {Void}
+     */
     Panel.prototype.setSize = function (size) {
         this.$panel.css({
             width: size.width,
             height: size.height
         });
-        this.setHeight(size.height);
+        this.setBodyHeight(size.height);
     };
 
     /**
@@ -5365,6 +5435,42 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
             return;
         }
     };
+
+    /**
+     * ȫ�ֳ�ʼ������
+     * @return {Void}
+     */
+    Panel.GLOBAL = function ($elms) {
+        $elms = $elms || $('div[data-module=panel]');
+        $elms.each(function () {
+            var $el = $(this),
+                options = $el.attr('data-options'),
+                slideDown = $el.attr('data-onslidedown'),
+                slideUp = $el.attr('data-onslideup'),
+                data = $el.data('panel');
+
+            if (options && options.length > 0) {
+                options = eval('(0,' + options + ')');
+            }
+
+
+            slideDown = slideDown && slideDown.length > 0 ? eval('(0,' + slideDown + ')') : $.noop;
+            slideUp = slideUp && slideUp.length > 0 ? eval('(0,' + slideUp + ')') : $.noop;
+
+            if (!data) {
+                data = new Panel($el, options);
+
+                data.on('slideDown', function () {
+                    slideDown.call(this);
+                }).on('slideUp', function () {
+                    slideUp.call(this);
+                });
+
+                $el.data('panel', data);
+            }
+
+        });
+    }
 
     return Panel;
 });
@@ -5510,6 +5616,89 @@ define('km/placeholder', ['jquery'], function($) {
     }
 });
 /*
+ * 弹出提示模块
+ * @date:2014-09-10
+ * @author:kotenei(kotenei@qq.com)
+ */
+define('km/popTips', ['jquery'], function ($) {
+
+    /**
+     * 弹出提示模块
+     * @return {Object} 
+     */
+    var PopTips = (function () {
+
+        var _instance;
+
+        function init() {
+
+            var $tips, tm;
+
+            function build(status, content, delay, callback) {
+
+                if (tm) { clearTimeout(tm); }
+
+                if ($.isFunction(delay)) { callback = delay; delay = 3000; }
+
+                callback = callback || $.noop;
+                delay = delay || 3000;
+
+                if ($tips) { $tips.stop().remove(); }
+
+                $tips = $(getHtml(status, content))
+                        .appendTo(document.body).hide();
+
+                $tips.css({ marginLeft: -($tips.width() / 2), marginTop: -($tips.height() / 2) }).fadeIn('fase', function () {
+                    tm = setTimeout(function () {
+                        $tips.stop().remove();
+                        callback();
+                    }, delay);
+                })
+            }
+
+            function getHtml(status, content) {
+                var html = [];
+                switch (status) {
+                    case "success":
+                        html.push('<div class="k-pop-tips success"><span class="fa fa-check"></span>&nbsp;<span>' + content + '</span></div>');
+                        break;
+                    case "error":
+                        html.push('<div class="k-pop-tips error"><span class="fa fa-close"></span>&nbsp;<span>' + content + '</span></div>');
+                        break;
+                    case "warning":
+                        html.push('<div class="k-pop-tips warning"><span class="fa fa-exclamation"></span>&nbsp;<span>' + content + '</span></div>');
+                        break;
+                }
+                return html.join('');
+            }
+
+            return {
+                success: function (content, callback, delay) {
+                    build("success", content, callback, delay);
+                },
+                error: function (content, callback, delay) {
+                    build("error", content, callback, delay);
+                },
+                warning: function (content, callback, delay) {
+                    build("warning", content, callback, delay);
+                }
+            };
+        }
+
+        return {
+            getInstance: function () {
+                if (!_instance) {
+                    _instance = init();
+                }
+                return _instance;
+            }
+        }
+    })();
+
+    return PopTips.getInstance();
+});
+
+/*
  * 弹出框模块
  * @date:2014-11-05
  * @author:kotenei(kotenei@qq.com)
@@ -5611,89 +5800,6 @@ define('km/popover', ['jquery', 'km/tooltips', 'km/util'], function ($, Tooltips
 
     return Popover;
 });
-/*
- * 弹出提示模块
- * @date:2014-09-10
- * @author:kotenei(kotenei@qq.com)
- */
-define('km/popTips', ['jquery'], function ($) {
-
-    /**
-     * 弹出提示模块
-     * @return {Object} 
-     */
-    var PopTips = (function () {
-
-        var _instance;
-
-        function init() {
-
-            var $tips, tm;
-
-            function build(status, content, delay, callback) {
-
-                if (tm) { clearTimeout(tm); }
-
-                if ($.isFunction(delay)) { callback = delay; delay = 3000; }
-
-                callback = callback || $.noop;
-                delay = delay || 3000;
-
-                if ($tips) { $tips.stop().remove(); }
-
-                $tips = $(getHtml(status, content))
-                        .appendTo(document.body).hide();
-
-                $tips.css({ marginLeft: -($tips.width() / 2), marginTop: -($tips.height() / 2) }).fadeIn('fase', function () {
-                    tm = setTimeout(function () {
-                        $tips.stop().remove();
-                        callback();
-                    }, delay);
-                })
-            }
-
-            function getHtml(status, content) {
-                var html = [];
-                switch (status) {
-                    case "success":
-                        html.push('<div class="k-pop-tips success"><span class="fa fa-check"></span>&nbsp;<span>' + content + '</span></div>');
-                        break;
-                    case "error":
-                        html.push('<div class="k-pop-tips error"><span class="fa fa-close"></span>&nbsp;<span>' + content + '</span></div>');
-                        break;
-                    case "warning":
-                        html.push('<div class="k-pop-tips warning"><span class="fa fa-exclamation"></span>&nbsp;<span>' + content + '</span></div>');
-                        break;
-                }
-                return html.join('');
-            }
-
-            return {
-                success: function (content, callback, delay) {
-                    build("success", content, callback, delay);
-                },
-                error: function (content, callback, delay) {
-                    build("error", content, callback, delay);
-                },
-                warning: function (content, callback, delay) {
-                    build("warning", content, callback, delay);
-                }
-            };
-        }
-
-        return {
-            getInstance: function () {
-                if (!_instance) {
-                    _instance = init();
-                }
-                return _instance;
-            }
-        }
-    })();
-
-    return PopTips.getInstance();
-});
-
 /*
  * 评级模块
  * @date:2015-07-17
@@ -6005,12 +6111,6 @@ define('km/resizable', ['jquery'], function ($) {
             this.$minbar.show();
         }
 
-        //this.resizeParams.top = parseInt(this.$elm.position().top);
-        //this.resizeParams.left = this.$elm.position().left;
-        //this.resizeParams.width = parseInt(this.$elm.outerWidth(true));
-        //this.resizeParams.height = parseInt(this.$elm.outerHeight(true));
-        //this.resizeParams.ratio = this.resizeParams.width >= this.resizeParams.height ? this.resizeParams.width / this.resizeParams.height : this.resizeParams.height / this.resizeParams.width;
-
         this.watch();
     };
 
@@ -6029,7 +6129,7 @@ define('km/resizable', ['jquery'], function ($) {
             self.resizeParams.height = parseInt(self.$elm.outerHeight(true));
             self.resizeParams.ratio = self.resizeParams.width >= self.resizeParams.height ? self.resizeParams.width / self.resizeParams.height : self.resizeParams.height / self.resizeParams.width;
             self.resizeParams.type = $el.attr('data-type');
-            self.showCover();   
+            self.showCover();
             e.stopPropagation();
             e.preventDefault();
             self.start(e, $el);
@@ -6039,6 +6139,8 @@ define('km/resizable', ['jquery'], function ($) {
 
     /**
      * �����Զ����¼�
+     * @param {String} type - �¼�����
+     * @param {Function} options - �¼��ص�
      * @return {Void}
      */
     Resizable.prototype.on = function (type, callback) {
@@ -6056,7 +6158,7 @@ define('km/resizable', ['jquery'], function ($) {
         this.$doc.on('mousemove.resizable', function (e) {
             self.resize(e)
         }).on('mouseup.resizable', function (e) {
-            self.stop(e,$handle);
+            self.stop(e, $handle);
             self.$doc.off('mousemove.resizable');
             self.$doc.off('mouseup.resizable');
         });
@@ -6081,6 +6183,13 @@ define('km/resizable', ['jquery'], function ($) {
         if ($handle[0].setCapture) {
             $handle[0].setCapture();
         }
+
+        this.css = {
+            left: this.resizeParams.left,
+            top: this.resizeParams.top,
+            width: this.resizeParams.width,
+            height:this.resizeParams.height
+        };
 
     };
 
@@ -6186,6 +6295,7 @@ define('km/resizable', ['jquery'], function ($) {
 
         this.css = css;
 
+
         if (this.options.cover) {
             $cover.css(css);
         } else {
@@ -6199,13 +6309,13 @@ define('km/resizable', ['jquery'], function ($) {
      * ֹͣ����
      * @return {Void}
      */
-    Resizable.prototype.stop = function (e,$handle) {
+    Resizable.prototype.stop = function (e, $handle) {
+
         this.moving = false;
         this.hideCover();
 
-        if (this.options.cover && this.css) {
+        if (this.options.cover) {
             this.$elm.css(this.css);
-            this.css = null;
         }
 
         if ($handle[0].releaseCapture) {
@@ -6235,7 +6345,6 @@ define('km/resizable', ['jquery'], function ($) {
         });
     };
 
-
     /**
      * ���ظ��ǲ�
      * @return {Void}
@@ -6243,21 +6352,6 @@ define('km/resizable', ['jquery'], function ($) {
     Resizable.prototype.hideCover = function () {
         $cover.hide();
     };
-
-    //Resizable.prototype.resize = function () {
-    //    var $range = this.options.$range,
-    //        rw,
-    //        rh;
-
-    //    if ($range) {
-    //        rw = $range.width();
-    //        rh = $range.height();
-    //    } else {
-    //        rw = this.$win.width() + this.$doc.scrollLeft();
-    //        rh = this.$win.height() + this.$doc.scrollTop();
-    //    }
-
-    //};
 
     /**
      * ȡ��������
@@ -6295,6 +6389,42 @@ define('km/resizable', ['jquery'], function ($) {
             return width * ratio;
         }
     };
+
+    /**
+     * ȫ�ֳ�ʼ������
+     * @return {Void}
+     */
+    Resizable.GLOBAL = function ($elms) {
+        $elms = $elms || $('[data-module=resizable]');
+        $elms.each(function () {
+            var $el = $(this),
+                options = $el.attr('data-options'),
+                resize = $el.attr('data-onresize'),
+                stop = $el.attr('data-onstop'),
+                data = $el.data('resizable');
+
+            if (options && options.length > 0) {
+                options = eval('(0,' + options + ')');
+            }
+
+            resize = resize && resize.length > 0 ? eval('(0,' + resize + ')') : $.noop;
+            stop = stop && stop.length > 0 ? eval('(0,' + stop + ')') : $.noop;
+
+            if (!data) {
+
+                data = new Resizable($el, options);
+
+                data.on('resize', function (css) {
+                    resize.call(this, css);
+                }).on('stop', function (css) {
+                    stop.call(this, css);
+                });
+
+                $el.data('resizable', data);
+            }
+
+        });
+    }
 
     return Resizable;
 
