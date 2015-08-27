@@ -10,7 +10,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
      * @param {Object} options - 参数
      */
     var Window = function (options) {
-        this.options = $.extend({}, {
+        this.options = $.extend(true, {
             id: null,
             url: null,
             params: null,
@@ -94,7 +94,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
             }
         });
 
-       
+
 
         if (this.options.btns && this.options.btns.length > 0) {
             for (var i = 0, item; i < this.options.btns.length; i++) {
@@ -186,7 +186,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
                         self.show();
                         self.bindIframeLoad = true;
                     });
-                } 
+                }
 
             } else {
                 self.show();
@@ -379,7 +379,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
         var win = $win.data('window');
         if (win) {
             win.close(true);
-        } 
+        }
     };
 
     /**
@@ -401,6 +401,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
         $elms = $elms || $('[data-module=window]');
         $elms.each(function () {
             var $elm = $(this),
+                options = $elm.attr('data-options'),
                 url = $elm.attr('data-url'),
                 width = $elm.attr('data-width'),
                 height = $elm.attr('data-height'),
@@ -414,19 +415,24 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
                 onAfterClose = $elm.attr('data-onAfterClose'),
                 data = $elm.data('window');
 
-            onOk = onOk && onOk.length > 0 ? eval('(0,'+onOk+')') : $.noop;
+            onOk = onOk && onOk.length > 0 ? eval('(0,' + onOk + ')') : $.noop;
             onClose = onClose && onClose.length > 0 ? eval('(0,' + onClose + ')') : $.noop;
-            onAfterClose = onAfterClose && onAfterClose.length > 0 ? eval('(0,'+onAfterClose+')') : $.noop;
+            onAfterClose = onAfterClose && onAfterClose.length > 0 ? eval('(0,' + onAfterClose + ')') : $.noop;
 
-            var options = {
-                url: url,
-                title: title,
-                content: content,
-                width: width && width.length > 0 ? parseInt(width) : 680,
-                height: height && height.length > 0 ? parseInt(height) : 480,
-                showFooter: showFooter && showFooter == 'false' ? false : true,
-                iframe: iframe && iframe == 'false' ? false : true,
-                btns: buttons && buttons.length > 0 ? eval('(0,' + buttons + ')') : []
+
+            if (options && options.length > 0) {
+                options = eval('(0,' + options + ')');
+            } else {
+                options = {
+                    url: url,
+                    title: title,
+                    content: content,
+                    width: width && width.length > 0 ? parseInt(width) : 680,
+                    height: height && height.length > 0 ? parseInt(height) : 480,
+                    showFooter: showFooter && showFooter == 'false' ? false : true,
+                    iframe: iframe && iframe == 'false' ? false : true,
+                    btns: buttons && buttons.length > 0 ? eval('(0,' + buttons + ')') : []
+                }
             }
 
 
