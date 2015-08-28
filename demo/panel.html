@@ -127,20 +127,20 @@ function slideUp() {
 
             <hr />
             <h3>自定义</h3>
-
-            <div  style="position: relative;border:1px solid #ebebeb;height:300px;">
-                <div class="k-panel" id="panel">
-                    <div class="k-panel-head">
-                        <h3 class="k-panel-title ">这是标题
+            <div class="bs-example bs-example-padded-bottom">
+                <div style="position: relative;  height: 300px;">
+                    <div class="k-panel" id="panel">
+                        <div class="k-panel-head">
+                            <h3 class="k-panel-title ">这是标题
                             <span class="fa fa-angle-double-up" role="slideup"></span>
-                        </h3>
-                    </div>
-                    <div class="k-panel-body">
-                        这是内容，可尝试拖动调整面板大小
+                            </h3>
+                        </div>
+                        <div class="k-panel-body">
+                            这是内容，可尝试拖动调整面板大小
+                        </div>
                     </div>
                 </div>
             </div>
-
             <h3>初始化</h3>
             <div class="highlight">
                 <pre>
@@ -255,9 +255,9 @@ panel.on('slideUp', function () {
             var panel = new KM.Panel($('#panel'), {
                 width: 400,
                 height: 100,
-                resizable:{
+                resizable: {
                     enabled: true,
-                    cover:true,
+                    cover: true,
                     callback: {
                         resize: function (info) {
                             console.log(info)
