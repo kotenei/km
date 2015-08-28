@@ -10,110 +10,327 @@
     <link href="demo.css" rel="stylesheet" />
 </head>
 <body class="">
-    <div class="k-layout" id="l1" data-module="layout">
-        <div class="k-panel k-panel-top" data-type="top">
-            <div class="k-panel-head">
-                <h3 class="k-panel-title ">顶部
-                    <span class="fa fa-angle-double-up" role="hide" data-type="top"></span>
-                </h3>
-            </div>
-            <div class="k-panel-body">
-                顶部内容
-            </div>
-        </div>
-        <div class="k-panel k-panel-left" data-type="left">
-            <div class="k-panel-head">
-                <h3 class="k-panel-title ">左侧
-                    <span class="fa fa-angle-double-left" role="hide" data-type="left"></span>
-                </h3>
-            </div>
-            <div class="k-panel-body">
-                左侧内容
-            </div>
-        </div>
-        <div class="k-panel k-panel-center" data-type="center">
-            <div class="k-layout" id="l2">
-                <div class="k-panel k-panel-top" data-type="top">
-                    <div class="k-panel-head">
-                        <h3 class="k-panel-title ">顶部
-                    <span class="fa fa-angle-double-up" role="hide" data-type="top"></span>
-                        </h3>
-                    </div>
-                    <div class="k-panel-body">
-                        顶部内容
-                    </div>
-                </div>
-                <div class="k-panel k-panel-left" data-type="left">
-                    <div class="k-panel-head">
-                        <h3 class="k-panel-title ">左侧
-                    <span class="fa fa-angle-double-left" role="hide" data-type="left"></span>
-                        </h3>
-                    </div>
-                    <div class="k-panel-body">
-                        左侧内容
-                    </div>
-                </div>
-                <div class="k-panel k-panel-center" data-type="center">
-                </div>
-                <div class="k-panel k-panel-right" data-type="right">
-                    <div class="k-panel-head">
-                        <h3 class="k-panel-title ">右侧
-                    <span class="fa fa-angle-double-right" role="hide" data-type="right"></span>
-                        </h3>
-                    </div>
-                    <div class="k-panel-body">
-                        右侧内容
-                    </div>
-                </div>
-                <div class="k-panel k-panel-bottom" data-type="bottom">
-                    <div class="k-panel-head">
-                        <h3 class="k-panel-title ">底部
-                    <span class="fa fa-angle-double-down" role="hide" data-type="bottom"></span>
-                        </h3>
-                    </div>
-                    <div class="k-panel-body">
-                        底部内容
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="k-panel k-panel-right" data-type="right">
-            <div class="k-panel-head">
-                <h3 class="k-panel-title ">右侧
-                    <span class="fa fa-angle-double-right" role="hide" data-type="right"></span>
-                </h3>
-            </div>
-            <div class="k-panel-body">
-                右侧内容
-            </div>
-        </div>
-        <div class="k-panel k-panel-bottom" data-type="bottom">
-            <div class="k-panel-head">
-                <h3 class="k-panel-title ">底部
-                    <span class="fa fa-angle-double-down" role="hide" data-type="bottom"></span>
-                </h3>
-            </div>
-            <div class="k-panel-body">
-                底部内容
-            </div>
+    <div class="header">
+        <div class="wrap">
+            <ul class="nav-list">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="###" class="active">demo</a></li>
+            </ul>
         </div>
     </div>
+    <div class="main wrap">
+        <ul class="demo-nav-list" id="navList">
+        </ul>
+        <script type="text/javascript" src="nav.js"></script>
+        <script type="text/javascript">
+            nav(document.getElementById('navList'), 'layout');
+        </script>
+        <div class="demo-container">
+            <h1 class="page-header">布局</h1>
+            <div class="bs-example bs-example-padded-bottom">
+                <!--开始-->
+                <div style="height: 600px; overflow: hidden; border: 1px solid #ddd;">
+                    <div class="k-layout" id="l1"
+                        data-module="layout"
+                        data-onshow="show"
+                        data-onhide="hide">
+                        <div class="k-panel k-panel-top" data-type="top">
+                            <div class="k-panel-head">
+                                <h3 class="k-panel-title ">顶部
+                    <span class="fa fa-angle-double-up" role="hide" data-type="top"></span>
+                                </h3>
+                            </div>
+                            <div class="k-panel-body">
+                                顶部内容
+                            </div>
+                        </div>
+                        <div class="k-panel k-panel-left" data-type="left">
+                            <div class="k-panel-head">
+                                <h3 class="k-panel-title ">左侧
+                    <span class="fa fa-angle-double-left" role="hide" data-type="left"></span>
+                                </h3>
+                            </div>
+                            <div class="k-panel-body">
+                                左侧内容
+                            </div>
+                        </div>
+                        <div class="k-panel k-panel-center" data-type="center">
+                            <div class="k-layout" id="l2"
+                                data-module="layout"
+                                data-onshow="show"
+                                data-onhide="hide">
+                                <div class="k-panel k-panel-top" data-type="top">
+                                    <div class="k-panel-head">
+                                        <h3 class="k-panel-title ">顶部
+                    <span class="fa fa-angle-double-up" role="hide" data-type="top"></span>
+                                        </h3>
+                                    </div>
+                                    <div class="k-panel-body">
+                                        顶部内容
+                                    </div>
+                                </div>
+                                <div class="k-panel k-panel-left" data-type="left">
+                                    <div class="k-panel-head">
+                                        <h3 class="k-panel-title ">左侧
+                    <span class="fa fa-angle-double-left" role="hide" data-type="left"></span>
+                                        </h3>
+                                    </div>
+                                    <div class="k-panel-body">
+                                        左侧内容
+                                    </div>
+                                </div>
+                                <div class="k-panel k-panel-center" data-type="center">
+                                </div>
+                                <div class="k-panel k-panel-right" data-type="right">
+                                    <div class="k-panel-head">
+                                        <h3 class="k-panel-title ">右侧
+                    <span class="fa fa-angle-double-right" role="hide" data-type="right"></span>
+                                        </h3>
+                                    </div>
+                                    <div class="k-panel-body">
+                                        右侧内容
+                                    </div>
+                                </div>
+                                <div class="k-panel k-panel-bottom" data-type="bottom">
+                                    <div class="k-panel-head">
+                                        <h3 class="k-panel-title ">底部
+                    <span class="fa fa-angle-double-down" role="hide" data-type="bottom"></span>
+                                        </h3>
+                                    </div>
+                                    <div class="k-panel-body">
+                                        底部内容
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="k-panel k-panel-right" data-type="right">
+                            <div class="k-panel-head">
+                                <h3 class="k-panel-title ">右侧
+                    <span class="fa fa-angle-double-right" role="hide" data-type="right"></span>
+                                </h3>
+                            </div>
+                            <div class="k-panel-body">
+                                右侧内容
+                            </div>
+                        </div>
+                        <div class="k-panel k-panel-bottom" data-type="bottom">
+                            <div class="k-panel-head">
+                                <h3 class="k-panel-title ">底部
+                    <span class="fa fa-angle-double-down" role="hide" data-type="bottom"></span>
+                                </h3>
+                            </div>
+                            <div class="k-panel-body">
+                                底部内容
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--结束-->
+            </div>
+            <h3>全局调用</h3>
+            <div class="highlight">
+                <pre>
+                    <code data-lang="js" class="language-js">
+//$elms为带有data-module=layout属性的元素，可不填（不填性能会低下）
+KM.Layout.Global($elms);
+                    </code>
+                </pre>
+            </div>
+
+            <h3>HTML属性设置</h3>
+            <table class="table table-bordered table-striped js-options-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>设置值</th>
+                        <th style="width: 60%;">描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>data-module</td>
+                        <td>layout</td>
+                        <td>告诉程序当前html元素需要初始化为layout模块
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>data-options</td>
+                        <td>"{ resizeMin : 5 ... }"
+                                
+                        </td>
+                        <td>初始化参数，参照下表 options 说明
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>data-onshow</td>
+                        <td>函数名称</td>
+                        <td>面板显示的回调函数</td>
+                    </tr>
+                    <tr>
+                        <td>data-onhide</td>
+                        <td>函数名称</td>
+                        <td>面板隐藏的回调函数</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>示例代码</h3>
+            <p><code>注：显示/隐藏面板需要加上 role="hide" 属性，data-type 属性是区分面板的方向，必须加上。</code></p>
+            <pre>
+                <code>
+
+&lt;!--layout结构开始--&gt;
+&lt;div class="k-layout"
+        data-module="layout"
+        data-options="{ resizeMin:5 }"
+        data-onshow="show"
+        data-onhide="hide" &gt;
+
+    &lt;!--panel结构开始--&gt;
+    &lt;div class="k-panel k-panel-top" data-type="top"&gt;
+        &lt;div class="k-panel-head"&gt;
+            &lt;h3 class="k-panel-title "&gt;顶部    
+                &lt;span class="fa fa-angle-double-up" role="hide" data-type="top"&gt;&lt;/span&gt;
+            &lt;/h3&gt;
+        &lt;/div&gt;
+        &lt;div class="k-panel-body"&gt;
+            顶部内容
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;!--panel结构结束--&gt;
+
+    ...
+
+&lt;/div&gt;
+&lt;!--layout结构结束--&gt;  
+                    
+                
+      
+                                
+//面板显示或隐藏的函数声明         
+function show(info) {
+    console.log('show')
+}
+
+function hide(info) {
+    console.log('hide')
+}      
+
+                </code>
+            </pre>
+
+            <hr />
+            <h3>自定义</h3>
+            <div class="bs-example bs-example-padded-bottom">
+                <div style="height: 400px; overflow: hidden; border: 1px solid #ddd;">
+                    <div class="k-layout" id="layout">
+
+                        <div class="k-panel k-panel-top" data-type="top" style="background: #797C80;">
+                            <div class="k-panel-body" style="color: white;">
+                                上侧内容
+                            </div>
+                        </div>
+
+                        <div class="k-panel k-panel-left" data-type="left" style="background: green;">
+                            <div class="k-panel-body" style="color: white;">
+                                左侧内容
+                            </div>
+                        </div>
+
+                        <div class="k-panel k-panel-right" data-type="right" style="background: red;">
+                            <div class="k-panel-body" style="color: white;">
+                                右侧内容
+                            </div>
+                        </div>
+
+                        <div class="k-panel k-panel-bottom" data-type="bottom" style="background: black;">
+                            <div class="k-panel-body" style="color: white;">
+                                下侧内容
+                            </div>
+                        </div>
+
+                        <div class="k-panel k-panel-center" data-type="center" style="background: blue;">
+                            <div class="k-panel-body" style="color: white;">
+                                中间内容
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <h3>初始化</h3>
+            <div class="highlight">
+                <pre>
+                    <code data-lang="js" class="language-js">
+var layout = new KM.Layout($elm, options);
+                    </code>
+                </pre>
+            </div>
+
+            <h3>参数 options</h3>
+            <table class="table table-bordered table-striped js-options-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>类型</th>
+                        <th style="width: 100px;">默认值</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>resizeMin</td>
+                        <td>int</td>
+                        <td>5</td>
+                        <td>调整面板大小时的最小值</td>
+                    </tr>
+                    <tr>
+                        <td>cache</td>
+                        <td>boolean</td>
+                        <td>false</td>
+                        <td>是否缓存当前面板状态 <code>（暂未实现）</code> </td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3>事件添加</h3>
+            <pre>
+                <code>
+//面板显示时的回调函数
+layout.on('show',function(info){
+    info: 当前面板的相关信息，包含属性有 width , height , left , top , $panel , $expand 等，详情自使用 console.log 观察
+});
+
+//面板隐藏时的回调函数
+layout.on('hide',function(info){
+    info:参数如上所述              
+});
+                </code>
+            </pre>
+        </div>
+    </div>
+
 
 
     <script type="text/javascript" src="vendor/require/require.js"></script>
     <script type="text/javascript" src="main.js"></script>
     <script type="text/javascript">
-        require(['KM'], function (KM) {
 
+        function show(info) {
+            console.log('show')
+        }
+
+        function hide(info) {
+            console.log('hide')
+        }
+
+        require(['jquery', 'KM'], function ($, KM) {
             KM.Layout.Global();
 
-            //var layout = new KM.Layout($('#l1'), {});
+            var layout = new KM.Layout($('#layout'), {
+                resizeMin: 38
+            });
 
-            //layout.on('hide', function (panelInfo) {
-            //    console.log(panelInfo)
-            //})
-
-            //var layout2 = new KM.Layout($('#l2'), {});
         });
     </script>
 </body>

@@ -10,58 +10,207 @@
     <link href="demo.css" rel="stylesheet" />
 </head>
 <body style="">
-
-    <div class="k-panel" 
-         data-module="panel"
-         data-options="{
-            width:400,
-            height:100,
-            resizable:{
-                enabled: true,
-                cover:true,
-                callback:{
-                    resize:function(css){
-                        console.log(css);
-                    },
-                    stop:function(css){
-                        console.log(css);
-                    }
-                }
-            }
-         }">
-        <div class="k-panel-head">
-            <h3 class="k-panel-title ">
-                这是标题
-                <span class="fa fa-angle-double-up" role="slideup"></span>
-            </h3>
+    <div class="header">
+        <div class="wrap">
+            <ul class="nav-list">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="###" class="active">demo</a></li>
+            </ul>
         </div>
-        <div class="k-panel-body">
-            这是内容
+    </div>
+
+    <div class="main wrap">
+        <ul class="demo-nav-list" id="navList">
+        </ul>
+        <script type="text/javascript" src="nav.js"></script>
+        <script type="text/javascript">
+            nav(document.getElementById('navList'), 'panel');
+        </script>
+
+        <div class="demo-container">
+            <h1 class="page-header">面板</h1>
+            <div class="bs-example bs-example-padded-bottom" style="position: relative;">
+                <div class="k-panel"
+                    data-module="panel"
+                    data-options="{height:200}"
+                    data-onslidedown="slideDown"
+                    data-onslideup="slideUp">
+                    <div class="k-panel-head">
+                        <h3 class="k-panel-title ">这是标题
+                            <span class="fa fa-angle-double-up" role="slideup"></span>
+                        </h3>
+                    </div>
+                    <div class="k-panel-body">
+                        这是内容
+                    </div>
+                </div>
+            </div>
+
+            <h3>全局调用</h3>
+            <div class="highlight">
+                <pre>
+                    <code data-lang="js" class="language-js">
+//$elms为带有data-module=panel属性的元素，可不填（不填性能会低下）
+KM.Panel.Global($elms);
+                    </code>
+                </pre>
+            </div>
+
+            <h3>HTML属性设置</h3>
+            <table class="table table-bordered table-striped js-options-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>设置值</th>
+                        <th style="width: 60%;">描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>data-module</td>
+                        <td>panel</td>
+                        <td>告诉程序当前html元素需要初始化为panel模块
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>data-options</td>
+                        <td>"{ width : 'auto',height:'auto' ... }"
+                                
+                        </td>
+                        <td>初始化参数，参照下表 options 说明
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>data-onslidedown</td>
+                        <td>函数名称</td>
+                        <td>收起面板的回调函数</td>
+                    </tr>
+                    <tr>
+                        <td>data-onslideup</td>
+                        <td>函数名称</td>
+                        <td>展开面板的回调函数</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>示例代码</h3>
+            <!--<p><code>注，展开或者收起面板需要加上 role="slideup" 或者 role="slidedown" 属性</code></p>-->
+            <pre>
+                <code>
+&lt;div class="k-panel"
+    data-module="panel"
+    data-options="{height:200}"
+    data-onslidedown="slideDown"
+    data-onslideup="slideUp"&gt;
+    &lt;div class="k-panel-head"&gt;
+        &lt;h3 class="k-panel-title "&gt;这是标题
+            &lt;span class="fa fa-angle-double-up" role="slideup"&gt;&lt;/span&gt;
+        &lt;/h3&gt;
+    &lt;/div&gt;
+    &lt;div class="k-panel-body"&gt;
+        这是内容
+    &lt;/div&gt;
+&lt;/div&gt;
+
+
+
+//展开或者收起的回调函数
+function slideDown() {
+    alert('slideDown');
+}
+
+function slideUp() {
+    alert('slideUp');
+}
+                </code>
+            </pre>
+
+            <hr />
+            <h3>自定义</h3>
+
+            <div  style="position: relative;">
+                <div class="k-panel" id="panel">
+                    <div class="k-panel-head">
+                        <h3 class="k-panel-title ">这是标题
+                            <span class="fa fa-angle-double-up" role="slideup"></span>
+                        </h3>
+                    </div>
+                    <div class="k-panel-body">
+                        这是内容，可试试拖放
+                    </div>
+                </div>
+            </div>
+
+            <h3>初始化</h3>
+            <div class="highlight">
+                <pre>
+                    <code data-lang="js" class="language-js">
+var panel = new KM.Layout($elm, options);
+                    </code>
+                </pre>
+            </div>
+
+
+            <h3>参数 options</h3>
+            <table class="table table-bordered table-striped js-options-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>类型</th>
+                        <th style="width: 100px;">默认值</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>width</td>
+                        <td>int/string</td>
+                        <td>'auto'</td>
+                        <td>面板宽度</td>
+                    </tr>
+                    <tr>
+                        <td>height</td>
+                        <td>int/string</td>
+                        <td>'auto'</td>
+                        <td>面板高度</td>
+                    </tr>
+                </tbody>
+            </table>
+
         </div>
     </div>
 
     <script type="text/javascript" src="vendor/require/require.js"></script>
     <script type="text/javascript" src="main.js"></script>
     <script type="text/javascript">
+
+        function slideDown() {
+            alert('slideDown');
+        }
+
+        function slideUp() {
+            alert('slideUp');
+        }
+
         require(['KM'], function (KM) {
-            //var panel = new KM.Panel($('.k-panel'), {
-            //    width: 400,
-            //    height: 100,
-            //    resizable:{
-            //        enabled: true,
-            //        cover:true,
-            //        callback: {
-            //            resize: function (css) {
-            //                //console.log(css)
-            //            },
-            //            stop: function (css) {
-            //                console.log(css)
-            //            }
-            //        }
-            //    },
-            //});
+            var panel = new KM.Panel($('#panel'), {
+                width: 400,
+                height: 100,
+                resizable:{
+                    enabled: true,
+                    cover:true,
+                    callback: {
+                        resize: function (info) {
+                            console.log(info)
+                        },
+                        stop: function (info) {
+                            console.log(info)
+                        }
+                    }
+                },
+            });
             KM.Panel.Global();
-          
+
         });
     </script>
 </body>

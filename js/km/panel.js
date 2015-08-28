@@ -145,7 +145,7 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
                 }
             });
 
-            this._event.slideDown.call();
+            this._event.slideDown.call(this);
 
             return;
         }
@@ -176,7 +176,7 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
                 }
             });
 
-            this._event.slideUp.call();
+            this._event.slideUp.call(this);
 
             return;
         }
@@ -191,8 +191,8 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
         $elms.each(function () {
             var $el = $(this),
                 options = $el.attr('data-options'),
-                slideDown = $el.attr('data-onslidedown'),
-                slideUp = $el.attr('data-onslideup'),
+                onSlideDown = $el.attr('data-onslidedown'),
+                onSlideUp = $el.attr('data-onslideup'),
                 data = $el.data('panel');
 
             if (options && options.length > 0) {
@@ -200,16 +200,16 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
             }
 
 
-            slideDown = slideDown && slideDown.length > 0 ? eval('(0,' + slideDown + ')') : $.noop;
-            slideUp = slideUp && slideUp.length > 0 ? eval('(0,' + slideUp + ')') : $.noop;
+            onSlideDown = onSlideDown && onSlideDown.length > 0 ? eval('(0,' + onSlideDown + ')') : $.noop;
+            onSlideUp = onSlideUp && onSlideUp.length > 0 ? eval('(0,' + onSlideUp + ')') : $.noop;
 
             if (!data) {
                 data = new Panel($el, options);
 
                 data.on('slideDown', function () {
-                    slideDown.call(this);
+                    onSlideDown.call(this);
                 }).on('slideUp', function () {
-                    slideUp.call(this);
+                    onSlideUp.call(this);
                 });
 
                 $el.data('panel', data);

@@ -14,7 +14,13 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
         this.$layout = $elm;
         this.options = $.extend(true, {
             cache: false,
-            resizeMin: 5
+            resizeMin: 5,
+            panel: {
+                left: { width: 100 },
+                top: { height: 100 },
+                right: { width: 100 },
+                bottom: { height: 100 }
+            }
         }, options);
         this.$parent = this.$layout.parent();
         this.init();
@@ -395,24 +401,23 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
         $elms.each(function () {
             var $el = $(this),
                 options = $el.attr('data-options'),
-                show = $el.attr('data-onshow'),
-                hide=$el.attr('data-onhide'),
+                onShow = $el.attr('data-onshow'),
+                onHide = $el.attr('data-onhide'),
                 data = $el.data('layout');
 
             if (options && options.length > 0) {
                 options = eval('(0,' + options + ')');
             }
 
-            show = show && show.length > 0 ? eval('(0,' + show + ')') : $.noop;
-            hide = hide && hide.length > 0 ? eval('(0,' + hide + ')') : $.noop;
+            onShow = onShow && onShow.length > 0 ? eval('(0,' + onShow + ')') : $.noop;
+            onHide = onHide && onHide.length > 0 ? eval('(0,' + onHide + ')') : $.noop;
 
             if (!data) {
                 data = new Layout($el, options);
-
                 data.on('show', function (info) {
-                    show.call(this, info);
+                    onShow.call(this, info);
                 }).on('hide', function (info) {
-                    hide.call(this, info);
+                    onHide.call(this, info);
                 });
 
                 $el.data('layout', data);
