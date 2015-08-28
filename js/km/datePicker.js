@@ -1275,7 +1275,6 @@ define('km/datePicker', ['jquery'], function ($) {
                 };
             }
 
-            console.log(options)
 
             if (!data) {
                 data = new DatePicker($this, options);
