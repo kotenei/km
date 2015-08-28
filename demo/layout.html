@@ -296,12 +296,12 @@ var layout = new KM.Layout($elm, options);
             <h3>事件添加</h3>
             <pre>
                 <code>
-//面板显示时的回调函数
+//面板显示时的事件函数
 layout.on('show',function(info){
     info: 当前面板的相关信息，包含属性有 width , height , left , top , $panel , $expand 等，详情自使用 console.log 观察
 });
 
-//面板隐藏时的回调函数
+//面板隐藏时的事件函数
 layout.on('hide',function(info){
     info:参数如上所述              
 });

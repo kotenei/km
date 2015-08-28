@@ -15,7 +15,7 @@ define('km/resizable', ['jquery'], function ($) {
     var Resizable = function ($elm, options) {
         this.$elm = $elm;
         this.options = $.extend(true, {
-            $range: null,
+            $range: this.$elm.parent(),
             minBar: false,
             scale: false,
             cover: true,
@@ -195,6 +195,7 @@ define('km/resizable', ['jquery'], function ($) {
             case 'left':
                 css.top = resizeParams.top;
                 css.height = resizeParams.height;
+
                 if (moveCoord.x <= 0) {
                     css.left = 0;
                     css.width = resizeParams.width + resizeParams.left;
@@ -228,6 +229,7 @@ define('km/resizable', ['jquery'], function ($) {
                 css.width = resizeParams.width - (this.originalCoord.x - mouseCoord.x);
                 css.height = resizeParams.height;
                 css.top = resizeParams.top;
+                css.left = resizeParams.left;
                 if ((css.width + resizeParams.left) >= rw) {
                     css.width = rw;
                 }
@@ -373,25 +375,25 @@ define('km/resizable', ['jquery'], function ($) {
         $elms.each(function () {
             var $el = $(this),
                 options = $el.attr('data-options'),
-                resize = $el.attr('data-onresize'),
-                stop = $el.attr('data-onstop'),
+                onResize = $el.attr('data-onresize'),
+                onStop = $el.attr('data-onstop'),
                 data = $el.data('resizable');
 
             if (options && options.length > 0) {
                 options = eval('(0,' + options + ')');
             }
 
-            resize = resize && resize.length > 0 ? eval('(0,' + resize + ')') : $.noop;
-            stop = stop && stop.length > 0 ? eval('(0,' + stop + ')') : $.noop;
+            onResize = onResize && onResize.length > 0 ? eval('(0,' + onResize + ')') : $.noop;
+            onStop = onStop && onStop.length > 0 ? eval('(0,' + onStop + ')') : $.noop;
 
             if (!data) {
 
                 data = new Resizable($el, options);
 
                 data.on('resize', function (css) {
-                    resize.call(this, css);
+                    onResize.call(this, css);
                 }).on('stop', function (css) {
-                    stop.call(this, css);
+                    onStop.call(this, css);
                 });
 
                 $el.data('resizable', data);

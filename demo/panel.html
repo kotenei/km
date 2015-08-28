@@ -128,7 +128,7 @@ function slideUp() {
             <hr />
             <h3>自定义</h3>
 
-            <div  style="position: relative;">
+            <div  style="position: relative;border:1px solid #ebebeb;height:300px;">
                 <div class="k-panel" id="panel">
                     <div class="k-panel-head">
                         <h3 class="k-panel-title ">这是标题
@@ -136,7 +136,7 @@ function slideUp() {
                         </h3>
                     </div>
                     <div class="k-panel-body">
-                        这是内容，可试试拖放
+                        这是内容，可尝试拖动调整面板大小
                     </div>
                 </div>
             </div>
@@ -174,9 +174,65 @@ var panel = new KM.Layout($elm, options);
                         <td>'auto'</td>
                         <td>面板高度</td>
                     </tr>
+                    <tr>
+                        <td>minWidth</td>
+                        <td>int</td>
+                        <td>100</td>
+                        <td>最小宽度</td>
+                    </tr>
+                    <tr>
+                        <td>minHeight</td>
+                        <td>int</td>
+                        <td>100</td>
+                        <td>最小高度</td>
+                    </tr>
+                    <tr>
+                        <td>resizable</td>
+                        <td>object</td>
+                        <td>
+                            <pre>
+                                <code>
+resizable: {
+    enabled: false,
+    cover: false,
+    border: {
+        left: true,
+        top: true,
+        right: true,
+        bottom: true
+    },
+    callback: {
+        resize: $.noop,
+        stop: $.noop
+    }
+}
+                                </code>
+                            </pre>
+                        </td>
+                        <td>
+                            <p><b>调整大小的设置</b></p>
+                            <p><b>enabled：</b>是否启用调整大小，默认为false</p>
+                            <p><b>cover：</b>调整大小时是否启用覆盖层，默认为启用</p>
+                            <p><b>border：</b>边框的四条边是否可拖动来调整大小，默认为全部可拖动</p>
+                            <p><b>callback：</b>调整大小时的回调函数，resize：拖动时触发，stop：停止拖动时触发，函数会返回当前面板相关信息info，如配置 resize:function( info ){ },相关说明请参考 <a href="resizable.html"><code>调整大小DEMO</code></a></p>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
+            <h3>事件添加</h3>
+            <pre>
+                <code>
+//面板展开时的事件函数
+panel.on('slideDown', function () {
+    alert('slideDown');
+});
 
+//面板收起时的事件函数
+panel.on('slideUp', function () {
+    alert('slideUp');
+});
+                </code>
+            </pre>
         </div>
     </div>
 
@@ -193,6 +249,9 @@ var panel = new KM.Layout($elm, options);
         }
 
         require(['KM'], function (KM) {
+
+            KM.Panel.Global();
+
             var panel = new KM.Panel($('#panel'), {
                 width: 400,
                 height: 100,
@@ -207,10 +266,16 @@ var panel = new KM.Layout($elm, options);
                             console.log(info)
                         }
                     }
-                },
+                }
             });
-            KM.Panel.Global();
 
+            panel.on('slideDown', function () {
+                //alert('slideDown');
+            });
+
+            panel.on('slideUp', function () {
+                //alert('slideUp');
+            });
         });
     </script>
 </body>

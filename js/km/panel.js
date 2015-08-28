@@ -58,7 +58,8 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
                 border: this.options.resizable.border,
                 cover: this.options.resizable.cover,
                 minWidth: this.options.minWidth,
-                minHeight: this.options.minHeight
+                minHeight: this.options.minHeight,
+                $range:this.$panel.parent()
             });
         }
 
