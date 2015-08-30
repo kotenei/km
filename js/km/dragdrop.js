@@ -5,6 +5,8 @@
  */
 define('km/dragdrop', ['jquery'], function ($) {
 
+    var zIndex = 1000;
+
     /**
      * 拖放模块
      * @constructor
@@ -26,7 +28,7 @@ define('km/dragdrop', ['jquery'], function ($) {
                 start: $.noop,
                 move: $.noop,
                 stop: $.noop,
-                resize:$.noop
+                resize: $.noop
             }
         }, options);
 
@@ -58,7 +60,7 @@ define('km/dragdrop', ['jquery'], function ($) {
         if (!this.$layer) { return; }
         if (this.$range) { this.$range.css("position", "relative"); }
         this.$handle = this.$handle || this.$layer;
-        this.$layer.css({ cursor: "move", position: 'absolute' });
+        this.$layer.css({ cursor: "move", position: 'absolute', zIndex: zIndex });
 
         if (this.options.resizable) {
             this.$layer.append('<span class="k-resizable k-resizable-topLeft" data-type="topLeft"></span>');
@@ -110,6 +112,8 @@ define('km/dragdrop', ['jquery'], function ($) {
         var self = this;
 
         this.$handle.on('mousedown.dragdrop', function (e) {
+            zIndex++;
+            self.$layer.css('zIndex', zIndex);
             e.stopPropagation();
             e.preventDefault();
             self.start(e);
@@ -213,10 +217,13 @@ define('km/dragdrop', ['jquery'], function ($) {
             if (moveCoord.x > rightBoundary) { moveCoord.x = rightBoundary; }
             if (moveCoord.y > bottomBoundary) { moveCoord.y = bottomBoundary; }
         }
+
         this.setPosition(moveCoord);
 
+
+
         if ($.isFunction(this.options.callback.move)) {
-            this.options.callback.move(moveCoord);
+            this.options.callback.move.call(this, moveCoord, $layer);
         }
 
     };
@@ -422,7 +429,7 @@ define('km/dragdrop', ['jquery'], function ($) {
         } else {
             return width * ratio;
         }
-    }
+    };
 
 
     /**
@@ -470,7 +477,14 @@ define('km/dragdrop', ['jquery'], function ($) {
                 top: moveCoord.y
             });
         }
-    }
+    };
+
+
+    DragDrop.draggable = function ($elms) {
+
+    };
+
+    DragDrop.droppable = function ($elms) { };
 
     return DragDrop;
 

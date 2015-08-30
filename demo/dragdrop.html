@@ -31,6 +31,7 @@
                 <div id="feedback" style="height: 30px;"></div>
                 <div id="panel" style="width: 500px; height: 300px; border: 1px solid red; margin: 0 auto;">
                     <div id="layer" style="width: 100px; height: 100px; background: red;"></div>
+                    <div id="layer2" style="width: 100px; height: 100px; background: green;"></div>
                 </div>
             </div>
             <h3>初始化</h3>
@@ -125,10 +126,11 @@ var dragdrop=new KM.Dragdrop(options);
     <script type="text/javascript">
         require(['KM'], function (KM) {
             var $feedback = $('#feedback');
+
             var dragdrop = new KM.Dragdrop({
                 $range: $('#panel'),
                 $layer: $('#layer'),
-                resizable: true,
+                resizable: false,
                 callback: {
                     start: function () {
                         $feedback.html('start');
@@ -147,6 +149,16 @@ var dragdrop=new KM.Dragdrop(options);
                     }
                 }
             });
+
+            var dragdrop2 = new KM.Dragdrop({
+                $range: $('#panel'),
+                $layer: $('#layer2'),
+                callback: {
+                    stop: function (e,$layer) {
+                        console.log($layer)
+                    }
+                }
+            })
         });
     </script>
 </body>
