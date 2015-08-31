@@ -29,9 +29,22 @@
             <h1 class="page-header">拖放</h1>
             <div class="bs-example bs-example-padded-bottom">
                 <div id="feedback" style="height: 30px;"></div>
-                <div id="panel" style="width: 500px; height: 300px; border: 1px solid red; margin: 0 auto;">
-                    <div id="layer" style="width: 100px; height: 100px; background: red;"></div>
-                    <div id="layer2" style="width: 100px; height: 100px; background: green;"></div>
+                <div id="panel" style="width: 500px; height: 300px; border: 1px solid red; margin: 0 auto;position:relative;">
+                    <div id="layer" style="width: 30px; height: 30px; background: red; position: absolute;"></div>
+                    <div id="layer2" style="width: 30px; height: 30px; background: green; position: absolute; top: 120px;"></div>
+
+                    <div id="droppable" data-module="droppable" style="border:1px solid red;width:120px;height:120px;right:120px;top:80px;position:absolute;">
+
+                        <p>父级</p>
+
+
+                        <div id="sub" data-module="droppable" style="width:80px;height:80px; border:1px solid ;margin-left:10px;">
+
+                            <p>子级</p>
+
+                        </div>
+
+                    </div>
                 </div>
             </div>
             <h3>初始化</h3>
@@ -45,7 +58,7 @@ var dragdrop=new KM.Dragdrop(options);
                 <thead>
                     <tr>
                         <th>名称</th>
-                        <th style="width:150px;">类型</th>
+                        <th style="width: 150px;">类型</th>
                         <th style="width: 100px;">默认值</th>
                         <th>描述</th>
                     </tr>
@@ -130,7 +143,6 @@ var dragdrop=new KM.Dragdrop(options);
             var dragdrop = new KM.Dragdrop({
                 $range: $('#panel'),
                 $layer: $('#layer'),
-                resizable: false,
                 callback: {
                     start: function () {
                         $feedback.html('start');
@@ -154,11 +166,25 @@ var dragdrop=new KM.Dragdrop(options);
                 $range: $('#panel'),
                 $layer: $('#layer2'),
                 callback: {
-                    stop: function (e,$layer) {
+                    stop: function (e, $layer) {
                         console.log($layer)
                     }
                 }
-            })
+            });
+
+
+           
+
+            //var left = 0;
+            //parent = $('#sub').parent()[0];
+
+            //do {
+            //    left += parent.offsetLeft - parent.scrollLeft;
+            //} while ((parent = parent.offsetParent));
+
+            //console.log(left)
+
+            KM.Dragdrop.droppable();
         });
     </script>
 </body>

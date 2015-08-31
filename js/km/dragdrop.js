@@ -5,7 +5,59 @@
  */
 define('km/dragdrop', ['jquery'], function ($) {
 
-    var zIndex = 1000;
+    var zIndex = 1000,
+        droppables = [],
+        sortables = [],
+        method = {
+            getDropInfo: function () {
+
+            },
+            move: function (moveCoord) {
+
+                var left,
+                    top,
+                    width,
+                    height;
+
+                if (droppables.length == 0) {
+                    return;
+                }
+
+                for (var i = 0, item; i < droppables.length; i++) {
+                    item = droppables[i];
+
+                    left = item.$drop.offset().left-this.$range.offset().left;
+                    top = item.$drop.offset().top-this.$range.offset().top;
+                    width = item.$drop.outerWidth();
+                    height = item.$drop.outerHeight();
+
+                    if (left <= moveCoord.x + this.dragParms.width / 2
+                        && top <= moveCoord.y + this.dragParms.height / 2
+                        && left + width >= moveCoord.x + this.dragParms.width / 2
+                        && top + height >= moveCoord.y + this.dragParms.height / 2) {
+                        item.isOver = true;
+                        item.isOut = false;
+                        console.log(item.$drop)
+                        if (item.isOver && !item.hasOverCallback) {
+                            
+                            item.hasOverCallback = true;
+                        }
+
+                    } else {
+                        item.isOver = false;
+                        item.isOut = true;
+                        item.hasOverCallback = false;
+                    }
+
+
+                    
+
+                }
+            },
+            out: function () {
+
+            }
+        };
 
     /**
      * 拖放模块
@@ -114,6 +166,12 @@ define('km/dragdrop', ['jquery'], function ($) {
         this.$handle.on('mousedown.dragdrop', function (e) {
             zIndex++;
             self.$layer.css('zIndex', zIndex);
+            self.dragParms = {
+                left: parseInt(self.$layer.position().left),
+                top: parseInt(self.$layer.position().top),
+                width: parseInt(self.$layer.outerWidth()),
+                height: parseInt(self.$layer.outerHeight())
+            };
             e.stopPropagation();
             e.preventDefault();
             self.start(e);
@@ -219,11 +277,11 @@ define('km/dragdrop', ['jquery'], function ($) {
         }
 
         this.setPosition(moveCoord);
-
-
+       
+        method.move.call(this, moveCoord);
 
         if ($.isFunction(this.options.callback.move)) {
-            this.options.callback.move.call(this, moveCoord, $layer);
+            this.options.callback.move.call(this, moveCoord);
         }
 
     };
@@ -480,11 +538,45 @@ define('km/dragdrop', ['jquery'], function ($) {
     };
 
 
-    DragDrop.draggable = function ($elms) {
-
+    DragDrop.draggable = function ($elms, options) {
+        $elms = $elms || $('[data-module=draggable]');
     };
 
-    DragDrop.droppable = function ($elms) { };
+
+    DragDrop.droppable = function ($elms, options) {
+
+        $elms = $elms || $('[data-module=droppable]');
+
+        //options = $.extend(true, {
+        //    greedy: false,
+        //    over: function (e) {
+
+        //    },
+        //    out: function (e) {
+
+        //    },
+        //    drop: function (e) {
+
+        //    }
+        //}, options);
+
+        $elms.each(function () {
+            var $el = $(this);
+
+
+            droppables.push({
+                isOver: false,
+                isOut: true,
+                hasOverCallback:false,
+                $drop: $el
+            });
+
+            //options = $.extend(true, options, settings);
+
+            //draggable.push()
+
+        });
+    };
 
     return DragDrop;
 
