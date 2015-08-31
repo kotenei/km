@@ -23,7 +23,7 @@ define('km/dragdrop', ['jquery'], function ($) {
                     return;
                 }
 
-                for (var i = 0, item; i < droppables.length; i++) {
+                for (var i = droppables.length-1, item; i >=0; i--) {
                     item = droppables[i];
 
                     left = item.$drop.offset().left-this.$range.offset().left;
@@ -35,23 +35,19 @@ define('km/dragdrop', ['jquery'], function ($) {
                         && top <= moveCoord.y + this.dragParms.height / 2
                         && left + width >= moveCoord.x + this.dragParms.width / 2
                         && top + height >= moveCoord.y + this.dragParms.height / 2) {
+
                         item.isOver = true;
                         item.isOut = false;
-                        console.log(item.$drop)
+
                         if (item.isOver && !item.hasOverCallback) {
-                            
                             item.hasOverCallback = true;
                         }
-
+                        break;
                     } else {
                         item.isOver = false;
                         item.isOut = true;
                         item.hasOverCallback = false;
-                    }
-
-
-                    
-
+                    } 
                 }
             },
             out: function () {
