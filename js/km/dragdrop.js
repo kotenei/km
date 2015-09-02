@@ -23,11 +23,11 @@ define('km/dragdrop', ['jquery'], function ($) {
                     return;
                 }
 
-                for (var i = droppables.length-1, item; i >=0; i--) {
+                for (var i = droppables.length - 1, item; i >= 0; i--) {
                     item = droppables[i];
 
-                    left = item.$drop.offset().left-this.$range.offset().left;
-                    top = item.$drop.offset().top-this.$range.offset().top;
+                    left = item.$drop.offset().left - this.$range.offset().left;
+                    top = item.$drop.offset().top - this.$range.offset().top;
                     width = item.$drop.outerWidth();
                     height = item.$drop.outerHeight();
 
@@ -39,15 +39,16 @@ define('km/dragdrop', ['jquery'], function ($) {
                         item.isOver = true;
                         item.isOut = false;
 
-                        if (item.isOver && !item.hasOverCallback) {
+                        if ((item.isOver && !item.hasOverCallback) || this.index != i) {
                             item.hasOverCallback = true;
+                            this.index = i;
                         }
                         break;
                     } else {
                         item.isOver = false;
                         item.isOut = true;
                         item.hasOverCallback = false;
-                    } 
+                    }
                 }
             },
             out: function () {
@@ -273,7 +274,7 @@ define('km/dragdrop', ['jquery'], function ($) {
         }
 
         this.setPosition(moveCoord);
-       
+
         method.move.call(this, moveCoord);
 
         if ($.isFunction(this.options.callback.move)) {
@@ -541,31 +542,29 @@ define('km/dragdrop', ['jquery'], function ($) {
 
     DragDrop.droppable = function ($elms, options) {
 
+        var Droppable = function ($el, options) {
+            this.$el = $el;
+            this.options = $.extend(true, {
+
+            }, options);
+        };
+
+
         $elms = $elms || $('[data-module=droppable]');
 
-        //options = $.extend(true, {
-        //    greedy: false,
-        //    over: function (e) {
-
-        //    },
-        //    out: function (e) {
-
-        //    },
-        //    drop: function (e) {
-
-        //    }
-        //}, options);
 
         $elms.each(function () {
             var $el = $(this);
 
 
-            droppables.push({
-                isOver: false,
-                isOut: true,
-                hasOverCallback:false,
-                $drop: $el
-            });
+            //Droppable drop=new Droppable();
+
+            //droppables.push({
+            //    isOver: false,
+            //    isOut: true,
+            //    hasOverCallback: false,
+            //    $drop: $el
+            //});
 
             //options = $.extend(true, options, settings);
 
