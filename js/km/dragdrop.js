@@ -23,6 +23,7 @@ define('km/dragdrop', ['jquery'], function ($) {
                     return;
                 }
 
+               
                 for (var i = droppables.length - 1, item; i >= 0; i--) {
                     item = droppables[i];
 
@@ -36,18 +37,22 @@ define('km/dragdrop', ['jquery'], function ($) {
                         && left + width >= moveCoord.x + this.dragParms.width / 2
                         && top + height >= moveCoord.y + this.dragParms.height / 2) {
 
-                        item.isOver = true;
-                        item.isOut = false;
 
-                        if ((item.isOver && !item.hasOverCallback) || this.index != i) {
-                            item.hasOverCallback = true;
-                            this.index = i;
+                        if (this.moveItem != item) {
+
+                            if (this.moveItem) {
+
+                            }
+
+                            this.moveItem = item;
                         }
                         break;
                     } else {
                         item.isOver = false;
-                        item.isOut = true;
-                        item.hasOverCallback = false;
+                        if (this.moveItem && this.moveItem == item) {
+                            console.log(this.moveItem)
+                            this.moveItem = null;
+                        }
                     }
                 }
             },
@@ -559,12 +564,9 @@ define('km/dragdrop', ['jquery'], function ($) {
 
             //Droppable drop=new Droppable();
 
-            //droppables.push({
-            //    isOver: false,
-            //    isOut: true,
-            //    hasOverCallback: false,
-            //    $drop: $el
-            //});
+            droppables.push({
+                $drop: $el
+            });
 
             //options = $.extend(true, options, settings);
 
