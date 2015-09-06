@@ -8,6 +8,12 @@
     <link href="../dist/css/km.min.css" rel="stylesheet" />
     <link href="docs.min.css" rel="stylesheet" />
     <link href="demo.css" rel="stylesheet" />
+    <style type="text/css">
+        .droppable-over
+        {
+            background: #ddd;
+        }
+    </style>
 </head>
 <body>
     <div class="header">
@@ -29,22 +35,8 @@
             <h1 class="page-header">拖放</h1>
             <div class="bs-example bs-example-padded-bottom">
                 <div id="feedback" style="height: 30px;"></div>
-                <div id="panel" style="width: 500px; height: 300px; border: 1px solid red; margin: 0 auto;position:relative;">
-                    <div id="layer" style="width: 30px; height: 30px; background: red; position: absolute;"></div>
-                    <div id="layer2" style="width: 30px; height: 30px; background: green; position: absolute; top: 120px;"></div>
-
-                    <div id="droppable" data-module="droppable" style="border:1px solid red;width:120px;height:120px;right:120px;top:80px;position:absolute;">
-
-                        <p>父级</p>
-
-
-                        <div id="sub" data-module="droppable" style="width:80px;height:80px; border:1px solid ;margin-left:10px;">
-
-                            <p>子级</p>
-
-                        </div>
-
-                    </div>
+                <div id="panel" style="width: 500px; height: 300px; border: 1px solid red; margin: 0 auto; position: relative;">
+                    <div id="layer" style="width: 50px; height: 50px; background: red; position: absolute;"></div>
                 </div>
             </div>
             <h3>初始化</h3>
@@ -131,6 +123,71 @@ var dragdrop=new KM.Dragdrop(options);
                     </tr>
                 </tbody>
             </table>
+
+            <h3>droppable</h3>
+            <div class="bs-example bs-example-padded-bottom">
+                <div id="panel2" style="width: 500px; height: 300px; border: 1px solid red; margin: 0 auto; position: relative;">
+                    <div id="layer2" style="width: 50px; height: 50px; background: red; position: absolute;"></div>
+                    <div id="droppable" data-module="droppable" style="border: 1px solid #ddd; width: 100px; height: 100px; right: 20px; top: 20px; position: absolute;">
+                        <span>试试拖到这里</span>
+                    </div>
+                </div>
+            </div>
+            <h3>调用</h3>
+            <pre>
+                <code>
+//$elms为带有data-module=droppable属性的元素
+KM.Dragdrop.droppable($elms,options);
+                </code>
+            </pre>
+            <h3>参数 options</h3>
+            <table class="table table-bordered table-striped js-options-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th style="width: 150px;">类型</th>
+                        <th style="width: 100px;">默认值</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>overClass</td>
+                        <td>string</td>
+                        <td>'droppable-over'</td>
+                        <td>滑过的时候添加的样式</td>
+                    </tr>
+                    <tr>
+                        <td>callback</td>
+                        <td>object</td>
+                        <td>
+                            <pre>
+                                <code>
+callback: {
+    over: $.noop,
+    out: $.noop,
+    drop: $.noop
+}
+                                </code>
+                            </pre>
+                        </td>
+                        <td>
+                            <p><b>over：</b>滑过时的回调函数</p>
+                            <p><b>out：</b>移出时的回调函数</p>
+                            <p><b>drop：</b>放置时的回调函数</p>
+                            回调函数返回的参数为 $drag，moveCoord，分别是被拖动的元素和鼠标移动的坐标值，如
+                        <pre>
+                            <code>
+over:function($drag,moveCoord){
+    ...
+}
+                            </code>
+                        </pre>
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
@@ -163,28 +220,26 @@ var dragdrop=new KM.Dragdrop(options);
             });
 
             var dragdrop2 = new KM.Dragdrop({
-                $range: $('#panel'),
-                $layer: $('#layer2'),
-                callback: {
-                    stop: function (e, $layer) {
-                        console.log($layer)
-                    }
-                }
+                $range: $('#panel2'),
+                $layer: $('#layer2')
             });
 
 
-           
+            var $droppable = $('#droppable');
 
-            //var left = 0;
-            //parent = $('#sub').parent()[0];
-
-            //do {
-            //    left += parent.offsetLeft - parent.scrollLeft;
-            //} while ((parent = parent.offsetParent));
-
-            //console.log(left)
-
-            KM.Dragdrop.droppable();
+            KM.Dragdrop.droppable($droppable, {
+                callback: {
+                    over: function () {
+                        $droppable.find('span').text('over');
+                    },
+                    out: function () {
+                        $droppable.find('span').text('out');
+                    },
+                    drop: function () {
+                        $droppable.find('span').text('drop');
+                    }
+                }
+            });
         });
     </script>
 </body>

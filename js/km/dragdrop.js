@@ -9,9 +9,6 @@ define('km/dragdrop', ['jquery'], function ($) {
         droppables = [],
         sortables = [],
         method = {
-            getDropInfo: function () {
-
-            },
             move: function (moveCoord) {
 
                 var left,
@@ -23,7 +20,6 @@ define('km/dragdrop', ['jquery'], function ($) {
                     return;
                 }
 
-               
                 for (var i = droppables.length - 1, item; i >= 0; i--) {
                     item = droppables[i];
 
@@ -38,26 +34,53 @@ define('km/dragdrop', ['jquery'], function ($) {
                         && top + height >= moveCoord.y + this.dragParms.height / 2) {
 
 
-                        if (this.moveItem != item) {
+                        if (this.overItem != item) {
 
-                            if (this.moveItem) {
-
+                            if (this.overItem) {
+                                this.overItem.out(this.$layer, moveCoord);
                             }
 
-                            this.moveItem = item;
+                            this.overItem = item;
+                            this.overItem.over(this.$layer, moveCoord);
                         }
                         break;
                     } else {
-                        item.isOver = false;
-                        if (this.moveItem && this.moveItem == item) {
-                            console.log(this.moveItem)
-                            this.moveItem = null;
+                        if (this.overItem && this.overItem == item) {
+                            this.overItem.out(this.$layer, moveCoord);
+                            this.overItem = null;
                         }
                     }
                 }
             },
-            out: function () {
+            drop: function (moveCoord) {
+                var left,
+                    top,
+                    width,
+                    height;
 
+                if (droppables.length == 0) {
+                    return;
+                }
+
+
+                for (var i = droppables.length - 1, item; i >= 0; i--) {
+                    item = droppables[i];
+
+                    left = item.$drop.offset().left - this.$range.offset().left;
+                    top = item.$drop.offset().top - this.$range.offset().top;
+                    width = item.$drop.outerWidth();
+                    height = item.$drop.outerHeight();
+
+                    if (left <= moveCoord.x + this.dragParms.width / 2
+                        && top <= moveCoord.y + this.dragParms.height / 2
+                        && left + width >= moveCoord.x + this.dragParms.width / 2
+                        && top + height >= moveCoord.y + this.dragParms.height / 2) {
+
+                        item.drop(this.$layer, moveCoord);
+
+                        break;
+                    }
+                }
             }
         };
 
@@ -286,6 +309,7 @@ define('km/dragdrop', ['jquery'], function ($) {
             this.options.callback.move.call(this, moveCoord);
         }
 
+        this.moveCoord = moveCoord;
     };
 
     /**
@@ -491,7 +515,6 @@ define('km/dragdrop', ['jquery'], function ($) {
         }
     };
 
-
     /**
      * 停止拖动
      * @param  {Object} e -事件
@@ -504,6 +527,8 @@ define('km/dragdrop', ['jquery'], function ($) {
         if (this.$handle[0].releaseCapture) {
             this.$handle[0].releaseCapture();
         }
+
+        method.drop.call(this, this.moveCoord);
 
         if ($.isFunction(this.options.callback.stop)) {
             this.options.callback.stop(e, this.$layer);
@@ -539,38 +564,69 @@ define('km/dragdrop', ['jquery'], function ($) {
         }
     };
 
-
-    DragDrop.draggable = function ($elms, options) {
-        $elms = $elms || $('[data-module=draggable]');
-    };
-
-
+    /**
+     * droppable
+     * @param {Dom} $elms - jquery对象
+     * @param {Object} options - 设置
+     */
     DragDrop.droppable = function ($elms, options) {
 
         var Droppable = function ($el, options) {
-            this.$el = $el;
+            this.$drop = $el;
             this.options = $.extend(true, {
-
+                overClass:'droppable-over',
+                callback: {
+                    over: $.noop,
+                    out: $.noop,
+                    drop: $.noop
+                }
             }, options);
+            droppables.push(this);
+        };
+
+        /**
+         * 滑动时的函数
+         * @param  {Dom} $drag -被拖动的对象
+         * @param  {Object} moveCoord - 鼠标的坐标
+         * @return {Void}   
+         */
+        Droppable.prototype.over = function ($drag, moveCoord) {
+            this.$drop.addClass(this.options.overClass);
+            this.options.callback.over.call(this, $drag, moveCoord);
+        };
+
+        /**
+         * 移出时的函数
+         * @param  {Dom} $drag -被拖动的对象
+         * @param  {Object} moveCoord - 鼠标的坐标
+         * @return {Void}   
+         */
+        Droppable.prototype.out = function ($drag, moveCoord) {
+            this.$drop.removeClass(this.options.overClass);
+            this.options.callback.out.call(this, $drag, moveCoord);
         };
 
 
+        /**
+         * 放置时的函数
+         * @param  {Dom} $drag -被拖动的对象
+         * @param  {Object} moveCoord - 鼠标的坐标
+         * @return {Void}   
+         */
+        Droppable.prototype.drop = function ($drag, moveCoord) {
+            this.options.callback.drop.call(this, $drag, moveCoord);
+        };
+
         $elms = $elms || $('[data-module=droppable]');
 
-
         $elms.each(function () {
-            var $el = $(this);
+            var $el = $(this),
+                data = $el.data('droppable');
 
-
-            //Droppable drop=new Droppable();
-
-            droppables.push({
-                $drop: $el
-            });
-
-            //options = $.extend(true, options, settings);
-
-            //draggable.push()
+            if (!data) {
+                data = new Droppable($el, options);
+                $el.data('droppable', data);
+            }
 
         });
     };
