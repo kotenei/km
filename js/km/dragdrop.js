@@ -7,7 +7,6 @@ define('km/dragdrop', ['jquery'], function ($) {
 
     var zIndex = 1000,
         droppables = [],
-        sortables = [],
         method = {
             move: function (moveCoord) {
 
@@ -96,10 +95,12 @@ define('km/dragdrop', ['jquery'], function ($) {
             $layer: null,
             $handle: null,
             $range: null,
-            direction: '',      // h:水平  v:垂直
-            resizable: false,   //是否可拖放
-            scale: false,        //是否按比例缩放
-            boundary: false,     //是否可移出边界
+            direction: '',          // h:水平  v:垂直
+            resizable: false,       //是否可拖放
+            scale: false,           //是否按比例缩放
+            boundary: false,        //是否可移出边界
+            sortable: false,        //是否可排序
+            placeholder: false,      //占位符
             minWidth: 100,
             callback: {
                 start: $.noop,
@@ -137,7 +138,13 @@ define('km/dragdrop', ['jquery'], function ($) {
         if (!this.$layer) { return; }
         if (this.$range) { this.$range.css("position", "relative"); }
         this.$handle = this.$handle || this.$layer;
-        this.$layer.css({ cursor: "move", position: 'absolute', zIndex: zIndex });
+
+        if (!this.options.sortable) {
+            this.$layer.css({ cursor: "move", position: 'absolute', zIndex: zIndex });
+        } else {
+            this.$layer.css({ cursor: 'move' });
+        }
+
 
         if (this.options.resizable) {
             this.$layer.append('<span class="k-resizable k-resizable-topLeft" data-type="topLeft"></span>');
@@ -221,6 +228,8 @@ define('km/dragdrop', ['jquery'], function ($) {
     DragDrop.prototype.start = function (e) {
         var self = this;
 
+        this.isMoving = true;
+
         //给文档绑定事件
         this.$document.on('mousemove.dragdrop', function (e) {
             if (self.isMoving) {
@@ -248,12 +257,14 @@ define('km/dragdrop', ['jquery'], function ($) {
         this.originalCoord.x = mouseCoord.x;
         this.originalCoord.y = mouseCoord.y;
 
+        this.moveCoord = { x: 0, y: 0 };
+
+
+
         //捕捉鼠标的作用范围，防止鼠标移动过快丢失
         if (this.$handle[0].setCapture) {
             this.$handle[0].setCapture();
         }
-
-        this.isMoving = true;
 
         //开始拖动回调函数
         if ($.isFunction(this.options.callback.start)) {
@@ -271,18 +282,36 @@ define('km/dragdrop', ['jquery'], function ($) {
      */
     DragDrop.prototype.move = function (e) {
         var self = this;
+
         var mouseCoord = this.getMouseCoord(e);
+
         var moveCoord = {
             x: mouseCoord.x - this.offset.x,
             y: mouseCoord.y - this.offset.y
         };
-        var $range = this.$range;
-        var rightBoundary, bottomBoundary;
+
+        var $range = this.$range,
+            rightBoundary,
+            bottomBoundary;
+
+
+        if (this.options.sortable) {
+            if (!this.$placeholder) {
+                this.$placeholder = this.$layer.clone(true).css({
+                    position: 'static',
+                    opacity: '0.5',
+                }).insertAfter(this.$layer);
+            }
+            this.$layer.css({
+                position: 'absolute'
+            });
+        }
+
 
         if ($range) {
             //元素范围内移动
-            rightBoundary = $range.width() - this.$layer.outerWidth(true);
-            bottomBoundary = $range.height() - this.$layer.outerHeight(true);
+            rightBoundary = $range.outerWidth() - this.$layer.outerWidth(true);
+            bottomBoundary = $range.outerHeight() - this.$layer.outerHeight(true);
 
             if (!this.options.boundary) {
                 if (moveCoord.x < 0) { moveCoord.x = 0; }
@@ -301,6 +330,8 @@ define('km/dragdrop', ['jquery'], function ($) {
             if (moveCoord.y > bottomBoundary) { moveCoord.y = bottomBoundary; }
         }
 
+        this.moveCoord = moveCoord;
+
         this.setPosition(moveCoord);
 
         method.move.call(this, moveCoord);
@@ -308,8 +339,33 @@ define('km/dragdrop', ['jquery'], function ($) {
         if ($.isFunction(this.options.callback.move)) {
             this.options.callback.move.call(this, moveCoord);
         }
+    };
 
-        this.moveCoord = moveCoord;
+    /**
+     * 停止拖动
+     * @param  {Object} e -事件
+     * @return {Void}   
+     */
+    DragDrop.prototype.stop = function (e) {
+        this.isMoving = false;
+        this.isResize = false;
+
+        if (this.$handle[0].releaseCapture) {
+            this.$handle[0].releaseCapture();
+        }
+
+        if (this.options.sortable && this.$placeholder) {
+            this.$layer.insertAfter(this.$placeholder).css('position', 'static');
+            this.$placeholder.remove();
+            this.$placeholder = null;
+        }
+
+        method.drop.call(this, this.moveCoord);
+
+
+        if ($.isFunction(this.options.callback.stop)) {
+            this.options.callback.stop(e, this.$layer);
+        }
     };
 
     /**
@@ -515,25 +571,6 @@ define('km/dragdrop', ['jquery'], function ($) {
         }
     };
 
-    /**
-     * 停止拖动
-     * @param  {Object} e -事件
-     * @return {Void}   
-     */
-    DragDrop.prototype.stop = function (e) {
-        this.isMoving = false;
-        this.isResize = false;
-
-        if (this.$handle[0].releaseCapture) {
-            this.$handle[0].releaseCapture();
-        }
-
-        method.drop.call(this, this.moveCoord);
-
-        if ($.isFunction(this.options.callback.stop)) {
-            this.options.callback.stop(e, this.$layer);
-        }
-    };
 
     /**
      * 获取鼠标坐标
@@ -574,7 +611,7 @@ define('km/dragdrop', ['jquery'], function ($) {
         var Droppable = function ($el, options) {
             this.$drop = $el;
             this.options = $.extend(true, {
-                overClass:'droppable-over',
+                overClass: 'droppable-over',
                 callback: {
                     over: $.noop,
                     out: $.noop,
@@ -628,6 +665,85 @@ define('km/dragdrop', ['jquery'], function ($) {
                 $el.data('droppable', data);
             }
 
+        });
+    };
+
+
+    DragDrop.sortable = function ($container, options) {
+        var sortables = [];
+
+        options = $.extend(true, {
+            draggable: '.draggable',
+            handle: null
+        }, options);
+
+        $draggable = $container.find(options.draggable);
+
+        if ($draggable.length == 0) {
+            return;
+        }
+
+        $draggable.each(function () {
+            var sortable = new DragDrop({
+                $range: $container,
+                $layer: $(this),
+                sortable: true,
+                callback: {
+                    start: function () {
+
+                    },
+                    move: function (moveCoord) {
+                        if (sortables.length == 0) {
+                            return;
+                        }
+                        var left,
+                            top,
+                            width,
+                            height;
+
+                        for (var i = 0, sortable; i < sortables.length; i++) {
+                            sortable = sortables[i];
+
+                            left = sortable.$layer.offset().left - sortable.$range.offset().left;
+                            top = sortable.$layer.offset().top - sortable.$range.offset().top;
+                            width = sortable.$layer.outerWidth();
+                            height = sortable.$layer.outerHeight();
+
+                            //if (left <= moveCoord.x + this.dragParms.width / 2
+                            //    && top <= moveCoord.y + this.dragParms.height / 2
+                            //    && left + width >= moveCoord.x + this.dragParms.width / 2
+                            //    && top + height >= moveCoord.y + this.dragParms.height / 2) {
+
+
+                            //}
+
+                            if (sortable == this) {
+                                continue;
+                            }
+
+
+                            if (this.$layer.position().left + this.dragParms.width >= left + width / 2
+                                && this.$layer.position().left <= left + width / 2) {
+                                
+
+                                if (this.$layer.position().left + this.dragParms.width >= left + width / 2) {
+                                    this.$placeholder.insertAfter(sortable.$layer);
+                                } else {
+                                    this.$placeholder.insertBefore(sortable.$layer);
+                                }
+
+                            }
+
+                           
+
+                        }
+                    },
+                    stop: function () {
+
+                    }
+                }
+            });
+            sortables.push(sortable);
         });
     };
 

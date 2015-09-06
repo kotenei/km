@@ -13,6 +13,37 @@
         {
             background: #ddd;
         }
+
+        .layer
+        {
+            width:30%;
+            padding:10px;
+            background:white;
+            border:1px solid #ebebeb;
+            display:inline-block;
+            margin:0 10px;
+            vertical-align:top
+        }
+
+        .layer .item
+        {
+            float:left;
+            margin:5px;
+            background:#5F9EDF;
+            text-align:center;
+            padding:5px;
+            color:white;
+        }
+
+        .layer-type2 .item
+        {
+            background:#F43C12;
+        }
+
+        .layer-type3 .item
+        {
+            background:#1ABC9C;
+        }
     </style>
 </head>
 <body>
@@ -188,6 +219,85 @@ over:function($drag,moveCoord){
                     </tr>
                 </tbody>
             </table>
+
+            <h3>sortable</h3>
+            <div class="bs-example bs-example-padded-bottom" id="multi">
+                <div class="layer">
+                    <div class="item">
+                        asp.net
+                    </div>
+                    <div class="item">
+                        jsp
+                    </div>
+                    <div class="item">
+                        php
+                    </div>
+                    <div class="item">
+                        asp
+                    </div>
+                    <div class="item">
+                        vbscript
+                    </div>
+                    <div class="item">
+                        c#
+                    </div>
+                    <div class="item">
+                        java
+                    </div>
+                    <div class="item">
+                        vb.net
+                    </div>
+                    <div class="item">
+                        c/c++
+                    </div>
+                </div>
+                <div class="layer layer-type2">
+                    <div class="item">
+                        html5
+                    </div>
+                    <div class="item">
+                        css3
+                    </div>
+                    <div class="item">
+                        javascript
+                    </div>
+                    <div class="item">
+                        jquery
+                    </div>
+                    <div class="item">
+                        angular
+                    </div>
+                    <div class="item">
+                        backbone
+                    </div>
+                    <div class="item">
+                        ember
+                    </div>
+                    <div class="item">
+                        nodejs
+                    </div>
+                </div>
+                <div class="layer layer-type3">
+                    <div class="item">
+                        sql server
+                    </div>
+                    <div class="item">
+                        mysql
+                    </div>
+                    <div class="item">
+                        oracle
+                    </div>
+                    <div class="item">
+                        mongodb
+                    </div>
+                    <div class="item">
+                        memcache
+                    </div>
+                    <div class="item">
+                        redis
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -240,6 +350,12 @@ over:function($drag,moveCoord){
                     }
                 }
             });
+
+            var $container = $('#multi');
+            KM.Dragdrop.sortable($container, {
+                draggable:'.layer'
+            });
+
         });
     </script>
 </body>
