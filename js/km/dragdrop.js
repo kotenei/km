@@ -709,33 +709,22 @@ define('km/dragdrop', ['jquery'], function ($) {
                             width = sortable.$layer.outerWidth();
                             height = sortable.$layer.outerHeight();
 
-                            //if (left <= moveCoord.x + this.dragParms.width / 2
-                            //    && top <= moveCoord.y + this.dragParms.height / 2
-                            //    && left + width >= moveCoord.x + this.dragParms.width / 2
-                            //    && top + height >= moveCoord.y + this.dragParms.height / 2) {
-
-
-                            //}
 
                             if (sortable == this) {
                                 continue;
                             }
 
-
                             if (this.$layer.position().left + this.dragParms.width >= left + width / 2
-                                && this.$layer.position().left <= left + width / 2) {
-                                
+                                && this.$layer.position().left <= left + width / 2
+                                && this.$layer.position().top + this.dragParms.width >= top + height / 2
+                                && this.$layer.position().top <= top + height / 2) {
 
-                                if (this.$layer.position().left + this.dragParms.width >= left + width / 2) {
+                                if (this.$layer.position().left<left) {
                                     this.$placeholder.insertAfter(sortable.$layer);
                                 } else {
                                     this.$placeholder.insertBefore(sortable.$layer);
                                 }
-
                             }
-
-                           
-
                         }
                     },
                     stop: function () {

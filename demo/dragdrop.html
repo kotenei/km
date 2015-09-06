@@ -22,7 +22,8 @@
             border:1px solid #ebebeb;
             display:inline-block;
             margin:0 10px;
-            vertical-align:top
+            vertical-align:top;
+            height:400px;
         }
 
         .layer .item
@@ -356,6 +357,9 @@ over:function($drag,moveCoord){
                 draggable:'.layer'
             });
 
+            KM.Dragdrop.sortable($container, {
+                draggable:'.item'
+            })
         });
     </script>
 </body>
