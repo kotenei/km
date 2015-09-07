@@ -315,10 +315,10 @@ over:function($drag,moveCoord){
                     start: function () {
                         $feedback.html('start');
                     },
-                    move: function (e) {
-                        $feedback.html(e.x + '<br/>' + e.y);
+                    move: function (e, moveCoord) {
+                        $feedback.html(moveCoord.x + '<br/>' + moveCoord.y);
                     },
-                    stop: function (e) {
+                    stop: function (e, moveCoord) {
                         $feedback.html('stop');
                     },
                     resize: function (e) {

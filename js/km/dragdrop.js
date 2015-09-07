@@ -8,7 +8,7 @@ define('km/dragdrop', ['jquery'], function ($) {
     var zIndex = 1000,
         droppables = [],
         method = {
-            move: function (moveCoord) {
+            move: function (e, moveCoord) {
 
                 var left,
                     top,
@@ -51,7 +51,7 @@ define('km/dragdrop', ['jquery'], function ($) {
                     }
                 }
             },
-            drop: function (moveCoord) {
+            drop: function (e, moveCoord) {
                 var left,
                     top,
                     width,
@@ -268,7 +268,7 @@ define('km/dragdrop', ['jquery'], function ($) {
 
         //开始拖动回调函数
         if ($.isFunction(this.options.callback.start)) {
-            this.options.callback.start(e, this.$layer);
+            this.options.callback.start.call(this, e, this.$layer);
         }
 
         return false;
@@ -334,10 +334,10 @@ define('km/dragdrop', ['jquery'], function ($) {
 
         this.setPosition(moveCoord);
 
-        method.move.call(this, moveCoord);
+        method.move.call(this, e, moveCoord);
 
         if ($.isFunction(this.options.callback.move)) {
-            this.options.callback.move.call(this, moveCoord);
+            this.options.callback.move.call(this, e, moveCoord);
         }
     };
 
@@ -360,11 +360,11 @@ define('km/dragdrop', ['jquery'], function ($) {
             this.$placeholder = null;
         }
 
-        method.drop.call(this, this.moveCoord);
+        method.drop.call(this, e, this.moveCoord);
 
 
         if ($.isFunction(this.options.callback.stop)) {
-            this.options.callback.stop(e, this.$layer);
+            this.options.callback.stop.call(this, e, this.$layer);
         }
     };
 
@@ -664,7 +664,6 @@ define('km/dragdrop', ['jquery'], function ($) {
                 data = new Droppable($el, options);
                 $el.data('droppable', data);
             }
-
         });
     };
 
@@ -683,49 +682,82 @@ define('km/dragdrop', ['jquery'], function ($) {
             return;
         }
 
-        $draggable.each(function () {
+        $draggable.each(function (i) {
+            var $el = $(this);
             var sortable = new DragDrop({
                 $range: $container,
-                $layer: $(this),
+                $layer: $el,
                 sortable: true,
                 callback: {
                     start: function () {
 
                     },
-                    move: function (moveCoord) {
+                    move: function (e, moveCoord) {
+                        return;
+                        var mouseCoord = this.getMouseCoord(e),
+                            sortable,
+                            sortableInfo,
+                            mid, min, max;
+
                         if (sortables.length == 0) {
                             return;
                         }
-                        var left,
-                            top,
-                            width,
-                            height;
 
-                        for (var i = 0, sortable; i < sortables.length; i++) {
+                        for (var i = 0; i < sortables.length; i++) {
+
                             sortable = sortables[i];
 
-                            left = sortable.$layer.offset().left - sortable.$range.offset().left;
-                            top = sortable.$layer.offset().top - sortable.$range.offset().top;
-                            width = sortable.$layer.outerWidth();
-                            height = sortable.$layer.outerHeight();
-
+                            sortableInfo = {
+                                oLeft: sortable.$layer.offset().left,
+                                oTop: sortable.$layer.offset().top,
+                                left: sortable.$layer.offset().left - sortable.$range.offset().left,
+                                top: sortable.$layer.offset().top - sortable.$range.offset().top,
+                                width: sortable.$layer.outerWidth(),
+                                height: sortable.$layer.outerHeight()
+                            };
 
                             if (sortable == this) {
                                 continue;
                             }
 
-                            if (this.$layer.position().left + this.dragParms.width >= left + width / 2
-                                && this.$layer.position().left <= left + width / 2
-                                && this.$layer.position().top + this.dragParms.width >= top + height / 2
-                                && this.$layer.position().top <= top + height / 2) {
+                            //if (mouseCoord.x >= sortableInfo.oLeft && mouseCoord.x <= sortableInfo.oLeft + sortableInfo.width
+                            //    && mouseCoord.y >= sortableInfo.oTop && mouseCoord.y <= sortableInfo.oTop + sortableInfo.height) {
 
-                                if (this.$layer.position().left<left) {
-                                    this.$placeholder.insertAfter(sortable.$layer);
-                                } else {
+
+                            //    //if (mouseCoord.x >= sortableInfo.oLeft && mouseCoord.x <= sortableInfo.oLeft + sortableInfo.width / 2) {
+                            //    //    this.$placeholder.insertAfter(sortable.$layer);
+                            //    //}
+
+                            //    //if (mouseCoord.x >= sortableInfo.oLeft + sortableInfo.width / 2 && mouseCoord.x <= sortableInfo.oLeft + sortableInfo.width) {
+                            //    //    this.$placeholder.insertBefore(sortable.$layer);
+                            //    //}
+
+                            //    if (mouseCoord.x <= sortableInfo.oLeft + sortableInfo.width / 2) {
+                            //        this.$placeholder.insertBefore(sortable.$layer);
+                            //    } else {
+                            //        console.log('adfdsaf')
+                            //        this.$placeholder.insertAfter(sortable.$layer);
+                            //    }
+                            //}
+
+                            if (this.$layer.position().left + this.dragParms.width >= sortableInfo.left + sortableInfo.width / 2
+                                && this.$layer.position().left <= sortableInfo.left + sortableInfo.width / 2
+                                && this.$layer.position().top + this.dragParms.height >= sortableInfo.top + sortableInfo.height / 2
+                                && this.$layer.position().top <= sortableInfo.top + sortableInfo.height / 2) {
+
+                                mid = sortableInfo.left + sortableInfo.width / 2;
+
+                                if (this.$layer.position().left + this.dragParms.width / 2 <= mid) {
                                     this.$placeholder.insertBefore(sortable.$layer);
+                                } else {
+                                    this.$placeholder.insertAfter(sortable.$layer);
                                 }
+
+                                return;
                             }
                         }
+
+                        console.log('ffff')
                     },
                     stop: function () {
 
@@ -733,6 +765,9 @@ define('km/dragdrop', ['jquery'], function ($) {
                 }
             });
             sortables.push(sortable);
+            //DragDrop.droppable($el.parent(), {
+            //    overClass: ''
+            //});
         });
     };
 
