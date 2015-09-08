@@ -867,8 +867,6 @@ define('km/dragdrop', ['jquery'], function ($) {
                         continue;
                     }
 
-
-
                     if (mouseCoord.x >= sortable.info.oLeft && mouseCoord.x <= sortable.info.oLeft + sortable.info.width
                         && mouseCoord.y >= sortable.info.oTop && mouseCoord.y <= sortable.info.oTop + sortable.info.height) {
 
@@ -886,39 +884,19 @@ define('km/dragdrop', ['jquery'], function ($) {
                             sortable.sortNum = tmpNum;
                             method._setSortableInfo();
                             method._setDroppableInfo();
-
                             return;
-                        }
-
+                        } 
 
                         if (mouseCoord.x <= sortable.info.oLeft + sortable.info.width / 2) {
-                            this.$placeholder.insertAfter(sortable.$layer);
-                        } else {
                             this.$placeholder.insertBefore(sortable.$layer);
+                        } else {
+                            this.$placeholder.insertAfter(sortable.$layer);
                         }
 
-
+                        method._setSortableInfo();
+                        method._setDroppableInfo();
+                        return;
                     }
-
-
-                    //else if (cl <= sortable.info.h_half && cl_w >= sortable.info.h_half
-                    //    && ct <= sortable.info.v_half && ct_h >= sortable.info.v_half && this.dragParms.width < sortable.info.width) {
-
-                    //    if (this.sortNum > sortable.sortNum) {
-                    //        this.$placeholder.insertBefore(sortable.$layer);
-                    //    } else {
-                    //        this.$placeholder.insertAfter(sortable.$layer);
-                    //    }
-
-                    //    tmpNum = this.sortNum;
-                    //    this.sortNum = sortable.sortNum;
-                    //    sortable.sortNum = tmpNum;
-                    //    method._setSortableInfo();
-                    //    method._setDroppableInfo();
-                    //    return;
-                    //}
-
-
                 }
 
                 options.callback.move.call(this, e);
