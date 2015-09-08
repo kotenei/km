@@ -16,34 +16,36 @@
 
         .layer
         {
-            width:30%;
-            padding:10px;
-            background:white;
-            border:1px solid #ebebeb;
-            display:inline-block;
-            margin:0 10px;
-            vertical-align:top;
-            height:400px;
+            width: 30%;
+            /*padding: 10px;*/
+            background: white;
+            /*border: 1px solid #ebebeb;*/
+            display: inline-block;
+            margin: 0 10px;
+            vertical-align: top;
+            overflow: hidden;
+            min-height:10px;
+            
         }
 
         .layer .item
         {
-            float:left;
-            margin:5px;
-            background:#5F9EDF;
-            text-align:center;
-            padding:5px;
-            color:white;
+            /*float:left;*/
+            margin: 5px;
+            background: #5F9EDF;
+            text-align: center;
+            padding: 5px;
+            color: white;
         }
 
         .layer-type2 .item
         {
-            background:#F43C12;
+            background: #F43C12;
         }
 
         .layer-type3 .item
         {
-            background:#1ABC9C;
+            background: #1ABC9C;
         }
     </style>
 </head>
@@ -278,11 +280,11 @@ over:function($drag,moveCoord){
                         nodejs
                     </div>
                 </div>
-                <div class="layer layer-type3">
-                    <div class="item">
+                <div class="layer layer-type3" style="height: auto;">
+                    <!-- <div class="item">
                         sql server
-                    </div>
-                    <div class="item">
+                    </div>-->
+                    <!-- <div class="item">
                         mysql
                     </div>
                     <div class="item">
@@ -296,7 +298,7 @@ over:function($drag,moveCoord){
                     </div>
                     <div class="item">
                         redis
-                    </div>
+                    </div>-->
                 </div>
             </div>
         </div>
@@ -353,12 +355,13 @@ over:function($drag,moveCoord){
             });
 
             var $container = $('#multi');
-            KM.Dragdrop.sortable($container, {
-                draggable:'.layer'
-            });
+            //KM.Dragdrop.sortable($container, {
+            //    draggable:'.layer'
+            //});
 
             KM.Dragdrop.sortable($container, {
-                draggable:'.item'
+                draggable: '.item',
+                droppable: '.layer'
             })
         });
     </script>
