@@ -2240,3 +2240,7 @@ table.k-treeTable tr.expanded.accept td span.indenter a {
   left: 0;
   width: 100%;
 }
+.k-sortable-placeholder {
+  border: 1px dashed #454545;
+  background: white;
+}
