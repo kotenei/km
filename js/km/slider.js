@@ -47,7 +47,7 @@ define('km/slider', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
             $layer: this.$slider.find(".k-slider-handle"),
             direction: 'h',
             callback: {
-                move: function (moveCoord) {
+                move: function (e,moveCoord) {
                     var val = self.getMoveValue(moveCoord);
                     self.setValue(val);
                     self.options.callback.slide(val);

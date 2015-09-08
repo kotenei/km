@@ -29,7 +29,7 @@
 
         .layer .item
         {
-            float:left;
+            /*float:left;*/
             margin: 5px;
             background: #5F9EDF;
             text-align: center;
@@ -151,7 +151,7 @@ var dragdrop=new KM.Dragdrop(options);
                             <p><b>start：</b>开始拖动的回调函数</p>
                             <p><b>move：</b>拖动时的回调函数</p>
                             <p><b>stop：</b>停止拖动的回调函数</p>
-                            <p><b>stop：</b>缩放时的回调函数</p>
+                            <p><b>resize：</b>缩放时的回调函数</p>
                         </td>
                     </tr>
                 </tbody>
@@ -300,6 +300,67 @@ over:function($drag,moveCoord){
                     </div>
                 </div>
             </div>
+
+
+            <h3>调用</h3>
+            <pre>
+                <code>
+//$container:拖动块可移动的范围的元素
+KM.Dragdrop.sortable($container,options);
+                </code>
+            </pre>
+            <h3>参数 options</h3>
+            <table class="table table-bordered table-striped js-options-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th style="width: 150px;">类型</th>
+                        <th style="width: 100px;">默认值</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>draggable</td>
+                        <td>string</td>
+                        <td>'.k-draggable'</td>
+                        <td>拖动块</td>
+                    </tr>
+                    <tr>
+                        <td>droppable</td>
+                        <td>string</td>
+                        <td>'.k-droppable'</td>
+                        <td>放置块</td>
+                    </tr>
+                    <tr>
+                        <td>handle</td>
+                        <td>string</td>
+                        <td>null</td>
+                        <td>拖动句柄</td>
+                    </tr>
+                    <tr>
+                        <td>callback</td>
+                        <td>object</td>
+                        <td>
+                            <pre>
+                                <code>
+callback: {
+    start: $.noop,
+    move: $.noop,
+    stop: $.noop
+}
+                                </code>
+                            </pre>
+                        </td>
+                        <td>
+                            <p><b>start：</b>开始拖动时的回调函数</p>
+                            <p><b>move：</b>移动中的回调函数</p>
+                            <p><b>stop：</b>停止拖动时的回调函数</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
         </div>
     </div>
 

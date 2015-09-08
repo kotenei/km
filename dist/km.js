@@ -2653,6 +2653,9 @@ define('km/dragdrop', ['jquery'], function ($) {
             sortable: false,        //是否可排序
             placeholder: false,      //占位符
             minWidth: 100,
+            zIndex: {
+                increase: false
+            },
             callback: {
                 start: $.noop,
                 move: $.noop,
@@ -2664,7 +2667,8 @@ define('km/dragdrop', ['jquery'], function ($) {
         this._event = {
             start: $.noop,
             move: $.noop,
-            stop: $.noop
+            stop: $.noop,
+            resize: $.noop
         };
 
         this.$layer = options.$layer;
@@ -2753,7 +2757,10 @@ define('km/dragdrop', ['jquery'], function ($) {
         var self = this;
 
         this.$handle.on('mousedown.dragdrop', function (e) {
-            zIndex++;
+
+            if (self.options.zIndex.increase) {
+                zIndex++;
+            }
 
             self.dragParms = {
                 left: parseInt(self.$layer.position().left),
@@ -3119,8 +3126,10 @@ define('km/dragdrop', ['jquery'], function ($) {
         this.$layer.css(css);
 
         if ($.isFunction(this.options.callback.resize)) {
-            this.options.callback.resize(css);
+            this.options.callback.resize.call(this, e, css);
         }
+
+        this._event.resize.call(this, e, css);
     };
 
     /**
@@ -3152,7 +3161,6 @@ define('km/dragdrop', ['jquery'], function ($) {
             return width * ratio;
         }
     };
-
 
     /**
      * 获取鼠标坐标
@@ -3436,7 +3444,7 @@ define('km/dragdrop', ['jquery'], function ($) {
                             method._setSortableInfo();
                             method._setDroppableInfo();
                             return;
-                        } 
+                        }
 
                         if (mouseCoord.x <= sortable.info.oLeft + sortable.info.width / 2) {
                             this.$placeholder.insertBefore(sortable.$layer);
@@ -3461,7 +3469,6 @@ define('km/dragdrop', ['jquery'], function ($) {
     };
 
     return DragDrop;
-
 });
 
 /**
@@ -7137,7 +7144,7 @@ define('km/slider', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
             $layer: this.$slider.find(".k-slider-handle"),
             direction: 'h',
             callback: {
-                move: function (moveCoord) {
+                move: function (e,moveCoord) {
                     var val = self.getMoveValue(moveCoord);
                     self.setValue(val);
                     self.options.callback.slide(val);
