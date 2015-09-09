@@ -68,7 +68,7 @@
             <h1 class="page-header">拖放</h1>
             <div class="bs-example bs-example-padded-bottom">
                 <div id="feedback" style="height: 30px;"></div>
-                <div id="panel" style="width: 500px; height: 300px; border: 1px solid red; margin: 0 auto; position: relative;">
+                <div id="panel" style="width: 500px; height: 300px; border: 1px solid red; margin: 0 auto;position:relative;">
                     <div id="layer" style="width: 50px; height: 50px; background: red; position: absolute;"></div>
                 </div>
             </div>
@@ -93,13 +93,13 @@ var dragdrop=new KM.Dragdrop(options);
                         <td>$layer</td>
                         <td>jQuery object</td>
                         <td>null</td>
-                        <td>被拖动的层</td>
+                        <td>被拖动的元素</td>
                     </tr>
                     <tr>
                         <td>$range</td>
                         <td>jQuery object</td>
-                        <td>null</td>
-                        <td>拖动的范围</td>
+                        <td>$(document.body)</td>
+                        <td>拖动的范围，默认为body</td>
                     </tr>
                     <tr>
                         <td>direction</td>
@@ -132,6 +132,18 @@ var dragdrop=new KM.Dragdrop(options);
                         <td>缩放时最小宽度</td>
                     </tr>
                     <tr>
+                        <td>autoScroll</td>
+                        <td>boolean</td>
+                        <td>true</td>
+                        <td>拖动时，鼠标到达浏览器顶部或者底部时是否自动滚动滚动条</td>
+                    </tr>
+                    <tr>
+                        <td>autoScrollDealy</td>
+                        <td>int</td>
+                        <td>5</td>
+                        <td>自动滚动的延迟时间，默认5毫秒</td>
+                    </tr>
+                    <tr>
                         <td>callback</td>
                         <td>object</td>
                         <td>
@@ -156,8 +168,10 @@ var dragdrop=new KM.Dragdrop(options);
                     </tr>
                 </tbody>
             </table>
-
-            <h3>droppable</h3>
+            <br />
+            <hr />
+            <br />
+            <h3>放置 droppable</h3>
             <div class="bs-example bs-example-padded-bottom">
                 <div id="panel2" style="width: 500px; height: 300px; border: 1px solid red; margin: 0 auto; position: relative;">
                     <div id="layer2" style="width: 50px; height: 50px; background: red; position: absolute;"></div>
@@ -221,9 +235,11 @@ over:function($drag,moveCoord){
                     </tr>
                 </tbody>
             </table>
-
-            <h3>sortable</h3>
-            <div class="bs-example bs-example-padded-bottom" id="multi" style="height: 900px;">
+            <br />
+            <hr />
+            <br />
+            <h3>排序 sortable</h3>
+            <div class="bs-example bs-example-padded-bottom" id="multi" >
                 <div class="layer">
                     <div class="item">
                         asp.net
@@ -371,7 +387,7 @@ callback: {
             var $feedback = $('#feedback');
 
             var dragdrop = new KM.Dragdrop({
-                $range: $('#panel'),
+                $range: $('#panel').parent(),
                 $layer: $('#layer'),
                 callback: {
                     start: function () {
@@ -392,37 +408,37 @@ callback: {
                 }
             });
 
-            var dragdrop2 = new KM.Dragdrop({
-                $range: $('#panel2'),
-                $layer: $('#layer2')
-            });
+            //var dragdrop2 = new KM.Dragdrop({
+            //    $range: $('#panel2'),
+            //    $layer: $('#layer2')
+            //});
 
 
             var $droppable = $('#droppable');
 
-            KM.Dragdrop.droppable($droppable, {
-                callback: {
-                    over: function () {
-                        $droppable.find('span').text('over');
-                    },
-                    out: function () {
-                        $droppable.find('span').text('out');
-                    },
-                    drop: function () {
-                        $droppable.find('span').text('drop');
-                    }
-                }
-            });
+            //KM.Dragdrop.droppable($droppable, {
+            //    callback: {
+            //        over: function () {
+            //            $droppable.find('span').text('over');
+            //        },
+            //        out: function () {
+            //            $droppable.find('span').text('out');
+            //        },
+            //        drop: function () {
+            //            $droppable.find('span').text('drop');
+            //        }
+            //    }
+            //});
 
             var $container = $('#multi');
             //KM.Dragdrop.sortable($container, {
             //    draggable:'.layer'
             //});
 
-            KM.Dragdrop.sortable($container, {
-                draggable: '.item',
-                droppable: '.layer'
-            })
+            //KM.Dragdrop.sortable($container, {
+            //    draggable: '.item',
+            //    droppable: '.layer'
+            //});
         });
     </script>
 </body>

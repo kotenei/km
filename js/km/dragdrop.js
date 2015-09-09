@@ -22,6 +22,7 @@ define('km/dragdrop', ['jquery'], function ($) {
                 for (var i = droppables.length - 1, item; i >= 0; i--) {
                     item = droppables[i];
 
+
                     left = item.$drop.offset().left - this.$range.offset().left;
                     top = item.$drop.offset().top - this.$range.offset().top;
                     width = item.$drop.outerWidth();
@@ -81,6 +82,33 @@ define('km/dragdrop', ['jquery'], function ($) {
                     }
                 }
             }
+        },
+        util = {
+            getPosition: function ($cur, $target) {
+
+                //var position = { left: 0, top: 0 },
+                //    cur = $cur[0],
+                //    parent = cur.offsetParent,
+                //    target = $target[0];
+
+                //position.left += cur.offsetLeft - cur.scrollLeft;
+                //position.top += cur.offsetTop - cur.scrollTop;
+
+                //while (parent != target) {
+                //    position.left += parent.offsetLeft - parent.scrollLeft;
+                //    position.top += parent.offsetTop - parent.scrollTop;
+                //    parent = parent.offsetParent;
+                //}
+
+                //return position;
+
+
+                return {
+                    left: $cur.offset().left - $target.offset().left,
+                    top: $cur.offset().top - $target.offset().top
+                };
+
+            }
         };
 
     /**
@@ -94,14 +122,15 @@ define('km/dragdrop', ['jquery'], function ($) {
         this.options = $.extend(true, {
             $layer: null,
             $handle: null,
-            $range: null,
+            $range: $(document.body),
             direction: '',          // h:水平  v:垂直
             resizable: false,       //是否可拖放
             scale: false,           //是否按比例缩放
             boundary: false,        //是否可移出边界
             sortable: false,        //是否可排序
-            placeholder: false,      //占位符
             minWidth: 100,
+            autoScroll: true,
+            autoScrollDealy: 5,
             zIndex: {
                 increase: false
             },
@@ -120,11 +149,17 @@ define('km/dragdrop', ['jquery'], function ($) {
             resize: $.noop
         };
 
-        this.$layer = options.$layer;
-        this.$handle = options.$handle;
-        this.$range = options.$range;
+
+
         this.$window = $(window);
         this.$document = $(document);
+
+        this.$layer = this.options.$layer;
+        this.$handle = this.options.$handle && this.options.$handle.length > 0 ? this.options.$handle : this.options.$layer;
+        this.$range = this.options.$range;
+
+        this.autoScrollActive = false;
+        this.tm = null;
 
         //是否设置大小
         this.isResize = false;
@@ -146,15 +181,14 @@ define('km/dragdrop', ['jquery'], function ($) {
      */
     DragDrop.prototype.init = function () {
         if (!this.$layer) { return; }
+
         if (this.$range) { this.$range.css("position", "relative"); }
-        this.$handle = this.$handle || this.$layer;
 
         if (!this.options.sortable) {
             this.$layer.css({ cursor: "move", position: 'absolute', zIndex: zIndex });
         } else {
             this.$layer.css({ cursor: 'move' });
         }
-
 
         if (this.options.resizable) {
             this.$layer.append('<span class="k-resizable k-resizable-topLeft" data-type="topLeft"></span>');
@@ -196,7 +230,7 @@ define('km/dragdrop', ['jquery'], function ($) {
             this.minHeight = this.minWidth * ratio;
         }
 
-    }
+    };
 
     /**
      * 事件监控
@@ -258,6 +292,9 @@ define('km/dragdrop', ['jquery'], function ($) {
 
         this.isMoving = true;
 
+        this.winHeight = this.$window.height();
+        this.docHeight = this.$document.height();
+
         //给文档绑定事件
         this.$document.on('mousemove.dragdrop', function (e) {
             if (self.isMoving) {
@@ -278,16 +315,22 @@ define('km/dragdrop', ['jquery'], function ($) {
         //获取鼠标位置
         var mouseCoord = this.getMouseCoord(e);
 
+        this.position = util.getPosition(this.$layer, this.$range);
+
         //记录鼠标在拖动层的坐标位置
-        this.offset.x = mouseCoord.x - this.$layer.position().left;
-        this.offset.y = mouseCoord.y - this.$layer.position().top;
+        //this.offset.x = mouseCoord.x - this.$layer.position().left;
+        //this.offset.y = mouseCoord.y - this.$layer.position().top;
+
+        this.offset.x = mouseCoord.x - this.position.left;
+        this.offset.y = mouseCoord.y - this.position.top;
+
+        console.log(this.position)
+
         //记录鼠标点击后的坐标
         this.originalCoord.x = mouseCoord.x;
         this.originalCoord.y = mouseCoord.y;
 
         this.moveCoord = { x: 0, y: 0 };
-
-
 
         //捕捉鼠标的作用范围，防止鼠标移动过快丢失
         if (this.$handle[0].setCapture) {
@@ -325,6 +368,26 @@ define('km/dragdrop', ['jquery'], function ($) {
             bottomBoundary;
 
 
+        if (this.options.autoScroll) {
+
+            if (e.clientY <= 10 || e.clientY >= this.winHeight) {
+
+                if (e.clientY <= 10 && !this.autoScrollActive) {
+                    this.autoScrollActive = true;
+                    this.autoScroll(-1, e.clientY);
+                }
+
+                if (e.clientY >= (this.winHeight - 10) && !this.autoScrollActive) {
+                    this.autoScrollActive = true;
+                    this.autoScroll(1, e.clientY);
+                }
+
+            } else {
+                this.autoScrollActive = false;
+            }
+        }
+
+
         if (this.options.sortable) {
             if (!this.$placeholder) {
 
@@ -342,10 +405,12 @@ define('km/dragdrop', ['jquery'], function ($) {
         }
 
 
+
         if ($range) {
             //元素范围内移动
             rightBoundary = $range.outerWidth() - this.$layer.outerWidth(true);
             bottomBoundary = $range.outerHeight() - this.$layer.outerHeight(true);
+
 
             if (!this.options.boundary) {
                 if (moveCoord.x < 0) { moveCoord.x = 0; }
@@ -353,6 +418,8 @@ define('km/dragdrop', ['jquery'], function ($) {
                 if (moveCoord.x > rightBoundary) { moveCoord.x = rightBoundary; }
                 if (moveCoord.y > bottomBoundary) { moveCoord.y = bottomBoundary; }
             }
+
+
 
         } else {
             //窗体内移动
@@ -378,6 +445,44 @@ define('km/dragdrop', ['jquery'], function ($) {
     };
 
     /**
+     * 自动滚动滚动条
+     * @param  {Int} direction -方向 
+     * @param  {Int} yPos - 鼠标移动时的y值
+     * @return {Void}   
+     */
+    DragDrop.prototype.autoScroll = function (direction, yPos) {
+        var self = this;
+
+        var scrollTop = this.$window.scrollTop();
+
+        if (direction < 0) {
+            if (scrollTop > 0) {
+                scrollTop -= 5;
+                this.$window.scrollTop(scrollTop);
+            } else {
+                this.autoScrollActive = false;
+            }
+        } else {
+            if (yPos >= (this.winHeight - 10)) {
+                scrollTop += 5;
+                this.$window.scrollTop(scrollTop);
+            } else {
+                this.autoScrollActive = false;
+            }
+        }
+
+        if (this.autoScrollActive) {
+            this.tm = setTimeout(function () {
+                self.autoScroll(direction, yPos);
+            }, this.options.autoScrollDealy);
+        } else {
+            if (this.tm) {
+                clearTimeout(this.tm);
+            }
+        }
+    };
+
+    /**
      * 停止拖动
      * @param  {Object} e -事件
      * @return {Void}   
@@ -385,6 +490,7 @@ define('km/dragdrop', ['jquery'], function ($) {
     DragDrop.prototype.stop = function (e) {
         this.isMoving = false;
         this.isResize = false;
+        this.autoScrollActive = false;
 
         if (this.$handle[0].releaseCapture) {
             this.$handle[0].releaseCapture();
@@ -628,11 +734,13 @@ define('km/dragdrop', ['jquery'], function ($) {
      * @param {Object} moveCoord - 鼠标坐标
      */
     DragDrop.prototype.setPosition = function (moveCoord) {
+
         if (this.options.direction === 'h') {
             this.$layer.css('left', moveCoord.x);
         } else if (this.options.direction === 'v') {
             this.$layer.css('top', moveCoord.y);
         } else {
+
             this.$layer.css({
                 left: moveCoord.x,
                 top: moveCoord.y

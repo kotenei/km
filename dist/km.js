@@ -2573,6 +2573,7 @@ define('km/dragdrop', ['jquery'], function ($) {
                 for (var i = droppables.length - 1, item; i >= 0; i--) {
                     item = droppables[i];
 
+
                     left = item.$drop.offset().left - this.$range.offset().left;
                     top = item.$drop.offset().top - this.$range.offset().top;
                     width = item.$drop.outerWidth();
@@ -2632,6 +2633,33 @@ define('km/dragdrop', ['jquery'], function ($) {
                     }
                 }
             }
+        },
+        util = {
+            getPosition: function ($cur, $target) {
+
+                //var position = { left: 0, top: 0 },
+                //    cur = $cur[0],
+                //    parent = cur.offsetParent,
+                //    target = $target[0];
+
+                //position.left += cur.offsetLeft - cur.scrollLeft;
+                //position.top += cur.offsetTop - cur.scrollTop;
+
+                //while (parent != target) {
+                //    position.left += parent.offsetLeft - parent.scrollLeft;
+                //    position.top += parent.offsetTop - parent.scrollTop;
+                //    parent = parent.offsetParent;
+                //}
+
+                //return position;
+
+
+                return {
+                    left: $cur.offset().left - $target.offset().left,
+                    top: $cur.offset().top - $target.offset().top
+                };
+
+            }
         };
 
     /**
@@ -2645,14 +2673,15 @@ define('km/dragdrop', ['jquery'], function ($) {
         this.options = $.extend(true, {
             $layer: null,
             $handle: null,
-            $range: null,
+            $range: $(document.body),
             direction: '',          // h:水平  v:垂直
             resizable: false,       //是否可拖放
             scale: false,           //是否按比例缩放
             boundary: false,        //是否可移出边界
             sortable: false,        //是否可排序
-            placeholder: false,      //占位符
             minWidth: 100,
+            autoScroll: true,
+            autoScrollDealy: 5,
             zIndex: {
                 increase: false
             },
@@ -2671,11 +2700,17 @@ define('km/dragdrop', ['jquery'], function ($) {
             resize: $.noop
         };
 
-        this.$layer = options.$layer;
-        this.$handle = options.$handle;
-        this.$range = options.$range;
+
+
         this.$window = $(window);
         this.$document = $(document);
+
+        this.$layer = this.options.$layer;
+        this.$handle = this.options.$handle && this.options.$handle.length > 0 ? this.options.$handle : this.options.$layer;
+        this.$range = this.options.$range;
+
+        this.autoScrollActive = false;
+        this.tm = null;
 
         //是否设置大小
         this.isResize = false;
@@ -2697,15 +2732,14 @@ define('km/dragdrop', ['jquery'], function ($) {
      */
     DragDrop.prototype.init = function () {
         if (!this.$layer) { return; }
+
         if (this.$range) { this.$range.css("position", "relative"); }
-        this.$handle = this.$handle || this.$layer;
 
         if (!this.options.sortable) {
             this.$layer.css({ cursor: "move", position: 'absolute', zIndex: zIndex });
         } else {
             this.$layer.css({ cursor: 'move' });
         }
-
 
         if (this.options.resizable) {
             this.$layer.append('<span class="k-resizable k-resizable-topLeft" data-type="topLeft"></span>');
@@ -2747,7 +2781,7 @@ define('km/dragdrop', ['jquery'], function ($) {
             this.minHeight = this.minWidth * ratio;
         }
 
-    }
+    };
 
     /**
      * 事件监控
@@ -2809,6 +2843,9 @@ define('km/dragdrop', ['jquery'], function ($) {
 
         this.isMoving = true;
 
+        this.winHeight = this.$window.height();
+        this.docHeight = this.$document.height();
+
         //给文档绑定事件
         this.$document.on('mousemove.dragdrop', function (e) {
             if (self.isMoving) {
@@ -2829,16 +2866,22 @@ define('km/dragdrop', ['jquery'], function ($) {
         //获取鼠标位置
         var mouseCoord = this.getMouseCoord(e);
 
+        this.position = util.getPosition(this.$layer, this.$range);
+
         //记录鼠标在拖动层的坐标位置
-        this.offset.x = mouseCoord.x - this.$layer.position().left;
-        this.offset.y = mouseCoord.y - this.$layer.position().top;
+        //this.offset.x = mouseCoord.x - this.$layer.position().left;
+        //this.offset.y = mouseCoord.y - this.$layer.position().top;
+
+        this.offset.x = mouseCoord.x - this.position.left;
+        this.offset.y = mouseCoord.y - this.position.top;
+
+        console.log(this.position)
+
         //记录鼠标点击后的坐标
         this.originalCoord.x = mouseCoord.x;
         this.originalCoord.y = mouseCoord.y;
 
         this.moveCoord = { x: 0, y: 0 };
-
-
 
         //捕捉鼠标的作用范围，防止鼠标移动过快丢失
         if (this.$handle[0].setCapture) {
@@ -2876,6 +2919,26 @@ define('km/dragdrop', ['jquery'], function ($) {
             bottomBoundary;
 
 
+        if (this.options.autoScroll) {
+
+            if (e.clientY <= 10 || e.clientY >= this.winHeight) {
+
+                if (e.clientY <= 10 && !this.autoScrollActive) {
+                    this.autoScrollActive = true;
+                    this.autoScroll(-1, e.clientY);
+                }
+
+                if (e.clientY >= (this.winHeight - 10) && !this.autoScrollActive) {
+                    this.autoScrollActive = true;
+                    this.autoScroll(1, e.clientY);
+                }
+
+            } else {
+                this.autoScrollActive = false;
+            }
+        }
+
+
         if (this.options.sortable) {
             if (!this.$placeholder) {
 
@@ -2893,10 +2956,12 @@ define('km/dragdrop', ['jquery'], function ($) {
         }
 
 
+
         if ($range) {
             //元素范围内移动
             rightBoundary = $range.outerWidth() - this.$layer.outerWidth(true);
             bottomBoundary = $range.outerHeight() - this.$layer.outerHeight(true);
+
 
             if (!this.options.boundary) {
                 if (moveCoord.x < 0) { moveCoord.x = 0; }
@@ -2904,6 +2969,8 @@ define('km/dragdrop', ['jquery'], function ($) {
                 if (moveCoord.x > rightBoundary) { moveCoord.x = rightBoundary; }
                 if (moveCoord.y > bottomBoundary) { moveCoord.y = bottomBoundary; }
             }
+
+
 
         } else {
             //窗体内移动
@@ -2929,6 +2996,44 @@ define('km/dragdrop', ['jquery'], function ($) {
     };
 
     /**
+     * 自动滚动滚动条
+     * @param  {Int} direction -方向 
+     * @param  {Int} yPos - 鼠标移动时的y值
+     * @return {Void}   
+     */
+    DragDrop.prototype.autoScroll = function (direction, yPos) {
+        var self = this;
+
+        var scrollTop = this.$window.scrollTop();
+
+        if (direction < 0) {
+            if (scrollTop > 0) {
+                scrollTop -= 5;
+                this.$window.scrollTop(scrollTop);
+            } else {
+                this.autoScrollActive = false;
+            }
+        } else {
+            if (yPos >= (this.winHeight - 10)) {
+                scrollTop += 5;
+                this.$window.scrollTop(scrollTop);
+            } else {
+                this.autoScrollActive = false;
+            }
+        }
+
+        if (this.autoScrollActive) {
+            this.tm = setTimeout(function () {
+                self.autoScroll(direction, yPos);
+            }, this.options.autoScrollDealy);
+        } else {
+            if (this.tm) {
+                clearTimeout(this.tm);
+            }
+        }
+    };
+
+    /**
      * 停止拖动
      * @param  {Object} e -事件
      * @return {Void}   
@@ -2936,6 +3041,7 @@ define('km/dragdrop', ['jquery'], function ($) {
     DragDrop.prototype.stop = function (e) {
         this.isMoving = false;
         this.isResize = false;
+        this.autoScrollActive = false;
 
         if (this.$handle[0].releaseCapture) {
             this.$handle[0].releaseCapture();
@@ -3179,11 +3285,13 @@ define('km/dragdrop', ['jquery'], function ($) {
      * @param {Object} moveCoord - 鼠标坐标
      */
     DragDrop.prototype.setPosition = function (moveCoord) {
+
         if (this.options.direction === 'h') {
             this.$layer.css('left', moveCoord.x);
         } else if (this.options.direction === 'v') {
             this.$layer.css('top', moveCoord.y);
         } else {
+
             this.$layer.css({
                 left: moveCoord.x,
                 top: moveCoord.y
@@ -3469,6 +3577,279 @@ define('km/dragdrop', ['jquery'], function ($) {
     };
 
     return DragDrop;
+});
+
+/*
+ * 下拉树模块
+ * @date:2015-07-28
+ * @author:kotenei(kotenei@qq.com)
+ */
+define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
+
+    /**
+     * 下拉树类
+     * @param {JQuery} $element - dom
+     * @param {Object} options - 参数
+     */
+    var DropDownTree = function ($elm, options) {
+        this.$elm = $elm;
+        this.options = $.extend(true, {
+            data: [],
+            url: null,
+            width: null,
+            height: 200,
+            zIndex: 999,
+            appendTo: $(document.body),
+            isTree: true,
+            multiple: false,
+            inputGroup: '.k-input-group',
+            bindElement: null,
+            callback: {
+                select: $.noop,
+                check: $.noop,
+                hide: $.noop
+            }
+        }, options);
+
+        this.$treePanel = $('<div class="k-dropDownTree k-pop-panel"></div>');
+        this.init();
+    };
+
+    /**
+     * 初始化
+     * @return {Void}
+     */
+    DropDownTree.prototype.init = function () {
+
+        var self = this;
+
+        if ((!this.options.url || this.options.url.length == 0) &&
+            (!this.options.data || this.options.data.length == 0)) {
+            return;
+        }
+
+        this.options.bindElement = $(this.options.bindElement);
+
+        this.$inputGroup = this.$elm.parent(this.options.inputGroup);
+
+        this.$elm.attr('readonly', 'readonly');
+
+        this.elmWidth = this.$elm.outerWidth();
+
+        this.$treePanel.css({
+            width: this.options.width || this.$inputGroup.outerWidth() || this.elmWidth,
+            height: this.options.height,
+            zIndex: this.options.zIndex
+        }).appendTo(this.options.appendTo);
+
+        if (!this.options.isTree) {
+            this.options.view = {
+                showLine: false,
+                showIcon: false
+            }
+
+            this.$treePanel.addClass('k-dropDownTree-list');
+        }
+
+        if (this.options.multiple) {
+            this.options.check = {
+                enable: true,
+                chkType: 'checkbox',
+                chkBoxType: { Y: "", N: "" }
+            };
+        }
+
+        this.options.callback.onCheck = function (nodes) {
+            self.check(nodes);
+        };
+
+        this.options.callback.onSelect = function (node) {
+            self.select(node);
+        };
+
+
+        if (this.options.url) {
+            $.get(this.options.url, { rand: Math.random() }, function (data) {
+
+                if (typeof data === 'string') {
+                    data = eval('(0,'+data+')');
+                }
+
+                self.options.data = data;
+                self.tree = new Tree(self.$treePanel, self.options);
+                self.watch();
+            });
+        } else {
+            this.tree = new Tree(this.$treePanel, this.options);
+            this.watch();
+        }
+
+    };
+
+    /**
+     * 事件监控
+     * @return {Void}
+     */
+    DropDownTree.prototype.watch = function () {
+        var self = this;
+
+        this.$elm.on('click.dropDownTree', function (e) {
+            self.show();
+            return false;
+        });
+
+        this.$inputGroup.on('click.dropDownTree', 'button', function (e) {
+            self.show();
+            return false;
+        });
+
+        $(document).on('click.dropDownTree', function (e) {
+            var $target = $(e.target);
+            if ($target.hasClass('k-dropDownTree') ||
+                $target.parents('.k-dropDownTree').length > 0) {
+                return;
+            }
+            self.hide();
+        });
+
+        $(window).on('resize.dropDownTree', function () {
+            self.setPosition();
+        });
+    };
+
+    /**
+     * 单选操作
+     * @return {Void}
+     */
+    DropDownTree.prototype.select = function (node) {
+        if (this.options.multiple) {
+            this.tree.$tree.find('a.selected').removeClass('selected');
+            return;
+        }
+
+        if (this.options.bindElement) {
+            this.options.bindElement.val(node.value || node.nodeId || node.text);
+        }
+
+        this.$elm.val(node.text).attr('title', node.text).focus().blur();
+
+        this.options.callback.select(node);
+
+    };
+
+    /**
+     * 复选操作
+     * @return {Void}
+     */
+    DropDownTree.prototype.check = function (node) {
+
+        var nodes = this.tree.getCheckedNodes();
+        var arrValue = [],
+            arrText = [];
+
+        for (var i = 0; i < nodes.length; i++) {
+            arrText.push(nodes[i].text);
+            arrValue.push(nodes[i].value || nodes[i].nodeId || nodes[i].text);
+        }
+
+        if (this.options.bindElement) {
+            this.options.bindElement.val(arrValue.join(','));
+        }
+
+        this.$elm.val(arrText.join(',')).attr('title', arrText.join(',')).focus().blur();
+        this.options.callback.check(nodes);
+    };
+
+    /**
+     * 设置位置
+     * @return {Void}
+     */
+    DropDownTree.prototype.setPosition = function () {
+        this.$treePanel.css({
+            left: this.$elm.offset().left,
+            top: this.$elm.offset().top + this.$elm.outerHeight() + 2
+        });
+    };
+
+    /**
+     * 显示
+     * @return {Void}
+     */
+    DropDownTree.prototype.show = function () {
+
+        if (this.$treePanel[0].style.display == 'block') {
+            return;
+        }
+        $('div.k-pop-panel').hide();
+        this.$treePanel.slideDown();
+        this.setPosition();
+    };
+
+    /**
+     * 隐藏
+     * @return {Void}
+     */
+    DropDownTree.prototype.hide = function () {
+        if (this.$treePanel[0].style.display == 'block') {
+            this.options.callback.hide();
+        }
+        this.$treePanel.slideUp();
+    };
+
+    /**
+     * 全局调用
+     * @return {Void}
+     */
+    DropDownTree.Global = function ($elms) {
+        $elms = $elms || $('input[data-module=dropdowntree]');
+
+        $elms.each(function () {
+            var $elm = $(this),
+                options=$elm.attr('data-options'),
+                url = $elm.attr('data-url'),
+                width = $elm.attr('data-width'),
+                height = $elm.attr('data-height'),
+                zIndex = $elm.attr('data-zIndex'),
+                appendTo = $elm.attr('data-appendTo'),
+                isTree = $elm.attr('data-isTree') || true,
+                multiple = $elm.attr('data-multiple') || false,
+                array = $elm.attr('data-data'),
+                callback = $elm.attr('data-callback'),
+                bindElm = $elm.attr('data-bindelement') || null,
+                data;
+
+            data = $elm.data('dropDownTree');
+
+            if (options && options.length > 0) {
+                options = eval('(0,' + options + ')');
+            } else {
+                options = {
+                    data: eval(array),
+                    url: url,
+                    width: width && width.length > 0 ? parseInt(width) : null,
+                    height: height && height.length > 0 ? parseInt(height) : 200,
+                    zIndex: zIndex && zIndex.length > 0 ? parseInt(zIndex) : 999,
+                    appendTo: $(appendTo || document.body),
+                    isTree: isTree && isTree == 'false' ? false : true,
+                    multiple: multiple && multiple == 'true' ? true : false,
+                    bindElement: bindElm,
+                    callback: callback && callback.length > 0 ? eval('(0,' + callback + ')') : {}
+                };
+            }
+
+
+
+            if (!data) {
+                data = new DropDownTree($elm, options);
+                $elm.data('dropDownTree', data);
+            }
+
+        });
+    };
+
+
+    return DropDownTree;
+
 });
 
 /**
@@ -3771,279 +4152,6 @@ function ($, Dropdown, DatePicker, util) {
     return DropdownDatePicker;
 
 });
-/*
- * 下拉树模块
- * @date:2015-07-28
- * @author:kotenei(kotenei@qq.com)
- */
-define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
-
-    /**
-     * 下拉树类
-     * @param {JQuery} $element - dom
-     * @param {Object} options - 参数
-     */
-    var DropDownTree = function ($elm, options) {
-        this.$elm = $elm;
-        this.options = $.extend(true, {
-            data: [],
-            url: null,
-            width: null,
-            height: 200,
-            zIndex: 999,
-            appendTo: $(document.body),
-            isTree: true,
-            multiple: false,
-            inputGroup: '.k-input-group',
-            bindElement: null,
-            callback: {
-                select: $.noop,
-                check: $.noop,
-                hide: $.noop
-            }
-        }, options);
-
-        this.$treePanel = $('<div class="k-dropDownTree k-pop-panel"></div>');
-        this.init();
-    };
-
-    /**
-     * 初始化
-     * @return {Void}
-     */
-    DropDownTree.prototype.init = function () {
-
-        var self = this;
-
-        if ((!this.options.url || this.options.url.length == 0) &&
-            (!this.options.data || this.options.data.length == 0)) {
-            return;
-        }
-
-        this.options.bindElement = $(this.options.bindElement);
-
-        this.$inputGroup = this.$elm.parent(this.options.inputGroup);
-
-        this.$elm.attr('readonly', 'readonly');
-
-        this.elmWidth = this.$elm.outerWidth();
-
-        this.$treePanel.css({
-            width: this.options.width || this.$inputGroup.outerWidth() || this.elmWidth,
-            height: this.options.height,
-            zIndex: this.options.zIndex
-        }).appendTo(this.options.appendTo);
-
-        if (!this.options.isTree) {
-            this.options.view = {
-                showLine: false,
-                showIcon: false
-            }
-
-            this.$treePanel.addClass('k-dropDownTree-list');
-        }
-
-        if (this.options.multiple) {
-            this.options.check = {
-                enable: true,
-                chkType: 'checkbox',
-                chkBoxType: { Y: "", N: "" }
-            };
-        }
-
-        this.options.callback.onCheck = function (nodes) {
-            self.check(nodes);
-        };
-
-        this.options.callback.onSelect = function (node) {
-            self.select(node);
-        };
-
-
-        if (this.options.url) {
-            $.get(this.options.url, { rand: Math.random() }, function (data) {
-
-                if (typeof data === 'string') {
-                    data = eval('(0,'+data+')');
-                }
-
-                self.options.data = data;
-                self.tree = new Tree(self.$treePanel, self.options);
-                self.watch();
-            });
-        } else {
-            this.tree = new Tree(this.$treePanel, this.options);
-            this.watch();
-        }
-
-    };
-
-    /**
-     * 事件监控
-     * @return {Void}
-     */
-    DropDownTree.prototype.watch = function () {
-        var self = this;
-
-        this.$elm.on('click.dropDownTree', function (e) {
-            self.show();
-            return false;
-        });
-
-        this.$inputGroup.on('click.dropDownTree', 'button', function (e) {
-            self.show();
-            return false;
-        });
-
-        $(document).on('click.dropDownTree', function (e) {
-            var $target = $(e.target);
-            if ($target.hasClass('k-dropDownTree') ||
-                $target.parents('.k-dropDownTree').length > 0) {
-                return;
-            }
-            self.hide();
-        });
-
-        $(window).on('resize.dropDownTree', function () {
-            self.setPosition();
-        });
-    };
-
-    /**
-     * 单选操作
-     * @return {Void}
-     */
-    DropDownTree.prototype.select = function (node) {
-        if (this.options.multiple) {
-            this.tree.$tree.find('a.selected').removeClass('selected');
-            return;
-        }
-
-        if (this.options.bindElement) {
-            this.options.bindElement.val(node.value || node.nodeId || node.text);
-        }
-
-        this.$elm.val(node.text).attr('title', node.text).focus().blur();
-
-        this.options.callback.select(node);
-
-    };
-
-    /**
-     * 复选操作
-     * @return {Void}
-     */
-    DropDownTree.prototype.check = function (node) {
-
-        var nodes = this.tree.getCheckedNodes();
-        var arrValue = [],
-            arrText = [];
-
-        for (var i = 0; i < nodes.length; i++) {
-            arrText.push(nodes[i].text);
-            arrValue.push(nodes[i].value || nodes[i].nodeId || nodes[i].text);
-        }
-
-        if (this.options.bindElement) {
-            this.options.bindElement.val(arrValue.join(','));
-        }
-
-        this.$elm.val(arrText.join(',')).attr('title', arrText.join(',')).focus().blur();
-        this.options.callback.check(nodes);
-    };
-
-    /**
-     * 设置位置
-     * @return {Void}
-     */
-    DropDownTree.prototype.setPosition = function () {
-        this.$treePanel.css({
-            left: this.$elm.offset().left,
-            top: this.$elm.offset().top + this.$elm.outerHeight() + 2
-        });
-    };
-
-    /**
-     * 显示
-     * @return {Void}
-     */
-    DropDownTree.prototype.show = function () {
-
-        if (this.$treePanel[0].style.display == 'block') {
-            return;
-        }
-        $('div.k-pop-panel').hide();
-        this.$treePanel.slideDown();
-        this.setPosition();
-    };
-
-    /**
-     * 隐藏
-     * @return {Void}
-     */
-    DropDownTree.prototype.hide = function () {
-        if (this.$treePanel[0].style.display == 'block') {
-            this.options.callback.hide();
-        }
-        this.$treePanel.slideUp();
-    };
-
-    /**
-     * 全局调用
-     * @return {Void}
-     */
-    DropDownTree.Global = function ($elms) {
-        $elms = $elms || $('input[data-module=dropdowntree]');
-
-        $elms.each(function () {
-            var $elm = $(this),
-                options=$elm.attr('data-options'),
-                url = $elm.attr('data-url'),
-                width = $elm.attr('data-width'),
-                height = $elm.attr('data-height'),
-                zIndex = $elm.attr('data-zIndex'),
-                appendTo = $elm.attr('data-appendTo'),
-                isTree = $elm.attr('data-isTree') || true,
-                multiple = $elm.attr('data-multiple') || false,
-                array = $elm.attr('data-data'),
-                callback = $elm.attr('data-callback'),
-                bindElm = $elm.attr('data-bindelement') || null,
-                data;
-
-            data = $elm.data('dropDownTree');
-
-            if (options && options.length > 0) {
-                options = eval('(0,' + options + ')');
-            } else {
-                options = {
-                    data: eval(array),
-                    url: url,
-                    width: width && width.length > 0 ? parseInt(width) : null,
-                    height: height && height.length > 0 ? parseInt(height) : 200,
-                    zIndex: zIndex && zIndex.length > 0 ? parseInt(zIndex) : 999,
-                    appendTo: $(appendTo || document.body),
-                    isTree: isTree && isTree == 'false' ? false : true,
-                    multiple: multiple && multiple == 'true' ? true : false,
-                    bindElement: bindElm,
-                    callback: callback && callback.length > 0 ? eval('(0,' + callback + ')') : {}
-                };
-            }
-
-
-
-            if (!data) {
-                data = new DropDownTree($elm, options);
-                $elm.data('dropDownTree', data);
-            }
-
-        });
-    };
-
-
-    return DropDownTree;
-
-});
-
 /**
  * 事件
  * @date :2014-12-01
@@ -6084,6 +6192,89 @@ define('km/placeholder', ['jquery'], function($) {
     }
 });
 /*
+ * 弹出提示模块
+ * @date:2014-09-10
+ * @author:kotenei(kotenei@qq.com)
+ */
+define('km/popTips', ['jquery'], function ($) {
+
+    /**
+     * 弹出提示模块
+     * @return {Object} 
+     */
+    var PopTips = (function () {
+
+        var _instance;
+
+        function init() {
+
+            var $tips, tm;
+
+            function build(status, content, delay, callback) {
+
+                if (tm) { clearTimeout(tm); }
+
+                if ($.isFunction(delay)) { callback = delay; delay = 3000; }
+
+                callback = callback || $.noop;
+                delay = delay || 3000;
+
+                if ($tips) { $tips.stop().remove(); }
+
+                $tips = $(getHtml(status, content))
+                        .appendTo(document.body).hide();
+
+                $tips.css({ marginLeft: -($tips.width() / 2), marginTop: -($tips.height() / 2) }).fadeIn('fase', function () {
+                    tm = setTimeout(function () {
+                        $tips.stop().remove();
+                        callback();
+                    }, delay);
+                })
+            }
+
+            function getHtml(status, content) {
+                var html = [];
+                switch (status) {
+                    case "success":
+                        html.push('<div class="k-pop-tips success"><span class="fa fa-check"></span>&nbsp;<span>' + content + '</span></div>');
+                        break;
+                    case "error":
+                        html.push('<div class="k-pop-tips error"><span class="fa fa-close"></span>&nbsp;<span>' + content + '</span></div>');
+                        break;
+                    case "warning":
+                        html.push('<div class="k-pop-tips warning"><span class="fa fa-exclamation"></span>&nbsp;<span>' + content + '</span></div>');
+                        break;
+                }
+                return html.join('');
+            }
+
+            return {
+                success: function (content, callback, delay) {
+                    build("success", content, callback, delay);
+                },
+                error: function (content, callback, delay) {
+                    build("error", content, callback, delay);
+                },
+                warning: function (content, callback, delay) {
+                    build("warning", content, callback, delay);
+                }
+            };
+        }
+
+        return {
+            getInstance: function () {
+                if (!_instance) {
+                    _instance = init();
+                }
+                return _instance;
+            }
+        }
+    })();
+
+    return PopTips.getInstance();
+});
+
+/*
  * 弹出框模块
  * @date:2014-11-05
  * @author:kotenei(kotenei@qq.com)
@@ -6194,89 +6385,6 @@ define('km/popover', ['jquery', 'km/tooltips', 'km/util'], function ($, Tooltips
 
     return Popover;
 });
-/*
- * 弹出提示模块
- * @date:2014-09-10
- * @author:kotenei(kotenei@qq.com)
- */
-define('km/popTips', ['jquery'], function ($) {
-
-    /**
-     * 弹出提示模块
-     * @return {Object} 
-     */
-    var PopTips = (function () {
-
-        var _instance;
-
-        function init() {
-
-            var $tips, tm;
-
-            function build(status, content, delay, callback) {
-
-                if (tm) { clearTimeout(tm); }
-
-                if ($.isFunction(delay)) { callback = delay; delay = 3000; }
-
-                callback = callback || $.noop;
-                delay = delay || 3000;
-
-                if ($tips) { $tips.stop().remove(); }
-
-                $tips = $(getHtml(status, content))
-                        .appendTo(document.body).hide();
-
-                $tips.css({ marginLeft: -($tips.width() / 2), marginTop: -($tips.height() / 2) }).fadeIn('fase', function () {
-                    tm = setTimeout(function () {
-                        $tips.stop().remove();
-                        callback();
-                    }, delay);
-                })
-            }
-
-            function getHtml(status, content) {
-                var html = [];
-                switch (status) {
-                    case "success":
-                        html.push('<div class="k-pop-tips success"><span class="fa fa-check"></span>&nbsp;<span>' + content + '</span></div>');
-                        break;
-                    case "error":
-                        html.push('<div class="k-pop-tips error"><span class="fa fa-close"></span>&nbsp;<span>' + content + '</span></div>');
-                        break;
-                    case "warning":
-                        html.push('<div class="k-pop-tips warning"><span class="fa fa-exclamation"></span>&nbsp;<span>' + content + '</span></div>');
-                        break;
-                }
-                return html.join('');
-            }
-
-            return {
-                success: function (content, callback, delay) {
-                    build("success", content, callback, delay);
-                },
-                error: function (content, callback, delay) {
-                    build("error", content, callback, delay);
-                },
-                warning: function (content, callback, delay) {
-                    build("warning", content, callback, delay);
-                }
-            };
-        }
-
-        return {
-            getInstance: function () {
-                if (!_instance) {
-                    _instance = init();
-                }
-                return _instance;
-            }
-        }
-    })();
-
-    return PopTips.getInstance();
-});
-
 /*
  * 评级模块
  * @date:2015-07-17
