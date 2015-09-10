@@ -86,28 +86,46 @@ define('km/dragdrop', ['jquery'], function ($) {
         util = {
             getPosition: function ($cur, $target) {
 
-                //var position = { left: 0, top: 0 },
-                //    cur = $cur[0],
-                //    parent = cur.offsetParent,
-                //    target = $target[0];
-
-                //position.left += cur.offsetLeft - cur.scrollLeft;
-                //position.top += cur.offsetTop - cur.scrollTop;
-
-                //while (parent != target) {
-                //    position.left += parent.offsetLeft - parent.scrollLeft;
-                //    position.top += parent.offsetTop - parent.scrollTop;
-                //    parent = parent.offsetParent;
-                //}
-
-                //return position;
-
+                var curOffset = $cur.offset(),
+                    targetOffset = $target.offset();
 
                 return {
-                    left: $cur.offset().left - $target.offset().left,
-                    top: $cur.offset().top - $target.offset().top
+                    left: curOffset.left - targetOffset.left,
+                    top: curOffset.top - targetOffset.top,
+                    offsetLeft: curOffset.left,
+                    offsetTop: curOffset.top
+                };
+            },
+            getOffsetParent: function ($cur, $target) {
+                var isRoot = true;
+                var $parent = $cur.parent();
+
+                var info = {
+                    isRoot: false,
+                    left: 0,
+                    top: 0,
+                    pLeft: 0,
+                    pTop: 0,
+                    $el: null
                 };
 
+                var offset, position;
+
+                while ($parent[0] != $target[0]) {
+                    position = $parent.css('position');
+                    if (position == 'relative' || position == 'absolute') {
+                        info.left = $parent.offset().left;
+                        info.top = $parent.offset().top;
+                        info.pLeft = info.left - $target.offset().left;
+                        info.pTop = info.top - $target.offset().top;
+                        info.$el = $parent;
+                        info.isRoot = true;
+                        return info;
+                    }
+                    $parent = $parent.parent();
+                }
+
+                return info;
             }
         };
 
@@ -122,7 +140,7 @@ define('km/dragdrop', ['jquery'], function ($) {
         this.options = $.extend(true, {
             $layer: null,
             $handle: null,
-            $range: $(document.body),
+            $range: null,
             direction: '',          // h:水平  v:垂直
             resizable: false,       //是否可拖放
             scale: false,           //是否按比例缩放
@@ -153,6 +171,7 @@ define('km/dragdrop', ['jquery'], function ($) {
 
         this.$window = $(window);
         this.$document = $(document);
+        this.$body = $(document.body);
 
         this.$layer = this.options.$layer;
         this.$handle = this.options.$handle && this.options.$handle.length > 0 ? this.options.$handle : this.options.$layer;
@@ -311,20 +330,24 @@ define('km/dragdrop', ['jquery'], function ($) {
             self.$document.off('mouseup.dragdrop');
         });
 
-
         //获取鼠标位置
         var mouseCoord = this.getMouseCoord(e);
 
-        this.position = util.getPosition(this.$layer, this.$range);
+        var position = util.getPosition(this.$layer, this.$range ? this.$range : this.$body);
 
         //记录鼠标在拖动层的坐标位置
         //this.offset.x = mouseCoord.x - this.$layer.position().left;
         //this.offset.y = mouseCoord.y - this.$layer.position().top;
 
-        this.offset.x = mouseCoord.x - this.position.left;
-        this.offset.y = mouseCoord.y - this.position.top;
+        this.offset.x = mouseCoord.x - position.left;
+        this.offset.y = mouseCoord.y - position.top;
 
-        console.log(this.position)
+        this.offset.click = {
+            left: mouseCoord.x - position.offsetLeft,
+            top: mouseCoord.y - position.offsetTop
+        };
+
+        this.offset.parent = util.getOffsetParent(this.$layer, this.$range ? this.$range : this.$body);
 
         //记录鼠标点击后的坐标
         this.originalCoord.x = mouseCoord.x;
@@ -354,7 +377,12 @@ define('km/dragdrop', ['jquery'], function ($) {
      * @return {Void}   
      */
     DragDrop.prototype.move = function (e) {
+
         var self = this;
+
+        var $range = this.$range;
+
+        var boundary = { right: 0, bottom: 0 };
 
         var mouseCoord = this.getMouseCoord(e);
 
@@ -362,10 +390,6 @@ define('km/dragdrop', ['jquery'], function ($) {
             x: mouseCoord.x - this.offset.x,
             y: mouseCoord.y - this.offset.y
         };
-
-        var $range = this.$range,
-            rightBoundary,
-            bottomBoundary;
 
 
         if (this.options.autoScroll) {
@@ -377,7 +401,8 @@ define('km/dragdrop', ['jquery'], function ($) {
                     this.autoScroll(-1, e.clientY);
                 }
 
-                if (e.clientY >= (this.winHeight - 10) && !this.autoScrollActive) {
+                if (e.clientY >= (this.winHeight - 10) && mouseCoord.y < this.docHeight && !this.autoScrollActive) {
+
                     this.autoScrollActive = true;
                     this.autoScroll(1, e.clientY);
                 }
@@ -404,36 +429,32 @@ define('km/dragdrop', ['jquery'], function ($) {
             });
         }
 
+        var position = {
+            left: mouseCoord.x - this.offset.click.left - this.offset.parent.left,
+            top: mouseCoord.y - this.offset.click.top - this.offset.parent.top
+        };
 
 
         if ($range) {
             //元素范围内移动
-            rightBoundary = $range.outerWidth() - this.$layer.outerWidth(true);
-            bottomBoundary = $range.outerHeight() - this.$layer.outerHeight(true);
-
+            boundary.right = parseInt($range.outerWidth() - parseInt(this.$range.css('borderLeftWidth')) - parseInt(this.$range.css('borderRightWidth')) - this.$layer.outerWidth());
+            boundary.bottom = parseInt($range.outerHeight() - parseInt(this.$range.css('borderTopWidth')) - parseInt(this.$range.css('borderBottomWidth')) - this.$layer.outerHeight());
 
             if (!this.options.boundary) {
-                if (moveCoord.x < 0) { moveCoord.x = 0; }
-                if (moveCoord.y < 0) { moveCoord.y = 0; }
-                if (moveCoord.x > rightBoundary) { moveCoord.x = rightBoundary; }
-                if (moveCoord.y > bottomBoundary) { moveCoord.y = bottomBoundary; }
+                this.setMoveCoord(moveCoord, boundary, position);
             }
-
-
 
         } else {
             //窗体内移动
-            rightBoundary = this.$window.width() - this.$layer.outerWidth() + this.$document.scrollLeft();
-            bottomBoundary = this.$window.height() - this.$layer.outerHeight() + this.$document.scrollTop();
-            if (moveCoord.x < 0) { moveCoord.x = 0; }
-            if (moveCoord.y < 0) { moveCoord.y = 0; }
-            if (moveCoord.x > rightBoundary) { moveCoord.x = rightBoundary; }
-            if (moveCoord.y > bottomBoundary) { moveCoord.y = bottomBoundary; }
+            boundary.right = parseInt(this.$window.width() - this.$layer.outerWidth() + this.$document.scrollLeft());
+            boundary.bottom = parseInt(this.$window.height() - this.$layer.outerHeight() + this.$document.scrollTop());
+            this.setMoveCoord(moveCoord, boundary, position);
         }
+
 
         this.moveCoord = moveCoord;
 
-        this.setPosition(moveCoord);
+        this.setPosition(moveCoord, position);
 
         method.move.call(this, e, moveCoord);
 
@@ -442,6 +463,51 @@ define('km/dragdrop', ['jquery'], function ($) {
         }
 
         this._event.move.call(this, e, moveCoord);
+    };
+
+    /**
+     * 设置移动时的坐标定位
+     * @param  {object} moveCoord - 坐标 
+     * @param  {object} boundary - 边界
+     * @return {objet}  position - 定位
+     */
+    DragDrop.prototype.setMoveCoord = function (moveCoord, boundary, position) {
+
+        if (moveCoord.x < 0) {
+
+            moveCoord.x = 0;
+
+            if (this.offset.parent.isRoot) {
+                position.left = -this.offset.parent.pLeft;
+            }
+
+        }
+
+        if (moveCoord.y < 0) {
+
+            moveCoord.y = 0;
+
+            if (this.offset.parent.isRoot) {
+                position.top = -this.offset.parent.pTop;
+            }
+        }
+
+        if (moveCoord.x > boundary.right) {
+            moveCoord.x = boundary.right;
+
+            if (this.offset.parent.isRoot) {
+                position.left = parseInt(moveCoord.x - this.offset.parent.pLeft);
+            }
+        }
+
+        if (moveCoord.y > boundary.bottom) {
+
+            moveCoord.y = boundary.bottom;
+
+            if (this.offset.parent.isRoot) {
+                position.top = parseInt(moveCoord.y - this.offset.parent.pTop);
+            }
+        }
     };
 
     /**
@@ -733,18 +799,19 @@ define('km/dragdrop', ['jquery'], function ($) {
      * 设置拖动层位置
      * @param {Object} moveCoord - 鼠标坐标
      */
-    DragDrop.prototype.setPosition = function (moveCoord) {
+    DragDrop.prototype.setPosition = function (moveCoord, position, boundary) {
 
         if (this.options.direction === 'h') {
-            this.$layer.css('left', moveCoord.x);
+            this.$layer.css('left', this.offset.parent.isRoot ? position.left : moveCoord.x);
         } else if (this.options.direction === 'v') {
-            this.$layer.css('top', moveCoord.y);
+            this.$layer.css('top', this.offset.parent.isRoot ? position.top : moveCoord.y);
         } else {
 
             this.$layer.css({
-                left: moveCoord.x,
-                top: moveCoord.y
+                left: this.offset.parent.isRoot ? position.left : moveCoord.x,
+                top: this.offset.parent.isRoot ? position.top : moveCoord.y
             });
+
         }
     };
 

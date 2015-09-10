@@ -46,6 +46,10 @@
         {
             background: #1ABC9C;
         }
+
+        .test
+        {
+        }
     </style>
 </head>
 <body>
@@ -66,11 +70,16 @@
         </script>
         <div class="demo-container">
             <h1 class="page-header">拖放</h1>
-            <div class="bs-example bs-example-padded-bottom">
+            <div class="bs-example bs-example-padded-bottom" id="range">
                 <div id="feedback" style="height: 30px;"></div>
-                <div id="panel" style="width: 500px; height: 300px; border: 1px solid red; margin: 0 auto;position:relative;">
-                    <div id="layer" style="width: 50px; height: 50px; background: red; position: absolute;"></div>
+
+                <div style="border: 1px solid black;width:510px;height:300px;margin:0 auto;position:relative;">
+                    <div id="panel" style="width: 500px; height: 300px; border: 1px solid red; margin: 0 auto;position:relative; ">
+                        <div id="layer" style="width: 50px; height: 50px; background: red;">
+                        </div>
+                    </div>
                 </div>
+
             </div>
             <h3>初始化</h3>
             <pre>
@@ -239,7 +248,7 @@ over:function($drag,moveCoord){
             <hr />
             <br />
             <h3>排序 sortable</h3>
-            <div class="bs-example bs-example-padded-bottom" id="multi" >
+            <div class="bs-example bs-example-padded-bottom" id="multi">
                 <div class="layer">
                     <div class="item">
                         asp.net
@@ -387,7 +396,7 @@ callback: {
             var $feedback = $('#feedback');
 
             var dragdrop = new KM.Dragdrop({
-                $range: $('#panel').parent(),
+                $range: $('#range'),
                 $layer: $('#layer'),
                 callback: {
                     start: function () {
