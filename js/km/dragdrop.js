@@ -644,21 +644,11 @@ define('km/dragdrop', ['jquery'], function ($) {
 
                 css.top = resizeParams.top - (css.height - resizeParams.height);
 
-                if (moveCoord.y <= 0) {
-                    if (this.offset.parent.isRoot) {
-                        css.top = -this.offset.parent.pTop;
-                    } else {
-                        css.top = 0;
-                    }
-                    css.height = resizeParams.height + this.offset.parent.pTop - Math.abs( resizeParams.top);
+                if (css.top <= -this.offset.parent.pTop) {
+                    css.top = -this.offset.parent.pTop;
+                    css.height = resizeParams.height + this.offset.parent.pTop + resizeParams.top;
                     css.width = this.getScaleWidth(css.height);
                 }
-
-                //if (css.top < 0) {
-                //    css.top = 0;
-                //    css.height = resizeParams.height + resizeParams.top;
-                //    css.width = this.getScaleWidth(css.height);
-                //}
 
                 break;
             case "leftCenter":
@@ -692,14 +682,16 @@ define('km/dragdrop', ['jquery'], function ($) {
                 }
                 break;
             case "topCenter":
-                css.top = moveCoord.y;
+                css.top = this.offset.parent.isRoot ? mouseCoord.y - this.offset.click.top - this.offset.parent.top : moveCoord.y;
                 css.left = resizeParams.left;
                 css.width = resizeParams.width;
                 css.height = resizeParams.height + (this.originalCoord.y - mouseCoord.y);
-                if (moveCoord.y < 0) {
-                    css.top = 0;
-                    css.height = resizeParams.height + resizeParams.top;
+
+                if (css.top < -this.offset.parent.pTop) {
+                    css.top = -this.offset.parent.pTop;
+                    css.height = resizeParams.height + this.offset.parent.pTop + resizeParams.top;
                 }
+
                 if (css.height <= this.minHeight) {
                     css.height = this.minHeight;
                     css.top = resizeParams.top + (resizeParams.height - css.height);
