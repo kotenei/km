@@ -73,12 +73,12 @@
             <div class="bs-example bs-example-padded-bottom" id="range">
                 <div id="feedback" style="height: 30px;"></div>
 
-                <div style="border: 1px solid black;width:510px;height:300px;margin:0 auto;position:relative;">
-                    <div id="panel" style="width: 500px; height: 300px; border: 1px solid red; margin: 0 auto;position:relative; ">
-                        <div id="layer" style="width: 50px; height: 50px; background: red;">
-                        </div>
+
+                <div id="panel" style="width: 500px; height: 300px; border: 1px solid red; margin: 0 auto; position: relative;">
+                    <div id="layer" style="width: 50px; height: 50px; background: red;">
                     </div>
                 </div>
+
 
             </div>
             <h3>初始化</h3>
@@ -398,6 +398,7 @@ callback: {
             var dragdrop = new KM.Dragdrop({
                 $range: $('#range'),
                 $layer: $('#layer'),
+                resizable: true,
                 callback: {
                     start: function () {
                         $feedback.html('start');
@@ -408,10 +409,10 @@ callback: {
                     stop: function (e, moveCoord) {
                         $feedback.html('stop');
                     },
-                    resize: function (e) {
+                    resize: function (e,size) {
                         var html = [];
-                        html.push('width:' + e.width + '<br/>');
-                        html.push('height:' + e.height + '<br/>');
+                        html.push('width:' + size.width + '<br/>');
+                        html.push('height:' + size.height + '<br/>');
                         $feedback.html(html.join(''));
                     }
                 }

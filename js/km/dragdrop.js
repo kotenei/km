@@ -288,8 +288,8 @@ define('km/dragdrop', ['jquery'], function ($) {
             self.resizeParams.top = parseInt(self.$layer.position().top);
             self.resizeParams.width = parseInt(self.$layer.outerWidth());
             self.resizeParams.height = parseInt(self.$layer.outerHeight());
-            self.resizeParams.ratio = self.resizeParams.width >= self.resizeParams.height ? self.resizeParams.width / self.resizeParams.height : self.resizeParams.height / self.resizeParams.width
-        })
+            self.resizeParams.ratio = self.resizeParams.width >= self.resizeParams.height ? self.resizeParams.width / self.resizeParams.height : self.resizeParams.height / self.resizeParams.width;
+        });
     };
 
     /**
@@ -592,14 +592,15 @@ define('km/dragdrop', ['jquery'], function ($) {
         };
         var $layer = this.$layer;
         var resizeParams = this.resizeParams;
+        var position = util.getPosition(this.$layer, this.$range ? this.$range : this.$body);
         var css = { left: 0, top: 0, width: 0, height: 0 };
         var rightBoundary, bottomBoundary;
         var rw, rh;
         var $range = this.$range;
 
         if ($range) {
-            rw = $range.width();
-            rh = $range.height();
+            rw = $range.outerWidth();
+            rh = $range.outerHeight();
         } else {
             rw = this.$window.width() + this.$document.scrollLeft();
             rh = this.$window.height() + this.$document.scrollTop();
@@ -635,18 +636,29 @@ define('km/dragdrop', ['jquery'], function ($) {
                 css.width = css.width < this.minWidth ? this.minWidth : css.width;
                 css.height = this.getScaleHeight(css.width);
 
-                if ((css.width + css.left) >= rw) {
-                    css.width = rw - resizeParams.left;
+
+                if ((css.width + this.offset.parent.pLeft + css.left) >= rw) {
+                    css.width = rw - this.offset.parent.pLeft - css.left;
                     css.height = this.getScaleHeight(css.width);
                 }
 
                 css.top = resizeParams.top - (css.height - resizeParams.height);
 
-                if (css.top < 0) {
-                    css.top = 0;
-                    css.height = resizeParams.height + resizeParams.top;
+                if (moveCoord.y <= 0) {
+                    if (this.offset.parent.isRoot) {
+                        css.top = -this.offset.parent.pTop;
+                    } else {
+                        css.top = 0;
+                    }
+                    css.height = resizeParams.height + this.offset.parent.pTop - Math.abs( resizeParams.top);
                     css.width = this.getScaleWidth(css.height);
                 }
+
+                //if (css.top < 0) {
+                //    css.top = 0;
+                //    css.height = resizeParams.height + resizeParams.top;
+                //    css.width = this.getScaleWidth(css.height);
+                //}
 
                 break;
             case "leftCenter":
@@ -665,12 +677,15 @@ define('km/dragdrop', ['jquery'], function ($) {
                 }
                 break;
             case "rightCenter":
+
                 css.top = resizeParams.top;
                 css.left = resizeParams.left;
                 css.height = resizeParams.height;
                 css.width = resizeParams.width - (this.originalCoord.x - mouseCoord.x);
-                if ((css.width + css.left) >= rw) {
-                    css.width = rw - resizeParams.left;
+
+
+                if ((css.width + this.offset.parent.pLeft + css.left) >= rw) {
+                    css.width = rw - this.offset.parent.pLeft - css.left;
                 }
                 if (css.width <= this.minWidth) {
                     css.width = this.minWidth;
@@ -695,9 +710,11 @@ define('km/dragdrop', ['jquery'], function ($) {
                 css.left = resizeParams.left;
                 css.width = resizeParams.width;
                 css.height = resizeParams.height - (this.originalCoord.y - mouseCoord.y);
-                if (css.height + css.top >= rh) {
-                    css.height = rh - resizeParams.top;
+
+                if ((css.height + this.offset.parent.pTop + css.top) >= rh) {
+                    css.height = rh - this.offset.parent.pTop - css.top;
                 }
+
                 if (css.height <= this.minHeight) {
                     css.height = this.minHeight;
                 }
@@ -723,19 +740,21 @@ define('km/dragdrop', ['jquery'], function ($) {
 
                 break;
             case "bottomRight":
+
                 css.top = resizeParams.top;
                 css.left = resizeParams.left;
                 css.width = resizeParams.width - (this.originalCoord.x - mouseCoord.x);
                 css.width = css.width < this.minWidth ? this.minWidth : css.width;
                 css.height = this.getScaleHeight(css.width);
 
-                if ((css.width + css.left) >= rw) {
-                    css.width = rw - resizeParams.left;
+
+                if ((css.width + this.offset.parent.pLeft + css.left) >= rw) {
+                    css.width = rw - this.offset.parent.pLeft - css.left;
                     css.height = this.getScaleHeight(css.width);
                 }
 
-                if (css.top + css.height >= rh) {
-                    css.height = rh - css.top;
+                if ((css.height + this.offset.parent.pTop + css.top) >= rh) {
+                    css.height = rh - this.offset.parent.pTop - css.top;
                     css.width = this.getScaleWidth(css.height);
                 }
 
