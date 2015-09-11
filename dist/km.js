@@ -948,7 +948,7 @@ define('km/clipZoom', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
                 boundary: true,
                 scale: true,
                 callback: {
-                    resize: function (css) {
+                    resize: function (e,css) {
                         self.setImgSize(css.width, css.height);
                         self.setPreview();
                     },
