@@ -609,22 +609,24 @@ define('km/dragdrop', ['jquery'], function ($) {
 
         switch (this.resizeParams.type) {
             case "topLeft":
-                css.width = resizeParams.width + (resizeParams.left - moveCoord.x);
+
+                css.width = resizeParams.width + (resizeParams.left - (this.offset.parent.isRoot ? mouseCoord.x - this.offset.click.left - this.offset.parent.left : moveCoord.x));
                 css.width = css.width < this.minWidth ? this.minWidth : css.width;
                 css.height = this.getScaleHeight(css.width);
+
                 css.top = resizeParams.top - (css.height - resizeParams.height);
                 css.left = resizeParams.left - (css.width - resizeParams.width);
 
-                if (css.left < 0) {
-                    css.left = 0;
-                    css.width = resizeParams.width + resizeParams.left;
+                if (css.left <= -this.offset.parent.pLeft) {
+                    css.left = -this.offset.parent.pLeft;
+                    css.width = resizeParams.width + this.offset.parent.pLeft + resizeParams.left;
                     css.height = this.getScaleHeight(css.width);
                     css.top = resizeParams.top - (css.height - resizeParams.height);
                 }
 
-                if (css.top < 0) {
-                    css.top = 0;
-                    css.height = resizeParams.height + resizeParams.top;
+                if (css.top <= -this.offset.parent.pTop) {
+                    css.top = -this.offset.parent.pTop;
+                    css.height = resizeParams.height + this.offset.parent.pTop + resizeParams.top;
                     css.width = this.getScaleWidth(css.height);
                     css.left = resizeParams.left - (css.width - resizeParams.width);
                 }
@@ -654,17 +656,20 @@ define('km/dragdrop', ['jquery'], function ($) {
             case "leftCenter":
                 css.top = resizeParams.top;
                 css.height = resizeParams.height;
+
                 if (moveCoord.x <= 0) {
-                    css.left = 0;
-                    css.width = resizeParams.width + resizeParams.left;
+                    css.left = -this.offset.parent.pLeft;
+                    css.width = resizeParams.width + this.offset.parent.pLeft + resizeParams.left;
                 } else {
-                    css.left = moveCoord.x;
+                    css.left = this.offset.parent.isRoot ? mouseCoord.x - this.offset.click.left - this.offset.parent.left : moveCoord.x;
                     css.width = resizeParams.width + (this.originalCoord.x - mouseCoord.x);
                 }
+
                 if (css.width <= this.minWidth) {
                     css.width = this.minWidth;
                     css.left = resizeParams.left + (resizeParams.width - css.width);
                 }
+
                 break;
             case "rightCenter":
 
@@ -718,14 +723,15 @@ define('km/dragdrop', ['jquery'], function ($) {
                 css.height = this.getScaleHeight(css.width);
                 css.left = resizeParams.left - (css.width - resizeParams.width);
 
-                if (css.left <= 0) {
-                    css.left = 0;
-                    css.width = resizeParams.width + resizeParams.left;
+
+                if (css.left <= -this.offset.parent.pLeft) {
+                    css.left = -this.offset.parent.pLeft;
+                    css.width = resizeParams.width + this.offset.parent.pLeft + resizeParams.left;
                     css.height = this.getScaleHeight(css.width);
                 }
 
-                if (css.height + css.top >= rh) {
-                    css.height = rh - css.top;
+                if ((css.height + this.offset.parent.pTop + css.top) >= rh) {
+                    css.height = rh - this.offset.parent.pTop - css.top;
                     css.width = this.getScaleWidth(css.height);
                     css.left = resizeParams.left - (css.width - resizeParams.width);
                 }
