@@ -30,13 +30,15 @@
 
         <div class="demo-container">
             <h1 class="page-header">调整大小</h1>
-            <div class="bs-example bs-example-padded-bottom">
-                <div style="position:relative;height:400px;">
+            <div class="bs-example bs-example-padded-bottom" id="range">
+
+
+                <div style=" height: 400px;">
                     <div style="width: 300px; height: 300px;"
                         data-module="resizable"
                         data-options="{
                             minBar:true,
-                            cover:false,
+                            cover:true,
                             minWidth:200,
                             minHeight:200
                         }"
@@ -126,7 +128,7 @@ function stop(info) {
             <h3>自定义</h3>
             <div class="bs-example bs-example-padded-bottom">
                 <div id="log"></div>
-                <div style="position:relative;height:300px;">
+                <div style="position: relative; height: 300px;">
                     <div id="resizable" style="width: 200px; height: 200px;">
                     </div>
                 </div>
@@ -186,7 +188,8 @@ var resizable = new KM.Resizable($elm, options);
                     <tr>
                         <td>border</td>
                         <td>object</td>
-                        <td><pre>
+                        <td>
+                            <pre>
                             <code>
 border:{
     left:true,
@@ -195,8 +198,9 @@ border:{
     bottom:true
 }
                             </code>
-                            </pre></td>
-                        
+                            </pre>
+                        </td>
+
                         <td>边框的四条边是否可拖动来调整大小，默认为全部可拖动</td>
                     </tr>
                 </tbody>
@@ -226,14 +230,14 @@ resizable.on('stop', function (info) {
     <script type="text/javascript">
 
         function resize(info) {
-            console.log(this);
+            console.log(info);
         }
 
         function stop(info) {
-            console.log(this);
+            console.log(info);
         }
 
-        require(['jquery','KM'], function ($,KM) {
+        require(['jquery', 'KM'], function ($, KM) {
 
             var $log = $('#log');
 
@@ -243,13 +247,13 @@ resizable.on('stop', function (info) {
                 cover: true,
                 minBar: true,
                 minWidth: 100,
-                minHeight:100
+                minHeight: 100
             });
 
             resizable.on('resize', function (info) {
-                $log.html('width:' + info.width + ' | height:'+info.height+' | left:'+info.left+' | top:'+info.top);
+                $log.html('width:' + info.width + ' | height:' + info.height + ' | left:' + info.left + ' | top:' + info.top);
             }).on('stop', function (info) {
-                $log.html('width:' + info.width + ' | height:' + info.height + ' | left:' + info.left + ' | top:' + info.top+' | stop');
+                $log.html('width:' + info.width + ' | height:' + info.height + ' | left:' + info.left + ' | top:' + info.top + ' | stop');
             });
 
         });

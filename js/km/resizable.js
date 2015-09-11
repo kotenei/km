@@ -7,6 +7,52 @@ define('km/resizable', ['jquery'], function ($) {
 
     var $cover = $('<div class="k-resizable-cover"></div>').appendTo(document.body);
 
+    var util = {
+        getPosition: function ($cur, $target) {
+
+            var curOffset = $cur.offset(),
+                targetOffset = $target.offset();
+
+            return {
+                left: curOffset.left - targetOffset.left,
+                top: curOffset.top - targetOffset.top,
+                offsetLeft: curOffset.left,
+                offsetTop: curOffset.top
+            };
+        },
+        getOffsetParent: function ($cur, $target) {
+            var isRoot = true;
+            var $parent = $cur.parent();
+
+            var info = {
+                isRoot: false,
+                left: 0,
+                top: 0,
+                pLeft: 0,
+                pTop: 0,
+                $el: null
+            };
+
+            var offset, position;
+
+            while ($parent[0] != $target[0]) {
+                position = $parent.css('position');
+                if (position == 'relative' || position == 'absolute') {
+                    info.left = $parent.offset().left;
+                    info.top = $parent.offset().top;
+                    info.pLeft = info.left - $target.offset().left;
+                    info.pTop = info.top - $target.offset().top;
+                    info.$el = $parent;
+                    info.isRoot = true;
+                    return info;
+                }
+                $parent = $parent.parent();
+            }
+
+            return info;
+        }
+    };
+
     /**
      * 缩放类
      * @param {JQuery} $elm - dom
@@ -35,13 +81,16 @@ define('km/resizable', ['jquery'], function ($) {
         this.offset = { x: 0, y: 0 };
         //缩放参数
         this.resizeParams = { left: 0, top: 0, width: 0, height: 0, ratio: 1, type: 'bottom' };
+
         this.moving = false;
         this.minWidth = this.options.minWidth;
         this.minHeight = this.options.minHeight;
+
         this._event = {
             resize: $.noop,
             stop: $.noop
         };
+
         this.init();
     };
 
@@ -50,6 +99,7 @@ define('km/resizable', ['jquery'], function ($) {
      * @return {Void}
      */
     Resizable.prototype.init = function () {
+
         var html = [];
         html.push('<div class="k-resizable-handle k-resizable-handle-left" role="resizable" data-type="left"></div>');
         html.push('<div class="k-resizable-handle k-resizable-handle-top" role="resizable" data-type="top"></div>');
@@ -62,8 +112,11 @@ define('km/resizable', ['jquery'], function ($) {
         this.$rightHandle = this.$elm.find('.k-resizable-handle-right');
         this.$bottomHandle = this.$elm.find('.k-resizable-handle-bottom');
         this.$minbar = this.$elm.find('.k-resizable-handle-minbar');
+
+        this.$range = this.options.$range.css("position", "relative");
         this.$doc = $(document);
         this.$win = $(window);
+        this.$body = $(document.body);
 
         if (this.options.border.left) {
             this.$leftHandle.show();
@@ -137,20 +190,31 @@ define('km/resizable', ['jquery'], function ($) {
             self.$doc.off('mouseup.resizable');
         });
 
+        this.moving = true;
+
+        this.winHeight = this.$win.height();
+        this.docHeight = this.$doc.height();
 
         //获取鼠标位置
         var mouseCoord = this.getMouseCoord(e);
 
+        var position = util.getPosition(this.$elm, this.$range ? this.$range : this.$body);
+
         //记录鼠标在拖动层的坐标位置
-        this.offset.x = mouseCoord.x - this.$elm.position().left;
-        this.offset.y = mouseCoord.y - this.$elm.position().top;
+        this.offset.x = mouseCoord.x - position.left;
+        this.offset.y = mouseCoord.y - position.top;
+
+        this.offset.click = {
+            left: mouseCoord.x - position.offsetLeft,
+            top: mouseCoord.y - position.offsetTop
+        };
+
+        this.offset.parent = util.getOffsetParent(this.$elm, this.$range ? this.$range : this.$body);
+
 
         //记录鼠标点击后的坐标
         this.originalCoord.x = mouseCoord.x;
         this.originalCoord.y = mouseCoord.y;
-
-
-        this.moving = true;
 
 
         //捕捉鼠标的作用范围，防止鼠标移动过快丢失
@@ -184,8 +248,8 @@ define('km/resizable', ['jquery'], function ($) {
             rw, rh;
 
         if ($range) {
-            rw = $range.width();
-            rh = $range.height();
+            rw = $range.outerWidth();
+            rh = $range.outerHeight();
         } else {
             rw = this.$win.width() + this.$doc.scrollLeft();
             rh = this.$win.height() + this.$doc.scrollTop();
@@ -197,53 +261,55 @@ define('km/resizable', ['jquery'], function ($) {
                 css.height = resizeParams.height;
 
                 if (moveCoord.x <= 0) {
-                    css.left = 0;
-                    css.width = resizeParams.width + resizeParams.left;
+                    css.left = -this.offset.parent.pLeft;
+                    css.width = resizeParams.width + this.offset.parent.pLeft + resizeParams.left;
                 } else {
-                    css.left = moveCoord.x;
+                    css.left = this.offset.parent.isRoot ? mouseCoord.x - this.offset.click.left - this.offset.parent.left : moveCoord.x;
                     css.width = resizeParams.width + (this.originalCoord.x - mouseCoord.x);
                 }
+
                 if (css.width <= this.minWidth) {
                     css.width = this.minWidth;
                     css.left = resizeParams.left + (resizeParams.width - css.width);
                 }
                 break;
             case 'top':
-                css.top = moveCoord.y;
+                css.top = this.offset.parent.isRoot ? mouseCoord.y - this.offset.click.top - this.offset.parent.top : moveCoord.y;
                 css.left = resizeParams.left;
                 css.width = resizeParams.width;
                 css.height = resizeParams.height + (this.originalCoord.y - mouseCoord.y);
+
+                if (css.top < -this.offset.parent.pTop) {
+                    css.top = -this.offset.parent.pTop;
+                    css.height = resizeParams.height + this.offset.parent.pTop + resizeParams.top;
+                }
 
                 if (css.height <= this.minHeight) {
                     css.height = this.minHeight;
                     css.top = resizeParams.top + (resizeParams.height - css.height);
                 }
-
-                if (css.top <= 0) {
-                    css.top = 0;
-                    css.height = resizeParams.height + resizeParams.top;
-                }
-
                 break;
             case 'right':
-                css.width = resizeParams.width - (this.originalCoord.x - mouseCoord.x);
-                css.height = resizeParams.height;
                 css.top = resizeParams.top;
                 css.left = resizeParams.left;
-                if ((css.width + resizeParams.left) >= rw) {
-                    css.width = rw;
+                css.height = resizeParams.height;
+                css.width = resizeParams.width - (this.originalCoord.x - mouseCoord.x);
+
+                if ((css.width + this.offset.parent.pLeft + css.left) >= rw) {
+                    css.width = rw - this.offset.parent.pLeft - css.left;
                 }
                 if (css.width <= this.minWidth) {
                     css.width = this.minWidth;
                 }
                 break;
             case 'bottom':
-                css.height = resizeParams.height - (this.originalCoord.y - mouseCoord.y);
-                css.width = resizeParams.width;
-                css.left = resizeParams.left;
                 css.top = resizeParams.top;
-                if (css.height >= rh) {
-                    css.height = rh;
+                css.left = resizeParams.left;
+                css.width = resizeParams.width;
+                css.height = resizeParams.height - (this.originalCoord.y - mouseCoord.y);
+
+                if ((css.height + this.offset.parent.pTop + css.top) >= rh) {
+                    css.height = rh - this.offset.parent.pTop - css.top;
                 }
 
                 if (css.height <= this.minHeight) {
@@ -257,13 +323,14 @@ define('km/resizable', ['jquery'], function ($) {
                 css.width = css.width < this.minWidth ? this.minWidth : css.width;
                 css.height = this.getScaleHeight(css.width);
 
-                if ((css.width + css.left) >= rw) {
-                    css.width = rw - resizeParams.left;
+
+                if ((css.width + this.offset.parent.pLeft + css.left) >= rw) {
+                    css.width = rw - this.offset.parent.pLeft - css.left;
                     css.height = this.getScaleHeight(css.width);
                 }
 
-                if (css.top + css.height >= rh) {
-                    css.height = rh - css.top;
+                if ((css.height + this.offset.parent.pTop + css.top) >= rh) {
+                    css.height = rh - this.offset.parent.pTop - css.top;
                     css.width = this.getScaleWidth(css.height);
                 }
                 break;

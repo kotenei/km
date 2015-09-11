@@ -175,8 +175,6 @@ define('km/dragdrop', ['jquery'], function ($) {
             resize: $.noop
         };
 
-
-
         this.$window = $(window);
         this.$document = $(document);
         this.$body = $(document.body);
