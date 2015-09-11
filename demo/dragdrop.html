@@ -9,9 +9,15 @@
     <link href="docs.min.css" rel="stylesheet" />
     <link href="demo.css" rel="stylesheet" />
     <style type="text/css">
+
+        .droppable
+        {
+            background:white;
+        }
+
         .droppable-over
         {
-            background: #ddd;
+            background: #1ABC9C;
         }
 
         .layer
@@ -23,8 +29,9 @@
             display: inline-block;
             margin: 0 10px;
             vertical-align: top;
-            overflow: hidden;
+            /*overflow: hidden;*/
             min-height: 10px;
+            /*position:relative;*/
         }
 
         .layer .item
@@ -114,7 +121,7 @@ var dragdrop=new KM.Dragdrop(options);
                         <td>direction</td>
                         <td>string</td>
                         <td>''</td>
-                        <td>拖动的方向，'h'为水平,'v'为垂直</td>
+                        <td>拖动的方向，'h'为水平,'v'为垂直，默认为任意方向</td>
                     </tr>
                     <tr>
                         <td>boundary</td>
@@ -184,8 +191,14 @@ var dragdrop=new KM.Dragdrop(options);
             <div class="bs-example bs-example-padded-bottom">
                 <div id="panel2" style="width: 500px; height: 300px; border: 1px solid red; margin: 0 auto; position: relative;">
                     <div id="layer2" style="width: 50px; height: 50px; background: red; position: absolute;"></div>
-                    <div id="droppable" data-module="droppable" style="border: 1px solid #ddd; width: 100px; height: 100px; right: 20px; top: 20px; position: absolute;">
+
+                    <div id="droppable" class="droppable" data-module="droppable" style="border: 1px solid #454545; width: 150px; height: 150px; right: 20px; top: 20px; position: absolute;">
                         <span>试试拖到这里</span>
+
+                        <div data-module="droppable" class="droppable" style="border:1px solid red;height:80px;width:80px;left:30px;top:30px;position:absolute;">
+                            <span>子元素</span>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -304,7 +317,7 @@ over:function($drag,moveCoord){
                         nodejs
                     </div>
                 </div>
-                <div class="layer layer-type3" style="height: auto;">
+                <div class="layer layer-type3" style="" >
                     <div class="item">
                         sql server
                     </div>
@@ -418,37 +431,35 @@ callback: {
                 }
             });
 
-            //var dragdrop2 = new KM.Dragdrop({
-            //    $range: $('#panel2'),
-            //    $layer: $('#layer2')
-            //});
+            var dragdrop2 = new KM.Dragdrop({
+                $range: $('#panel2'),
+                $layer: $('#layer2')
+            });
 
 
-            var $droppable = $('#droppable');
-
-            //KM.Dragdrop.droppable($droppable, {
-            //    callback: {
-            //        over: function () {
-            //            $droppable.find('span').text('over');
-            //        },
-            //        out: function () {
-            //            $droppable.find('span').text('out');
-            //        },
-            //        drop: function () {
-            //            $droppable.find('span').text('drop');
-            //        }
-            //    }
-            //});
+            KM.Dragdrop.droppable($('div[data-module=droppable]'), {
+                callback: {
+                    over: function () {
+                        this.$drop.children('span').text('over');
+                    },
+                    out: function () {
+                        this.$drop.children('span').text('out');
+                    },
+                    drop: function () {
+                        this.$drop.children('span').text('drop');
+                    }
+                }
+            });
 
             var $container = $('#multi');
             //KM.Dragdrop.sortable($container, {
             //    draggable:'.layer'
             //});
 
-            //KM.Dragdrop.sortable($container, {
-            //    draggable: '.item',
-            //    droppable: '.layer'
-            //});
+            KM.Dragdrop.sortable($container, {
+                draggable: '.item',
+                droppable: '.layer'
+            });
         });
     </script>
 </body>

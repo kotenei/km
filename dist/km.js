@@ -2558,26 +2558,34 @@ define('km/dragdrop', ['jquery'], function ($) {
 
     var zIndex = 1000,
         droppables = [],
-        method = {
+        dropMethod = {
+            start: function () {
+                if (droppables.length == 0) {
+                    return;
+                }
+
+                for (var i = 0; i < droppables.length; i++) {
+                    droppables[i].setInfo();
+                }
+            },
             move: function (e, moveCoord) {
 
-                var left,
-                    top,
-                    width,
-                    height;
 
                 if (droppables.length == 0) {
                     return;
                 }
 
-                for (var i = droppables.length - 1, item; i >= 0; i--) {
-                    item = droppables[i];
+                var left, top, width, height;
 
+                for (var i = droppables.length - 1, droppable; i >= 0; i--) {
 
-                    left = item.$drop.offset().left - this.$range.offset().left;
-                    top = item.$drop.offset().top - this.$range.offset().top;
-                    width = item.$drop.outerWidth();
-                    height = item.$drop.outerHeight();
+                    droppable = droppables[i];
+
+                    left = droppable.info.offset.left - this.$range.offset().left;
+                    top = droppable.info.offset.top - this.$range.offset().top;
+                    width = droppable.info.width;
+                    height = droppable.info.height;
+
 
                     if (left <= moveCoord.x + this.dragParms.width / 2
                         && top <= moveCoord.y + this.dragParms.height / 2
@@ -2585,49 +2593,49 @@ define('km/dragdrop', ['jquery'], function ($) {
                         && top + height >= moveCoord.y + this.dragParms.height / 2) {
 
 
-                        if (this.overItem != item) {
+                        if (this.overDrop != droppable) {
 
-                            if (this.overItem) {
-                                this.overItem.out(this.$layer, moveCoord);
+                            if (this.overDrop) {
+                                this.overDrop.out(this.$layer, moveCoord);
                             }
 
-                            this.overItem = item;
-                            this.overItem.over(this.$layer, moveCoord);
+                            this.overDrop = droppable;
+                            this.overDrop.over(this.$layer, moveCoord);
                         }
                         break;
                     } else {
-                        if (this.overItem && this.overItem == item) {
-                            this.overItem.out(this.$layer, moveCoord);
-                            this.overItem = null;
+                        if (this.overDrop && this.overDrop == droppable) {
+                            this.overDrop.out(this.$layer, moveCoord);
+                            this.overDrop = null;
                         }
                     }
                 }
             },
             drop: function (e, moveCoord) {
-                var left,
-                    top,
-                    width,
-                    height;
+
 
                 if (droppables.length == 0) {
                     return;
                 }
 
+                var left, top, width, height;
 
-                for (var i = droppables.length - 1, item; i >= 0; i--) {
-                    item = droppables[i];
 
-                    left = item.$drop.offset().left - this.$range.offset().left;
-                    top = item.$drop.offset().top - this.$range.offset().top;
-                    width = item.$drop.outerWidth();
-                    height = item.$drop.outerHeight();
+                for (var i = droppables.length - 1, droppable; i >= 0; i--) {
+
+                    droppable = droppables[i];
+
+                    left = droppable.info.offset.left - this.$range.offset().left;
+                    top = droppable.info.offset.top - this.$range.offset().top;
+                    width = droppable.info.width;
+                    height = droppable.info.height;
 
                     if (left <= moveCoord.x + this.dragParms.width / 2
                         && top <= moveCoord.y + this.dragParms.height / 2
                         && left + width >= moveCoord.x + this.dragParms.width / 2
                         && top + height >= moveCoord.y + this.dragParms.height / 2) {
 
-                        item.drop(this.$layer, moveCoord);
+                        droppable.drop(this.$layer, moveCoord);
 
                         break;
                     }
@@ -2887,9 +2895,6 @@ define('km/dragdrop', ['jquery'], function ($) {
         var position = util.getPosition(this.$layer, this.$range ? this.$range : this.$body);
 
         //记录鼠标在拖动层的坐标位置
-        //this.offset.x = mouseCoord.x - this.$layer.position().left;
-        //this.offset.y = mouseCoord.y - this.$layer.position().top;
-
         this.offset.x = mouseCoord.x - position.left;
         this.offset.y = mouseCoord.y - position.top;
 
@@ -2910,6 +2915,9 @@ define('km/dragdrop', ['jquery'], function ($) {
         if (this.$handle[0].setCapture) {
             this.$handle[0].setCapture();
         }
+
+
+        dropMethod.start.call(this, e);
 
         //开始拖动回调函数
         if ($.isFunction(this.options.callback.start)) {
@@ -3007,7 +3015,7 @@ define('km/dragdrop', ['jquery'], function ($) {
 
         this.setPosition(moveCoord, position);
 
-        method.move.call(this, e, moveCoord);
+        dropMethod.move.call(this, e, moveCoord);
 
         if ($.isFunction(this.options.callback.move)) {
             this.options.callback.move.call(this, e, moveCoord);
@@ -3119,7 +3127,7 @@ define('km/dragdrop', ['jquery'], function ($) {
             this.$placeholder = null;
         }
 
-        method.drop.call(this, e, this.moveCoord);
+        dropMethod.drop.call(this, e, this.moveCoord);
 
 
         if ($.isFunction(this.options.callback.stop)) {
@@ -3143,7 +3151,6 @@ define('km/dragdrop', ['jquery'], function ($) {
         };
         var $layer = this.$layer;
         var resizeParams = this.resizeParams;
-        var position = util.getPosition(this.$layer, this.$range ? this.$range : this.$body);
         var css = { left: 0, top: 0, width: 0, height: 0 };
         var rightBoundary, bottomBoundary;
         var rw, rh;
@@ -3400,7 +3407,27 @@ define('km/dragdrop', ['jquery'], function ($) {
                     drop: $.noop
                 }
             }, options);
-            droppables.push(this);
+
+
+
+            this.setInfo();
+        };
+
+        /**
+         * 设置放置区相关信息
+         * @return {Void}   
+         */
+        Droppable.prototype.setInfo = function () {
+
+            var offset = this.$drop.offset(),
+                position = this.$drop.position();
+
+            this.info = {
+                width: this.$drop.outerWidth() + parseInt(this.$drop.css('borderLeftWidth')) + parseInt(this.$drop.css('borderRightWidth')),
+                height: this.$drop.outerHeight() + parseInt(this.$drop.css('borderTopWidth')) + parseInt(this.$drop.css('borderBottomWidth')),
+                offset: { left: offset.left, top: offset.top },
+                position: { left: position.left, top: position.left }
+            };
         };
 
         /**
@@ -3445,6 +3472,7 @@ define('km/dragdrop', ['jquery'], function ($) {
             if (!data) {
                 data = new Droppable($el, options);
                 $el.data('droppable', data);
+                droppables.push(data);
             }
         });
     };
@@ -3577,23 +3605,11 @@ define('km/dragdrop', ['jquery'], function ($) {
             }).on('move', function (e, moveCoord) {
 
                 var mouseCoord = this.getMouseCoord(e),
-                    sortable,
-                    sortableInfo,
-                    mid, min, max,
-                    cl, cl_w, ct, ct_h, ch_half, cv_half, $parent;
+                    sortable;
 
                 if (sortables.length == 0) {
                     return;
                 }
-
-                cl = this.$layer.position().left;
-                cl_w = cl + this.dragParms.width;
-                ch_half = cl + this.dragParms.width / 2;
-                ct = this.$layer.position().top;
-                ct_h = ct + this.dragParms.height;
-                cv_half = ct + this.dragParms.height / 2;
-                $parent = this.$layer.parent();
-
 
                 for (var i = 0, droppable; i < droppables.length; i++) {
 
