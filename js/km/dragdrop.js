@@ -209,10 +209,12 @@ define('km/dragdrop', ['jquery'], function ($) {
 
         if (this.$range) { this.$range.css("position", "relative"); }
 
+        this.$handle.css('cursor', 'move');
+
         if (!this.options.sortable) {
-            this.$layer.css({ cursor: "move", position: 'absolute', zIndex: zIndex });
+            this.$layer.css({ position: 'absolute', zIndex: zIndex });
         } else {
-            this.$layer.css({ cursor: 'move' });
+            this.$layer.css({});
         }
 
         if (this.options.resizable) {
@@ -1062,14 +1064,25 @@ define('km/dragdrop', ['jquery'], function ($) {
 
                     droppable = droppables[i];
 
-                    if (mouseCoord.y >= droppable.oTop + droppable.height
-                        && mouseCoord.x >= droppable.oLeft && mouseCoord.x <= droppable.oLeft + droppable.width
-                        && droppable.$droppable.find('.k-sortable-placeholder').length == 0) {
+                    //if (mouseCoord.y >= droppable.oTop + droppable.height
+                    //    && mouseCoord.x >= droppable.oLeft && mouseCoord.x <= droppable.oLeft + droppable.width
+                    //    && droppable.$droppable.children('.k-sortable-placeholder').length == 0) {
+                    //    droppable.$droppable.append(this.$placeholder);
+                    //    method._setSortableInfo();
+                    //    method._setDroppableInfo();
+                    //    return;
+                    //}
+
+
+                    if (mouseCoord.y > droppable.oTop && mouseCoord.y < droppable.oTop + droppable.height
+                        && mouseCoord.x > droppable.oLeft && mouseCoord.x < droppable.oLeft + droppable.width
+                        && droppable.$droppable.children('.k-sortable-placeholder').length == 0) {
                         droppable.$droppable.append(this.$placeholder);
                         method._setSortableInfo();
                         method._setDroppableInfo();
                         return;
                     }
+
                 }
 
 
@@ -1116,7 +1129,7 @@ define('km/dragdrop', ['jquery'], function ($) {
                 options.callback.move.call(this, e);
 
             }).on('stop', function (e) {
-                options.callback.stop.call(this, e);
+                options.callback.stop.call(this, e, $el);
             });
 
             sortables.push(sortable);
