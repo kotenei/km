@@ -934,13 +934,16 @@ define('km/dragdrop', ['jquery'], function ($) {
     DragDrop.sortable = function ($container, options) {
         var sortables = [],
             droppables = [],
+            groups = [],
             $draggable,
             $droppable,
+            $group,
             method;
 
         options = $.extend(true, {
             draggable: '.k-draggable',
             droppable: '.k-droppable',
+            group: $container,
             handle: null,
             callback: {
                 start: $.noop,
@@ -950,11 +953,14 @@ define('km/dragdrop', ['jquery'], function ($) {
         }, options);
 
         $draggable = $container.find(options.draggable);
-        $droppable = $container.find(options.droppable);
+        //$droppable = $container.find(options.droppable);
+        //$group = $container.find(options.group);
 
         if ($draggable.length == 0) {
             return;
         }
+
+        return;
 
         method = {
             _droppableInit: function ($el) {
@@ -967,6 +973,19 @@ define('km/dragdrop', ['jquery'], function ($) {
                     oTop: offset.top,
                     left: position.left,
                     top: position.top,
+                    width: $el.outerWidth(),
+                    height: $el.outerHeight()
+                });
+
+            },
+            _groupInit: function ($el) {
+
+                //var $
+
+                groups.push({
+                    $el: $el,
+                    oLeft: $el.offset().left,
+                    oTop: $el.offset().top,
                     width: $el.outerWidth(),
                     height: $el.outerHeight()
                 });
@@ -1006,17 +1025,30 @@ define('km/dragdrop', ['jquery'], function ($) {
             _setDroppableInfo: function () {
                 var offset, position;
 
-                for (var i = 0, droppable; i < droppables.length; i++) {
+                for (var i = 0, droppable, $parent; i < droppables.length; i++) {
                     droppable = droppables[i];
                     $el = droppable.$droppable;
+                    $parent = $el.parent();
+
                     offset = $el.offset();
                     position = $el.position();
+
                     droppable.oLeft = offset.left;
                     droppable.oTop = offset.top;
                     droppable.left = position.left;
                     droppable.top = position.top;
                     droppable.width = $el.outerWidth();
                     droppable.height = $el.outerHeight();
+
+                }
+            },
+            _setDropRangeInfo: function () {
+                for (var i = 0, dropRange; i < dropRanges.length; i++) {
+                    dropRange = dropRanges[i];
+                    dropRange.oLeft = dropRange.$el.offset().left;
+                    dropRange.oTop = dropRange.$el.offset().top;
+                    dropRange.width = dropRange.$el.outerWidth();
+                    dropRange.height = dropRange.$el.outerHeight();
                 }
             }
         };
@@ -1032,8 +1064,16 @@ define('km/dragdrop', ['jquery'], function ($) {
             });
         }
 
-        $draggable.each(function (i) {
+        if ($dropRange.length > 0) {
+            $dropRange.each(function () {
+                method._dropRangeInit($(this));
+            });
+        } 
 
+        
+
+        $draggable.each(function (i) {
+            return;
             var $el = $(this),
                 $handle = $el.find(options.handle);
 
@@ -1048,6 +1088,7 @@ define('km/dragdrop', ['jquery'], function ($) {
 
                 method._setSortableInfo(true);
                 method._setDroppableInfo();
+                method._setDropRangeInfo();
 
                 options.callback.start.call(this, e);
 
@@ -1060,30 +1101,37 @@ define('km/dragdrop', ['jquery'], function ($) {
                     return;
                 }
 
-                for (var i = 0, droppable; i < droppables.length; i++) {
 
-                    droppable = droppables[i];
+                if (dropRanges.length > 0) {
 
-                    //if (mouseCoord.y >= droppable.oTop + droppable.height
-                    //    && mouseCoord.x >= droppable.oLeft && mouseCoord.x <= droppable.oLeft + droppable.width
-                    //    && droppable.$droppable.children('.k-sortable-placeholder').length == 0) {
-                    //    droppable.$droppable.append(this.$placeholder);
-                    //    method._setSortableInfo();
-                    //    method._setDroppableInfo();
-                    //    return;
-                    //}
+                    for (var i = 0, dropRange; i < dropRanges.length; i++) {
+                        dropRange = dropRanges[i];
 
+                        if (mouseCoord) {
 
-                    if (mouseCoord.y > droppable.oTop && mouseCoord.y < droppable.oTop + droppable.height
-                        && mouseCoord.x > droppable.oLeft && mouseCoord.x < droppable.oLeft + droppable.width
-                        && droppable.$droppable.children('.k-sortable-placeholder').length == 0) {
-                        droppable.$droppable.append(this.$placeholder);
-                        method._setSortableInfo();
-                        method._setDroppableInfo();
-                        return;
+                        }
+
                     }
 
+
+                } else {
+                    for (var i = 0, droppable; i < droppables.length; i++) {
+                        droppable = droppables[i];
+
+                        if (mouseCoord.y >= droppable.oTop + droppable.height
+                            && mouseCoord.x >= droppable.oLeft && mouseCoord.x <= droppable.oLeft + droppable.width
+                            && droppable.$droppable.find('.k-sortable-placeholder').length == 0) {
+
+                            droppable.$droppable.append(this.$placeholder);
+                            method._setSortableInfo();
+                            method._setDroppableInfo();
+                            method._setDropRangeInfo();
+                            return;
+                        }
+                    }
                 }
+
+
 
 
                 for (var i = 0, tmpNum; i < sortables.length; i++) {
@@ -1111,6 +1159,7 @@ define('km/dragdrop', ['jquery'], function ($) {
                             sortable.sortNum = tmpNum;
                             method._setSortableInfo();
                             method._setDroppableInfo();
+                            method._setDropRangeInfo();
                             return;
                         }
 
@@ -1122,6 +1171,7 @@ define('km/dragdrop', ['jquery'], function ($) {
 
                         method._setSortableInfo();
                         method._setDroppableInfo();
+                        method._setDropRangeInfo();
                         return;
                     }
                 }
