@@ -937,13 +937,13 @@ define('km/dragdrop', ['jquery'], function ($) {
             groups = [],
             $draggable,
             $droppable,
-            $group,
+            $groups,
             method;
 
         options = $.extend(true, {
             draggable: '.k-draggable',
             droppable: '.k-droppable',
-            group: $container,
+            group: '.k-sortable-group',
             handle: null,
             callback: {
                 start: $.noop,
@@ -952,13 +952,60 @@ define('km/dragdrop', ['jquery'], function ($) {
             }
         }, options);
 
-        $draggable = $container.find(options.draggable);
+        //$draggable = $container.find(options.draggable);
         //$droppable = $container.find(options.droppable);
         //$group = $container.find(options.group);
 
-        if ($draggable.length == 0) {
-            return;
+        //if ($draggable.length == 0) {
+        //    return;
+        //}
+
+        $groups = $container.find(options.group);
+
+        if ($groups.length == 0) {
+            $groups = $container;
         }
+
+
+
+        $groups.each(function () {
+
+            var $group = $(this),
+                $draggable = $group.find(options.draggable),
+                $droppable = $group.find(options.droppable);
+
+            $draggable.each(function () {
+
+                var $el = $(this),
+                    $handle = $el.find(options.handle);
+
+                var sortable = new DragDrop({
+                    $range: $container,
+                    $layer: $el,
+                    $handle: $handle.length > 0 ? $handle : null,
+                    sortable: true
+                });
+
+                sortable.on('start', function (e) {
+
+                }).on('move', function (e, moveCoord) {
+
+
+                }).on('stop', function (e) {
+
+                });
+
+            });
+
+            groups.push({
+                $group: $group,
+                $draggable: $draggable,
+                $droppable: $droppable,
+                offset: {},
+                draggableInfo: [],
+                droppableInfo: []
+            });
+        });
 
         return;
 
@@ -1050,6 +1097,30 @@ define('km/dragdrop', ['jquery'], function ($) {
                     dropRange.width = dropRange.$el.outerWidth();
                     dropRange.height = dropRange.$el.outerHeight();
                 }
+            },
+            _setGroupInfo: function (groups) {
+
+                if (!groups || groups.length == 0) {
+                    return;
+                }
+
+                for (var i = 0, group; i < groups.length; i++) {
+
+                    group = groups[i];
+
+                    group.offset = {
+                        left: group.$group.offset().left,
+                        top: group.$group.offset().top,
+                        width: group.$group.outerWidth(),
+                        height: group.$group.outerHeight()
+                    };
+
+                    group.$draggable.each(function () {
+
+                    });
+
+
+                }
             }
         };
 
@@ -1068,9 +1139,9 @@ define('km/dragdrop', ['jquery'], function ($) {
             $dropRange.each(function () {
                 method._dropRangeInit($(this));
             });
-        } 
+        }
 
-        
+
 
         $draggable.each(function (i) {
             return;
