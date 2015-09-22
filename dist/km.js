@@ -3543,10 +3543,43 @@ define('km/dragdrop', ['jquery'], function ($) {
                 });
 
                 sortable.on('start', function (e) {
-                    method._setGroupInfo(groups)
+                    method._setGroupInfo(groups);
 
                 }).on('move', function (e, moveCoord) {
 
+                    var mouseCoord = this.getMouseCoord(e)
+
+                    for (var i = 0, group; i < groups.length; i++) {
+
+                        group = groups[i];
+
+                        //分组范围内
+                        if (mouseCoord.y >= group.offset.top && mouseCoord.y <= group.offset.top + group.offset.height
+                            && mouseCoord.x >= group.offset.left && mouseCoord.x <= group.offset.left + group.offset.width) {
+
+
+                            //放置区域
+                            for (var j = 0, dropInfo; j < group.droppableInfo.length; j++) {
+
+                                dropInfo = group.droppableInfo[j];
+
+                                if (mouseCoord.y >= dropInfo.offset.top + dropInfo.height
+                                    && mouseCoord.x >= dropInfo.offset.left && mouseCoord.x <= dropInfo.offset.left + dropInfo.width
+                                    && dropInfo.$drop.find('.k-sortable-placeholder').length == 0) {
+
+                                    dropInfo.$drop.append(this.$placeholder);
+
+                                    method._setGroupInfo(groups);
+
+                                    return;
+                                }
+
+                            }
+
+                            return;
+                        }
+
+                    }
 
                 }).on('stop', function (e) {
 
@@ -3578,7 +3611,7 @@ define('km/dragdrop', ['jquery'], function ($) {
                         top: position.top
                     },
                     width: $elm.outerWidth() + util.getNum($elm.css('borderLeftWidth')) + util.getNum($elm.css('borderRightWidth')),
-                    height: $elm.outerWidth() + util.getNum($elm.css('borderTopWidth')) + util.getNum($elm.css('borderBottomWidth'))
+                    height: $elm.outerHeight() + util.getNum($elm.css('borderTopWidth')) + util.getNum($elm.css('borderBottomWidth'))
                 };
             },
             _setGroupInfo: function (groups) {
@@ -3604,15 +3637,17 @@ define('km/dragdrop', ['jquery'], function ($) {
                         height: group.$group.outerHeight() + util.getNum(group.$group.css('borderTopWidth')) + util.getNum(group.$group.css('borderBottomWidth'))
                     };
 
-                    group.$draggable.each(function () {
+                    
+                    group.$draggable = group.$group.find(options.draggable).each(function () {
                         var $drag = $(this),
                             info = method._getInfo($drag);
 
                         info.$drag = $drag;
                         draggableInfo.push(info);
                     });
+                   
 
-                    group.$droppable.each(function () {
+                    group.$droppable = group.$group.find(options.droppable).each(function () {
                         var $drop = $(this),
                             info = method._getInfo($drop);
 
@@ -3623,6 +3658,7 @@ define('km/dragdrop', ['jquery'], function ($) {
                     group.draggableInfo = draggableInfo;
 
                     group.droppableInfo = droppableInfo;
+
                 }
             }
         };
