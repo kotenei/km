@@ -1161,7 +1161,7 @@ define('km/dragdrop', ['jquery'], function ($) {
 
                     $el.data('sortable', sortable);
                 }
-  
+
                 options.callback.init.call(this, sortable);
             });
 
@@ -1176,10 +1176,6 @@ define('km/dragdrop', ['jquery'], function ($) {
         method._setSortableInfo(true);
 
         return {
-            refresh: function () {
-                //method._setGroupInfo(groups);
-                //method._setSortableInfo(true);
-            },
             removeSortable: function (sortable) {
                 var index = -1;
                 for (var i = 0; i < sortables.length; i++) {
@@ -1189,18 +1185,42 @@ define('km/dragdrop', ['jquery'], function ($) {
                     }
                 }
 
-                
-
-                if (index==-1) {
+                if (index == -1) {
                     return;
                 }
 
-                console.log(sortables)
-
                 sortables[index].$layer.remove();
                 sortables.splice(index, 1);
+                method._setGroupInfo(groups);
+                method._setSortableInfo(true);
+            },
+            removeSortables: function (arrSortable) {
+                if (arrSortable.length == 0) {
+                    return;
+                }
+                
+                var tmpSortables = [],
+                    has=false;
 
-                console.log(sortables)
+                for (var i = 0; i < sortables.length; i++) {
+
+                    has = false;
+
+                    for (var j = 0; j < arrSortable.length; j++) {
+                        if (sortables[i] == arrSortable[j]) {
+                            has = true;
+                            break;
+                        }
+                    }
+
+                    if (!has) {
+                        tmpSortables.push(sortables[i]);
+                    } 
+                }
+
+                sortables = tmpSortables;
+                method._setGroupInfo(groups);
+                method._setSortableInfo(true);
             }
         };
 
