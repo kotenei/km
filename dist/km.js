@@ -3675,8 +3675,14 @@ define('km/dragdrop', ['jquery'], function ($) {
 
 
 
-                                    if (mouseCoord.x >= sortable.info.offset.left && mouseCoord.x <= sortable.info.offset.left + sortable.info.width
-                                        && mouseCoord.y >= sortable.info.offset.top && mouseCoord.y <= sortable.info.offset.top + sortable.info.height) {
+                                    if (mouseCoord.x >= sortable.info.offset.left
+                                        && mouseCoord.x <= sortable.info.offset.left + sortable.info.width
+                                        && mouseCoord.y >= sortable.info.offset.top
+                                        && mouseCoord.y <= sortable.info.offset.top + sortable.info.height) {
+
+
+
+                                        console.log(this.dragParam.width)
 
 
                                         if (this.sortNum > sortable.sortNum) {
@@ -3731,8 +3737,8 @@ define('km/dragdrop', ['jquery'], function ($) {
         method._setSortableInfo(true);
 
         return {
-            getGroups: function () { return groups;},
-            getSortables: function () { return sortables;},
+            getGroups: function () { return groups; },
+            getSortables: function () { return sortables; },
             setInfo: function () {
                 method._setGroupInfo(groups);
                 method._setSortableInfo(true);
