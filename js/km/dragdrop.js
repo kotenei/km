@@ -1021,6 +1021,7 @@ define('km/dragdrop', ['jquery'], function ($) {
                 }
             },
             _setSortableInfo: function (resetSortNum) {
+
                 for (var i = 0, sortable; i < sortables.length; i++) {
 
                     sortable = sortables[i];
@@ -1031,6 +1032,9 @@ define('km/dragdrop', ['jquery'], function ($) {
 
                     sortable.info = method._getInfo(sortable.$layer);
                 }
+
+
+
             }
         };
 
@@ -1176,6 +1180,12 @@ define('km/dragdrop', ['jquery'], function ($) {
         method._setSortableInfo(true);
 
         return {
+            getGroups: function () { return groups;},
+            getSortables: function () { return sortables;},
+            setInfo: function () {
+                method._setGroupInfo(groups);
+                method._setSortableInfo(true);
+            },
             removeSortable: function (sortable) {
                 var index = -1;
                 for (var i = 0; i < sortables.length; i++) {
@@ -1198,9 +1208,9 @@ define('km/dragdrop', ['jquery'], function ($) {
                 if (arrSortable.length == 0) {
                     return;
                 }
-                
+
                 var tmpSortables = [],
-                    has=false;
+                    has = false;
 
                 for (var i = 0; i < sortables.length; i++) {
 
@@ -1215,12 +1225,31 @@ define('km/dragdrop', ['jquery'], function ($) {
 
                     if (!has) {
                         tmpSortables.push(sortables[i]);
-                    } 
+                    }
                 }
 
                 sortables = tmpSortables;
                 method._setGroupInfo(groups);
                 method._setSortableInfo(true);
+            },
+            removeGroup: function ($el) {
+
+                if (!$el || $el.length == 0) {
+                    return;
+                }
+                var index = -1;
+
+                for (var i = 0; i < groups.length; i++) {
+
+                    if ($el[0] == groups[i].$group[0]) {
+                        index = i;
+                        break;
+                    }
+                }
+                if (index == -1) {
+                    return;
+                }
+                groups.splice(index, 1);
             }
         };
 
