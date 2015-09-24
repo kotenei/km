@@ -287,8 +287,8 @@ define('km/dragdrop', ['jquery'], function ($) {
             self.dragParms = {
                 left: parseInt(self.$layer.position().left),
                 top: parseInt(self.$layer.position().top),
-                width: parseInt(self.$layer.outerWidth()),
-                height: parseInt(self.$layer.outerHeight())
+                width: parseInt(self.$layer.outerWidth()) + util.getNum(self.$layer.css('borderLeftWidth')) + util.getNum(self.$layer.css('borderRightWidth')),
+                height: parseInt(self.$layer.outerHeight()) + util.getNum(self.$layer.css('borderTopWidth')) + util.getNum(self.$layer.css('borderBottomWidth'))
             };
 
             self.$layer.css({
@@ -481,7 +481,7 @@ define('km/dragdrop', ['jquery'], function ($) {
             this.options.callback.move.call(this, e, moveCoord);
         }
 
-        this._event.move.call(this, e, moveCoord);
+        this._event.move.call(this, e, moveCoord, position);
     };
 
     /**
@@ -958,7 +958,9 @@ define('km/dragdrop', ['jquery'], function ($) {
         var method = {
             _getInfo: function ($elm) {
                 var offset = $elm.offset(),
-                    position = $elm.position();
+                    position = $elm.position(),
+                    width = $elm.outerWidth() + util.getNum($elm.css('borderLeftWidth')) + util.getNum($elm.css('borderRightWidth')),
+                    height = $elm.outerHeight() + util.getNum($elm.css('borderTopWidth')) + util.getNum($elm.css('borderBottomWidth'));
 
                 return {
                     offset: {
@@ -969,8 +971,10 @@ define('km/dragdrop', ['jquery'], function ($) {
                         left: position.left,
                         top: position.top
                     },
-                    width: $elm.outerWidth() + util.getNum($elm.css('borderLeftWidth')) + util.getNum($elm.css('borderRightWidth')),
-                    height: $elm.outerHeight() + util.getNum($elm.css('borderTopWidth')) + util.getNum($elm.css('borderBottomWidth'))
+                    width: width,
+                    height: height,
+                    h_half: offset.left + width / 2,
+                    v_half: offset.top + height / 2
                 };
             },
             _setGroupInfo: function (groups) {
@@ -1081,7 +1085,7 @@ define('km/dragdrop', ['jquery'], function ($) {
 
                     sortable.on('start', function (e) {
                         options.callback.start.call(this, e);
-                    }).on('move', function (e, moveCoord) {
+                    }).on('move', function (e, moveCoord, position) {
 
                         var mouseCoord = this.getMouseCoord(e);
 
@@ -1130,19 +1134,29 @@ define('km/dragdrop', ['jquery'], function ($) {
                                         && mouseCoord.y <= sortable.info.offset.top + sortable.info.height) {
 
 
+                                        if (this.dragParms.height < sortable.info.height) {
 
-                                        console.log(this.dragParam.width)
+                                            if (mouseCoord.y >= sortable.info.offset.top
+                                                && mouseCoord.y <= sortable.info.offset.top + this.dragParms.height) {
+                                                this.$placeholder.insertBefore(sortable.$layer);
+
+                                            } else  {
+                                                this.$placeholder.insertAfter(sortable.$layer);
+                                            }
 
 
-                                        if (this.sortNum > sortable.sortNum) {
-                                            this.$placeholder.insertBefore(sortable.$layer);
                                         } else {
-                                            this.$placeholder.insertAfter(sortable.$layer);
+                                            if (this.sortNum > sortable.sortNum) {
+                                                this.$placeholder.insertBefore(sortable.$layer);
+                                            } else {
+                                                this.$placeholder.insertAfter(sortable.$layer);
+                                            }
+
+                                            tmpNum = this.sortNum;
+                                            this.sortNum = sortable.sortNum;
+                                            sortable.sortNum = tmpNum;
                                         }
 
-                                        tmpNum = this.sortNum;
-                                        this.sortNum = sortable.sortNum;
-                                        sortable.sortNum = tmpNum;
 
                                         method._setGroupInfo(groups);
                                         method._setSortableInfo();
