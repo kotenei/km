@@ -287,9 +287,13 @@ define('km/dragdrop', ['jquery'], function ($) {
             self.dragParms = {
                 left: parseInt(self.$layer.position().left),
                 top: parseInt(self.$layer.position().top),
-                width: parseInt(self.$layer.outerWidth()) + util.getNum(self.$layer.css('borderLeftWidth')) + util.getNum(self.$layer.css('borderRightWidth')),
-                height: parseInt(self.$layer.outerHeight()) + util.getNum(self.$layer.css('borderTopWidth')) + util.getNum(self.$layer.css('borderBottomWidth'))
+                //width: parseInt(self.$layer.outerWidth()) + util.getNum(self.$layer.css('borderLeftWidth')) + util.getNum(self.$layer.css('borderRightWidth')),
+                //height: parseInt(self.$layer.outerHeight()) + util.getNum(self.$layer.css('borderTopWidth')) + util.getNum(self.$layer.css('borderBottomWidth'))
+                width: self.$layer.outerWidth(),
+                height: self.$layer.outerHeight()
             };
+
+
 
             self.$layer.css({
                 zIndex: zIndex,
@@ -417,14 +421,15 @@ define('km/dragdrop', ['jquery'], function ($) {
 
         if (this.options.autoScroll) {
 
-            if (e.clientY <= 10 || e.clientY >= this.winHeight) {
+
+            if (e.clientY <= 10 || e.clientY >= this.winHeight - 10) {
 
                 if (e.clientY <= 10 && !this.autoScrollActive) {
                     this.autoScrollActive = true;
                     this.autoScroll(-1, e.clientY);
                 }
 
-                if (e.clientY >= (this.winHeight - 10) && mouseCoord.y < this.docHeight && !this.autoScrollActive) {
+                if (e.clientY >= (this.winHeight - 10) && mouseCoord.y < (this.docHeight + 100) && !this.autoScrollActive) {
 
                     this.autoScrollActive = true;
                     this.autoScroll(1, e.clientY);
@@ -440,7 +445,8 @@ define('km/dragdrop', ['jquery'], function ($) {
                 this.$placeholder = $('<div/>');
                 this.$placeholder.attr('class', this.$layer.attr('class')).addClass('k-sortable-placeholder').css({
                     opacity: '0.5',
-                    height: this.$layer.outerHeight(),
+                    height: this.dragParms.height,
+                    //width: this.dragParms.width,
                     background: 'white'
                 }).insertAfter(this.$layer);
             }
@@ -952,6 +958,7 @@ define('km/dragdrop', ['jquery'], function ($) {
 
         var groups = [],
             sortables = [],
+            hasSwap = false,
             $groups,
             method;
 
@@ -959,8 +966,8 @@ define('km/dragdrop', ['jquery'], function ($) {
             _getInfo: function ($elm) {
                 var offset = $elm.offset(),
                     position = $elm.position(),
-                    width = $elm.outerWidth() + util.getNum($elm.css('borderLeftWidth')) + util.getNum($elm.css('borderRightWidth')),
-                    height = $elm.outerHeight() + util.getNum($elm.css('borderTopWidth')) + util.getNum($elm.css('borderBottomWidth'));
+                    width = $elm.outerWidth(),
+                    height = $elm.outerHeight();
 
                 return {
                     offset: {
@@ -1047,6 +1054,9 @@ define('km/dragdrop', ['jquery'], function ($) {
             droppable: '.k-droppable',
             group: '.k-sortable-group',
             handle: null,
+            boundary: false,
+            model: 'default',
+            direction:'',
             callback: {
                 init: $.noop,
                 start: $.noop,
@@ -1080,7 +1090,9 @@ define('km/dragdrop', ['jquery'], function ($) {
                         $range: $container,
                         $layer: $el,
                         $handle: $handle.length > 0 ? $handle : null,
-                        sortable: true
+                        sortable: true,
+                        boundary: options.boundary,
+                        direction: options.direction
                     });
 
                     sortable.on('start', function (e) {
@@ -1138,14 +1150,52 @@ define('km/dragdrop', ['jquery'], function ($) {
 
                                             if (mouseCoord.y >= sortable.info.offset.top
                                                 && mouseCoord.y <= sortable.info.offset.top + this.dragParms.height) {
+
+                                                hasSwap = this.$placeholder.next()[0] == sortable.$layer[0];
+
                                                 this.$placeholder.insertBefore(sortable.$layer);
 
-                                            } else  {
+                                                if (hasSwap) {
+                                                    return;
+                                                }
+
+                                            } else {
+
+                                                hasSwap = this.$placeholder.prev()[0] == sortable.$layer[0];
+
                                                 this.$placeholder.insertAfter(sortable.$layer);
+
+                                                if (hasSwap) {
+                                                    return;
+                                                }
                                             }
 
 
+                                        } else if (this.dragParms.width < sortable.info.width && options.mode == 'float') {
+
+                                            if (mouseCoord.x >= sortable.info.offset.left
+                                                && mouseCoord.x <= sortable.info.offset.left + this.dragParms.width) {
+
+                                                hasSwap = this.$placeholder.next()[0] == sortable.$layer[0];
+
+                                                this.$placeholder.insertBefore(sortable.$layer);
+
+                                                if (hasSwap) {
+                                                    return;
+                                                }
+
+                                            } else {
+                                                hasSwap = this.$placeholder.prev()[0] == sortable.$layer[0];
+
+                                                this.$placeholder.insertAfter(sortable.$layer);
+
+                                                if (hasSwap) {
+                                                    return;
+                                                }
+                                            }
+
                                         } else {
+
                                             if (this.sortNum > sortable.sortNum) {
                                                 this.$placeholder.insertBefore(sortable.$layer);
                                             } else {
@@ -1157,12 +1207,9 @@ define('km/dragdrop', ['jquery'], function ($) {
                                             sortable.sortNum = tmpNum;
                                         }
 
-
                                         method._setGroupInfo(groups);
                                         method._setSortableInfo();
-
                                         options.callback.move.call(this, e);
-
                                         return;
                                     }
                                 }
@@ -1176,6 +1223,7 @@ define('km/dragdrop', ['jquery'], function ($) {
 
                     }).on('stop', function (e) {
                         this.$layer.css('width', 'auto');
+                        hasSwap = false;
                         method._setGroupInfo(groups);
                         method._setSortableInfo(true);
                         options.callback.stop.call(this, e, $el);

@@ -29,14 +29,14 @@
             display: inline-block;
             margin: 0 10px;
             vertical-align: top;
-            /*overflow: hidden;*/
+            overflow: hidden;
             min-height: 10px;
             /*position:relative;*/
         }
 
         .layer .item
         {
-            /*float:left;*/
+            float:left;
             margin: 5px;
             background: #5F9EDF;
             text-align: center;
@@ -458,7 +458,14 @@ callback: {
 
             KM.Dragdrop.sortable($container, {
                 draggable: '.item',
-                droppable: '.layer'
+                droppable: '.layer',
+                mode: 'float',
+                boundary:true,
+                callback: {
+                    move: function () {
+                        this.$placeholder.css('width',this.dragParms.width)
+                    }
+                }
             });
         });
     </script>
