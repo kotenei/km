@@ -980,8 +980,8 @@ define('km/dragdrop', ['jquery'], function ($) {
                     },
                     width: width,
                     height: height,
-                    h_half: offset.left + width / 2,
-                    v_half: offset.top + height / 2
+                    h_half: offset.left + width / 2,        //水平
+                    v_half: offset.top + height / 2         //垂直
                 };
             },
             _setGroupInfo: function (groups) {
@@ -1056,7 +1056,7 @@ define('km/dragdrop', ['jquery'], function ($) {
             handle: null,
             boundary: false,
             model: 'default',
-            direction:'',
+            direction: '',
             callback: {
                 init: $.noop,
                 start: $.noop,
@@ -1149,7 +1149,7 @@ define('km/dragdrop', ['jquery'], function ($) {
                                         if (this.dragParms.height < sortable.info.height) {
 
                                             if (mouseCoord.y >= sortable.info.offset.top
-                                                && mouseCoord.y <= sortable.info.offset.top + this.dragParms.height) {
+                                                && mouseCoord.y <= sortable.info.v_half) {
 
                                                 hasSwap = this.$placeholder.next()[0] == sortable.$layer[0];
 
@@ -1174,7 +1174,7 @@ define('km/dragdrop', ['jquery'], function ($) {
                                         } else if (this.dragParms.width < sortable.info.width && options.mode == 'float') {
 
                                             if (mouseCoord.x >= sortable.info.offset.left
-                                                && mouseCoord.x <= sortable.info.offset.left + this.dragParms.width) {
+                                                && mouseCoord.x <= sortable.info.h_half) {
 
                                                 hasSwap = this.$placeholder.next()[0] == sortable.$layer[0];
 
