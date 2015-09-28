@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>模板</title>
+    <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../dist/css/km.min.css" rel="stylesheet" />
+    <link href="docs.min.css" rel="stylesheet" />
+    <link href="demo.css" rel="stylesheet" />
+</head>
+<body style="">
+    <div class="header">
+        <div class="wrap">
+            <ul class="nav-list">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="###" class="active">demo</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="main wrap">
+        <ul class="demo-nav-list" id="navList">
+        </ul>
+        <script type="text/javascript" src="nav.js"></script>
+        <script type="text/javascript">
+            nav(document.getElementById('navList'), 'template');
+        </script>
+        <div class="demo-container">
+            <h1 class="page-header">模板</h1>
+            <div class="bs-example bs-example-padded-bottom" id="content">
+            </div>
+        </div>
+    </div>
+
+    <script type="text/template" id="template">
+        {{each item in list}}
+            <span>{{item.name}}</span>
+        {{/each}}
+
+    </script>
+
+    <script type="text/javascript" src="vendor/require/require.js"></script>
+    <script type="text/javascript" src="main.js"></script>
+    <script type="text/javascript">
+        require(['KM'], function (KM) {
+            var tpl = new KM.Template($('#template'), {
+                data: {
+                    list: [{ name: '测试' }]
+                }
+            });
+
+            $('#content').html(tpl.render());
+        })
+    </script>
+</body>
+</html>
