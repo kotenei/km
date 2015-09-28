@@ -52,13 +52,12 @@ define('km/template', ['jquery'], function ($) {
             }
 
 
+
             return code;
         },
         logic: function (code) {
 
             code = method.parser(code);
-
-            console.log(code)
 
             return code;
 
@@ -86,6 +85,7 @@ define('km/template', ['jquery'], function ($) {
 
                     break;
                 default:
+                    code = '=' + code;
                     break;
             }
 
@@ -125,7 +125,7 @@ define('km/template', ['jquery'], function ($) {
 
         });
 
-        //console.log(mainCode)
+        console.log(mainCode)
 
     };
 
