@@ -101,7 +101,11 @@ define('km/template', ['jquery'], function ($) {
         this.data = data;
         this.source = this.$el.html().replace(/^\s*|\s*$/g, '');
         this.fileName = fileName;
-        this.init();
+        //this.init();
+
+
+        this.source = this.source.replace(/^{{\s*each\s*(\w*)\s*in\s*(\w*)\s*}}$/igm, function () { });
+
     };
 
     Template.prototype.init = function () {
