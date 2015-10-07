@@ -9,18 +9,13 @@ define('km/template', ['jquery'], function ($) {
 
     var fileName = 'tpl_' + index;
 
-    var keywords =
-        'break,case,catch,continue,debugger,default,delete,do,else,false'
-      + ',finally,for,function,if,in,instanceof,new,null,return,switch,this'
-      + ',throw,true,try,typeof,var,void,while,with';
-
     var tags = {
         open: '{{',
         close: '}}'
     };
 
 
-    var util = {
+    var utils = {
         each: function (arr, callback) {
             for (var i = 0, item; i < arr.length; i++) {
                 item = arr[i];
@@ -31,111 +26,125 @@ define('km/template', ['jquery'], function ($) {
         }
     };
 
-    var method = {
-
-        escape: function (code) {
-            return "'" + code
-            // 单引号与反斜杠转义
-            .replace(/('|\\)/g, '\\$1')
-            // 换行符转义(windows + linux)
-            .replace(/\r/g, '\\r')
-            .replace(/\n/g, '\\n') + "'";
-        },
-
-        html: function (code) {
-
-
-            code = code.replace(/\s+/g, ' ').replace(/<!--[\w\W]*?-->/g, '');
-
-            if (code) {
-                code = "$out+=" + method.escape(code) + ";" + "\n";
-            }
-
-
-
-            return code;
-        },
-        logic: function (code) {
-
-            code = method.parser(code);
-
-            return code;
-
-        },
-        parser: function (code) {
-
-            code = code.replace(/^\s/, '');
-
+    var method={
+        script: function (code) {
+            //删除左侧空格
+            code = code.replace('^\s', '');
+            //以空格分割字符串
             var split = code.split(' ');
             var key = split.shift();
             var args = split.join(' ');
+            
 
             switch (key) {
                 case 'each':
-
-                    var item = split[0],
-                        data = split[2];
-
-                    code = "util.each(data,function(index," + item + "){";
-
+                    var arr = split[2];
+                    var obj = split[0];
+                    code= '_each(' + arr + ',function(index,' + obj + '){';
                     break;
                 case '/each':
+                    code='});';
+                    break;
+                case 'if':
+                    code = 'if (' + args + ') {';
+                    break;
+                case 'else':
 
-                    code = '})';
+                    if (split.shift() === 'if') {
+                        split = ' if(' + split.join(' ') + ')';
+                    } else {
+                        split = '';
+                    }
 
+                    code = '}else' + split + '{';
+                    break;
+                case '/if':
+                    code = '}';
                     break;
                 default:
-                    code = '=' + code;
-                    break;
+
             }
 
+
             return code;
-        }
+        },
+        html: function (code) { }
     };
-
-
 
     var Template = function ($el, data) {
         ++index;
         this.$el = $el;
         this.data = data;
-        this.source = this.$el.html().replace(/^\s*|\s*$/g, '');
+        this.source = this.$el[0].innerHTML;
         this.fileName = fileName;
-        //this.init();
-
-
-        this.source = this.source.replace(/^{{\s*each\s*(\w*)\s*in\s*(\w*)\s*}}$/igm, function () { });
-
+        this.init();
     };
 
     Template.prototype.init = function () {
 
-        var mainCode = "$out='';";
+        var main = "'use strict';";
 
-        util.each(this.source.split(tags.open), function (index, code) {
-            var code = code.split(tags.close);
-            var $c0 = code[0];
-            var $c1 = code[1];
+        main += "var $out='';";
 
-            if (code.length == 1) {
-                mainCode += method.html($c0);
+
+
+        utils.each(this.source.split(tags.open), function (index, item) {
+            var code = item.split(tags.close);
+            var script = code[0];
+            var html = code[1];
+            
+            if (code.length==1) {
+
             } else {
-                mainCode += method.logic($c0);
-
-                if ($c1) {
-                    mainCode += method.html($c1);
-                }
+                main += method.script(script);
             }
 
         });
 
-        console.log(mainCode)
+        console.log(main)
 
+
+        return;
+
+        this.regSettings = {
+            forStart: new RegExp(tags.open + '\\s*each\\s*(\\w*?)\\s*in\\s*(\\w*?)\\s*' + tags.close, 'igm'),
+            forEnd: new RegExp(tags.open + '\\s*\\/each\\s*' + tags.close, 'igm'),
+            ifStart: new RegExp(tags.open + '\\s*if\\s*([^}]*?)' + tags.close, 'igm'),
+            ifEnd: new RegExp(tags.open + '\\s*\\/if\\s*' + tags.close, 'igm'),
+            elseifStart: new RegExp(tags.open + '\\s*else if\\s*([^}]*?)' + tags.close, 'igm'),
+            elseStart: new RegExp(tags.open + '\\s*else\\s*' + tags.close, 'igm'),
+            interpolate: new RegExp(tags.open + '([\\s\\S]+?)' + tags.close, 'igm'),
+            html: new RegExp('<[^>]*?(.*?)<\/\1>', 'igm')
+        };
+
+
+
+        this.source = this.source.replace(this.regSettings.forStart, function (source, item, list) {
+            return 'util.each(' + list + ',function(index,' + item + '){';
+        }).replace(this.regSettings.forEnd, function (source) {
+            return '});';
+        }).replace(this.regSettings.ifStart, function (source, condition) {
+            return 'if ( ' + condition + ' ) {';
+        }).replace(this.regSettings.ifEnd, function () {
+            return '}';
+        }).replace(this.regSettings.elseifStart, function (source, condition) {
+            return '} else if (' + condition + ') {';
+        }).replace(this.regSettings.elseStart, function () {
+            return '} else {';
+        }).replace(this.regSettings.interpolate, function (source, exp) {
+            return "$out+=" + exp + ";";
+        }).replace(/<span>(.*)<\/span>/igm, function (source, content) {
+            console.log(source)
+        }).replace(/(<\/?[^>]+?\s*?\/?>)/igm, function (source) {
+            return "$out+='" + source + "';";
+        })
+
+        this.source = code + this.source;
+
+        console.log(this.source);
     };
 
-    Template.prototype.compile = function () {
 
-    };
 
     Template.prototype.render = function () {
         var html = '';

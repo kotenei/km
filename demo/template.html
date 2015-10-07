@@ -35,11 +35,30 @@
 
     <script type="text/template" id="template">
         {{each item in list}}
-            <span>{{item.name}}</span>
+
+            {{if item==123 }}
+                <span title="{{item.name}}">{{item.name}}</span>
+
+            {{else if item == 256 }}
+            
+            {{else}}
+
+            {{/if}}
+
         {{/each}}
 
-    </script>
+       <input />
 
+        <div>
+            <a>
+                <span title="{{value.value.title}}">
+                    {{test.a}}
+                </span>
+            </a>
+        </div>
+
+    </script>
+   
     <script type="text/javascript" src="vendor/require/require.js"></script>
     <script type="text/javascript" src="main.js"></script>
     <script type="text/javascript">
@@ -51,6 +70,9 @@
             });
 
             $('#content').html(tpl.render());
+
+           
+            
         })
     </script>
 </body>
