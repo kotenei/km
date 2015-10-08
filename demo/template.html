@@ -35,45 +35,45 @@
 
     <script type="text/template" id="template">
         {{each item in list}}
-
-            {{if item==123 }}
-                <span title="{{item.name}}">{{item.name}}</span>
-
-            {{else if item == 256 }}
-            
-            {{else}}
-
-            {{/if}}
-
-        {{/each}}
-
-       <input />
-
+            <span title="{{item.value}}">{{item.name}}</span>
         <div>
-            <a>
-                <span title="{{value.value.title}}">
-                    {{test.a}}
-                </span>
+            <a href="{{item.link}}">
+                <span>{{item.name}}</span>
             </a>
         </div>
+        {{/each}}
+
+        {{ if has }}
+
+        {{user.userName}}
+
+        {{ /if }}
 
     </script>
-   
+
     <script type="text/javascript" src="vendor/require/require.js"></script>
     <script type="text/javascript" src="main.js"></script>
     <script type="text/javascript">
         require(['KM'], function (KM) {
             var tpl = new KM.Template($('#template'), {
                 data: {
-                    list: [{ name: '测试' }]
+                    list: [{ name: '测试' }],
+                    has: false,
+                    user: {
+                        userName:'123'
+                    }
                 }
             });
 
             $('#content').html(tpl.render());
 
-           
-            
-        })
+            //var sl = new Function('return this');
+            //console.log(sl()); // true, sloppy mode
+
+            //var st = new Function('"use strict";console.log(this); return this;');
+            //st.prototype = {};
+            //console.log(st()); // true, strict mode
+        });
     </script>
 </body>
 </html>
