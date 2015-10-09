@@ -30,24 +30,158 @@
             <h1 class="page-header">模板</h1>
             <div class="bs-example bs-example-padded-bottom" id="content">
             </div>
+
+            <h3>使用</h3>
+            <pre>
+                  <code>
+//初始化模板和数据
+var tpl = new KM.Template($('#content'), {
+    tpl: $('#template').html(),
+    data: {
+        title:'表格测试'
+        list: [
+            { id: 1, name: 'Tom', birthday: '/Date(1444320000000)/' },
+            { id: 2, name: 'Rose', birthday: '/Date(1391141532000)/' }
+        ]
+    }
+});
+
+//输出
+tpl.render();
+                  </code>
+              </pre>
+
+            <h3>模板编写</h3>
+            <p>
+                <code>使用一个type="text/template"的script标签存放模板：</code>
+            </p>
+            <pre>
+                <code>
+&lt;script type="text/template" id="tpl"&gt;
+    &lt;h3&gt;{{title}}&lt;/h3&gt;
+    &lt;table class="k-table k-table-bordered k-table-hover"&gt;
+        &lt;thead&gt;
+            &lt;tr&gt;
+                &lt;th&gt;编号&lt;/th&gt;
+                &lt;th&gt;姓名&lt;/th&gt;
+                &lt;th&gt;出生日期&lt;/th&gt;
+            &lt;/tr&gt;
+        &lt;/thead&gt;
+        &lt;tbody&gt;
+            {{each item in list }}
+            &lt;tr&gt;
+                &lt;td&gt;{{item.id}}&lt;/td&gt;
+                &lt;td&gt;{{item.name}}&lt;/td&gt;
+                &lt;td&gt;{{item.birthday | jsonDateFormat:'yyyy-MM-dd'}}&lt;/td&gt;
+            &lt;/tr&gt;
+            {{/each}}
+        &lt;/tbody&gt;
+    &lt;/table&gt;
+&lt;/script&gt;
+                </code>
+            </pre>
+
+            <h3>模板语法</h3>
+            <pre>
+                <code>
+//遍历语法
+{{each item in list }}
+    {{index}}
+{{/each}}
+
+
+
+//if语法
+{{if true }}
+
+{{else if true}}
+
+{{else}}
+
+{{/if}}
+                </code>
+            </pre>
+
+
+            <h3>过滤器使用</h3>
+            <p><code>使用 “|” 分隔多个过滤器, “|” 分隔符前后必须加上空格</code></p>
+            <pre>
+                <code>
+{{value | filterA:parms | filterB:parm1,parm2 }}
+
+
+//例子：使用jsonDateFormat过滤器格式化出生日期,多个参数用 “,” 逗号分隔。
+{{item.birthday | jsonDateFormat:'yyyy-MM-dd'}}       
+                </code>
+            </pre>
+
+
+            <h3>参数 options</h3>
+
+            <table class="table table-bordered table-striped js-options-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>类型</th>
+                        <th style="width: 100px;">默认值</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>tpl</td>
+                        <td>string</td>
+                        <td>''</td>
+                        <td>模板字符串</td>
+                    </tr>
+                    <tr>
+                        <td>data</td>
+                        <td>object</td>
+                        <td>{}</td>
+                        <td>数据项</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>方法</h3>
+            <pre>
+                <code>
+//添加过滤器
+Template.addFilter('filterName',function(str,parm1,parm2){
+   //todo: do something...
+    return value;                 
+});
+
+
+//异步加载模板
+Template.load(tplName, callback)
+
+                </code>
+            </pre>
+
         </div>
     </div>
 
     <script type="text/template" id="template">
-        {{each item in list}}
-            <span title="{{item.value}}">{{item.name}}</span>
-        <div>
-            <a href="{{item.link}}">
-                <span>{{item.name}}</span>
-            </a>
-        </div>
-        {{/each}}
-
-        {{ if has }}
-
-        {{user.userName}}
-
-        {{ /if }}
+        <h3>{{title}}</h3>
+        <table class="k-table k-table-bordered k-table-hover">
+            <thead>
+                <tr>
+                    <th>编号</th>
+                    <th>姓名</th>
+                    <th>出生日期</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{each item in list }}
+                <tr>
+                    <td>{{item.id}}</td>
+                    <td>{{item.name}}</td>
+                    <td>{{item.birthday | jsonDateFormat:'yyyy-MM-dd'}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
 
     </script>
 
@@ -55,24 +189,19 @@
     <script type="text/javascript" src="main.js"></script>
     <script type="text/javascript">
         require(['KM'], function (KM) {
-            var tpl = new KM.Template($('#template'), {
+
+            var tpl = new KM.Template($('#content'), {
+                tpl: $('#template').html(),
                 data: {
-                    list: [{ name: '测试' }],
-                    has: false,
-                    user: {
-                        userName:'123'
-                    }
+                    title: '表格测试',
+                    list: [
+                        { id: 1, name: 'Tom', birthday: '/Date(1444320000000)/' },
+                        { id: 2, name: 'Rose', birthday: '/Date(1391141532000)/' }
+                    ]
                 }
             });
 
-            $('#content').html(tpl.render());
-
-            //var sl = new Function('return this');
-            //console.log(sl()); // true, sloppy mode
-
-            //var st = new Function('"use strict";console.log(this); return this;');
-            //st.prototype = {};
-            //console.log(st()); // true, strict mode
+            tpl.render();
         });
     </script>
 </body>

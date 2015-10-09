@@ -35,6 +35,7 @@
         { text: '瀑布流', activeCode: 'waterfall', link: 'waterfall.html' },
         { text: '本地存储', activeCode: 'localStorage', link: 'localStorage.html' },
         { text: 'Ajax', activeCode: 'ajax', link: 'ajax.html' },
+        { text: '模板', activeCode: 'template', link: 'template.html' },
         { text: '路由', activeCode: 'route', link: 'route.html' }
     ];
 
