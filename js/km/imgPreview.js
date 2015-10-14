@@ -16,7 +16,7 @@ define('km/imgPreview', ['jquery', 'km/loading', 'km/popTips'], function ($, Loa
     var ImgPreview = function ($elements, options) {
         this.$elements = $elements;
         this.options = $.extend(true, {
-            delay:500,
+            delay: 500,
             showButtons: true,
             backdrop: true,
             backdropClose: true,
@@ -114,9 +114,19 @@ define('km/imgPreview', ['jquery', 'km/loading', 'km/popTips'], function ($, Loa
         });
 
         this.$win.on('resize.imgpreview', function () {
-            var width = self.$img.attr('data-width'),
-                height = self.$img.attr('data-height');
-            self.setPosition({width:width,height:height});
+            var width = parseInt(self.$img.attr('data-width')),
+                height = parseInt(self.$img.attr('data-height'));
+
+            if (self.tm) {
+                clearTimeout(self.tm);
+            }
+
+            if (self.isShow) {
+                self.tm = setTimeout(function () {
+                    self.setPosition({ width: width, height: height });
+                }, 300);
+            }
+
         });
     };
 
@@ -153,7 +163,7 @@ define('km/imgPreview', ['jquery', 'km/loading', 'km/popTips'], function ($, Loa
         var img = new Image();
 
         img.onload = function () {
-            callback(true, { width: img.width, height: img.height });   
+            callback(true, { width: img.width, height: img.height });
         };
         img.onerror = function () {
             popTips.error('图片加载失败！', 1500);
@@ -220,7 +230,9 @@ define('km/imgPreview', ['jquery', 'km/loading', 'km/popTips'], function ($, Loa
 
         src = $img.attr('data-href') || $img.attr('src');
 
-        if (!src || this.isLoading) {  return; }
+        if (!src || this.isLoading) { return; }
+
+        this.isShow = true;
 
         this.isLoading = true;
 
@@ -232,20 +244,21 @@ define('km/imgPreview', ['jquery', 'km/loading', 'km/popTips'], function ($, Loa
                 self.$img.attr({
                     'src': src,
                     'data-width': size.width,
-                    'data-height':size.height
+                    'data-height': size.height
                 });
-                self.setPosition(size);
 
-                self.$imgPreview.hide().fadeIn(self.options.delay);
+                //self.$imgPreview.hide().fadeIn(self.options.delay);  
 
                 if (self.options.backdrop && self.$backdrop[0].style.display != 'block') {
                     self.$backdrop.css({
                         opacity: 0,
                         display: 'block'
-                    }).animate({
+                    }).stop().animate({
                         opacity: 0.8
                     }, self.options.delay)
                 }
+
+                self.setPosition(size);
 
             } else {
                 self.hide();
@@ -262,6 +275,7 @@ define('km/imgPreview', ['jquery', 'km/loading', 'km/popTips'], function ($, Loa
     ImgPreview.prototype.hide = function () {
         this.isLoading = false;
         Loading.hide();
+        this.isShow = false;
         this.$imgPreview.fadeOut(this.options.delay);
         if (this.options.backdrop) {
             this.$backdrop.fadeOut(this.options.delay);
@@ -282,13 +296,12 @@ define('km/imgPreview', ['jquery', 'km/loading', 'km/popTips'], function ($, Loa
 
         var size = this.zoom(iw, ih);
 
-
-        this.$container.css({
+        this.$container.show().stop().animate({
             width: size.width,
             height: size.height
         });
 
-        this.$imgPreview.css({
+        this.$imgPreview.show().stop().animate({
             width: size.width + 20,
             height: size.height + 20,
             marginTop: -((size.height + 20) / 2),
@@ -297,7 +310,7 @@ define('km/imgPreview', ['jquery', 'km/loading', 'km/popTips'], function ($, Loa
 
     };
 
-    return function ($elms,options) {
+    return function ($elms, options) {
         $elms = $elms || $('img');
         var imgPreview = new ImgPreview($elms, options);
         return imgPreview;
