@@ -84,14 +84,21 @@ tpl.render();
             <h3>模板语法</h3>
             <pre>
                 <code>
-//遍历语法
+//遍历
 {{each item in list }}
     {{index}}
 {{/each}}
 
 
 
-//if语法
+//for循环
+{{for i=0; i<10; i++ }}
+
+{{/for}}
+
+
+
+//if判断
 {{if true }}
 
 {{else if true}}
@@ -202,6 +209,7 @@ Template.load(tplName, callback)
             });
 
             tpl.render();
+
         });
     </script>
 </body>

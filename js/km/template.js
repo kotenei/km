@@ -130,11 +130,16 @@ define('km/template', ['jquery'], function ($) {
                 case 'each':
                     var arr = split[2];
                     var obj = split[0];
-                    code = '$each(' + arr + ',function(index,' + obj + '){';
-
+                    code = '$each(' + arr + ',function(index,' + obj + ') {';
                     break;
                 case '/each':
                     code = '});';
+                    break;
+                case 'for':
+                    code = 'for ( var ' + args + ') {';
+                    break;
+                case '/for':
+                    code = '}';
                     break;
                 case 'if':
                     code = 'if (' + args + ') {';
@@ -313,7 +318,7 @@ define('km/template', ['jquery'], function ($) {
 
         this.code = headerCode + variable.join('') + mainCode + footerCode;
 
-        //console.log(this.code)
+        console.log(this.code)
 
         try {
             this.Render = new Function('$utils', '$filter', '$data', this.code);
