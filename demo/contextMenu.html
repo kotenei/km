@@ -19,7 +19,7 @@
         </div>
     </div>
     <div class="main wrap">
-        <ul class="demo-nav-list" id="navList"> 
+        <ul class="demo-nav-list" id="navList">
         </ul>
         <script type="text/javascript" src="nav.js"></script>
         <script type="text/javascript">
@@ -28,13 +28,29 @@
         <div class="demo-container">
             <h1 class="page-header">右键菜单</h1>
             <div class="bs-example bs-example-padded-bottom">
-                <div id="target" style="width:150px;height:150px;margin:50px auto;vertical-align: middle; text-align: center;border:1px solid yellow;">点击右键弹出菜单</div>
+                <div class="target" style="width: 150px; height: 150px; display:inline-block; vertical-align: middle; text-align: center; border: 1px solid yellow;">点击右键弹出菜单</div>
+
+                <!--<div class="target" 
+                    data-module="contextmenu" 
+                    data-options="{
+                        items:[{
+                            text:'测试',
+                            func:function(){
+                                alert('自定义');
+                            }    
+                        }]
+                    }"
+                    style="width: 150px; height: 150px; display:inline-block;margin-left:10px; vertical-align: middle; text-align: center; border: 1px solid yellow;">
+                    全局调用
+                </div>-->
+
             </div>
             <h3>初始化</h3>
             <div class="highlight">
                 <pre>
                     <code data-lang="js" class="language-js">
-KM.contextMenu($elm,options)
+
+KM.contextMenu($elms,options);
                     </code>
                 </pre>
             </div>
@@ -49,12 +65,12 @@ KM.contextMenu($elm,options)
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
+                    <!--<tr>
                         <td>className</td>
                         <td>string</td>
                         <td>'k-contextMenu'</td>
                         <td>菜单样式名</td>
-                    </tr>
+                    </tr>-->
                     <tr>
                         <td>items</td>
                         <td>array</td>
@@ -71,8 +87,7 @@ KM.contextMenu($elm,options)
     <script type="text/javascript" src="main.js"></script>
     <script type="text/javascript">
         require(['KM'], function (KM) {
-            KM.contextMenu($('#target'), {
-                items: [
+            var items = [
                 {
                     text: '下载',
                     func: function ($target) {
@@ -109,9 +124,14 @@ KM.contextMenu($elm,options)
                         alert('rename')
                     }
                 }]
+
+
+            KM.contextMenu($('div.target'), {
+                items:items
             });
+
         });
-        
+
 
     </script>
 </body>

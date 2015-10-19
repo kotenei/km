@@ -5,6 +5,21 @@
  */
 define('km/contextMenu', ['jquery'], function ($) {
 
+    var items = [], $curTarget;
+
+    var $contextMenu = $('<ul class="k-contextMenu"></ul>').appendTo(document.body);
+
+    $contextMenu.on('click.contextmenu', 'li', function () {
+        var $el = $(this),
+            text = $el.text(),
+            item = items[text];
+
+        if (item && typeof item.func === 'function') {
+            item.func($curTarget);
+        }
+    });
+
+
     /**
      * 右键菜单模块
      * @constructor
@@ -22,7 +37,6 @@ define('km/contextMenu', ['jquery'], function ($) {
                 onShow: $.noop
             }
         }, options);
-        this.$curTarget = null;
         this.tm = null;
         this.init();
     };
@@ -47,13 +61,20 @@ define('km/contextMenu', ['jquery'], function ($) {
         var self = this;
 
         this.$el.on('contextmenu.contextmenu', this.options.target, function (e) {
+
             var left = e.pageX,
                 top = e.pageY;
 
-            self.$curTarget = $(this);
+            $contextMenu.hide();
+
+            $curTarget = $(this);
+
+            self.build();
+
+            items = self.items;
 
             self.tm = setTimeout(function () {
-                self.$contextMenu.css({
+                $contextMenu.css({
                     left: left,
                     top: top,
                     display: 'block'
@@ -66,18 +87,10 @@ define('km/contextMenu', ['jquery'], function ($) {
             return false;
         });
 
-        this.$contextMenu.on('click.contextmenu', 'li', function () {
-            var $el = $(this),
-                text = $el.text(),
-                item = self.items[text];
-            if (item && typeof item.func === 'function') {
-                item.func(self.$curTarget);
-            }
-        });
 
         $(document.body).on('click.contextmenu', function () {
-            self.$contextMenu.hide();
-            self.$curTarget = null;
+            $contextMenu.hide();
+            $curTarget = null;
         });
     };
 
@@ -88,14 +101,15 @@ define('km/contextMenu', ['jquery'], function ($) {
     ContextMenu.prototype.build = function () {
         var html = [];
         this.items = {};
-        html.push('<ul class="' + this.options.className + '">');
+        //html.push('<ul class="' + this.options.className + '">');
         for (var i = 0; i < this.options.items.length; i++) {
             html.push('<li>' + this.options.items[i].text + '</li>');
             this.items[this.filterHtml(this.options.items[i].text)] = this.options.items[i];
         }
-        html.push('</ul>');
-        this.$contextMenu = $(html.join(''));
-        this.$contextMenu.appendTo(document.body);
+        //html.push('</ul>');
+        //this.$contextMenu = $(html.join(''));
+        //this.$contextMenu.appendTo(document.body);
+        $contextMenu.html(html.join(''));
     };
 
     /**
@@ -106,10 +120,40 @@ define('km/contextMenu', ['jquery'], function ($) {
         return str.replace(/<[^>]*>/ig, '');
     };
 
-
-    return function ($elm, options) {
-        var contextMenu = new ContextMenu($elm, options);
-        return contextMenu;
+    /**
+     * 销毁
+     * @return {Void}   
+     */
+    ContextMenu.Destory = function () {
+        $contextMenu.remove();
     }
+
+
+    return function ($elms, settings) {
+
+        $elms = $elms || $('[data-module=contextmenu]');
+
+        $elms.each(function () {
+            var $el = $(this),
+                options = $el.attr('data-options'),
+                data =$.data($el[0], 'contextMenu');
+
+            if (!data) {
+
+                if (options && options.length > 0) {
+                    options = eval('(0,' + options + ')');
+                } else {
+                    options = settings;
+                }
+
+                data = new ContextMenu($el, options);
+
+                $.data($el[0], 'contextMenu', data);
+            }
+
+        });
+    };
+
+    return ContextMenu;
 
 });
