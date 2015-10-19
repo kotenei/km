@@ -31,28 +31,37 @@
                 <code>请部署后再测试使用</code>
             </p>
             <div class="bs-example bs-example-padded-bottom">
-                <p>
-                    <input type="text"
-                        class="k-form-control"
-                        value=""
-                        placeholder="全局调用"
-                        data-module="upload"
-                        data-options="{
-                            uploadUrl:'/',
-                            removeUrl:'/'
+                <fieldset>
+            <legend>单文件上传</legend>
+            <input type="text"
+                   class="k-form-control"
+                   value="test.html"
+                   placeholder="全局调用"
+                   data-module="upload"
+                   data-options="{
+                            uploadUrl:'/demo/data/TestUpload.ashx',
+                            removeUrl:'/demo/data/TestRemove.ashx'
                         }" />
-                </p>
-                <p>
-                    <button type="button"
-                        data-module="upload"
-                        data-options="{
-                            uploadUrl:'/',
-                            removeUrl:'/',
+        </fieldset>
+
+        <br />
+        <br />
+
+        <fieldset>
+            <legend>多文件上传</legend>
+            <button type="button"
+                    data-module="upload"
+                    data-options="{
+                            uploadUrl:'/demo/data/TestUpload.ashx',
+                            removeUrl:'/demo/data/TestRemove.ashx',
+                            uploadedUrls:['1.jpg','2.jpg'],
+                            $target:$('#target'),
                             text:'上传文件'
                         }">
-                        上传
-                    </button>
-                </p>
+                上传
+            </button>
+            <input type="hidden" id="target" />
+        </fieldset>
             </div>
             <h3>全局调用</h3>
             <pre>
@@ -80,8 +89,7 @@ KM.Upload.Global($elms);
                     <tr>
                         <td>data-options</td>
                         <td>"{uploadUrl:xxx,removeUrl:xxx ... }"</td>
-                        <td>
-                            初始化参数，参照下表 options 说明
+                        <td>初始化参数，参照下表 options 说明
                         </td>
                     </tr>
                 </tbody>
@@ -117,66 +125,72 @@ var upload = new KM.Upload($elm,options);
             </pre>
             <h3>参数 options</h3>
             <table class="table table-bordered table-striped js-options-table">
-                <thead>
-                    <tr>
-                        <th>名称</th>
-                        <th>类型</th>
-                        <th style="width: 100px;">默认值</th>
-                        <th>描述</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>uploadUrl</td>
-                        <td>string</td>
-                        <td>''</td>
-                        <td>上传Url</td>
-                    </tr>
-                    <tr>
-                        <td>removeUrl</td>
-                        <td>string</td>
-                        <td>''</td>
-                        <td>删除Url</td>
-                    </tr>
-                    <tr>
-                        <td>text</td>
-                        <td>string</td>
-                        <td>'上传'</td>
-                        <td>上传按钮文本</td>
-                    </tr>
-                    <tr>
-                        <td>name</td>
-                        <td>string</td>
-                        <td>'file'</td>
-                        <td>上传控件的name属性值，默认为'file'</td>
-                    </tr>
-                    <tr>
-                        <td>loadingEnable</td>
-                        <td>boolean</td>
-                        <td>true</td>
-                        <td>上传或删除时，是否显示Loading提示，默认显示</td>
-                    </tr>
-                    <tr>
-                        <td>popTips</td>
-                        <td>object</td>
-                        <td>
-                            <pre>
-                                <code>
+        <thead>
+            <tr>
+                <th>名称</th>
+                <th>类型</th>
+                <th style="width: 100px;">默认值</th>
+                <th>描述</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>uploadUrl</td>
+                <td>string</td>
+                <td>null</td>
+                <td>上传Url</td>
+            </tr>
+            <tr>
+                <td>removeUrl</td>
+                <td>string</td>
+                <td>null</td>
+                <td>删除Url</td>
+            </tr>
+            <tr>
+                <td>$target</td>
+                <td>jquery</td>
+                <td>null</td>
+                <td>上传或者删除文件后，给目标元素设置val值</td>
+            </tr>
+            <tr>
+                <td>text</td>
+                <td>string</td>
+                <td>'上传'</td>
+                <td>上传按钮文本</td>
+            </tr>
+            <tr>
+                <td>name</td>
+                <td>string</td>
+                <td>'file'</td>
+                <td>上传控件的name属性值，默认为'file'</td>
+            </tr>
+            <tr>
+                <td>uploadedUrls</td>
+                <td>array</td>
+                <td>[]</td>
+                <td>已上传的文件路径，只能在多文件上传模式初始化时显示</td>
+            </tr>
+            <tr>
+                <td>popTips</td>
+                <td>object</td>
+                <td>
+                    <pre>
+                    <code>
 {
     enable: true,
     delay: 600
 }
                                 </code>
                             </pre>
-                        </td>
-                        <td>
-                            <p>popTips设置</p>
-                            <p><b>enable：</b>是否启用弹出提示</p>
-                            <p><b>delay：</b>弹出提示的显示的时间，默认600毫秒</p>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                </td>
+                <td>
+                    <p>popTips设置</p>
+                    <p><b>enable：</b>是否启用弹出提示</p>
+                    <p><b>delay：</b>弹出提示的显示的时间，默认600毫秒</p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
         </div>
     </div>
 

@@ -26,11 +26,13 @@ define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event'], func
     var Upload = function ($elm, options) {
         this.$elm = $elm;
         this.options = $.extend(true, {
-            uploadUrl: '',
-            removeUrl: '',
+            uploadUrl: null,
+            removeUrl: null,
+            $target:null,
             fontClassName: 'fa fa-upload',
             text: '上传',
             name: 'file',
+            uploadedUrls: [],
             //loadingEnable: true,
             popTips: {
                 enable: true,
@@ -68,12 +70,9 @@ define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event'], func
             left: '10px'// spinner 相对父容器Left定位 单位 px
         });
 
-
+        this.uploadedUrls = this.options.uploadedUrls;
         this.build();
         this.watch();
-
-
-
 
     };
 
@@ -87,11 +86,16 @@ define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event'], func
         this.$uploadBox.on('change.upload', 'input', function () {
             self.upload();
         }).on('click.upload', '.fa-close', function () {
+            var $el = $(this),
+                $parent = $el.parents('.k-upload-result:eq(0)'),
+                removeUrl = $parent.attr('data-url');
+
             if (self.isLoading) {
                 return;
             }
+
             Window.confirm('您确认要删除该文件吗？', function () {
-                self.removeFile();
+                self.removeFile(self.isButton ? { filePath: removeUrl } : null);
             });
         });
     };
@@ -107,9 +111,20 @@ define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event'], func
         html.push('<div class="k-upload-box">');
 
         if (this.isButton) {
-            html.push('<div class="k-upload-result">');
-            html.push('<span></span>');
-            html.push('<i class="fa fa-close"></i>');
+
+            html.push('<div class="k-upload-result-box">');
+
+            if (this.options.uploadedUrls.length > 0) {
+
+                for (var i = 0; i < this.options.uploadedUrls.length; i++) {
+                    html.push('<div class="k-upload-result" data-url="' + this.options.uploadedUrls[i] + '">');
+                    html.push('<span title="' + this.options.uploadedUrls[i] + '">' + this.options.uploadedUrls[i] + '</span>');
+                    html.push('<i class="fa fa-close" style="display:'+(this.options.removeUrl?"block":"none")+';"></i>');
+                    html.push('</div>');
+                }
+
+            }
+
             html.push('</div>');
         }
 
@@ -126,8 +141,10 @@ define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event'], func
         html.push('</div>');
 
         if (!this.isButton) {
+            var val =$.trim( this.$elm.val());
+
             groupHtml.push('<div class="k-input-group k-input-group-upload">');
-            groupHtml.push('<i class="fa fa-close"></i>');
+            groupHtml.push('<i class="fa fa-close" style="display:'+(this.options.removeUrl&&val.length>0?"block":"none")+';"></i>');
             groupHtml.push('<span class="k-input-group-btn">');
             groupHtml.push(html.join(''));
             groupHtml.push('</span>');
@@ -139,7 +156,7 @@ define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event'], func
         this.$button = this.$uploadBox.find('button');
         this.$file = this.$uploadBox.find('input[type=file]');
         this.$form = this.$uploadBox.find('form');
-        this.$resultBox = this.$uploadBox.find('.k-upload-result');
+        this.$resultBox = this.$uploadBox.find('.k-upload-result-box');
         this.$txtResult = this.isButton ? null : this.$elm;
         this.$close = this.$uploadBox.find('.fa-close');
         this.$uploadBox.appendTo(this.$elm.parent());
@@ -180,6 +197,10 @@ define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event'], func
                 inCallback: false
             }
         }).done(function (ret) {
+
+            if (self.isButton && ret.Url && ret.Url.length > 0) {
+                self.uploadedUrls.push(ret.Url);
+            }
             self.showResult(ret.Url || '');
         }).always(function () {
             self.isLoading = false;
@@ -200,7 +221,9 @@ define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event'], func
 
         this.isLoading = true;
 
-        ajax.post(this.options.removeUrl, data || { filePath: this.url }, {
+        data = data || { filePath: this.url }
+
+        ajax.post(this.options.removeUrl, data, {
             redirectEnable: false,
             loadingEnable: true,
             popTips: {
@@ -210,7 +233,7 @@ define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event'], func
             }
         }).done(function (ret) {
             if (ret.Status || ret.status) {
-                self.hideResult();
+                self.hideResult(data.filePath);
             }
         }).always(function () {
             self.isLoading = false;
@@ -224,11 +247,24 @@ define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event'], func
     Upload.prototype.showResult = function (url) {
         this.url = url;
         if (this.isButton) {
-            this.$resultBox.children('span').text(url).end().fadeIn();
-            this.$buttonBox.hide();
+            this.$resultBox.append('<div class="k-upload-result" data-url="' + url + '"><span title="' + url + '">"' + url + '"</span><i class="fa fa-close" style="display:' + (this.options.removeUrl ? "block" : "none") + ';"></i></div>');
+
+            if (this.options.$target) {
+                this.options.$target.val(this.uploadedUrls.join(','));
+            }
+
+
         } else {
+
             this.$txtResult.val(url);
-            this.$close.fadeIn();
+
+            if (this.options.removeUrl) {
+                this.$close.fadeIn();
+            }
+
+            if (this.options.$target) {
+                this.options.$target.val(url);
+            }
         }
     };
 
@@ -236,13 +272,31 @@ define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event'], func
      * 隐藏结果
      * @return {Void}
      */
-    Upload.prototype.hideResult = function () {
+    Upload.prototype.hideResult = function (url) {
+        var index = -1;
         if (this.isButton) {
-            this.$resultBox.children('span').text('').end().hide();
-            this.$buttonBox.fadeIn();
+            this.$resultBox.children('div[data-url="' + url + '"]').remove();
+
+            for (var i = 0; i < this.uploadedUrls.length; i++) {
+                if (this.uploadedUrls[i] == url) {
+                    index = i;
+                    break;
+                }
+            }
+            if (i >= 0) {
+                this.uploadedUrls.splice(index, 1);
+            }
+
+            if (this.options.$target) {
+                this.options.$target.val(this.uploadedUrls.join(','));
+            }
+
         } else {
             this.$txtResult.val('');
             this.$close.hide();
+            if (this.options.$target) {
+                this.options.$target.val('');
+            }
         }
     }
 
@@ -266,7 +320,7 @@ define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event'], func
         $elms = $elms || $('button[data-module=upload],input[data-module=upload]');
         $elms.each(function () {
             var $el = $(this),
-                options=$el.attr('data-options'),
+                options = $el.attr('data-options'),
                 uploadUrl = $el.attr('data-uploadurl'),
                 removeUrl = $el.attr('data-removeurl'),
                 name = $el.attr('data-name'),

@@ -1969,7 +1969,6 @@ table.k-treeTable tr.expanded.accept td span.indenter a {
 }
 .k-upload-box .k-upload-result {
   border: 1px solid #ddd;
-  float: left;
   height: 35px;
   line-height: 35px;
   min-width: 200px;
@@ -1977,7 +1976,11 @@ table.k-treeTable tr.expanded.accept td span.indenter a {
   border-radius: 4px;
   padding-right: 20px;
   padding-left: 10px;
-  display: none;
+  margin-bottom: 10px;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .k-upload-box .k-upload-result .fa {
   position: absolute;
