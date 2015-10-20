@@ -1,0 +1,101 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>标签页</title>
+    <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../dist/css/km.min.css" rel="stylesheet" />
+    <link href="docs.min.css" rel="stylesheet" />
+    <link href="demo.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="header">
+        <div class="wrap">
+            <ul class="nav-list">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="###" class="active">demo</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="main wrap">
+        <ul class="demo-nav-list" id="navList">
+        </ul>
+        <script type="text/javascript" src="nav.js"></script>
+        <script type="text/javascript">
+            nav(document.getElementById('navList'), 'tab');
+        </script>
+        <div class="demo-container">
+            <h1 class="page-header">标签页</h1>
+
+            <div class="bs-example bs-example-padded-bottom">
+
+                <div class="k-tab">
+                    <ul class="k-tab-nav">
+                        <li class="active" role="tab">
+                            <a href="javascript:void(0);">
+                                <span class="k-tab-nav-title">标签 1</span>
+                                <span class="fa fa-close" role="close"></span>
+                            </a>
+                        </li>
+                        <li role="tab">
+                            <a href="javascript:void(0);">
+                                <span class="k-tab-nav-title">标签 2</span>
+                                <span class="fa fa-close" role="close"></span>
+                            </a>
+                        </li>
+                        <li role="tab">
+                            <a href="javascript:void(0);">
+                                <span class="k-tab-nav-title">标签 3</span>
+                                <span class="fa fa-close" role="close"></span>
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="k-tab-container">
+                        <div class="k-tab-content" style="display: block;">
+                            标签1内容
+                        </div>
+                        <div class="k-tab-content">
+                            标签2内容
+                        </div>
+                        <div class="k-tab-content">
+                            标签3内容
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <script type="text/javascript" src="vendor/require/require.js"></script>
+    <script type="text/javascript" src="main.js"></script>
+    <script type="text/javascript">
+        require(['KM'], function (KM) {
+            //KM.Tab.Global($('div.k-tab'));
+
+            var tab = new KM.Tab($('div.k-tab'));
+
+            tab.on('click', function () {
+                //alert('a')
+            }).on('close', function () {
+                //alert('b')
+            }).on('refresh', function () {
+                //alert('c')
+            });
+
+            setTimeout(function () {
+                tab.add({
+                    url: 'ddddddd',
+                    title: '新标签标题',
+                    content: '新标签内容',
+                    canClose: true
+                })
+            },5000)
+
+            
+        });
+    </script>
+</body>
+</html>

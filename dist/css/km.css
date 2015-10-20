@@ -2250,3 +2250,77 @@ table.k-treeTable tr.expanded.accept td span.indenter a {
   border: 1px dashed #454545;
   background: white;
 }
+.k-tab {
+  background: white;
+  position: relative;
+}
+.k-tab > .k-tab-nav {
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.k-tab > .k-tab-nav > li {
+  position: relative;
+  float: left;
+  display: inline;
+  margin-right: 6px;
+  border: 1px solid #F7F7F9;
+  border-radius: 4px 4px 0 0;
+  border-bottom: none;
+  height: 40px;
+  line-height: 40px;
+  max-width: 200px;
+  background: #F7F7F9;
+}
+.k-tab > .k-tab-nav > li.active {
+  border-color: #ccc;
+  z-index: 1;
+  background: white;
+}
+.k-tab > .k-tab-nav > li.active > a {
+  color: #333;
+}
+.k-tab > .k-tab-nav > li.active > a > .fa-close {
+  color: #D9534F;
+}
+.k-tab > .k-tab-nav > li > a {
+  text-decoration: none;
+  color: #666;
+  padding: 0 18px;
+  display: block;
+  overflow: hidden;
+  position: relative;
+}
+.k-tab > .k-tab-nav > li > a > span.k-tab-nav-title {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.k-tab > .k-tab-nav > li > a > span.fa {
+  font-size: 12px;
+  position: absolute;
+  right: 4px;
+  top: 14px;
+}
+.k-tab > .k-tab-nav > li > a > span.fa.fa-refresh {
+  left: 4px;
+  right: initial;
+  /*color: #5CB85C;*/
+}
+.k-tab > .k-tab-nav > li > a > span.fa.fa-close {
+  /*color:#D9534F;*/
+}
+.k-tab > .k-tab-container {
+  border: 1px solid #ccc;
+  position: relative;
+  top: -1px;
+  border-radius: 0 4px 4px 4px;
+  padding: 18px;
+  padding-top: 10px;
+}
+.k-tab > .k-tab-container > .k-tab-content {
+  display: none;
+  min-height: 100px;
+}
