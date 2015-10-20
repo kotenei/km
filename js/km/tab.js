@@ -173,6 +173,7 @@ define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu'], function ($, ajax, con
     };
 
     Tab.prototype.refresh = function (index) {
+        var self = this;
         var $el = this.$tabNav.children().eq(index);
         var url = $el.attr('data-url');
         var $content = this.$tabContainer.children().eq(index);
