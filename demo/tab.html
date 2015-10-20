@@ -32,7 +32,7 @@
 
                 <div class="k-tab">
                     <ul class="k-tab-nav">
-                        <li class="active" role="tab">
+                        <li class="active" role="tab" data-url="http://www.baidu.com">
                             <a href="javascript:void(0);">
                                 <span class="k-tab-nav-title">标签 1</span>
                                 <span class="fa fa-close" role="close"></span>
@@ -53,7 +53,7 @@
                     </ul>
                     <div class="k-tab-container">
                         <div class="k-tab-content" style="display: block;">
-                            标签1内容
+                            
                         </div>
                         <div class="k-tab-content">
                             标签2内容
@@ -75,7 +75,23 @@
         require(['KM'], function (KM) {
             //KM.Tab.Global($('div.k-tab'));
 
-            var tab = new KM.Tab($('div.k-tab'));
+            var tab = new KM.Tab($('div.k-tab'), {
+                contextMenu: {
+                    items: [
+                        {
+                            text: '<span class="fa fa-plus"></span>&nbsp;添加标签',
+                            func: function () {
+                                tab.add({
+                                    title: '新标签',
+                                    content: '新标签内容',
+                                    canClose: true
+                                });
+                                tab.contextMenuInit();
+                            }
+                        }
+                    ]
+                }
+            });
 
             tab.on('click', function () {
                 //alert('a')
@@ -85,16 +101,8 @@
                 //alert('c')
             });
 
-            setTimeout(function () {
-                tab.add({
-                    url: 'ddddddd',
-                    title: '新标签标题',
-                    content: '新标签内容',
-                    canClose: true
-                })
-            },5000)
 
-            
+
         });
     </script>
 </body>

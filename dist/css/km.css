@@ -2282,7 +2282,7 @@ table.k-treeTable tr.expanded.accept td span.indenter a {
   color: #333;
 }
 .k-tab > .k-tab-nav > li.active > a > .fa-close {
-  color: #D9534F;
+  /*color: #D9534F;*/
 }
 .k-tab > .k-tab-nav > li > a {
   text-decoration: none;
