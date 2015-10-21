@@ -28,32 +28,167 @@
         <div class="demo-container">
             <h1 class="page-header">标签页</h1>
 
-            <div class="bs-example bs-example-padded-bottom">
+            <div class="bs-example bs-example-padded-bottom" style="">
+                <div style="width: 400px;">
 
-                <div class="k-tab">
-                    <ul class="k-tab-nav">
-                        <li class="active" role="tab" data-url="http://www.baidu.com">
-                            <a href="javascript:void(0);">
-                                <span class="k-tab-nav-title">标签 1</span>
-                                <span class="fa fa-close" role="close"></span>
-                            </a>
-                        </li>
-                        <li role="tab">
-                            <a href="javascript:void(0);">
-                                <span class="k-tab-nav-title">标签 2</span>
-                                <span class="fa fa-close" role="close"></span>
-                            </a>
-                        </li>
-                        <li role="tab">
-                            <a href="javascript:void(0);">
-                                <span class="k-tab-nav-title">标签 3</span>
-                                <span class="fa fa-close" role="close"></span>
-                            </a>
-                        </li>
-                    </ul>
+                    <!--Tab开始-->
+                    <div class="k-tab" id="tab1">
+                        <div class="k-tab-head">
+                            <div class="left" role="left">
+                                <span class="fa fa-caret-left"></span>
+                            </div>
+                            <div class="k-tab-scroller">
+                                <ul class="k-tab-nav">
+                                    <li class="active" role="tab">
+                                        <a href="javascript:void(0);">
+                                            <span class="k-tab-nav-title">标签 1</span>
+                                            <span class="fa fa-close" role="close"></span>
+                                        </a>
+                                    </li>
+                                    <li role="tab">
+                                        <a href="javascript:void(0);">
+                                            <span class="k-tab-nav-title">标签 2</span>
+                                            <span class="fa fa-close" role="close"></span>
+                                        </a>
+                                    </li>
+                                    <li role="tab">
+                                        <a href="javascript:void(0);">
+                                            <span class="k-tab-nav-title">标签 3</span>
+                                            <span class="fa fa-close" role="close"></span>
+                                        </a>
+                                    </li>
+                                    <li role="tab">
+                                        <a href="javascript:void(0);">
+                                            <span class="k-tab-nav-title">标签 4</span>
+                                            <span class="fa fa-close" role="close"></span>
+                                        </a>
+                                    </li>
+                                    <li role="tab">
+                                        <a href="javascript:void(0);">
+                                            <span class="k-tab-nav-title">标签 5</span>
+                                            <span class="fa fa-close" role="close"></span>
+                                        </a>
+                                    </li>
+                                    <li role="tab">
+                                        <a href="javascript:void(0);">
+                                            <span class="k-tab-nav-title">标签 6</span>
+                                            <span class="fa fa-close" role="close"></span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="right" role="right">
+                                <span class="fa fa-caret-right"></span>
+                            </div>
+                        </div>
+                        <div class="k-tab-container">
+                            <div class="k-tab-content" style="display: block;">
+                                标签1内容
+                            </div>
+                            <div class="k-tab-content">
+                                标签2内容
+                            </div>
+                            <div class="k-tab-content">
+                                标签3内容
+                            </div>
+                            <div class="k-tab-content">
+                                标签4内容
+                            </div>
+                            <div class="k-tab-content">
+                                标签5内容
+                            </div>
+                            <div class="k-tab-content">
+                                标签6内容
+                            </div>
+                        </div>
+                    </div>
+                    <!--Tab结束-->
+
+                </div>
+            </div>
+
+            <h3>全局调用</h3>
+
+            <pre>
+                <code>
+KM.Tab.Global($elms,options);
+                </code>
+            </pre>
+
+            <h3>HTML 参数设置</h3>
+            <table class="table table-bordered table-striped js-options-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>设置值</th>
+                        <th style="width: 60%;">描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>data-options</td>
+                        <td>"{keepOne:true,contextMenu:xxx ... }"</td>
+                        <td>初始化参数，参照下表 options 说明
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>data-onclick</td>
+                        <td>data-onclick="function(parms){}或者funcName"</td>
+                        <td>点击tab的回调函数
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>data-onclose</td>
+                        <td>data-onclose="function(parms){}或者funcName"</td>
+                        <td>关闭tab的回调函数
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>data-onrefresh</td>
+                        <td>data-onrefresh="function(parms){}或者funcName"</td>
+                        <td>刷新tab的回调函数
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>自定义</h3>
+            <div class="bs-example bs-example-padded-bottom" style="">
+                <!--Tab开始-->
+                <div class="k-tab" id="tab2">
+                    <div class="k-tab-head">
+                        <div class="left" role="left">
+                            <span class="fa fa-caret-left"></span>
+                        </div>
+                        <div class="k-tab-scroller">
+                            <ul class="k-tab-nav">
+                                <li class="active" role="tab">
+                                    <a href="javascript:void(0);">
+                                        <span class="k-tab-nav-title">标签 1</span>
+                                        <span class="fa fa-close" role="close"></span>
+                                    </a>
+                                </li>
+                                <li role="tab">
+                                    <a href="javascript:void(0);">
+                                        <span class="k-tab-nav-title">标签 2</span>
+                                        <span class="fa fa-close" role="close"></span>
+                                    </a>
+                                </li>
+                                <li role="tab">
+                                    <a href="javascript:void(0);">
+                                        <span class="k-tab-nav-title">标签 3</span>
+                                        <span class="fa fa-close" role="close"></span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="right" role="right">
+                            <span class="fa fa-caret-right"></span>
+                        </div>
+                    </div>
                     <div class="k-tab-container">
                         <div class="k-tab-content" style="display: block;">
-                            
+                            标签1内容
                         </div>
                         <div class="k-tab-content">
                             标签2内容
@@ -63,19 +198,103 @@
                         </div>
                     </div>
                 </div>
-
+                <!--Tab结束-->
             </div>
 
+            <h3>初始化</h3>
+            <pre>
+                <code>
+var tab = new KM.Tab($elm,options);
+                </code>
+            </pre>
+            <h3>options 参数设置</h3>
+
+            <table class="table table-bordered table-striped js-options-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>类型</th>
+                        <th style="width: 100px;">默认值</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>keepOne</td>
+                        <td>boolean</td>
+                        <td>true</td>
+                        <td>关闭tab时，是否保留一个，默认为保留</td>
+                    </tr>
+                    <tr>
+                        <td>contextMenu</td>
+                        <td>object</td>
+                        <td>
+                            <pre>
+                                <code>
+contextMenu: {
+    items: []
+}
+                                </code>
+                            </pre>
+                        </td>
+                        <td>右键菜单配置项，参数右键菜单的options设置</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3>函数调用</h3>
+            <pre>
+                <code>
+//回调函数绑定
+tab.on('click', function ($el) {
+    alert('切换');
+}).on('close', function ($el) {
+    alert('关闭');
+}).on('refresh', function ($el) {
+    alert('刷新');
+});
+
+
+//添加新的标签项
+//数据格式
+//data = {
+//    url: 'ajax地址',
+//    title: '标签标题',
+//    content: '标签内容',   
+//    canClose: true,       //是否启用关闭
+//    canRefresh: true      //是否启用刷新
+//};
+tab.add(data);
+
+
+//切换tab项
+tab.toggle(index);
+
+
+//关闭tab
+tab.close(index);
+
+
+//刷新tab（请在li标签上设置data-url地址）
+tab.refresh(index);
+
+
+//滑动tab项
+tab.scrollTo(index);
+                </code>
+            </pre>
         </div>
     </div>
+
+
 
     <script type="text/javascript" src="vendor/require/require.js"></script>
     <script type="text/javascript" src="main.js"></script>
     <script type="text/javascript">
         require(['KM'], function (KM) {
-            //KM.Tab.Global($('div.k-tab'));
 
-            var tab = new KM.Tab($('div.k-tab'), {
+            KM.Tab.Global($('#tab1'));
+
+            var tab = new KM.Tab($('#tab2'), {
                 contextMenu: {
                     items: [
                         {
@@ -93,12 +312,15 @@
                 }
             });
 
-            tab.on('click', function () {
-                //alert('a')
-            }).on('close', function () {
-                //alert('b')
-            }).on('refresh', function () {
-                //alert('c')
+            tab.on('click', function ($el) {
+                //console.log($el)
+                alert('切换');
+            }).on('close', function ($el) {
+                //console.log($el)
+                alert('关闭');
+            }).on('refresh', function ($el) {
+                //console.log($el)
+                alert('刷新');
             });
 
 

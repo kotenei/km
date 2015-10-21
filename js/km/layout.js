@@ -48,7 +48,7 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
                 type = $panel.attr('data-type'),
                 $expand = $(self.getExpandHtml(type)).appendTo(self.$layout);
 
-            $panel.data('expand', $expand);
+            $.data($panel[0], 'expand', $expand);
         });
         this.setSize();
         this.panelInit();
@@ -109,7 +109,8 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
                     break;
             }
             var panel = new Panel($panel, options);
-            $panel.data('panel', panel);
+
+            $.data($panel[0], 'panel', panel);
         });
     };
 
@@ -361,8 +362,8 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
 
         this.$panels.each(function () {
             var $panel = $(this),
-                $expand = $panel.data('expand'),
-                panel = $panel.data('panel'),
+                $expand = $.data($panel[0],'expand'),
+                panel = $.data($panel[0], 'panel'),
                 type = $panel.attr('data-type');
 
             ret[type] = {
@@ -403,16 +404,19 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
                 options = $el.attr('data-options'),
                 onShow = $el.attr('data-onshow'),
                 onHide = $el.attr('data-onhide'),
-                data = $el.data('layout');
+                data =$.data($el[0],'layout');
 
-            if (options && options.length > 0) {
-                options = eval('(0,' + options + ')');
-            }
-
-            onShow = onShow && onShow.length > 0 ? eval('(0,' + onShow + ')') : $.noop;
-            onHide = onHide && onHide.length > 0 ? eval('(0,' + onHide + ')') : $.noop;
+            
 
             if (!data) {
+
+                if (options && options.length > 0) {
+                    options = eval('(0,' + options + ')');
+                }
+
+                onShow = onShow && onShow.length > 0 ? eval('(0,' + onShow + ')') : $.noop;
+                onHide = onHide && onHide.length > 0 ? eval('(0,' + onHide + ')') : $.noop;
+
                 data = new Layout($el, options);
                 data.on('show', function (info) {
                     onShow.call(this, info);
@@ -420,7 +424,8 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
                     onHide.call(this, info);
                 });
 
-                $el.data('layout', data);
+                
+                $.data($el[0], 'layout', data);
             }
 
         });

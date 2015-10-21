@@ -292,7 +292,10 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
             width: this.options.width,
             height: this.options.height,
             borderRadius: this.options.borderRadius
-        }).data('window', this);
+        });
+
+        $.data(this.$win[0], 'window', this);
+
         this.$backdrop = $(this.backdrop);
         this.$header = this.$win.find('.k-window-header');
         this.$container = this.$win.find('.k-window-container');
@@ -376,7 +379,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
      */
     Window.close = function (id) {
         $win = $('#k-window-' + id);
-        var win = $win.data('window');
+        var win =$.data($win[0],'window');
         if (win) {
             win.close(true);
         }
@@ -413,30 +416,34 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
                 onOk = $elm.attr('data-onOk'),
                 onClose = $elm.attr('data-onClose'),
                 onAfterClose = $elm.attr('data-onAfterClose'),
-                data = $elm.data('window');
+                data =$.data($elm[0],'window');
 
-            onOk = onOk && onOk.length > 0 ? eval('(0,' + onOk + ')') : $.noop;
-            onClose = onClose && onClose.length > 0 ? eval('(0,' + onClose + ')') : $.noop;
-            onAfterClose = onAfterClose && onAfterClose.length > 0 ? eval('(0,' + onAfterClose + ')') : $.noop;
-
-
-            if (options && options.length > 0) {
-                options = eval('(0,' + options + ')');
-            } else {
-                options = {
-                    url: url,
-                    title: title,
-                    content: content,
-                    width: width && width.length > 0 ? parseInt(width) : 680,
-                    height: height && height.length > 0 ? parseInt(height) : 480,
-                    showFooter: showFooter && showFooter == 'false' ? false : true,
-                    iframe: iframe && iframe == 'false' ? false : true,
-                    btns: buttons && buttons.length > 0 ? eval('(0,' + buttons + ')') : []
-                }
-            }
+            
 
 
             if (!data) {
+
+                onOk = onOk && onOk.length > 0 ? eval('(0,' + onOk + ')') : $.noop;
+                onClose = onClose && onClose.length > 0 ? eval('(0,' + onClose + ')') : $.noop;
+                onAfterClose = onAfterClose && onAfterClose.length > 0 ? eval('(0,' + onAfterClose + ')') : $.noop;
+
+
+                if (options && options.length > 0) {
+                    options = eval('(0,' + options + ')');
+                } else {
+                    options = {
+                        url: url,
+                        title: title,
+                        content: content,
+                        width: width && width.length > 0 ? parseInt(width) : 680,
+                        height: height && height.length > 0 ? parseInt(height) : 480,
+                        showFooter: showFooter && showFooter == 'false' ? false : true,
+                        iframe: iframe && iframe == 'false' ? false : true,
+                        btns: buttons && buttons.length > 0 ? eval('(0,' + buttons + ')') : []
+                    }
+                }
+
+
                 data = new Window(options);
 
                 data.on('ok', function () {
@@ -451,9 +458,11 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
                     data.open();
                 });
 
-                $elm.data('window', data).on('click', function () {
+                $elm.on('click.window', function () {
                     data.open();
                 });
+
+                $.data($elm[0], 'window', data);  
             }
 
         });

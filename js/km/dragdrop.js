@@ -939,11 +939,11 @@ define('km/dragdrop', ['jquery'], function ($) {
 
         $elms.each(function () {
             var $el = $(this),
-                data = $el.data('droppable');
+                data = $.data($el[0], 'droppable'); 
 
             if (!data) {
                 data = new Droppable($el, options);
-                $el.data('droppable', data);
+                $.data($el[0], 'droppable', data);
                 droppables.push(data);
             }
         });
@@ -1081,7 +1081,7 @@ define('km/dragdrop', ['jquery'], function ($) {
 
                 var $el = $(this),
                     $handle = $el.find(options.handle),
-                    sortable = $el.data('sortable');
+                    sortable =$.data($el[0],'sortable');
 
 
                 if (!sortable) {
@@ -1231,7 +1231,7 @@ define('km/dragdrop', ['jquery'], function ($) {
 
                     sortables.push(sortable);
 
-                    $el.data('sortable', sortable);
+                    $.data($el[0], 'sortable', sortable);
                 }
 
                 options.callback.init.call(this, sortable);

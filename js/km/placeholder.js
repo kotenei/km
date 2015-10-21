@@ -117,14 +117,14 @@ define('km/placeholder', ['jquery'], function($) {
     function init($elms) {
         $elms.each(function() {
             var $elm = $(this);
-            var placeholder = $elm.data('placeholder');
+            var placeholder =$.data($elm[0],'placeholder');
             if (placeholder === undefined) {
                 var text = $.trim($elm.attr("placeholder"));
                 if (!text || text.length === 0) {
                     return;
                 }
                 placeholder = new Placeholder($elm);
-                $elm.data('placeholder', placeholder);
+                $.data($elm[0], 'placeholder', placeholder)
             } else {
                 placeholder.setPosition();
             }

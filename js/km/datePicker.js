@@ -288,7 +288,7 @@ define('km/datePicker', ['jquery'], function ($) {
                 self.$element.val('');
             }
             else {
-                self.$element.data('value', '');
+                $.data(self.$element[0], 'value', '');
             }
             self.isSetTime = false;
             self.setTodayInfo();
@@ -1010,7 +1010,7 @@ define('km/datePicker', ['jquery'], function ($) {
             value = $.trim(this.$element.val());
         }
         else {
-            value = $.trim(this.$element.data('value'));
+            value = $.trim($.data(this.$element[0], 'value'));
         }
 
         if (value.length === 0) { return; }
@@ -1255,28 +1255,29 @@ define('km/datePicker', ['jquery'], function ($) {
                 onSelected = $this.attr('data-onselected'),
                 onClean = $this.attr('data-onclean');
 
-            var data = $this.data('datepicker');
-
-            showTime = showTime ? showTime === "true" : false;
-            onSelected = onSelected && onSelected.length > 0 ? eval('(0,' + onSelected + ')') : null;
-            onClean = onClean && onClean.length > 0 ? eval('(0,' + onClean + ')') : null;
-
-
-            if (options && options.length > 0) {
-                options = eval('(0,' + options + ')');
-            } else {
-                options = {
-                    format: format,
-                    showTime: showTime,
-                    minDate: minDate,
-                    maxDate: maxDate,
-                    position: position || 'left',
-                    appendTo: $(appendTo || document.body)
-                };
-            }
+            var data = $.data($this[0], 'datepicker');
 
 
             if (!data) {
+
+                showTime = showTime ? showTime === "true" : false;
+                onSelected = onSelected && onSelected.length > 0 ? eval('(0,' + onSelected + ')') : null;
+                onClean = onClean && onClean.length > 0 ? eval('(0,' + onClean + ')') : null;
+
+
+                if (options && options.length > 0) {
+                    options = eval('(0,' + options + ')');
+                } else {
+                    options = {
+                        format: format,
+                        showTime: showTime,
+                        minDate: minDate,
+                        maxDate: maxDate,
+                        position: position || 'left',
+                        appendTo: $(appendTo || document.body)
+                    };
+                }
+
                 data = new DatePicker($this, options);
 
                 if (onSelected) {
@@ -1287,7 +1288,7 @@ define('km/datePicker', ['jquery'], function ($) {
                     data.on('clean', onClean);
                 }
 
-                $this.data('datepicker', data);
+                $.data($this[0], 'datepicker', data);
             }
         });
     };

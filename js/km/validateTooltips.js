@@ -55,7 +55,7 @@ define('km/validateTooltips', ['jquery', 'km/validate', 'km/tooltips', 'km/util'
 
         if (placement.target) {
             $target = $(placement.target);
-            $element.data('$target', $target);
+            $.data($element[0], '$target', $target);
         } else {
             $target = $element
         }
@@ -92,7 +92,7 @@ define('km/validateTooltips', ['jquery', 'km/validate', 'km/tooltips', 'km/util'
             $element = this.validFields.data[$element[0].name];
         }
 
-        var $target = $element.data('$target');
+        var $target =$.data($element[0],'$target');
         if ($target) {
             $element = $target;
         }

@@ -194,17 +194,19 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
                 options = $el.attr('data-options'),
                 onSlideDown = $el.attr('data-onslidedown'),
                 onSlideUp = $el.attr('data-onslideup'),
-                data = $el.data('panel');
+                data = $.data($el[0], 'panel');
 
-            if (options && options.length > 0) {
-                options = eval('(0,' + options + ')');
-            }
-
-
-            onSlideDown = onSlideDown && onSlideDown.length > 0 ? eval('(0,' + onSlideDown + ')') : $.noop;
-            onSlideUp = onSlideUp && onSlideUp.length > 0 ? eval('(0,' + onSlideUp + ')') : $.noop;
+            
 
             if (!data) {
+
+                if (options && options.length > 0) {
+                    options = eval('(0,' + options + ')');
+                }
+
+                onSlideDown = onSlideDown && onSlideDown.length > 0 ? eval('(0,' + onSlideDown + ')') : $.noop;
+                onSlideUp = onSlideUp && onSlideUp.length > 0 ? eval('(0,' + onSlideUp + ')') : $.noop;
+
                 data = new Panel($el, options);
 
                 data.on('slideDown', function () {
@@ -213,7 +215,7 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
                     onSlideUp.call(this);
                 });
 
-                $el.data('panel', data);
+                $.data($el[0], 'panel', data);
             }
 
         });

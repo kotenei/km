@@ -3,81 +3,124 @@
     background: white;
     position: relative;
 
-    >.k-tab-nav
+    >.k-tab-head
     {
         overflow: hidden;
-        margin: 0;
-        padding: 0;
-        list-style: none;
 
-        >li
+        >div.left,
+        >div.right
         {
-            position: relative;
             float: left;
-            display: inline;
-            margin-right: 6px;
-            border: 1px solid #F7F7F9;
-            border-radius: 4px 4px 0 0;
-            border-bottom: none;
+            width: 20px;
             height: 40px;
             line-height: 40px;
-            max-width: 200px;
-            background: #F7F7F9;
+            cursor: pointer;
+            text-align: center;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            background: #F2F2F2;
+            display:none;
+        }
 
-            &.active
+        /*>div.left
+        {
+            border-right:none;
+        }
+
+        >div.right
+        {
+            border-left:none;
+        }*/
+
+
+        >.k-tab-scroller
+        {
+            overflow: hidden;
+            height:40px;
+            float: left;
+
+            >.k-tab-nav
             {
-                border-color: #ccc;
-                z-index: 1;
-                background:white;
-
-                >a
-                {
-                    color: #333;
-
-                    >.fa-close
-                    {
-                        /*color: #D9534F;*/
-                    }
-                }
-            }
-
-            >a
-            {
-                text-decoration: none;
-                color: #666;
-                padding: 0 18px;
-                display: block;
                 overflow: hidden;
-                position: relative;
+                margin: 0;
+                padding: 0;
+                list-style: none;
 
-                >span
+                >li
                 {
+                    position: relative;
+                    float: left;
+                    display: inline;
+                    border: 1px solid #ccc;
+                    /*border-radius: 5px 5px 0 0;*/
+                    border-left: none;
+                    border-bottom: none;
+                    height: 40px;
+                    line-height: 40px;
+                    max-width: 200px;
+                    background: #F2F2F2;
 
-                    &.k-tab-nav-title
+                    &:first-child
                     {
+                        border-left: 1px solid #ccc;
+                    }
+
+                    &.active
+                    {
+                        border-color: #ccc;
+                        z-index: 1;
+                        background: white;
+
+                        >a
+                        {
+                            color: #333;
+
+                            >.fa-close
+                            {
+                                /*color: #D9534F;*/
+                            }
+                        }
+                    }
+
+                    >a
+                    {
+                        text-decoration: none;
+                        color: #666;
+                        padding: 0 18px;
                         display: block;
                         overflow: hidden;
-                        text-overflow: ellipsis;
-                        white-space: nowrap;
-                    }
+                        position: relative;
 
-                    &.fa
-                    {
-                        font-size: 12px;
-                        position: absolute;
-                        right: 4px;
-                        top: 14px;
-
-                        &.fa-refresh
+                        >span
                         {
-                            left: 4px;
-                            right: initial;
-                            /*color: #5CB85C;*/
-                        }
 
-                        &.fa-close
-                        {
-                            /*color:#D9534F;*/
+                            &.k-tab-nav-title
+                            {
+                                display: block;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                                white-space: nowrap;
+                            }
+
+                            &.fa
+                            {
+                                font-size: 12px;
+                                position: absolute;
+                                right: 4px;
+                                top: 14px;
+
+                                &.fa-refresh
+                                {
+                                    left: 4px;
+                                    right: initial;
+                                    /*color: #5CB85C;*/
+                                }
+
+                                &.fa-close
+                                {
+                                    /*color:#D9534F;*/
+                                }
+                            }
                         }
                     }
                 }
@@ -90,13 +133,13 @@
         border: 1px solid #ccc;
         position: relative;
         top: -1px;
-        border-radius: 0 4px 4px 4px;
+        /*border-radius: 0 4px 4px 4px;*/
         padding: 18px;
         padding-top: 10px;
 
         >.k-tab-content
         {
-            display:none;
+            display: none;
             min-height: 100px;
         }
     }

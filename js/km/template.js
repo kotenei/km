@@ -318,8 +318,6 @@ define('km/template', ['jquery'], function ($) {
 
         this.code = headerCode + variable.join('') + mainCode + footerCode;
 
-        console.log(this.code)
-
         try {
             this.Render = new Function('$utils', '$filter', '$data', this.code);
         } catch (e) {

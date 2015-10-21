@@ -28,7 +28,7 @@ define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event'], func
         this.options = $.extend(true, {
             uploadUrl: null,
             removeUrl: null,
-            $target:null,
+            $target: null,
             fontClassName: 'fa fa-upload',
             text: '上传',
             name: 'file',
@@ -41,7 +41,10 @@ define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event'], func
         }, options);
         this.isLoading = false;
         this.isButton = this.$elm[0].type.toLowerCase() == 'text' ? false : true;
-        this.event = event;
+        this._event = {
+            success: $.noop,
+            error: $.noop
+        };
         this.init();
     };
 
@@ -119,7 +122,7 @@ define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event'], func
                 for (var i = 0; i < this.options.uploadedUrls.length; i++) {
                     html.push('<div class="k-upload-result" data-url="' + this.options.uploadedUrls[i] + '">');
                     html.push('<span title="' + this.options.uploadedUrls[i] + '">' + this.options.uploadedUrls[i] + '</span>');
-                    html.push('<i class="fa fa-close" style="display:'+(this.options.removeUrl?"block":"none")+';"></i>');
+                    html.push('<i class="fa fa-close" style="display:' + (this.options.removeUrl ? "block" : "none") + ';"></i>');
                     html.push('</div>');
                 }
 
@@ -141,10 +144,10 @@ define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event'], func
         html.push('</div>');
 
         if (!this.isButton) {
-            var val =$.trim( this.$elm.val());
+            var val = $.trim(this.$elm.val());
 
             groupHtml.push('<div class="k-input-group k-input-group-upload">');
-            groupHtml.push('<i class="fa fa-close" style="display:'+(this.options.removeUrl&&val.length>0?"block":"none")+';"></i>');
+            groupHtml.push('<i class="fa fa-close" style="display:' + (this.options.removeUrl && val.length > 0 ? "block" : "none") + ';"></i>');
             groupHtml.push('<span class="k-input-group-btn">');
             groupHtml.push(html.join(''));
             groupHtml.push('</span>');
@@ -202,6 +205,13 @@ define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event'], func
                 self.uploadedUrls.push(ret.Url);
             }
             self.showResult(ret.Url || '');
+
+            self._event.success(ret);
+
+        }).fail(function () {
+
+            self._event.error();
+
         }).always(function () {
             self.isLoading = false;
             method.hideLoading.call(self);
@@ -305,11 +315,9 @@ define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event'], func
      * 事件添加
      * @return {Void}
      */
-    Upload.prototype.on = function (name, callback) {
-        var self = this;
-        this.event.on(name + '.upload', function (args) {
-            callback.apply(self, args);
-        });
+    Upload.prototype.on = function (type, callback) {
+        this._event[type] = callback || $.noop;
+        return this;
     };
 
     /**
@@ -327,24 +335,31 @@ define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event'], func
                 text = $el.attr('data-text'),
                 loadingEnable = $el.attr('data-loadingEnable'),
                 popTips = $el.attr('data-popTips'),
-                data = $el.data('upload');
-
-            if (options && options.length > 0) {
-                options = eval('(0,' + options + ')');
-            } else {
-                options = {
-                    uploadUrl: uploadUrl && uploadUrl.length > 0 ? uploadUrl : '',
-                    removeUrl: removeUrl && removeUrl.length > 0 ? removeUrl : '',
-                    name: name && name.length > 0 ? name : 'file',
-                    text: text && text.length > 0 ? text : '上传',
-                    loadingEnable: loadingEnable && loadingEnable == 'false' ? false : true,
-                    popTips: popTips && popTips.length > 0 ? eval('(0,' + popTips + ')') : {}
-                };
-            }
+                success = $el.attr('data-success'),
+                error = $el.attr('data-error'),
+                data = $.data($el[0], 'upload');
 
             if (!data) {
+
+                if (options && options.length > 0) {
+                    options = eval('(0,' + options + ')');
+                } else {
+                    options = {
+                        uploadUrl: uploadUrl && uploadUrl.length > 0 ? uploadUrl : '',
+                        removeUrl: removeUrl && removeUrl.length > 0 ? removeUrl : '',
+                        name: name && name.length > 0 ? name : 'file',
+                        text: text && text.length > 0 ? text : '上传',
+                        loadingEnable: loadingEnable && loadingEnable == 'false' ? false : true,
+                        popTips: popTips && popTips.length > 0 ? eval('(0,' + popTips + ')') : {}
+                    };
+                }
+
                 data = new Upload($el, options);
-                $el.data('upload', data);
+
+                data.on('success', success && success.length > 0 ? eval('(0,' + success + ')') : $.noop)
+                    .on('error', error && error.length > 0 ? eval('(0,' + error + ')') : $.noop);
+
+                $.data($el[0], 'upload', data);
             }
         });
     };

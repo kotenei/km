@@ -95,7 +95,7 @@ define('km/popover', ['jquery', 'km/tooltips', 'km/util'], function ($, Tooltips
      * @param {JQuery} $element - dom
      */
     Popover.Get = function ($element) {
-        return $element.data("popover");
+        return $.data($element[0],'popover');
     };
 
     /**
@@ -104,7 +104,7 @@ define('km/popover', ['jquery', 'km/tooltips', 'km/util'], function ($, Tooltips
      * @param {Object} popover - 缓存对象
      */
     Popover.Set = function ($element, popover) {
-        $element.data("popover", popover);
+        $.data($element[0], 'popover', popover);
     };
 
     return Popover;

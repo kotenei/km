@@ -221,7 +221,7 @@ define('km/tooltips', ['jquery'], function ($) {
      * @param {JQuery} $element - dom
      */
     Tooltips.Get = function ($element) {
-        return $element.data("tooltips");
+        return $.data($element[0], 'tooltips');
     };
 
     /**
@@ -230,7 +230,7 @@ define('km/tooltips', ['jquery'], function ($) {
      * @param {Object} tooltips - 缓存对象
      */
     Tooltips.Set = function ($element, tooltips) {
-        $element.data("tooltips", tooltips);
+        $.data($element[0], 'tooltips', tooltips);
     }
 
     return Tooltips;

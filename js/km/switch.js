@@ -128,23 +128,27 @@ define('km/switch', ['jquery'], function ($) {
                 values = $el.attr('data-values'),
                 funcName = $el.attr('data-onClick');
 
-            var data = $el.data('switch');
+            var data =$.data($el[0],'switch');
 
-            if (options && options.length > 0) {
-                options = eval('(0,' + options + ')');
-            } else {
-                options = {
-                    values: values && values.length > 0 ? eval('(0,' + values + ')') : undefined,
-                    callback: {
-                        onclick: funcName && funcName.length > 0 ? eval('(0,' + funcName + ')') : $.noop
-                    }
-                };
-            }
+            
 
 
             if (!data) {
+
+                if (options && options.length > 0) {
+                    options = eval('(0,' + options + ')');
+                } else {
+                    options = {
+                        values: values && values.length > 0 ? eval('(0,' + values + ')') : undefined,
+                        callback: {
+                            onclick: funcName && funcName.length > 0 ? eval('(0,' + funcName + ')') : $.noop
+                        }
+                    };
+                }
+
                 data = new Switch($el, options);
-                $el.data('switch', data);
+
+                $.data($el[0], 'switch', data);
             }
 
         });

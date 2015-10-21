@@ -237,30 +237,31 @@ define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
                 bindElm = $elm.attr('data-bindelement') || null,
                 data;
 
-            data = $elm.data('dropDownTree');
-
-            if (options && options.length > 0) {
-                options = eval('(0,' + options + ')');
-            } else {
-                options = {
-                    data: eval(array),
-                    url: url,
-                    width: width && width.length > 0 ? parseInt(width) : null,
-                    height: height && height.length > 0 ? parseInt(height) : 200,
-                    zIndex: zIndex && zIndex.length > 0 ? parseInt(zIndex) : 999,
-                    appendTo: $(appendTo || document.body),
-                    isTree: isTree && isTree == 'false' ? false : true,
-                    multiple: multiple && multiple == 'true' ? true : false,
-                    bindElement: bindElm,
-                    callback: callback && callback.length > 0 ? eval('(0,' + callback + ')') : {}
-                };
-            }
-
+            data =$.data($elm[0],'dropDownTree');
 
 
             if (!data) {
+
+                if (options && options.length > 0) {
+                    options = eval('(0,' + options + ')');
+                } else {
+                    options = {
+                        data: eval(array),
+                        url: url,
+                        width: width && width.length > 0 ? parseInt(width) : null,
+                        height: height && height.length > 0 ? parseInt(height) : 200,
+                        zIndex: zIndex && zIndex.length > 0 ? parseInt(zIndex) : 999,
+                        appendTo: $(appendTo || document.body),
+                        isTree: isTree && isTree == 'false' ? false : true,
+                        multiple: multiple && multiple == 'true' ? true : false,
+                        bindElement: bindElm,
+                        callback: callback && callback.length > 0 ? eval('(0,' + callback + ')') : {}
+                    };
+                }
+
                 data = new DropDownTree($elm, options);
-                $elm.data('dropDownTree', data);
+
+                $.data($elm[0], 'dropDownTree', data);
             }
 
         });

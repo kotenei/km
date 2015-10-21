@@ -93,7 +93,7 @@ define('km/wordLimit', ['jquery'], function ($) {
      * @param {JQuery} $element - dom
      */
     WordLimit.Get = function ($element) {
-        return $element.data('wordLimit');
+        return $.data($element[0],'wordLimit');
     };
 
     /**
@@ -102,7 +102,7 @@ define('km/wordLimit', ['jquery'], function ($) {
      * @param {Object} wordLimit - 被缓存的对象
      */
     WordLimit.Set = function ($element, wordLimit) {
-        $element.data("wordLimit", wordLimit);
+        $.data($element[0], 'wordLimit', wordLimit);
     };
 
 

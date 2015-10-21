@@ -24,7 +24,7 @@ define('km/dropdown', ['jquery'], function($){
             height: $el.height()
         }, setting || {});
 
-        $el.data('widget', this);
+        $.data($el[0], 'widget', this);
 
         _id++;
 

@@ -444,7 +444,7 @@ define('km/resizable', ['jquery'], function ($) {
                 options = $el.attr('data-options'),
                 onResize = $el.attr('data-onresize'),
                 onStop = $el.attr('data-onstop'),
-                data = $el.data('resizable');
+                data =$.data($el[0],'resizable');
 
             if (options && options.length > 0) {
                 options = eval('(0,' + options + ')');
@@ -463,7 +463,7 @@ define('km/resizable', ['jquery'], function ($) {
                     onStop.call(this, css);
                 });
 
-                $el.data('resizable', data);
+                $.data($el[0], 'resizable', data);
             }
 
         });

@@ -39,7 +39,7 @@ define('km/validate', ['jquery'], function ($) {
             return;
         }
         this.eventBind();
-        this.$form.data('validate', this);
+        $.data(this.$form[0], 'validate', this);
     };
 
     /**
@@ -63,7 +63,9 @@ define('km/validate', ['jquery'], function ($) {
         }).each(function () {
             if (!self.validFields.data[this.name]) {
                 var $el = $(this);
-                $el.data('$form', self.$form);
+
+                $.data($el[0], '$form', self.$form);
+
                 self.validFields.data[this.name] = $el;
                 self.validFields.count++;
             }
@@ -221,10 +223,10 @@ define('km/validate', ['jquery'], function ($) {
         if (this.checkable($element[0])) {
             $element = this.validFields.data[$element[0].name];
         }
-        var $error = $element.data('error');
+        var $error =$.data($element[0],'error');
         if (!$error) {
             $error = $("<" + this.options.errorElement + ">").addClass(this.options.errorClass);
-            $element.data('error', $error);
+            $.data($element[0], 'error', $error);
         }
         $error.html(message).show();
         $element.addClass(this.options.errorClass);
@@ -247,7 +249,7 @@ define('km/validate', ['jquery'], function ($) {
         if (this.checkable($element[0])) {
             $element = this.validFields.data[$element[0].name];
         }
-        var $error = $element.data('error');
+        var $error =$.data($element[0],'error');
         if (isRemoveClass) {
             $element.removeClass(this.options.errorClass);
         }

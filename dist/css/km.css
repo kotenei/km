@@ -5,6 +5,9 @@
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
+a:focus {
+  outline: none;
+}
 /*html, body{ margin:0; height:100%; }*/
 body {
   margin: 0;
@@ -2254,37 +2257,70 @@ table.k-treeTable tr.expanded.accept td span.indenter a {
   background: white;
   position: relative;
 }
-.k-tab > .k-tab-nav {
+.k-tab > .k-tab-head {
+  overflow: hidden;
+  /*>div.left
+        {
+            border-right:none;
+        }
+
+        >div.right
+        {
+            border-left:none;
+        }*/
+}
+.k-tab > .k-tab-head > div.left,
+.k-tab > .k-tab-head > div.right {
+  float: left;
+  width: 20px;
+  height: 40px;
+  line-height: 40px;
+  cursor: pointer;
+  text-align: center;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  background: #F2F2F2;
+  display: none;
+}
+.k-tab > .k-tab-head > .k-tab-scroller {
+  overflow: hidden;
+  height: 40px;
+  float: left;
+}
+.k-tab > .k-tab-head > .k-tab-scroller > .k-tab-nav {
   overflow: hidden;
   margin: 0;
   padding: 0;
   list-style: none;
 }
-.k-tab > .k-tab-nav > li {
+.k-tab > .k-tab-head > .k-tab-scroller > .k-tab-nav > li {
   position: relative;
   float: left;
   display: inline;
-  margin-right: 6px;
-  border: 1px solid #F7F7F9;
-  border-radius: 4px 4px 0 0;
+  border: 1px solid #ccc;
+  /*border-radius: 5px 5px 0 0;*/
+  border-left: none;
   border-bottom: none;
   height: 40px;
   line-height: 40px;
   max-width: 200px;
-  background: #F7F7F9;
+  background: #F2F2F2;
 }
-.k-tab > .k-tab-nav > li.active {
+.k-tab > .k-tab-head > .k-tab-scroller > .k-tab-nav > li:first-child {
+  border-left: 1px solid #ccc;
+}
+.k-tab > .k-tab-head > .k-tab-scroller > .k-tab-nav > li.active {
   border-color: #ccc;
   z-index: 1;
   background: white;
 }
-.k-tab > .k-tab-nav > li.active > a {
+.k-tab > .k-tab-head > .k-tab-scroller > .k-tab-nav > li.active > a {
   color: #333;
 }
-.k-tab > .k-tab-nav > li.active > a > .fa-close {
+.k-tab > .k-tab-head > .k-tab-scroller > .k-tab-nav > li.active > a > .fa-close {
   /*color: #D9534F;*/
 }
-.k-tab > .k-tab-nav > li > a {
+.k-tab > .k-tab-head > .k-tab-scroller > .k-tab-nav > li > a {
   text-decoration: none;
   color: #666;
   padding: 0 18px;
@@ -2292,31 +2328,31 @@ table.k-treeTable tr.expanded.accept td span.indenter a {
   overflow: hidden;
   position: relative;
 }
-.k-tab > .k-tab-nav > li > a > span.k-tab-nav-title {
+.k-tab > .k-tab-head > .k-tab-scroller > .k-tab-nav > li > a > span.k-tab-nav-title {
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.k-tab > .k-tab-nav > li > a > span.fa {
+.k-tab > .k-tab-head > .k-tab-scroller > .k-tab-nav > li > a > span.fa {
   font-size: 12px;
   position: absolute;
   right: 4px;
   top: 14px;
 }
-.k-tab > .k-tab-nav > li > a > span.fa.fa-refresh {
+.k-tab > .k-tab-head > .k-tab-scroller > .k-tab-nav > li > a > span.fa.fa-refresh {
   left: 4px;
   right: initial;
   /*color: #5CB85C;*/
 }
-.k-tab > .k-tab-nav > li > a > span.fa.fa-close {
+.k-tab > .k-tab-head > .k-tab-scroller > .k-tab-nav > li > a > span.fa.fa-close {
   /*color:#D9534F;*/
 }
 .k-tab > .k-tab-container {
   border: 1px solid #ccc;
   position: relative;
   top: -1px;
-  border-radius: 0 4px 4px 4px;
+  /*border-radius: 0 4px 4px 4px;*/
   padding: 18px;
   padding-top: 10px;
 }
