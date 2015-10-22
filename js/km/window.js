@@ -356,14 +356,46 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
         }
     };
 
-
-    Window.prototype.appendBtns = function (btns) {
+    /**
+     * 设置按钮
+     * @return {Void} 
+     */
+    Window.prototype.setBtns = function (btns) {
         if (!btns || btns.length == 0) {
             return;
         }
 
+        this.$footer.html(this.getBtnHtml(btns));
+    };
 
-    }
+    /**
+     * 取创建按钮HTML
+     * @return {Void} 
+     */
+    Window.prototype.getBtnHtml = function (btns) {
+
+        var html = [];
+
+        for (var i = 0, item, action, className; i < btns.length; i++) {
+            item = btns[i];
+            action = item.action.toLowerCase();
+            className = item.className;
+
+            if (action == 'ok' && !className) {
+                className = "k-btn-primary";
+            }
+
+            if ((action == 'close' || action == "cancel") && !className) {
+                className = "k-btn-default";
+            }
+
+            html.push('<button type="button" class="k-btn ' + (className || "k-btn-primary") + '" role="kwin_' + item.action.toLowerCase() + '">' + item.text + '</button>');
+
+        }
+
+        return html.join('');
+    };
+
 
     /**
      * 提示对话框
