@@ -27,6 +27,13 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
             btns: []
         }, options);
 
+        if (this.options.btns.length == 0) {
+            this.options.btns = [
+                { text: '确定', className: 'k-btn-primary', action: 'ok' },
+                { text: '取消', className: 'k-btn-default', action: 'close' }
+            ];
+        }
+
         this._event = {
             open: $.noop,
             ok: $.noop,
@@ -39,13 +46,23 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
                             '<h4 class="k-window-header"><span class="k-window-title"></span><span class="k-window-close" role="KWINCLOSE">×</span></h4>' +
                             '<div class="k-window-container"></div>' +
                             '<div class="k-window-footer">' +
-                                '<button type="button" class="k-btn k-btn-primary k-window-ok" role="KWINOK">确定</button>' +
-                                '<button type="button" class="k-btn k-btn-default k-window-cancel" role="KWINCLOSE">取消</button>' +
+
+                                //'<div class="k-btn-box">'+
+
+                                //'<button type="button" class="k-btn k-btn-primary k-window-ok k-btn-inner" role="kwin_ok">确定</button>' +
+                                //'<div class="insert-btn-box"></div>' +
+
+                                //'<button type="button" class="k-btn k-btn-default k-window-cancel k-btn-inner" role="kwin_close">取消</button>' +
+
+                                //'</div>'+
+
+                                 //'<div class="append-btn-box"></div>' +
+
                             '</div>' +
                         '</div>';
         this.backdrop = '<div class="k-window-backdrop"></div>';
         this.$document = $(document);
-        this.$window = $(window)
+        this.$window = $(window);
         this.init();
     };
 
@@ -84,11 +101,13 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
                 self.close();
             }
         });
-        this.$win.on('click.window', '[role=KWINCLOSE]', function () {
+
+
+        this.$win.on('click.window', '[role=kwin_close]', function () {
             if (self._event.close.call(self) !== false) {
                 self.close();
             }
-        }).on('click.window', '[role=KWINOK]', function () {
+        }).on('click.window', '[role=kwin_ok]', function () {
             if (self._event.ok.call(self) !== false) {
                 self.close();
             }
@@ -97,9 +116,15 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
 
 
         if (this.options.btns && this.options.btns.length > 0) {
-            for (var i = 0, item; i < this.options.btns.length; i++) {
+            for (var i = 0, item, action; i < this.options.btns.length; i++) {
                 item = this.options.btns[i];
-                this.$win.on('click.window', '[role=' + item.actionCode + ']', function () {
+                action = item.action.toLowerCase();
+
+                if (action == 'ok' || action == "cancel" || action == 'close') {
+                    continue;
+                }
+
+                this.$win.on('click.window', '[role=kwin_' + action + ']', function () {
                     item.func.call(self, self.$iframe);
                 });
             }
@@ -300,23 +325,45 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
         this.$header = this.$win.find('.k-window-header');
         this.$container = this.$win.find('.k-window-container');
         this.$footer = this.$win.find('.k-window-footer');
+        this.$btnBox = this.$footer.find('.k-btn-box');
+        this.$appendBtnBox = this.$footer.find('.append-btn-box');
+        this.$insertBtnBox = this.$footer.find('.insert-btn-box');
         this.$win.appendTo(this.options.appendTo);
         this.$backdrop.appendTo(this.options.appendTo);
         if (!this.options.showFooter) {
             this.$footer.hide();
         }
         if (this.options.btns && this.options.btns.length > 0) {
-            this.$footer.find('.k-btn').hide();
+            this.$footer.find('.k-btn-inner').hide();
             var html = [];
-            for (var i = 0, item; i < this.options.btns.length; i++) {
+            for (var i = 0, item, action, className; i < this.options.btns.length; i++) {
                 item = this.options.btns[i];
+                action = item.action.toLowerCase();
+                className = item.className;
 
-                html.push('<button type="button" class="k-btn ' + (item.className || "k-btn-primary") + '" role="' + item.actionCode + '">' + item.text + '</button>');
+                if (action == 'ok' && !className) {
+                    className = "k-btn-primary";
+                }
+
+                if ((action == 'close' || action == "cancel") && !className) {
+                    className = "k-btn-default";
+                }
+
+                html.push('<button type="button" class="k-btn ' + (className || "k-btn-primary") + '" role="kwin_' + item.action.toLowerCase() + '">' + item.text + '</button>');
 
             }
             this.$footer.append(html.join(''));
         }
     };
+
+
+    Window.prototype.appendBtns = function (btns) {
+        if (!btns || btns.length == 0) {
+            return;
+        }
+
+
+    }
 
     /**
      * 提示对话框
@@ -337,7 +384,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
             win.$win.find(".window-cancel").hide();
             window.winAlert = win;
         }
-        win.$win.find(".k-window-cancel").hide();
+        win.$win.find("button[role=kwin_close]").hide();
         win.setTitle(title);
         win.setContent(content);
         win.on('ok', onOk || $.noop);
@@ -379,7 +426,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
      */
     Window.close = function (id) {
         $win = $('#k-window-' + id);
-        var win =$.data($win[0],'window');
+        var win = $.data($win[0], 'window');
         if (win) {
             win.close(true);
         }
@@ -416,9 +463,9 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
                 onOk = $elm.attr('data-onOk'),
                 onClose = $elm.attr('data-onClose'),
                 onAfterClose = $elm.attr('data-onAfterClose'),
-                data =$.data($elm[0],'window');
+                data = $.data($elm[0], 'window');
 
-            
+
 
 
             if (!data) {
@@ -462,7 +509,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
                     data.open();
                 });
 
-                $.data($elm[0], 'window', data);  
+                $.data($elm[0], 'window', data);
             }
 
         });

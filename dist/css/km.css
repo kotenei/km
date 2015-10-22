@@ -841,6 +841,9 @@ label.k-error {
   padding: 0 15px;
   text-align: right;
 }
+.k-window-footer > .append-btn-box {
+  display: inline;
+}
 .k-window-backdrop {
   background: black;
   bottom: 0;
