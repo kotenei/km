@@ -112,17 +112,17 @@ define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
     DropDownTree.prototype.watch = function () {
         var self = this;
 
-        this.$elm.on('click.dropDownTree', function (e) {
+        this.$elm.off('click.dropDownTree').on('click.dropDownTree', function (e) {
             self.show();
             return false;
         });
 
-        this.$inputGroup.on('click.dropDownTree', 'button', function (e) {
+        this.$inputGroup.off('click.dropDownTree', 'button').on('click.dropDownTree', 'button', function (e) {
             self.show();
             return false;
         });
 
-        $(document).on('click.dropDownTree', function (e) {
+        $(document).off('click.dropDownTree').on('click.dropDownTree', function (e) {
             var $target = $(e.target);
             if ($target.hasClass('k-dropDownTree') ||
                 $target.parents('.k-dropDownTree').length > 0) {
@@ -131,7 +131,7 @@ define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
             self.hide();
         });
 
-        $(window).on('resize.dropDownTree', function () {
+        $(window).off('resize.dropDownTree').on('resize.dropDownTree', function () {
             self.setPosition();
         });
     };

@@ -172,7 +172,7 @@ define('km/dropdown', ['jquery'], function($){
             left: offset.left
         }).show();
 
-        $win.on('click.' + self.nameSpace, function(e){
+        $win.off('click.'+self.nameSpace).on('click.' + self.nameSpace, function(e){
             if(e.target !== self.$label[0] &&
                e.target !== self.$icon[0] &&
                e.target !== self.$drop[0] &&
@@ -199,11 +199,11 @@ define('km/dropdown', ['jquery'], function($){
      */
     Dropdown.prototype.watch = function(){
         var self = this;
-        this.$el.on('click', function(){
+        this.$el.off('click').on('click', function(){
             self.showDrop();
         });
 
-        this.$drop.on('click', 'li', function(){
+        this.$drop.off('click','li').on('click', 'li', function(){
             var $el = $(this);
             self.setVal($el.data('val'));
             self.sync();

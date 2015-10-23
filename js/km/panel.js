@@ -59,7 +59,7 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
                 cover: this.options.resizable.cover,
                 minWidth: this.options.minWidth,
                 minHeight: this.options.minHeight,
-                $range:this.$panel.parent()
+                $range: this.$panel.parent()
             });
         }
 
@@ -77,9 +77,11 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
      */
     Panel.prototype.watch = function () {
         var self = this;
-        this.$panel.on('click.panel', 'span[role=slideup]', function () {
+        this.$panel.off('click.panel')
+        .on('click.panel', 'span[role=slideup]', function () {
             self.slideUp($(this));
-        }).on('click.panel', 'span[role=slidedown]', function () {
+        })
+        .on('click.panel', 'span[role=slidedown]', function () {
             self.slideDown($(this));
         });
 
@@ -196,7 +198,7 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
                 onSlideUp = $el.attr('data-onslideup'),
                 data = $.data($el[0], 'panel');
 
-            
+
 
             if (!data) {
 

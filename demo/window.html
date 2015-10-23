@@ -19,7 +19,7 @@
         </div>
     </div>
     <div class="main wrap">
-        <ul class="demo-nav-list" id="navList"> 
+        <ul class="demo-nav-list" id="navList">
         </ul>
         <script type="text/javascript" src="nav.js"></script>
         <script type="text/javascript">
@@ -153,7 +153,7 @@ KM.Window.confirm('确认对话框xxx','您确认要XXXX吗？', function () {
                     Launch demo modal
                 </button>
             </div>
-            
+
             <pre>
                 <code>
 //$elms为带有data-module=window属性的元素，可不填（不填性能会低下）
@@ -178,32 +178,27 @@ KM.Window.Global($elms);
                     </tr>
                     <tr>
                         <td>data-options</td>
-                        <td>
-                            "{url:'',width:680,height:480 ... }"
+                        <td>"{url:'',width:680,height:480 ... }"
                         </td>
-                        <td>
-                            初始化参数，参照下表options说明
+                        <td>初始化参数，参照下表options说明
                         </td>
                     </tr>
                     <tr>
                         <td>data-onok</td>
                         <td>函数的名称</td>
-                        <td>
-                            点击确定的回调函数
+                        <td>点击确定的回调函数
                         </td>
                     </tr>
                     <tr>
                         <td>data-onclose</td>
                         <td>函数的名称</td>
-                        <td>
-                            关闭窗口的回调函数
+                        <td>关闭窗口的回调函数
                         </td>
                     </tr>
                     <tr>
                         <td>data-onafterclose</td>
                         <td>函数的名称</td>
-                        <td>
-                            窗口关闭之后的回调函数
+                        <td>窗口关闭之后的回调函数
                         </td>
                     </tr>
                 </tbody>
@@ -234,7 +229,7 @@ KM.Window.Global($elms);
 var btns: [
     {
         text: '测试',                        //按钮文本
-        actionCode: 'test',                 //按钮绑定事件的唯一标识
+        action: 'test',                 //按钮绑定事件的唯一标识
         className: 'k-btn-success',         //按钮的样式
         func: function () {                 //点击按钮的回调函数
             alert('测试');
@@ -357,12 +352,16 @@ var win=new KM.Window(options);
                         <td>array</td>
                         <td>[]</td>
                         <td>自定义按钮
+                            <p>
+                                <code>注：如果 action 设置为 ok、close 或者 cancel 时，func 参数将不会起效。
+                                </code>
+                            </p>
                             <pre>
                                 <code>
 btns: [
     {
         text: '测试',                        //按钮文本
-        actionCode: 'test',                 //按钮绑定事件的唯一标识
+        action: 'test',                 //按钮绑定事件的唯一标识
         className: 'k-btn-success',         //按钮的样式
         func: function () {                 //点击按钮的回调函数
             alert('测试');
@@ -411,14 +410,34 @@ win.setTitle('title');
 
 //设置内容
 win.setContent('content');
+
+//设置按钮
+win.setBtns([
+    {
+        text: '设置新按钮',
+        action: 'test',
+        className: 'k-btn-success',
+        func: function () {
+            alert('测试');
+            this.close();
+        }
+    }
+]);
                     </code>
                 </pre>
             </div>
         </div>
     </div>
+
+    <button type="button" id="btn1">测试1</button>
+    <button type="button" id="btn2">测试2</button>
+
+
     <script type="text/javascript" src="vendor/require/require.js"></script>
     <script type="text/javascript" src="main.js"></script>
     <script type="text/javascript">
+
+
 
         function ok() {
             alert("ok");
@@ -442,6 +461,10 @@ win.setContent('content');
             }
         }];
 
+
+
+
+
         require(['KM'], function (KM) {
 
             KM.Window.Global();
@@ -450,22 +473,43 @@ win.setContent('content');
                 width: 600,
                 title: '标题',
                 content: '<h4>Overflowing text to show scroll behavior</h4><p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p><p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p><p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p><p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p><p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p><p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p><p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p><p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p><p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>',
-                btns: [
-                    {
-                        text: '测试',
-                        action: 'test',
-                        className: 'k-btn-success',
-                        func: function () {
-                            alert('测试');
-                            this.close();
-                        }
-                    }
-                ]
+                //btns: [
+                //    {
+                //        text: '测试',
+                //        action: 'test',
+                //        className: 'k-btn-success',
+                //        func: function () {
+                //            alert('测试');
+                //            this.close();
+                //        }
+                //    }
+                //]
             });
+
+            //$('body').on('click.test1 mousemove.test1', '#btn1', function () {
+            //    alert('1')
+            //}).on('click.test', '#btn2', function () {
+            //    alert('2')
+            //})
+
+            //$('body').off('click.test1 mousemove.test1 click.test')
+
+            win.setBtns([
+                {
+                    text: '设置新按钮',
+                    action: 'test',
+                    className: 'k-btn-success',
+                    func: function () {
+                        alert('测试');
+                        this.close();
+                    }
+                }
+            ]);
 
             win.on('ok', function () {
                 alert("ok")
             });
+
 
             $(document.body).on('click', '[role=alert]', function () {
                 KM.Window.alert('提示框', '警告提示', function () {

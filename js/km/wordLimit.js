@@ -27,7 +27,7 @@ define('km/wordLimit', ['jquery'], function ($) {
         var self = this;
         this.maxLength = parseInt(this.$element.attr('maxLength') || this.options.maxLength);
         this.$feedback = $(this.options.feedback);
-        this.$element.on('keyup.wordlimit', function () {
+        this.$element.off('keyup.wordlimit').on('keyup.wordlimit', function () {
             var val = $.trim($(this).val());
             self.update(val);
         });

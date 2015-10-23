@@ -259,7 +259,7 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
     Tree.prototype.eventBind = function () {
         var self = this;
 
-        this.$element.on('click.tree', "." + _consts.className.SWITCH, function () {
+        this.$element.off('click.tree').on('click.tree', "." + _consts.className.SWITCH, function () {
             //展开或收缩
             var $this = $(this),
                 id = $this.attr('nId'),

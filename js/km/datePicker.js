@@ -178,12 +178,12 @@ define('km/datePicker', ['jquery'], function ($) {
     DatePicker.prototype.eventBind = function () {
         var self = this;
 
-        this.$groupBox.on('click.datepicker', 'button', function () {
+        this.$groupBox.off('click.datepicker').on('click.datepicker', 'button', function () {
             self.show();
             return false;
         });
 
-        this.$element.on('click.datepicker', function () {
+        this.$element.off('click.datepicker').on('click.datepicker', function () {
             if (self.options.desktop) {
                 return;
             }
@@ -191,7 +191,7 @@ define('km/datePicker', ['jquery'], function ($) {
             return false;
         });
 
-        this.$datepicker.on('click.datepicker', function (e) {
+        this.$datepicker.off('click.datepicker').on('click.datepicker', function (e) {
             var target = e.target,
                 $target = $(target);
 
@@ -386,7 +386,7 @@ define('km/datePicker', ['jquery'], function ($) {
             self.hide();
         });
 
-        $(document).on('click.datepicker', function () {
+        $(document).off('click.datepicker').on('click.datepicker', function () {
             if (self.options.desktop) {
                 return;
             }

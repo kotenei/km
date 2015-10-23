@@ -47,12 +47,12 @@ define('km/tooltips', ['jquery'], function ($) {
         for (var i = 0, trigger; i < triggers.length; i++) {
             trigger = triggers[i];
             if (trigger === 'click') {
-                this.$element.on(trigger + "." + this.options.type, $.proxy(this.toggle, this));
+                this.$element.off(trigger + "." + this.options.type).on(trigger + "." + this.options.type, $.proxy(this.toggle, this));
             } else if (trigger != 'manual') {
                 var eventIn = trigger === 'hover' ? 'mouseenter' : 'focus';
                 var eventOut = trigger === 'hover' ? 'mouseleave' : 'blur';
-                this.$element.on(eventIn + "." + this.options.type, $.proxy(this.show, this));
-                this.$element.on(eventOut + "." + this.options.type, $.proxy(this.hide, this));
+                this.$element.off(eventIn + "." + this.options.type).on(eventIn + "." + this.options.type, $.proxy(this.show, this));
+                this.$element.off(eventOut + "." + this.options.type).on(eventOut + "." + this.options.type, $.proxy(this.hide, this));
             }
         }
 
@@ -62,13 +62,13 @@ define('km/tooltips', ['jquery'], function ($) {
 
         this.$container.append(this.$tips);
 
-        if (this.options.scrollContainer) {
-            $(this.options.scrollContainer).on('scroll.' + this.options.type, function () {
+        //if (this.options.scrollContainer) {
+        //    $(this.options.scrollContainer).on('scroll.' + this.options.type, function () {
 
-            });
-        }
+        //    });
+        //}
 
-        $(window).on('resize.' + this.options.type, function () {
+        $(window).off('resize.' + this.options.type).on('resize.' + this.options.type, function () {
             self.setPosition();
         });
 

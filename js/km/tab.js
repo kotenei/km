@@ -72,7 +72,7 @@ define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu', 'km/loading'], function
     Tab.prototype.watch = function () {
         var self = this;
 
-        this.$elm.on('click.tab', '[role=tab]', function () {
+        this.$elm.off('click.tab').on('click.tab', '[role=tab]', function () {
             var $el = $(this),
                 index = $el.index();
             self.toggle(index);
@@ -92,7 +92,7 @@ define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu', 'km/loading'], function
             return false;
         });
 
-        $(window).on('resize.tab', function () {
+        $(window).off('resize.tab').on('resize.tab', function () {
             if (self.tm) {
                 clearTimeout(self.tm);
             }

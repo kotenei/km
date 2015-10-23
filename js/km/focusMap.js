@@ -89,7 +89,8 @@ define('km/focusMap', ['jquery'], function ($) {
             return;
         }
         this.isWatch = true;
-        this.$el.on('mouseenter.focusmap', function () {
+        this.$el.off('mouseenter.focusmap mouseleave.focusmap click.focusmap')
+        .on('mouseenter.focusmap', function () {
             self.stop();
         }).on('mouseleave.focusmap', function () {
             self.run();

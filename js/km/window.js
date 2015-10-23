@@ -93,26 +93,33 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
      */
     Window.prototype.eventBind = function () {
         var self = this;
-        this.$window.on('resize.window', function () {
-            self.layout();
-        });
-        this.$backdrop.on('click.window', function () {
-            if (self.options.backdropClose) {
-                self.close();
-            }
-        });
+
+        this.$window
+            .off('resize.window')
+            .on('resize.window', function () {
+                self.layout();
+            });
+
+        this.$backdrop
+            .off('click.window')
+            .on('click.window', function () {
+                if (self.options.backdropClose) {
+                    self.close();
+                }
+            });
 
 
-        this.$win.on('click.window', '[role=kwin_close]', function () {
-            if (self._event.close.call(self) !== false) {
-                self.close();
-            }
-        }).on('click.window', '[role=kwin_ok]', function () {
-            if (self._event.ok.call(self) !== false) {
-                self.close();
-            }
-        });
-
+        this.$win.off('click.window')
+                 .on('click.window', '[role=kwin_close]', function () {
+                     if (self._event.close.call(self) !== false) {
+                         self.close();
+                     }
+                 })
+                 .on('click.window', '[role=kwin_ok]', function () {
+                     if (self._event.ok.call(self) !== false) {
+                         self.close();
+                     }
+                 });
 
 
         if (this.options.btns && this.options.btns.length > 0) {
@@ -124,7 +131,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
                     continue;
                 }
 
-                this.$win.on('click.window', '[role=kwin_' + action + ']', function () {
+                this.$win.off('click.window', '[role=kwin_' + action + ']').on('click.window', '[role=kwin_' + action + ']', function () {
                     item.func.call(self, self.$iframe);
                 });
             }
@@ -335,24 +342,8 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
         }
         if (this.options.btns && this.options.btns.length > 0) {
             this.$footer.find('.k-btn-inner').hide();
-            var html = [];
-            for (var i = 0, item, action, className; i < this.options.btns.length; i++) {
-                item = this.options.btns[i];
-                action = item.action.toLowerCase();
-                className = item.className;
-
-                if (action == 'ok' && !className) {
-                    className = "k-btn-primary";
-                }
-
-                if ((action == 'close' || action == "cancel") && !className) {
-                    className = "k-btn-default";
-                }
-
-                html.push('<button type="button" class="k-btn ' + (className || "k-btn-primary") + '" role="kwin_' + item.action.toLowerCase() + '">' + item.text + '</button>');
-
-            }
-            this.$footer.append(html.join(''));
+            var html = this.getBtnHtml(this.options.btns);
+            this.$footer.append(html);
         }
     };
 
@@ -361,11 +352,33 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
      * @return {Void} 
      */
     Window.prototype.setBtns = function (btns) {
+
+
+        this.$footer.find('.k-btn-inner').show().end().find('.k-btn-custom').remove();
+
         if (!btns || btns.length == 0) {
+
             return;
         }
 
-        this.$footer.html(this.getBtnHtml(btns));
+        var self = this;
+
+        this.$footer.find('.k-btn-inner').hide().end().append(this.getBtnHtml(btns));
+
+        for (var i = 0, item, action; i < btns.length; i++) {
+            item = btns[i];
+            action = item.action.toLowerCase();
+
+            if (action == 'ok' || action == 'close' || action == 'cancel') {
+                continue;
+            }
+
+            this.$win
+                .off('click.window', '[role=kwin_' + action + ']')
+                .on('click.window', '[role=kwin_' + action + ']', function () {
+                    item.func.call(self, self.$iframe);
+                });
+        }
     };
 
     /**
@@ -376,20 +389,27 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
 
         var html = [];
 
-        for (var i = 0, item, action, className; i < btns.length; i++) {
+        for (var i = 0, item, action, className, custom; i < btns.length; i++) {
             item = btns[i];
             action = item.action.toLowerCase();
             className = item.className;
+            custom = "k-btn-custom";
 
-            if (action == 'ok' && !className) {
-                className = "k-btn-primary";
+            if (action == 'ok') {
+                custom = "k-btn-inner";
+                if (!className) {
+                    className = "k-btn-primary";
+                }
             }
 
-            if ((action == 'close' || action == "cancel") && !className) {
-                className = "k-btn-default";
+            if (action == 'close' || action == "cancel") {
+                custom = "k-btn-inner";
+                if (!className) {
+                    className = "k-btn-default";
+                }
             }
 
-            html.push('<button type="button" class="k-btn ' + (className || "k-btn-primary") + '" role="kwin_' + item.action.toLowerCase() + '">' + item.text + '</button>');
+            html.push('<button type="button" class="k-btn ' + (className || "k-btn-primary") + ' ' + custom + ' " role="kwin_' + item.action.toLowerCase() + '">' + item.text + '</button>');
 
         }
 
@@ -533,13 +553,16 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
                     return onAfterClose.call(this);
                 });
 
-                $elm.parent('.k-input-group').on('click.window', 'button', function () {
-                    data.open();
-                });
+                $elm.parent('.k-input-group')
+                    .off('click.window', 'button')
+                    .on('click.window', 'button', function () {
+                        data.open();
+                    });
 
-                $elm.on('click.window', function () {
-                    data.open();
-                });
+                $elm.off('click.window')
+                    .on('click.window', function () {
+                        data.open();
+                    });
 
                 $.data($elm[0], 'window', data);
             }

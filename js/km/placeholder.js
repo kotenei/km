@@ -3,13 +3,13 @@
  * @date:2014-08-20
  * @author:kotenei(kotenei@qq.com)
  */
-define('km/placeholder', ['jquery'], function($) {
+define('km/placeholder', ['jquery'], function ($) {
 
     /**
      * 文本占位符模块
      * @param {JQuery} $elm - dom
      */
-    var Placeholder = function($elm) {
+    var Placeholder = function ($elm) {
         this.$elm = $elm;
         this.type = 'placeholder';
         this.init();
@@ -19,7 +19,7 @@ define('km/placeholder', ['jquery'], function($) {
      * 初始化
      * @return {Void}
      */
-    Placeholder.prototype.init = function() {
+    Placeholder.prototype.init = function () {
         var text = $.trim(this.$elm.attr("placeholder"));
         this.timer = this.$elm.attr("data-timer");
         if (this.timer) {
@@ -40,18 +40,18 @@ define('km/placeholder', ['jquery'], function($) {
      * 事件绑定
      * @return {Void}
      */
-    Placeholder.prototype.eventBind = function() {
+    Placeholder.prototype.eventBind = function () {
         var self = this;
 
         if (this.timer) {
-            setInterval(function() {
+            setInterval(function () {
                 self.setPosition();
             }, this.timer.delay);
         }
 
-        this.$elm.on('focus.' + this.type, function() {
+        this.$elm.off('focus.' + this.type).on('focus.' + this.type, function () {
             self.$placeholder.hide();
-        }).on('blur.' + this.type, function() {
+        }).off('blur.' + this.type).on('blur.' + this.type, function () {
             var value = $.trim(self.$elm.val());
             if (value.length === 0 || value === self.text) {
                 self.$elm.val("");
@@ -61,7 +61,7 @@ define('km/placeholder', ['jquery'], function($) {
             }
         });
 
-        this.$placeholder.on('focus.' + this.type, function() {
+        this.$placeholder.off('focus.' + this.type).on('focus.' + this.type, function () {
             self.$elm.focus();
         });
 
@@ -71,7 +71,7 @@ define('km/placeholder', ['jquery'], function($) {
      * 显示或隐藏
      * @return {Void}
      */
-    Placeholder.prototype.display = function() {
+    Placeholder.prototype.display = function () {
         var value = $.trim(this.$elm.val());
         if (value.length === 0 || value === $.trim(this.$elm.attr("placeholder"))) {
             this.$placeholder.show();
@@ -83,9 +83,9 @@ define('km/placeholder', ['jquery'], function($) {
     /**
      * 定位
      */
-    Placeholder.prototype.setPosition = function() {
+    Placeholder.prototype.setPosition = function () {
         var self = this;
-        setTimeout(function() {
+        setTimeout(function () {
             var css = {
                 left: self.$elm[0].offsetLeft,
                 top: self.$elm[0].offsetTop,
@@ -108,16 +108,16 @@ define('km/placeholder', ['jquery'], function($) {
             self.display();
         }, 50);
     };
-    
+
     /**
      * 全局初始化
      * @param  {JQuery} $elms - dom
      * @return {Void}    
      */
     function init($elms) {
-        $elms.each(function() {
+        $elms.each(function () {
             var $elm = $(this);
-            var placeholder =$.data($elm[0],'placeholder');
+            var placeholder = $.data($elm[0], 'placeholder');
             if (placeholder === undefined) {
                 var text = $.trim($elm.attr("placeholder"));
                 if (!text || text.length === 0) {
@@ -131,7 +131,7 @@ define('km/placeholder', ['jquery'], function($) {
         });
     }
 
-    return function($elms) {
+    return function ($elms) {
         if ("placeholder" in document.createElement("input")) {
             return;
         }

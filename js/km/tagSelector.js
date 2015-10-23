@@ -92,7 +92,7 @@ define('km/tagSelector', ['jquery'], function ($) {
 
         var $curElm;
 
-        $elms.on('mouseover.tagSelector', function () {
+        $elms.off('mouseover.tagSelector mouseout.tagSelector click.tagSelector').on('mouseover.tagSelector', function () {
             method.setSidePosition($(this).addClass('k-tagSelector-curr'));
             return false;
         }).on('mouseout.tagSelector', function () {
@@ -116,19 +116,19 @@ define('km/tagSelector', ['jquery'], function ($) {
             return false;
         });
 
-        $layer.on('click', function () {
+        $layer.off('click.tagSelector').on('click.tagSelector', function () {
             $layer.hide();
             return false;
         });
 
-        $(window).on('resize.tagSelector', function () {
+        $(window).off('resize.tagSelector').on('resize.tagSelector', function () {
             if (!$curElm) {
                 return;
             }
             method.showLayer($curElm, $layer);
         });
 
-        $(document).on('click.tagSelector', function () {
+        $(document).off('click.tagSelector').on('click.tagSelector', function () {
             $layer.hide();
             $curElm = null;
         });

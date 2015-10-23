@@ -52,7 +52,7 @@ define('km/autoComplete', ['jquery'], function ($) {
         var self = this;
         this.$listBox = $(this.tpl).hide().appendTo(document.body);
         this.data = this.options.data || [];
-        this.$element.on('keyup', function (e) {
+        this.$element.off('keyup.autocomplete').on('keyup.autocomplete', function (e) {
             var $this = $(this),
                 val = $.trim($this.val());
 
@@ -85,7 +85,7 @@ define('km/autoComplete', ['jquery'], function ($) {
             }
         });
 
-        this.$listBox.on('click.autocomplete', 'li', function () {
+        this.$listBox.off('click.autocomplete').on('click.autocomplete', 'li', function () {
             var text = $(this).text();
             self.$element.val(text).focus();
             if ($.isFunction(self.options.callback.setValue)) {
@@ -95,11 +95,11 @@ define('km/autoComplete', ['jquery'], function ($) {
         });
 
 
-        $(document).on('click.autocomplete', function () {
+        $(document).off('click.autocomplete').on('click.autocomplete', function () {
             self.hide();
         });
 
-        $(window).on('resize.autocomplete', function () {
+        $(window).off('resize.autocomplete').on('resize.autocomplete', function () {
             self.setCss();
         })
     };

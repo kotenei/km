@@ -43,7 +43,7 @@ define('km/magnifier', ['jquery'], function ($) {
         var self = this;
        
 
-        this.$el.on('mousemove.magnifier', function (e) {
+        this.$el.off('mousemove.magnifier mouseleave.magnifier').on('mousemove.magnifier', function (e) {
             var src = self.$img.attr('data-big-img');
 
             self.$view.show();

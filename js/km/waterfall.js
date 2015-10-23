@@ -64,7 +64,7 @@ define('km/waterfall', ['jquery', 'km/infiniteScroll', 'km/popTips'], function (
         });
 
         if (this.options.resize) {
-            this.$panel.on('resize.waterfall', $.proxy(this.arrangementInit, this));
+            this.$panel.off('resize.waterfall').on('resize.waterfall', $.proxy(this.arrangementInit, this));
         }
     };
 
