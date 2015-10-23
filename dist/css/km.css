@@ -864,12 +864,21 @@ label.k-error {
   height: 140px;
   border-radius: 20px;
   position: fixed;
-  z-index: 2000;
+  z-index: 9999;
   left: 50%;
   top: 50%;
   margin-left: -70px;
   margin-top: -70px;
   display: none;
+}
+.k-loading.k-loading-full {
+  width: auto;
+  height: auto;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
 }
 .k-autocomplete {
   padding: 0px;

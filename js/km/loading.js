@@ -23,8 +23,8 @@ define('km/loading', ['jquery', 'spin'], function ($, Spinner) {
             hwaccel: false, // 是否启用硬件加速及高速旋转            
             className: 'k-spinner', // css 样式名称
             zIndex: 2e9, // spinner的z轴 (默认是2000000000)
-            top: '70px', // spinner 相对父容器Top定位 单位 px
-            left: '70px'// spinner 相对父容器Left定位 单位 px
+            top: '50%', // spinner 相对父容器Top定位 单位 px
+            left: '50%'// spinner 相对父容器Left定位 单位 px
         }, options);
         this.tpl = '<div class="k-loading"></div>';
         this.init();
@@ -34,16 +34,23 @@ define('km/loading', ['jquery', 'spin'], function ($, Spinner) {
 
     Loading.prototype.init = function () {
         this.$loading = $(this.tpl).appendTo(document.body).hide();
-        this.options.top = this.$loading.outerHeight() / 2 + "px";
-        this.options.left = this.$loading.outerWidth() / 2 + "px";
+        //this.options.top = this.$loading.outerHeight() / 2 + "px";
+        //this.options.left = this.$loading.outerWidth() / 2 + "px";
         this.spinner = new Spinner(this.options);
     };
 
-    Loading.prototype.show = function () {
+    Loading.prototype.show = function (isFull) {
         if (isShow) { return; }
         isShow = true;
+        if (isFull) {
+            this.$loading.addClass('k-loading-full');
+        } else {
+            this.$loading.removeClass('k-loading-full');
+        }
+
         this.spinner.spin(this.$loading.get(0));
         this.$loading.fadeIn('fast');
+
     };
 
     Loading.prototype.hide = function () {
@@ -53,9 +60,9 @@ define('km/loading', ['jquery', 'spin'], function ($, Spinner) {
         isShow = false;
     };
 
-    Loading.show = function () {
+    Loading.show = function (isFull) {
         if (!global) { global = new Loading(); }
-        global.show();
+        global.show(isFull);
     };
 
     Loading.hide = function () {
