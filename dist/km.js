@@ -11733,7 +11733,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
         this.isClose = true;
         this.loading = false;
         this.template = '<div class="k-window" id="k-window-' + (this.options.id || ids.get()) + '">' +
-                            '<h4 class="k-window-header"><span class="k-window-title"></span><span class="k-window-close" role="KWINCLOSE">×</span></h4>' +
+                            '<h4 class="k-window-header"><span class="k-window-title"></span><span class="k-window-close" role="kwin_close">×</span></h4>' +
                             '<div class="k-window-container"></div>' +
                             '<div class="k-window-footer">' +
 
@@ -11822,7 +11822,9 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
                 }
 
                 this.$win.off('click.window', '[role=kwin_' + action + ']').on('click.window', '[role=kwin_' + action + ']', function () {
-                    item.func.call(self, self.$iframe);
+                    if (item.func.call(self, self.$iframe) !== false) {
+                        self.close();
+                    }
                 });
             }
         }
@@ -12066,7 +12068,9 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
             this.$win
                 .off('click.window', '[role=kwin_' + action + ']')
                 .on('click.window', '[role=kwin_' + action + ']', function () {
-                    item.func.call(self, self.$iframe);
+                    if (item.func.call(self, self.$iframe) !== false) {
+                        self.close();
+                    }
                 });
         }
     };
