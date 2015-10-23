@@ -110,7 +110,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
 
 
         this.$win.off('click.window')
-                 .on('click.window', '[role=kwin_close]', function () {
+                 .on('click.window', '[role=kwin_close],[role=kwin_cancel]', function () {
                      if (self._event.close.call(self) !== false) {
                          self.close();
                      }
@@ -365,7 +365,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
 
         var self = this;
 
-        this.$footer.find('.k-btn-inner').hide().end().append(this.getBtnHtml(btns));
+        this.$footer.find('.k-btn-inner').hide().end().append(this.getBtnHtml(btns,true));
 
         for (var i = 0, item, action; i < btns.length; i++) {
             item = btns[i];
@@ -389,7 +389,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
      * 取创建按钮HTML
      * @return {Void} 
      */
-    Window.prototype.getBtnHtml = function (btns) {
+    Window.prototype.getBtnHtml = function (btns, isSet) {
 
         var html = [];
 
@@ -400,20 +400,24 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
             custom = "k-btn-custom";
 
             if (action == 'ok') {
-                custom = "k-btn-inner";
+
+                custom = isSet ? custom : "k-btn-inner";
+
                 if (!className) {
                     className = "k-btn-primary";
                 }
             }
 
             if (action == 'close' || action == "cancel") {
-                custom = "k-btn-inner";
+
+                custom = isSet ? custom : "k-btn-inner";
+
                 if (!className) {
                     className = "k-btn-default";
                 }
             }
 
-            html.push('<button type="button" class="k-btn ' + (className || "k-btn-primary") + ' ' + custom + ' " role="kwin_' + item.action.toLowerCase() + '">' + item.text + '</button>');
+            html.push('<button type="button" class="k-btn ' + (className || "k-btn-primary") + ' ' + custom + ' " role="kwin_' + (action == 'cancel' ? 'close' : action) + '">' + item.text + '</button>');
 
         }
 
