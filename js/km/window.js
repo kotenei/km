@@ -131,11 +131,20 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
                     continue;
                 }
 
-                this.$win.off('click.window', '[role=kwin_' + action + ']').on('click.window', '[role=kwin_' + action + ']', function () {
-                    if (item.func.call(self, self.$iframe) !== false) {
-                        self.close();
-                    }
-                });
+
+                (function (item, action, self) {
+
+                    this.$win.off('click.window', '[role=kwin_' + action + ']')
+                        .on('click.window', '[role=kwin_' + action + ']', function () {
+                            if (item.func && item.func.call(self, self.$iframe) !== false) {
+                                self.close();
+                            }
+                        });
+
+                })(item, action, this);
+
+
+
             }
         }
 
@@ -365,9 +374,10 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
 
         var self = this;
 
-        this.$footer.find('.k-btn-inner').hide().end().append(this.getBtnHtml(btns,true));
+        this.$footer.find('.k-btn-inner').hide().end().append(this.getBtnHtml(btns, true));
 
         for (var i = 0, item, action; i < btns.length; i++) {
+
             item = btns[i];
             action = item.action.toLowerCase();
 
@@ -375,13 +385,21 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
                 continue;
             }
 
-            this.$win
+
+            (function (item, action, self) {
+
+                self.$win
                 .off('click.window', '[role=kwin_' + action + ']')
                 .on('click.window', '[role=kwin_' + action + ']', function () {
-                    if (item.func.call(self, self.$iframe) !== false) {
+
+                    if (item.func && item.func.call(self, self.$iframe) !== false) {
                         self.close();
                     }
                 });
+
+            })(item, action, this)
+
+
         }
     };
 
