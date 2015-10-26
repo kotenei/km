@@ -79,7 +79,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
             this.$container.css({
                 padding: 0,
                 overflowY: 'hidden'
-            }).append('<iframe frameborder="0" width="100%" src="' + this.options.url + '" scrolling="auto"></iframe>');
+            }).append('<iframe frameborder="0" width="100%" src="' + (this.options.url||"###") + '" scrolling="auto"></iframe>');
             this.$iframe = this.$container.find('iframe');
         } else {
             this.setContent(this.options.content);
@@ -134,7 +134,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
 
                 (function (item, action, self) {
 
-                    this.$win.off('click.window', '[role=kwin_' + action + ']')
+                    self.$win.off('click.window', '[role=kwin_' + action + ']')
                         .on('click.window', '[role=kwin_' + action + ']', function () {
                             if (item.func && item.func.call(self, self.$iframe) !== false) {
                                 self.close();
