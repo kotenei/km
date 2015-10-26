@@ -1148,8 +1148,8 @@ define('km/contextMenu', ['jquery'], function ($) {
 
     $contextMenu.off('click.contextmenu').on('click.contextmenu', 'li', function () {
         var $el = $(this),
-            text = $.trim($el.html()),
-            item = items[text];
+            action = $el.attr('data-action'),
+            item = items[action];
 
 
         if (item && typeof item.func === 'function') {
@@ -1240,10 +1240,13 @@ define('km/contextMenu', ['jquery'], function ($) {
         var html = [];
         this.items = {};
         //html.push('<ul class="' + this.options.className + '">');
-        for (var i = 0; i < this.options.items.length; i++) {
-            html.push('<li>' + this.options.items[i].text + '</li>');
+        for (var i = 0, action; i < this.options.items.length; i++) {
+
+            action = "contextMenu_" + i;
+
+            html.push('<li data-action="'+action+'">' + this.options.items[i].text + '</li>');
             //this.items[this.filterHtml(this.options.items[i].text)] = this.options.items[i];
-            this.items[this.options.items[i].text] = this.options.items[i];
+            this.items[action] = this.options.items[i];
         }
         //html.push('</ul>');
         //this.$contextMenu = $(html.join(''));
