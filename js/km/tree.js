@@ -5,7 +5,7 @@
  */
 define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
 
-    
+
     /**
      * 常量
      * @type {Object}
@@ -57,7 +57,7 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
      * @type {Object}
      */
     var view = {
-        getLineHtml: function (node,options) {
+        getLineHtml: function (node, options) {
 
             if (!options.view.showLine) {
                 return;
@@ -84,13 +84,13 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
 
             return '<span id="switch_' + node.nodeId + '" nId="' + node.nodeId + '" class="' + _consts.className.ICON + ' ' + _consts.className.SWITCH + ' ' + lineType + '"></span>';
         },
-        getIconHtml: function (node,options) {
+        getIconHtml: function (node, options) {
 
-            
+
             if (!options.view.showIcon) {
                 return;
             }
-            
+
 
             html = '<span id="' + _consts.className.ICON + '_' + node.nodeId + '" class="' + _consts.className.ICON + ' ico_' + _consts.floder.DOCU + '"></span>';
             if (node.hasChildren) {
@@ -178,8 +178,9 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
     var Tree = function ($element, options) {
         this.$element = $element;
 
-       
+
         this.options = $.extend(true, {
+            selectLimit: true,
             data: [],
             edit: {
                 enable: false
@@ -311,7 +312,7 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
                 return;
             }
 
-            if ($this.hasClass(_consts.node.SELECTED)) { return; }
+            if ($this.hasClass(_consts.node.SELECTED) && self.options.selectLimit) { return; }
             self.$element.find('a').removeClass(_consts.node.SELECTED);
             $this.addClass(_consts.node.SELECTED);
 
@@ -376,10 +377,10 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
             node = this.getNode(data[i].nodeId);
             if (node) {
                 html.push('<li id="li_' + node.nodeId + '" nId="' + node.nodeId + '">');
-                html.push(view.getLineHtml(node,this.options));
+                html.push(view.getLineHtml(node, this.options));
                 html.push(view.getChkHtml(node, this.options));
                 html.push('<a href="javascript:void(0);" id="a_' + node.nodeId + '" nId="' + node.nodeId + '">');
-                html.push(view.getIconHtml(node,this.options));
+                html.push(view.getIconHtml(node, this.options));
                 html.push('<span>' + node.text + '</span>');
                 //html.push(view.getOperateHtml(node, this.options));
                 html.push('</a>');
@@ -648,7 +649,7 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
      * @return {Object}
      */
     Tree.prototype.getSelectedNode = function () {
-        var $selected = this.$tree.find('a.selected');
+        var $selected = this.$tree.find('a.' + _consts.node.SELECTED);
         if ($selected.length === 0) { return null; }
         var id = $selected.attr('nId');
         return this.getNode(id);
@@ -673,8 +674,8 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
      * 根据ID获取节点
      * @return {Object}
      */
-    Tree.prototype.getNode = function (id) {
-        return this.nodes[this.prefix + id];
+    Tree.prototype.getNode = function (nodeId) {
+        return this.nodes[this.prefix + nodeId];
     };
 
     /**
@@ -688,6 +689,41 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
         }
         return false;
     };
+
+
+    /**
+     * 取消选择节点
+     * @param  {Int} nodeId - 节点编号
+     * @param  {Function} callback - 取消节点回调函数
+     * @return {Boolean}
+     */
+    Tree.prototype.unSelectNode = function (nodeId, callback) {
+        callback = callback || $.noop;
+        var $selected = this.$tree.find('#a_' + nodeId);
+
+        if ($selected.length == 0 || !$selected.hasClass(_consts.node.SELECTED)) {
+            return;
+        }
+
+        $selected.removeClass(_consts.node.SELECTED);
+        callback(this.getNode(nodeId));
+    };
+
+
+    /**
+     * 反选节点
+     * @param  {Int} nodeId - 节点编号
+     * @return {Boolean}
+     */
+    Tree.prototype.unCheckNode = function (nodeId) {
+        var $checked = this.$tree.find('#chk_' + nodeId),
+            className=$checked.attr('class');
+
+        if ($checked.length == 0 || className.indexOf('true')==-1) {
+            return;
+        }
+        $checked.click();
+    }
 
     return Tree;
 });

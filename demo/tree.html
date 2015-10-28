@@ -55,6 +55,12 @@ var tree = new KM.Tree($elm,options);
                 </thead>
                 <tbody>
                     <tr>
+                        <td>selectLimit</td>
+                        <td>boolean</td>
+                        <td>true</td>
+                        <td>是否限制节点只选中一次，默认是（用于callback的onSelect中）</td>
+                    </tr>
+                    <tr>
                         <td>data</td>
                         <td>array</td>
                         <td style="width: 100px;">[]</td>
@@ -86,6 +92,7 @@ data: [
                             </pre>
                         </td>
                     </tr>
+                    
                     <tr>
                         <td>check</td>
                         <td>object</td>
@@ -140,13 +147,19 @@ callback: {
 tree.getSelectedNode();
 
 //返回勾选的节点
-win.getCheckedNodes();
+tree.getCheckedNodes();
 
 //添加节点（parentNode：父级节点，nodes：新的节点，节点格式参考data参数格式）
 tree.addNodes(parentNode,nodes);
 
 //移除某个节点
 tree.removeNode(node);
+
+//取消节点选中状态
+tree.unSelectNode(nodeId);
+
+//取消复选框选中状态
+tree.unCheckNode(nodeId);
                     </code>
                 </pre>
             </div>
@@ -185,11 +198,22 @@ tree.removeNode(node);
 
             var tree = new KM.Tree($("#tree"), {
                 data: nodes,
+                //selectLimit:false,
                 check: {
                     enable: true,
                     chkType: 'checkbox',
+                },
+                callback: {
+                    onCheck: function () {
+                        console.log('ddd')
+                    },
+                    onSelect: function (node) {
+                        
+                    }
                 }
             });
+
+
 
             $("#btnAdd").click(function () {
                 var selectedNode = tree.getSelectedNode();
