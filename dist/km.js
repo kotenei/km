@@ -5864,13 +5864,15 @@ define('km/loading', ['jquery', 'spin'], function ($, Spinner) {
     };
 
     Loading.show = function (isFull) {
-        if (!global) { global = new Loading(); }
-        global.show(isFull);
+        if (!top.KM_LOADING) {
+            top.KM_LOADING = new KM.Loading();
+        }
+        top.KM_LOADING.show(isFull);
     };
 
     Loading.hide = function () {
-        if (!global) { return; }
-        global.hide();
+        if (!top.KM_LOADING) { return;}
+        top.KM_LOADING.hide();
     };
 
     return Loading;
