@@ -161,6 +161,7 @@ define('km/dragdrop', ['jquery'], function ($) {
             $layer: null,
             $handle: null,
             $range: null,
+            $scrollWrap:null,
             direction: '',          // h:水平  v:垂直
             resizable: false,       //是否可拖放
             scale: false,           //是否按比例缩放
@@ -194,6 +195,8 @@ define('km/dragdrop', ['jquery'], function ($) {
         this.$layer = this.options.$layer;
         this.$handle = this.options.$handle && this.options.$handle.length > 0 ? this.options.$handle : this.options.$layer;
         this.$range = this.options.$range;
+
+        this.$scrollWrap = this.options.$scrollWrap || this.$window;
 
         this.autoScrollActive = false;
         this.tm = null;
@@ -337,7 +340,7 @@ define('km/dragdrop', ['jquery'], function ($) {
 
         this.isMoving = true;
 
-        this.winHeight = this.$window.height();
+        this.winHeight = this.$scrollWrap.height();
         this.docHeight = this.$document.height();
 
         //给文档绑定事件
@@ -545,19 +548,19 @@ define('km/dragdrop', ['jquery'], function ($) {
     DragDrop.prototype.autoScroll = function (direction, yPos) {
         var self = this;
 
-        var scrollTop = this.$window.scrollTop();
+        var scrollTop = this.$scrollWrap.scrollTop();
 
         if (direction < 0) {
             if (scrollTop > 0) {
                 scrollTop -= 5;
-                this.$window.scrollTop(scrollTop);
+                this.$scrollWrap.scrollTop(scrollTop);
             } else {
                 this.autoScrollActive = false;
             }
         } else {
             if (yPos >= (this.winHeight - 10)) {
                 scrollTop += 5;
-                this.$window.scrollTop(scrollTop);
+                this.$scrollWrap.scrollTop(scrollTop);
             } else {
                 this.autoScrollActive = false;
             }
@@ -1050,6 +1053,7 @@ define('km/dragdrop', ['jquery'], function ($) {
         };
 
         options = $.extend(true, {
+            $scrollWrap:null,
             draggable: '.k-draggable',
             droppable: '.k-droppable',
             group: '.k-sortable-group',
@@ -1087,6 +1091,7 @@ define('km/dragdrop', ['jquery'], function ($) {
                 if (!sortable) {
 
                     sortable = new DragDrop({
+                        $scrollWrap: options.$scrollWrap,
                         $range: $container,
                         $layer: $el,
                         $handle: $handle.length > 0 ? $handle : null,
@@ -1096,7 +1101,7 @@ define('km/dragdrop', ['jquery'], function ($) {
                     });
 
                     sortable.on('start', function (e) {
-                        options.callback.start.call(this, e);
+                        options.callback.start.call(this, e,$el);
                     }).on('move', function (e, moveCoord, position) {
 
                         var mouseCoord = this.getMouseCoord(e);

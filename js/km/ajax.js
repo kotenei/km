@@ -45,7 +45,8 @@ define('km/ajax', ['jquery', 'km/loading', 'km/popTips', 'km/validate', 'km/vali
                         enable: true,
                         delay: 600,
                         inCallback: true
-                    }
+                    },
+                    ajaxConfig: {}
                 }, config);
 
                 data = data || {};
@@ -69,14 +70,16 @@ define('km/ajax', ['jquery', 'km/loading', 'km/popTips', 'km/validate', 'km/vali
                     Loading.show();
                 }
 
-                $.ajax({
+                var ajaxConfig = $.extend(true, {
                     url: url,
                     type: type,
                     data: data,
                     dataType: 'json',
                     traditional: true,
                     cache: false
-                }).done(function (ret) {
+                }, config.ajaxConfig);
+
+                $.ajax(ajaxConfig).done(function (ret) {
 
                     if (typeof ret === 'string') {
                         try {
