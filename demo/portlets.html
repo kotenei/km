@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>评级打分</title>
+    <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../dist/css/km.min.css" rel="stylesheet" />
+    <link href="docs.min.css" rel="stylesheet" />
+    <link href="demo.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="header">
+        <div class="wrap">
+            <ul class="nav-list">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="###" class="active">demo</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="main wrap">
+        <ul class="demo-nav-list" id="navList"> 
+        </ul>
+        <script type="text/javascript" src="nav.js"></script>
+        <script type="text/javascript">
+            nav(document.getElementById('navList'), 'porlets');
+        </script>
+        <div class="demo-container">
+            <h1 class="page-header">门户组件</h1>
+            <a href="portlets_demo.html" target="_blank"><code>点击查看Demo</code></a>
+            <h3>初始化</h3>
+
+            <pre>
+            <code>
+var $container = $('div.w-portlets');
+KM.portlets($container, {
+    //组块
+    group: {
+        callback: {
+            show: function ($el) {
+                // 显示回调函数
+            },
+            hide: function ($el) {
+                // 隐藏回调函数
+            },
+            start:function(e,$el){
+                // 开始拖动回调函数
+            },
+            stop: function (e,$el) {
+                // 停止拖动回调函数
+            }
+        }
+    },
+    //部件
+    webpart: {
+        callback: {
+            show: function ($el) {
+                // 显示回调函数
+            },
+            hide: function ($el) {
+                // 隐藏回调函数
+            },
+            start:function(e,$el){
+                // 开始拖动回调函数
+            },
+            stop: function (e,$el) {
+                // 停止拖动回调函数
+            }
+        }
+    }
+});
+        </code>
+    </pre>
+        </div>
+    </div>
+</body>
+</html>

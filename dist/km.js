@@ -3944,6 +3944,306 @@ define('km/dragdrop', ['jquery'], function ($) {
     return DragDrop;
 });
 
+/**
+ * 下拉框
+ * @author vfasky (vfasky@gmail.com)
+ */
+define('km/dropdown', ['jquery'], function($){
+    var $body = $('body');
+    var $win  = $(document);
+
+    var _id=0;
+
+    /**
+     * 下拉框
+     * @constructor
+     * @alias km/dropdown
+     * @param {jQuery} $el - dom
+     * @param {Object} setting - 参数设置
+     * @param {Number} setting.width - 宽度
+     * @param {Number} setting.height - 高度
+     */
+    var Dropdown = function($el, setting){
+        this.$soure  = $el;
+        this.setting = $.extend({
+            width: $el.width(),
+            height: $el.height()
+        }, setting || {});
+
+        $.data($el[0], 'widget', this);
+
+        _id++;
+
+        this.id = _id;
+        this.nameSpace = 'dropdown_' + String(this.id);
+
+        this.initDom();
+    };
+
+    /**
+     * 初始化 this.$el
+     * @return {Void}
+     */
+    Dropdown.prototype.initDom = function() {
+        var $parent = this.$soure.parent();
+        var self   = this;
+
+        this.$soure.css({
+            visibility: 'hidden'
+        });
+
+        if($parent.css('position') === 'static'){
+            $parent.css({
+                visibility: 'relative'
+            });
+        }
+
+        var zIndex = 1;
+        if(this.$soure.css('zIndex') === 'auto'){
+            this.$soure.css('zIndex', 1);
+        }
+        else{
+            zIndex = Number(this.$soure.css('zIndex'));
+        }
+       
+        this.$el = $('<div class="widget-dropbox"/>').css({
+            width: this.setting.width,
+            height: this.setting.height,
+            zIndex: zIndex + 1
+        });
+
+        //在侧内容
+        this.$label = $('<div class="label"/>').css({
+            width: this.setting.width - this.setting.height,
+            height: this.setting.height,
+            lineHeight: String(this.setting.height - 4) + 'px'
+        }).appendTo(this.$el);
+
+        //右侧icon
+        this.$icon = $('<div class="ic">&#9660;</div>').css({
+            width: this.setting.height,
+            height: this.setting.height,
+            lineHeight: String(this.setting.height) + 'px'
+            
+        }).appendTo(this.$el);
+
+        this.buildDrop();
+
+        this.$el.insertBefore(this.$soure);
+
+        this.watch();
+    };
+
+    /**
+     * 同步下拉框位置
+     * @return {Void}
+     */
+    Dropdown.prototype.syncPosition = function(){
+        this.$el.css(this.$soure.position());
+    };
+
+    /**
+     * 设置下拉框显示的值
+     * @return {Void}
+     */
+    Dropdown.prototype.setLabel = function(label){
+        this.$label.text(label).attr('title', label);
+    };
+
+    /**
+     * 取下拉框的值
+     * @return {Void}
+     */
+    Dropdown.prototype.getVal = function () {
+        return this.$soure.val();
+    };
+
+    /**
+     * 设置下拉框的值
+     * @return {Void}
+     */
+    Dropdown.prototype.setVal = function(val){
+        this.$soure.val(val).change();
+    };
+
+    /**
+     * 生成下拉框内容
+     * @return {jQuery} - dom
+     */
+    Dropdown.prototype.buildDrop = function(){
+        if(this.$drop){
+            this.$drop.remove();
+        }
+        this.$drop = $('<div class="widget-dropbox-drop"/>').css({
+            width: this.setting.width,
+        }).hide();
+
+        var html = [];
+        this.$soure.find('option').each(function(){
+            var $el = $(this);
+            html.push('<li data-val="'+ $el.val() +'">' + $el.text() + '</li>');
+        });
+        var $el = $('<ul>' + html.join('') + '</ul>');
+
+        $el.appendTo(this.$drop);
+        this.$drop.appendTo($body);
+        this.syncPosition();
+        this.sync();
+    };
+
+    /**
+     * 与原下拉框同步数据
+     * @return {Void}
+     */
+    Dropdown.prototype.sync = function(){
+        var label = this.$soure.find('option:selected').text();
+        if(!label){
+            var $option = this.$soure.find('option').eq(0);
+            label = $option.text();
+            this.setVal($option.val());
+        }
+        this.setLabel(label);
+    };
+
+    /**
+     * 显示下拉框
+     * @return {Void}
+     */
+    Dropdown.prototype.showDrop = function(){
+        var self   = this;
+        var offset = self.$el.offset();
+        self.$el.addClass('widget-dropbox-hover');
+        self.$drop.css({
+            top: offset.top + self.setting.height + 2,
+            left: offset.left
+        }).show();
+
+        $win.off('click.'+self.nameSpace).on('click.' + self.nameSpace, function(e){
+            if(e.target !== self.$label[0] &&
+               e.target !== self.$icon[0] &&
+               e.target !== self.$drop[0] &&
+               false === $.contains(self.$drop[0], e.target)){
+                self.hideDrop();
+            }
+        });
+    };
+
+    /**
+     * 隐藏下拉框
+     * @return {Void}
+     */
+    Dropdown.prototype.hideDrop = function(){
+        var self = this;
+        self.$drop.hide(); 
+        self.$el.removeClass('widget-dropbox-hover');
+        $win.off('click.' + self.nameSpace);
+    };
+
+    /**
+     * 监听事件
+     * @return {Void}
+     */
+    Dropdown.prototype.watch = function(){
+        var self = this;
+        this.$el.off('click').on('click', function(){
+            self.showDrop();
+        });
+
+        this.$drop.off('click','li').on('click', 'li', function(){
+            var $el = $(this);
+            self.setVal($el.data('val'));
+            self.sync();
+            self.hideDrop();
+            return false;
+        });
+    };
+
+    /**
+     * 重新加载数据
+     * @return {Void}
+     */
+    Dropdown.prototype.reload = function(){
+        this.buildDrop();
+    };
+
+    return Dropdown;
+});
+/**
+ * 日历下拉框 
+ * @module km/dropdownDatepicker 
+ * @author vfasky (vfasky@gmail.com)
+ */
+define('km/dropdownDatepicker',
+['jquery', 'km/dropdown', 'km/datePicker', 'km/util'],
+function ($, Dropdown, DatePicker, util) {
+
+    /**
+     * 日历下拉框
+     * @constructor
+     * @alias km/dropdownDatepicker
+     * @param {jQuery} $el - dom
+     * @param {Object} setting - 参数设置
+     */
+    var DropdownDatePicker = function ($el, setting) {
+        Dropdown.call(this, $el, setting);
+    };
+
+    DropdownDatePicker.prototype = util.createProto(Dropdown.prototype);
+
+    /**
+     * 生成下拉框内容
+     * @return {Void}
+     */
+    DropdownDatePicker.prototype.buildDrop = function () {    
+        var self = this;
+
+        this.datepicker = new DatePicker(self.$el, {
+            format: this.setting.format,
+            showTime: this.setting.showTime || false
+        });
+
+        this.datepicker.on('selected', function (date) {
+            self.$el.data('value', date);
+            self.setVal(date);
+            self.setLabel(date);
+        }).on('clean', function () {
+            var placeholder = self.$soure.attr('placeholder') || '选择日期';
+            self.setVal('');
+            self.setLabel(placeholder);
+            self.$el.data('value', null);
+        });
+
+        self.sync();
+    };
+
+    /**
+     * 同步数据
+     * @return {Void}
+     */
+    DropdownDatePicker.prototype.sync = function () {
+        var date = this.getVal();
+
+        if (date) {
+            this.$el.data('value', date);
+            this.setVal(date);
+            this.setLabel(date);
+        }
+        else {
+            var placeholder = this.$soure.attr('placeholder') || '选择日期';
+            this.setLabel(placeholder);
+        }
+    };
+
+    /**
+     * 监听事件
+     * @return {Void}
+     */
+    DropdownDatePicker.prototype.watch = function () { };
+
+
+    return DropdownDatePicker;
+
+});
 /*
  * 下拉树模块
  * @date:2015-07-28
@@ -4259,306 +4559,6 @@ define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
 
 });
 
-/**
- * 下拉框
- * @author vfasky (vfasky@gmail.com)
- */
-define('km/dropdown', ['jquery'], function($){
-    var $body = $('body');
-    var $win  = $(document);
-
-    var _id=0;
-
-    /**
-     * 下拉框
-     * @constructor
-     * @alias km/dropdown
-     * @param {jQuery} $el - dom
-     * @param {Object} setting - 参数设置
-     * @param {Number} setting.width - 宽度
-     * @param {Number} setting.height - 高度
-     */
-    var Dropdown = function($el, setting){
-        this.$soure  = $el;
-        this.setting = $.extend({
-            width: $el.width(),
-            height: $el.height()
-        }, setting || {});
-
-        $.data($el[0], 'widget', this);
-
-        _id++;
-
-        this.id = _id;
-        this.nameSpace = 'dropdown_' + String(this.id);
-
-        this.initDom();
-    };
-
-    /**
-     * 初始化 this.$el
-     * @return {Void}
-     */
-    Dropdown.prototype.initDom = function() {
-        var $parent = this.$soure.parent();
-        var self   = this;
-
-        this.$soure.css({
-            visibility: 'hidden'
-        });
-
-        if($parent.css('position') === 'static'){
-            $parent.css({
-                visibility: 'relative'
-            });
-        }
-
-        var zIndex = 1;
-        if(this.$soure.css('zIndex') === 'auto'){
-            this.$soure.css('zIndex', 1);
-        }
-        else{
-            zIndex = Number(this.$soure.css('zIndex'));
-        }
-       
-        this.$el = $('<div class="widget-dropbox"/>').css({
-            width: this.setting.width,
-            height: this.setting.height,
-            zIndex: zIndex + 1
-        });
-
-        //在侧内容
-        this.$label = $('<div class="label"/>').css({
-            width: this.setting.width - this.setting.height,
-            height: this.setting.height,
-            lineHeight: String(this.setting.height - 4) + 'px'
-        }).appendTo(this.$el);
-
-        //右侧icon
-        this.$icon = $('<div class="ic">&#9660;</div>').css({
-            width: this.setting.height,
-            height: this.setting.height,
-            lineHeight: String(this.setting.height) + 'px'
-            
-        }).appendTo(this.$el);
-
-        this.buildDrop();
-
-        this.$el.insertBefore(this.$soure);
-
-        this.watch();
-    };
-
-    /**
-     * 同步下拉框位置
-     * @return {Void}
-     */
-    Dropdown.prototype.syncPosition = function(){
-        this.$el.css(this.$soure.position());
-    };
-
-    /**
-     * 设置下拉框显示的值
-     * @return {Void}
-     */
-    Dropdown.prototype.setLabel = function(label){
-        this.$label.text(label).attr('title', label);
-    };
-
-    /**
-     * 取下拉框的值
-     * @return {Void}
-     */
-    Dropdown.prototype.getVal = function () {
-        return this.$soure.val();
-    };
-
-    /**
-     * 设置下拉框的值
-     * @return {Void}
-     */
-    Dropdown.prototype.setVal = function(val){
-        this.$soure.val(val).change();
-    };
-
-    /**
-     * 生成下拉框内容
-     * @return {jQuery} - dom
-     */
-    Dropdown.prototype.buildDrop = function(){
-        if(this.$drop){
-            this.$drop.remove();
-        }
-        this.$drop = $('<div class="widget-dropbox-drop"/>').css({
-            width: this.setting.width,
-        }).hide();
-
-        var html = [];
-        this.$soure.find('option').each(function(){
-            var $el = $(this);
-            html.push('<li data-val="'+ $el.val() +'">' + $el.text() + '</li>');
-        });
-        var $el = $('<ul>' + html.join('') + '</ul>');
-
-        $el.appendTo(this.$drop);
-        this.$drop.appendTo($body);
-        this.syncPosition();
-        this.sync();
-    };
-
-    /**
-     * 与原下拉框同步数据
-     * @return {Void}
-     */
-    Dropdown.prototype.sync = function(){
-        var label = this.$soure.find('option:selected').text();
-        if(!label){
-            var $option = this.$soure.find('option').eq(0);
-            label = $option.text();
-            this.setVal($option.val());
-        }
-        this.setLabel(label);
-    };
-
-    /**
-     * 显示下拉框
-     * @return {Void}
-     */
-    Dropdown.prototype.showDrop = function(){
-        var self   = this;
-        var offset = self.$el.offset();
-        self.$el.addClass('widget-dropbox-hover');
-        self.$drop.css({
-            top: offset.top + self.setting.height + 2,
-            left: offset.left
-        }).show();
-
-        $win.off('click.'+self.nameSpace).on('click.' + self.nameSpace, function(e){
-            if(e.target !== self.$label[0] &&
-               e.target !== self.$icon[0] &&
-               e.target !== self.$drop[0] &&
-               false === $.contains(self.$drop[0], e.target)){
-                self.hideDrop();
-            }
-        });
-    };
-
-    /**
-     * 隐藏下拉框
-     * @return {Void}
-     */
-    Dropdown.prototype.hideDrop = function(){
-        var self = this;
-        self.$drop.hide(); 
-        self.$el.removeClass('widget-dropbox-hover');
-        $win.off('click.' + self.nameSpace);
-    };
-
-    /**
-     * 监听事件
-     * @return {Void}
-     */
-    Dropdown.prototype.watch = function(){
-        var self = this;
-        this.$el.off('click').on('click', function(){
-            self.showDrop();
-        });
-
-        this.$drop.off('click','li').on('click', 'li', function(){
-            var $el = $(this);
-            self.setVal($el.data('val'));
-            self.sync();
-            self.hideDrop();
-            return false;
-        });
-    };
-
-    /**
-     * 重新加载数据
-     * @return {Void}
-     */
-    Dropdown.prototype.reload = function(){
-        this.buildDrop();
-    };
-
-    return Dropdown;
-});
-/**
- * 日历下拉框 
- * @module km/dropdownDatepicker 
- * @author vfasky (vfasky@gmail.com)
- */
-define('km/dropdownDatepicker',
-['jquery', 'km/dropdown', 'km/datePicker', 'km/util'],
-function ($, Dropdown, DatePicker, util) {
-
-    /**
-     * 日历下拉框
-     * @constructor
-     * @alias km/dropdownDatepicker
-     * @param {jQuery} $el - dom
-     * @param {Object} setting - 参数设置
-     */
-    var DropdownDatePicker = function ($el, setting) {
-        Dropdown.call(this, $el, setting);
-    };
-
-    DropdownDatePicker.prototype = util.createProto(Dropdown.prototype);
-
-    /**
-     * 生成下拉框内容
-     * @return {Void}
-     */
-    DropdownDatePicker.prototype.buildDrop = function () {    
-        var self = this;
-
-        this.datepicker = new DatePicker(self.$el, {
-            format: this.setting.format,
-            showTime: this.setting.showTime || false
-        });
-
-        this.datepicker.on('selected', function (date) {
-            self.$el.data('value', date);
-            self.setVal(date);
-            self.setLabel(date);
-        }).on('clean', function () {
-            var placeholder = self.$soure.attr('placeholder') || '选择日期';
-            self.setVal('');
-            self.setLabel(placeholder);
-            self.$el.data('value', null);
-        });
-
-        self.sync();
-    };
-
-    /**
-     * 同步数据
-     * @return {Void}
-     */
-    DropdownDatePicker.prototype.sync = function () {
-        var date = this.getVal();
-
-        if (date) {
-            this.$el.data('value', date);
-            this.setVal(date);
-            this.setLabel(date);
-        }
-        else {
-            var placeholder = this.$soure.attr('placeholder') || '选择日期';
-            this.setLabel(placeholder);
-        }
-    };
-
-    /**
-     * 监听事件
-     * @return {Void}
-     */
-    DropdownDatePicker.prototype.watch = function () { };
-
-
-    return DropdownDatePicker;
-
-});
 /**
  * 事件
  * @date :2014-12-01
@@ -6629,89 +6629,6 @@ define('km/placeholder', ['jquery'], function ($) {
     }
 });
 /*
- * 弹出提示模块
- * @date:2014-09-10
- * @author:kotenei(kotenei@qq.com)
- */
-define('km/popTips', ['jquery'], function ($) {
-
-    /**
-     * 弹出提示模块
-     * @return {Object} 
-     */
-    var PopTips = (function () {
-
-        var _instance;
-
-        function init() {
-
-            var $tips, tm;
-
-            function build(status, content, delay, callback) {
-
-                if (tm) { clearTimeout(tm); }
-
-                if ($.isFunction(delay)) { callback = delay; delay = 3000; }
-
-                callback = callback || $.noop;
-                delay = delay || 3000;
-
-                if ($tips) { $tips.stop().remove(); }
-
-                $tips = $(getHtml(status, content))
-                        .appendTo(document.body).hide();
-
-                $tips.css({ marginLeft: -($tips.width() / 2), marginTop: -($tips.height() / 2) }).fadeIn('fase', function () {
-                    tm = setTimeout(function () {
-                        $tips.stop().remove();
-                        callback();
-                    }, delay);
-                })
-            }
-
-            function getHtml(status, content) {
-                var html = [];
-                switch (status) {
-                    case "success":
-                        html.push('<div class="k-pop-tips success"><span class="fa fa-check"></span>&nbsp;<span>' + content + '</span></div>');
-                        break;
-                    case "error":
-                        html.push('<div class="k-pop-tips error"><span class="fa fa-close"></span>&nbsp;<span>' + content + '</span></div>');
-                        break;
-                    case "warning":
-                        html.push('<div class="k-pop-tips warning"><span class="fa fa-exclamation"></span>&nbsp;<span>' + content + '</span></div>');
-                        break;
-                }
-                return html.join('');
-            }
-
-            return {
-                success: function (content, callback, delay) {
-                    build("success", content, callback, delay);
-                },
-                error: function (content, callback, delay) {
-                    build("error", content, callback, delay);
-                },
-                warning: function (content, callback, delay) {
-                    build("warning", content, callback, delay);
-                }
-            };
-        }
-
-        return {
-            getInstance: function () {
-                if (!_instance) {
-                    _instance = init();
-                }
-                return _instance;
-            }
-        }
-    })();
-
-    return PopTips.getInstance();
-});
-
-/*
  * 弹出框模块
  * @date:2014-11-05
  * @author:kotenei(kotenei@qq.com)
@@ -6821,6 +6738,299 @@ define('km/popover', ['jquery', 'km/tooltips', 'km/util'], function ($, Tooltips
     };
 
     return Popover;
+});
+/*
+ * 弹出提示模块
+ * @date:2014-09-10
+ * @author:kotenei(kotenei@qq.com)
+ */
+define('km/popTips', ['jquery'], function ($) {
+
+    /**
+     * 弹出提示模块
+     * @return {Object} 
+     */
+    var PopTips = (function () {
+
+        var _instance;
+
+        function init() {
+
+            var $tips, tm;
+
+            function build(status, content, delay, callback) {
+
+                if (tm) { clearTimeout(tm); }
+
+                if ($.isFunction(delay)) { callback = delay; delay = 3000; }
+
+                callback = callback || $.noop;
+                delay = delay || 3000;
+
+                if ($tips) { $tips.stop().remove(); }
+
+                $tips = $(getHtml(status, content))
+                        .appendTo(document.body).hide();
+
+                $tips.css({ marginLeft: -($tips.width() / 2), marginTop: -($tips.height() / 2) }).fadeIn('fase', function () {
+                    tm = setTimeout(function () {
+                        $tips.stop().remove();
+                        callback();
+                    }, delay);
+                })
+            }
+
+            function getHtml(status, content) {
+                var html = [];
+                switch (status) {
+                    case "success":
+                        html.push('<div class="k-pop-tips success"><span class="fa fa-check"></span>&nbsp;<span>' + content + '</span></div>');
+                        break;
+                    case "error":
+                        html.push('<div class="k-pop-tips error"><span class="fa fa-close"></span>&nbsp;<span>' + content + '</span></div>');
+                        break;
+                    case "warning":
+                        html.push('<div class="k-pop-tips warning"><span class="fa fa-exclamation"></span>&nbsp;<span>' + content + '</span></div>');
+                        break;
+                }
+                return html.join('');
+            }
+
+            return {
+                success: function (content, callback, delay) {
+                    build("success", content, callback, delay);
+                },
+                error: function (content, callback, delay) {
+                    build("error", content, callback, delay);
+                },
+                warning: function (content, callback, delay) {
+                    build("warning", content, callback, delay);
+                }
+            };
+        }
+
+        return {
+            getInstance: function () {
+                if (!_instance) {
+                    _instance = init();
+                }
+                return _instance;
+            }
+        }
+    })();
+
+    return PopTips.getInstance();
+});
+
+define('km/portlets', ['jquery', 'km/window', 'km/dragdrop'], function ($, Window, Dragdrop) {
+
+    var groupSortable,
+        webPartSortable;
+
+    var groupMoving = false,
+        isSetGroup = false;
+
+    var method = {
+        group: {
+            init: function ($container, options) {
+                //组排序
+                groupSortable = Dragdrop.sortable($container, {
+                    $scrollWrap:options.$scrollWrap,
+                    draggable: 'div.group',
+                    handle: 'div.group-head-handle',
+                    boundary: true,
+                    direction: 'v',
+                    callback: {
+                        init: function () {
+
+                        },
+                        start: options.callback.start,
+                        move: options.callback.move,
+                        stop: options.callback.stop
+                    }
+                });
+            },
+            toggle: function ($el, options) {
+                var $group = $el.parents('div.group:eq(0)'),
+                    $body = $group.find('div.group-body');
+
+                if ($el.hasClass('fa-minus-square-o')) {
+                    $el.removeClass('fa-minus-square-o').addClass('fa-plus-square-o');
+                    options.callback.hide($el);
+                } else {
+                    $el.removeClass('fa-plus-square-o').addClass('fa-minus-square-o');
+                    options.callback.show($el);
+                }
+
+                $group.toggleClass('group-hide');
+
+                webPartSortable.setInfo();
+                groupSortable.setInfo();
+            },
+            refresh: function () {
+
+            },
+            close: function ($el) {
+                var $group = $el.parents('div.group:eq(0)'),
+                    sortable = $group.data('sortable');
+                Window.confirm('删除', '您确认要删除该模块吗？', function () {
+
+                    var $webParts = sortable.$layer.find('div.webPart'),
+                        sortables = [];
+
+                    $webParts.each(function () {
+                        var sortable = $(this).data('sortable');
+                        if (sortable) {
+                            sortables.push(sortable);
+                        }
+                    });
+
+                    //删除组排序项
+                    groupSortable.removeSortable(sortable);
+
+                    //删除部件中的组
+                    webPartSortable.removeGroup($group);
+
+                    //删除部件排序项
+                    webPartSortable.removeSortables(sortables);
+
+                });
+            }
+        },
+        webpart: {
+            init: function ($container, options) {
+
+                //项排序
+                webPartSortable = Dragdrop.sortable($container, {
+                    $scrollWrap: options.$scrollWrap,
+                    draggable: 'div.webPart',
+                    droppable: 'div.column',
+                    group: 'div.group',
+                    handle: 'div.webPart-head-handle',
+                    boundary: true,
+                    callback: {
+                        init: function (sortable) {
+                            sortable.portletsOptions = eval('(0,' + sortable.$layer.attr('data-options') + ')');
+                        },
+                        start: options.callback.start,
+                        move: options.callback.move,
+                        stop: options.callback.stop
+                    }
+                });
+            },
+            toggle: function ($el, options) {
+                var $panel = $el.parents('div.webPart:eq(0)'),
+                    $body = $panel.find('div.webPart-body');
+
+                if ($el.hasClass('fa-minus-square-o')) {
+                    $el.removeClass('fa-minus-square-o').addClass('fa-plus-square-o');
+                    options.callback.hide($el);
+                } else {
+                    $el.removeClass('fa-plus-square-o').addClass('fa-minus-square-o');
+                    options.callback.show($el);
+                }
+
+                $panel.toggleClass('webPart-hide');
+
+                webPartSortable.setInfo();
+                groupSortable.setInfo();
+            },
+            refresh: function () {
+
+            },
+            setting: function () {
+
+            },
+            close: function ($el) {
+                var $layer = $el.parents('div.webPart:eq(0)'),
+                    sortable = $layer.data('sortable');
+
+                Window.confirm('删除', '您确认要删除该模块吗？', function () {
+                    webPartSortable.removeSortable(sortable);
+                });
+            }
+        }
+    };
+
+
+
+
+    return function ($container, options) {
+
+        var tm;
+
+        options = $.extend(true, {
+            group: {
+                callback: {
+                    init: $.noop,
+                    hide: $.noop,
+                    show: $.noop,
+                    start: $.noop,
+                    move: $.noop,
+                    stop: $.noop
+                }
+            },
+            webpart: {
+                callback: {
+                    init: $.noop,
+                    hide: $.noop,
+                    show: $.noop,
+                    start: $.noop,
+                    move: $.noop,
+                    stop: $.noop
+                }
+            }
+        }, options);
+
+
+        method.group.init($container, options.group);
+
+        method.webpart.init($container, options.webpart);
+
+
+        //事件监控
+        $container.off('click.portlets').on('click.portlets', '[data-role=gtoggle]', function () {
+            //组显示隐藏
+            method.group.toggle($(this), options.group);
+            return false;
+        }).on('click.portlets', '[data-role=grefresh]', function () {
+            //组刷新
+            method.group.refresh();
+            return false;
+        }).on('click.portlets', '[data-role=gclose]', function () {
+            //组关闭
+            method.group.close($(this));
+            return false;
+        }).on('click.portlets', '[data-role=wtoggle]', function () {
+            //部件显示隐藏
+            console.log('asdf')
+            method.webpart.toggle($(this), options.webpart);
+            return false;
+        }).on('click.portlets', '[data-role=wrefresh]', function () {
+            //部件刷新
+            method.webpart.refresh();
+            return false;
+        }).on('click.portlets', '[data-role=wsetting]', function () {
+            //部件设置
+            method.webpart.setting();
+            return false;
+        }).on('click.portlets', '[data-role=wclose]', function () {
+            //部件关闭
+            method.webpart.close($(this));
+            return false;
+        })
+
+        $(window).off('resize.portlets')
+                .on('resize.portlets', function () {
+                    if (tm) {
+                        clearTimeout(tm);
+                    }
+                    tm = setTimeout(function () {
+                        groupSortable.setInfo();
+                        webPartSortable.setInfo();
+                    }, 300);
+                });
+    };
 });
 /*
  * 评级模块
@@ -12592,7 +12802,7 @@ define('km/wordLimit', ['jquery'], function ($) {
     return WordLimit;
 });
 ;
-define("KM", ["km/ajax", "km/app", "km/autoComplete", "km/cache", "km/clipZoom", "km/contextMenu", "km/datePicker", "km/dragdrop", "km/dropdown", "km/dropdownDatepicker", "km/dropDownTree", "km/event", "km/focusMap", "km/highlight", "km/imgPreview", "km/infiniteScroll", "km/layout", "km/lazyload", "km/loading", "km/magnifier", "km/pager", "km/panel", "km/placeholder", "km/popover", "km/popTips", "km/rating", "km/resizable", "km/router", "km/slider", "km/switch", "km/tab", "km/tagSelector", "km/template", "km/tooltips", "km/tree", "km/treeTable", "km/upload", "km/util", "km/validate", "km/validateTooltips", "km/waterfall", "km/window", "km/wordLimit"], function(_ajax, _app, _autoComplete, _cache, _clipZoom, _contextMenu, _datePicker, _dragdrop, _dropdown, _dropdownDatepicker, _dropDownTree, _event, _focusMap, _highlight, _imgPreview, _infiniteScroll, _layout, _lazyload, _loading, _magnifier, _pager, _panel, _placeholder, _popover, _popTips, _rating, _resizable, _router, _slider, _switch, _tab, _tagSelector, _template, _tooltips, _tree, _treeTable, _upload, _util, _validate, _validateTooltips, _waterfall, _window, _wordLimit){
+define("KM", ["km/ajax", "km/app", "km/autoComplete", "km/cache", "km/clipZoom", "km/contextMenu", "km/datePicker", "km/dragdrop", "km/dropdown", "km/dropdownDatepicker", "km/dropDownTree", "km/event", "km/focusMap", "km/highlight", "km/imgPreview", "km/infiniteScroll", "km/layout", "km/lazyload", "km/loading", "km/magnifier", "km/pager", "km/panel", "km/placeholder", "km/popover", "km/popTips", "km/portlets", "km/rating", "km/resizable", "km/router", "km/slider", "km/switch", "km/tab", "km/tagSelector", "km/template", "km/tooltips", "km/tree", "km/treeTable", "km/upload", "km/util", "km/validate", "km/validateTooltips", "km/waterfall", "km/window", "km/wordLimit"], function(_ajax, _app, _autoComplete, _cache, _clipZoom, _contextMenu, _datePicker, _dragdrop, _dropdown, _dropdownDatepicker, _dropDownTree, _event, _focusMap, _highlight, _imgPreview, _infiniteScroll, _layout, _lazyload, _loading, _magnifier, _pager, _panel, _placeholder, _popover, _popTips, _portlets, _rating, _resizable, _router, _slider, _switch, _tab, _tagSelector, _template, _tooltips, _tree, _treeTable, _upload, _util, _validate, _validateTooltips, _waterfall, _window, _wordLimit){
     return window.KM={
         "ajax" : _ajax,
         "App" : _app,
@@ -12619,6 +12829,7 @@ define("KM", ["km/ajax", "km/app", "km/autoComplete", "km/cache", "km/clipZoom",
         "placeholder" : _placeholder,
         "Popover" : _popover,
         "popTips" : _popTips,
+        "portlets" : _portlets,
         "Rating" : _rating,
         "Resizable" : _resizable,
         "Router" : _router,

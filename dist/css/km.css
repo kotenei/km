@@ -2373,3 +2373,146 @@ table.k-treeTable tr.expanded.accept td span.indenter a {
   display: none;
   min-height: 100px;
 }
+.k-portlets {
+  width: 100%;
+  padding: 10px;
+  padding-bottom: 1px;
+  background: #eeeeee;
+}
+.k-portlets .width-10-percent {
+  width: 9%;
+}
+.k-portlets .width-20-percent {
+  width: 19%;
+}
+.k-portlets .width-30-percent {
+  width: 29%;
+}
+.k-portlets .width-33-percent {
+  width: 32.33%;
+}
+.k-portlets .width-50-percent {
+  width: 49%;
+}
+.k-portlets .width-60-percent {
+  width: 59%;
+}
+.k-portlets .width-70-percent {
+  width: 69%;
+}
+.k-portlets .width-100-percent {
+  width: 100%;
+}
+.k-portlets .column {
+  float: left;
+  text-align: center;
+  margin: 0 .5%;
+  min-height: 1px;
+}
+.k-portlets .column.width-100-percent {
+  float: none;
+  margin: 0;
+}
+.k-portlets > .group {
+  padding: 10px;
+  padding-bottom: 0;
+  padding-top: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+.k-portlets > .group.group-hide .group-body {
+  display: none;
+}
+.k-portlets > .group > .group-head {
+  margin-top: 0;
+  position: relative;
+  font-size: 14px;
+  line-height: 40px;
+  height: 40px;
+  color: #454545;
+}
+.k-portlets > .group > .group-head > .group-head-icon {
+  position: absolute;
+  top: 0;
+}
+.k-portlets > .group > .group-head > .group-head-icon.right-icon {
+  right: 0;
+}
+.k-portlets > .group > .group-head > .group-head-handle {
+  padding-left: 15px;
+}
+.k-portlets > .group > .group-head span {
+  vertical-align: middle;
+  height: 20px;
+  line-height: 20px;
+}
+.k-portlets > .group > .group-head span.fa {
+  cursor: pointer;
+  margin-right: 5px;
+  font-size: 14px;
+}
+.k-portlets > .group > .group-head .right {
+  font-size: 0;
+}
+.k-portlets > .group > .group-head .right > .fa {
+  margin-left: 8px;
+  margin-right: 0;
+  font-size: 14px;
+}
+.k-portlets > .group > .group-body {
+  overflow: hidden;
+}
+.k-portlets > .group > .group-body > .column .webPart {
+  border-radius: 4px;
+  width: 100%;
+  margin-bottom: 10px;
+  background: #fff;
+  border: 1px solid #ddd;
+  overflow: hidden;
+}
+.k-portlets > .group > .group-body > .column .webPart.webPart-hide .webPart-body {
+  display: none;
+}
+.k-portlets > .group > .group-body > .column .webPart .webPart-head {
+  height: 35px;
+  line-height: 35px;
+  padding: 0 10px 0 10px;
+  background: #fbfbfb;
+  border-bottom: 1px solid #ddd;
+  position: relative;
+}
+.k-portlets > .group > .group-body > .column .webPart .webPart-head > .webPart-head-icon {
+  position: absolute;
+  top: 0;
+}
+.k-portlets > .group > .group-body > .column .webPart .webPart-head > .webPart-head-icon.right-icon {
+  right: 5px;
+}
+.k-portlets > .group > .group-body > .column .webPart .webPart-head .webPart-head-handle {
+  padding-left: 15px;
+  text-align: left;
+}
+.k-portlets > .group > .group-body > .column .webPart .webPart-head .right {
+  font-size: 0;
+  height: 35px;
+}
+.k-portlets > .group > .group-body > .column .webPart .webPart-head .right .fa {
+  margin-right: 0;
+  margin-left: 8px;
+  font-size: 14px;
+  line-height: inherit;
+}
+.k-portlets > .group > .group-body > .column .webPart .webPart-head .fa {
+  cursor: pointer;
+  margin-right: 5px;
+}
+.k-portlets > .group > .group-body > .column .webPart .webPart-body {
+  padding: 0;
+}
+.k-portlets > .group > .group-body > .column .webPart .webPart-body .loading-box {
+  text-align: center;
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
