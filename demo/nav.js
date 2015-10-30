@@ -15,6 +15,7 @@
         { text: '调整大小', activeCode: 'resizable', link: 'resizable.html' },
         { text: '面板', activeCode: 'panel', link: 'panel.html' },
         { text: '布局', activeCode: 'layout', link: 'layout.html' },
+        { text: '门户组件', activeCode: 'porlets', link: 'porlets.html' },
         { text: '上传', activeCode: 'upload', link: 'upload.html' },
         { text: '焦点图', activeCode: 'focusmap', link: 'focusmap.html' },
         { text: '文字高亮', activeCode: 'highlight', link: 'highlight.html' },
