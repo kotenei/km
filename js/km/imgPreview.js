@@ -67,20 +67,19 @@ define('km/imgPreview', ['jquery', 'km/loading', 'km/popTips'], function ($, Loa
     ImgPreview.prototype.eventBind = function () {
         var self = this;
 
-        this.$elements.off('click.imgpreview').on('click.imgpreview', function () {
+        this.$elements.on('click.imgpreview', function () {
             var $this = $(this);
             self.index = Number($this.attr('data-index'));
             self.show();
         });
 
-        this.$backdrop.off('click.imgpreview').on('click.imgpreview', function () {
+        this.$backdrop.on('click.imgpreview', function () {
             if (self.options.backdropClose) {
                 self.hide();
             }
         });
 
-        this.$imgPreview.off('click.imgpreview mouseenter.imgpreview mouseleave.imgpreview')
-        .on('click.imgpreview', '[role=close]', function () {
+        this.$imgPreview.on('click.imgpreview', '[role=close]', function () {
             //关闭
             self.hide();
         }).on('click.imgpreview', '[role=prev]', function () {
@@ -114,7 +113,7 @@ define('km/imgPreview', ['jquery', 'km/loading', 'km/popTips'], function ($, Loa
             self.$next.hide();
         });
 
-        this.$win.off('resize.imgpreview').on('resize.imgpreview', function () {
+        this.$win.on('resize.imgpreview', function () {
             var width = parseInt(self.$img.attr('data-width')),
                 height = parseInt(self.$img.attr('data-height'));
 

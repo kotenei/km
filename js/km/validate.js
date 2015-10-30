@@ -106,7 +106,7 @@ define('km/validate', ['jquery'], function ($) {
      */
     Validate.prototype.eventBind = function () {
         var self = this;
-        this.$form.off('submit.validate focus.validate blur.validate keyup.validate click.validate').on('submit.validate', function (e) {
+        this.$form.on('submit.validate', function (e) {
             return self.validateFrom(e);
         }).on('focus.validate blur.validate keyup.validate',
         ':text, [type="password"], [type="file"], select, textarea, ' +

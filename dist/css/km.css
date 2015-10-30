@@ -2316,6 +2316,7 @@ table.k-treeTable tr.expanded.accept td span.indenter a {
   height: 40px;
   line-height: 40px;
   max-width: 200px;
+  min-width: 100px;
   background: #F2F2F2;
 }
 .k-tab > .k-tab-head > .k-tab-scroller > .k-tab-nav > li:first-child {

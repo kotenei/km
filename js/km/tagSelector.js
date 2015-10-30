@@ -5,7 +5,8 @@
  */
 define('km/tagSelector', ['jquery'], function ($) {
 
-    var $selector,
+    var identity = 1,
+        $selector,
         $layer,
         $left, $top, $right, $bottom;
 
@@ -92,7 +93,7 @@ define('km/tagSelector', ['jquery'], function ($) {
 
         var $curElm;
 
-        $elms.off('mouseover.tagSelector mouseout.tagSelector click.tagSelector').on('mouseover.tagSelector', function () {
+        $elms.on('mouseover.tagSelector', function () {
             method.setSidePosition($(this).addClass('k-tagSelector-curr'));
             return false;
         }).on('mouseout.tagSelector', function () {
@@ -116,19 +117,19 @@ define('km/tagSelector', ['jquery'], function ($) {
             return false;
         });
 
-        $layer.off('click.tagSelector').on('click.tagSelector', function () {
+        $layer.on('click.tagSelector', function () {
             $layer.hide();
             return false;
         });
 
-        $(window).off('resize.tagSelector').on('resize.tagSelector', function () {
+        $(window).on('resize.tagSelector', function () {
             if (!$curElm) {
                 return;
             }
             method.showLayer($curElm, $layer);
         });
 
-        $(document).off('click.tagSelector').on('click.tagSelector', function () {
+        $(document).on('click.tagSelector', function () {
             $layer.hide();
             $curElm = null;
         });

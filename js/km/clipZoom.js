@@ -77,7 +77,7 @@ define('km/clipZoom', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
     ClipZoom.prototype.eventBind = function () {
         var self = this;
 
-        this.$element.off('click.clipzoom').on('click.clipzoom', '[role="clip"]', function () {
+        this.$element.on('click.clipzoom', '[role="clip"]', function () {
             //裁剪
             self.clip();
         }).on('click.clipzoom', '[role="center"]', function () {

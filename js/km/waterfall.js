@@ -5,12 +5,15 @@
  */
 define('km/waterfall', ['jquery', 'km/infiniteScroll', 'km/popTips'], function ($, InfiniteScroll, popTips) {
 
+    var identity = 1;
+
     /**
      * 瀑布流模块
      * @param {JQuery} $element - dom
      * @param {Object} options - 参数
      */
     var Waterfall = function ($element, options) {
+        this.identity = identity++;
         this.$element = $element;
         this.options = $.extend(true, {
             $scrollElement: $(window),
@@ -64,7 +67,11 @@ define('km/waterfall', ['jquery', 'km/infiniteScroll', 'km/popTips'], function (
         });
 
         if (this.options.resize) {
-            this.$panel.off('resize.waterfall').on('resize.waterfall', $.proxy(this.arrangementInit, this));
+
+            this.$panel.on('resize.waterfall.' + this.identity, function () {
+                
+                self.arrangementInit();
+            });
         }
     };
 

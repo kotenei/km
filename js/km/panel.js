@@ -77,8 +77,7 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
      */
     Panel.prototype.watch = function () {
         var self = this;
-        this.$panel.off('click.panel')
-        .on('click.panel', 'span[role=slideup]', function () {
+        this.$panel.on('click.panel', 'span[role=slideup]', function () {
             self.slideUp($(this));
         })
         .on('click.panel', 'span[role=slidedown]', function () {

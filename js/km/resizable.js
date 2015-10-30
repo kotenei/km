@@ -148,7 +148,7 @@ define('km/resizable', ['jquery'], function ($) {
     Resizable.prototype.watch = function () {
         var self = this;
 
-        this.$elm.off('mousedown.resizable', '[role=resizable]').on('mousedown.resizable', '[role=resizable]', function (e) {
+        this.$elm.on('mousedown.resizable', '[role=resizable]', function (e) {
             var $el = $(this);
             self.resizeParams.top = parseInt(self.$elm.position().top);
             self.resizeParams.left = self.$elm.position().left;

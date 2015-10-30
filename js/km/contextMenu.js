@@ -7,9 +7,11 @@ define('km/contextMenu', ['jquery'], function ($) {
 
     var items = [], $curTarget;
 
+    var identity = 1;
+
     var $contextMenu = $('<ul class="k-contextMenu"></ul>').appendTo(document.body);
 
-    $contextMenu.off('click.contextmenu').on('click.contextmenu', 'li', function () {
+    $contextMenu.on('click.contextmenu', 'li', function () {
         var $el = $(this),
             action = $el.attr('data-action'),
             item = items[action];
@@ -29,6 +31,7 @@ define('km/contextMenu', ['jquery'], function ($) {
      * @param {Object} options - 参数设置
      */
     var ContextMenu = function ($el, options) {
+        this.identity = identity++;
         this.$el = $el;
         this.options = $.extend(true, {
             target: '',
@@ -61,7 +64,7 @@ define('km/contextMenu', ['jquery'], function ($) {
     ContextMenu.prototype.watch = function () {
         var self = this;
 
-        this.$el.off('contextmenu.contextmenu').on('contextmenu.contextmenu', this.options.target, function (e) {
+        this.$el.on('contextmenu.contextmenu', this.options.target, function (e) {
 
             var left = e.pageX,
                 top = e.pageY;
@@ -89,7 +92,13 @@ define('km/contextMenu', ['jquery'], function ($) {
         });
 
 
-        $(document.body).off('click.contextmenu').on('click.contextmenu', function () {
+        $(document.body).on('click.contextmenu.' + this.identity, function () {
+
+            //if (self && self.$el.parent().length == 0) {
+            //    $(document.body).off('click.contextmenu.' + self.identity);
+            //    self = null;
+            //}
+
             $contextMenu.hide();
             $curTarget = null;
         });

@@ -120,14 +120,14 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
      */
     Layout.prototype.watch = function () {
         var self = this;
-        this.$win.off('resize.layout').on('resize.layout', function () {
+        this.$win.on('resize.layout', function () {
             self.setSize();
         });
-        this.$panels.off('click.layout', 'span[role=hide]').on('click.layout', 'span[role=hide]', function () {
+        this.$panels.on('click.layout', 'span[role=hide]', function () {
             self.hide($(this).attr('data-type'));
             return false;
         });
-        this.$layout.off('click.layout', 'span[role=show]').on('click.layout', 'span[role=show]', function () {
+        this.$layout.on('click.layout', 'span[role=show]', function () {
             self.show($(this).attr('data-type'));
             return false;
         });

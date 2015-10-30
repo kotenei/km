@@ -40,9 +40,10 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
             close: $.noop,
             afterClose: $.noop
         };
+        this.identity = this.options.id || ids.get();
         this.isClose = true;
         this.loading = false;
-        this.template = '<div class="k-window" id="k-window-' + (this.options.id || ids.get()) + '">' +
+        this.template = '<div class="k-window" id="k-window-' + (this.identity) + '">' +
                             '<h4 class="k-window-header"><span class="k-window-title"></span><span class="k-window-close" role="kwin_close">×</span></h4>' +
                             '<div class="k-window-container"></div>' +
                             '<div class="k-window-footer">' +
@@ -94,32 +95,34 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
     Window.prototype.eventBind = function () {
         var self = this;
 
-        this.$window
-            .off('resize.window')
-            .on('resize.window', function () {
+        this.$window.on('resize.window.' + this.identity, function () {
+
+            if (self.tm) {
+                clearTimeout(self.tm);
+            }
+
+            self.tm = setTimeout(function () {
                 self.layout();
-            });
+            }, 300);
+            
+        });
 
-        this.$backdrop
-            .off('click.window')
-            .on('click.window', function () {
-                if (self.options.backdropClose) {
-                    self.close();
-                }
-            });
+        this.$backdrop.on('click.window', function () {
+            if (self.options.backdropClose) {
+                self.close();
+            }
+        });
 
 
-        this.$win.off('click.window')
-                 .on('click.window', '[role=kwin_close],[role=kwin_cancel]', function () {
-                     if (self._event.close.call(self) !== false) {
-                         self.close();
-                     }
-                 })
-                 .on('click.window', '[role=kwin_ok]', function () {
-                     if (self._event.ok.call(self) !== false) {
-                         self.close();
-                     }
-                 });
+        this.$win.on('click.window', '[role=kwin_close],[role=kwin_cancel]', function () {
+            if (self._event.close.call(self) !== false) {
+                self.close();
+            }
+        }).on('click.window', '[role=kwin_ok]', function () {
+            if (self._event.ok.call(self) !== false) {
+                self.close();
+            }
+        });
 
 
         if (this.options.btns && this.options.btns.length > 0) {
@@ -521,6 +524,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
         return win;
     };
 
+
     /**
      * 全局调用
      * @return {void}
@@ -585,10 +589,9 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
                         data.open();
                     });
 
-                $elm.off('click.window')
-                    .on('click.window', function () {
-                        data.open();
-                    });
+                $elm.on('click.window', function () {
+                    data.open();
+                });
 
                 $.data($elm[0], 'window', data);
             }

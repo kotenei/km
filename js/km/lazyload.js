@@ -54,7 +54,7 @@ define('km/lazyload', ['jquery'], function ($) {
      * @return {Void}
      */
     LazyLoad.prototype.eventBind = function () {
-        this.options.$container.off('scroll.lazyload').on('scroll.lazyload', $.proxy(this.load, this));
+        this.options.$container.on('scroll.lazyload', $.proxy(this.load, this));
     };
 
     /**

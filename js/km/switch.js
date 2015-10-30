@@ -39,7 +39,7 @@ define('km/switch', ['jquery'], function ($) {
         this.moveLeft = this.$switch.find('.k-switch-left').width();
         if (this.checked) { this.on(); } else { this.off(); }
         if (this.disabled) { this.$switch.addClass("disabled"); }
-        this.$switch.off('click.switch').on('click.switch', $.proxy(this.toggle, this));
+        this.$switch.on('click.switch', $.proxy(this.toggle, this));
     };
 
     /**

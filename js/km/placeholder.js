@@ -49,9 +49,9 @@ define('km/placeholder', ['jquery'], function ($) {
             }, this.timer.delay);
         }
 
-        this.$elm.off('focus.' + this.type).on('focus.' + this.type, function () {
+        this.$elm.on('focus.' + this.type, function () {
             self.$placeholder.hide();
-        }).off('blur.' + this.type).on('blur.' + this.type, function () {
+        }).on('blur.' + this.type, function () {
             var value = $.trim(self.$elm.val());
             if (value.length === 0 || value === self.text) {
                 self.$elm.val("");
@@ -61,7 +61,7 @@ define('km/placeholder', ['jquery'], function ($) {
             }
         });
 
-        this.$placeholder.off('focus.' + this.type).on('focus.' + this.type, function () {
+        this.$placeholder.on('focus.' + this.type, function () {
             self.$elm.focus();
         });
 

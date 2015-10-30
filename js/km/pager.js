@@ -36,7 +36,7 @@ define('km/pager', ['jquery', 'km/event'], function ($, event) {
         var self = this;
         this.$pager = $(this.template).appendTo(this.$element);
         this.build();
-        this.$pager.off('click.pager').on('click.pager', 'li', function () {
+        this.$pager.on('click.pager', 'li', function () {
             var $this = $(this),
                 page = $this.attr('data-page');
             if ($this.hasClass("disabled") || $this.hasClass("active")) { return; }

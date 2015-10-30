@@ -5,12 +5,15 @@
  */
 define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
 
+    var identity = 1;
+
     /**
      * 下拉树类
      * @param {JQuery} $element - dom
      * @param {Object} options - 参数
      */
     var DropDownTree = function ($elm, options) {
+        this.identity = identity++;
         this.$elm = $elm;
         this.options = $.extend(true, {
             data: [],
@@ -29,7 +32,7 @@ define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
                 hide: $.noop
             }
         }, options);
-
+        this.tm = null;
         this.$treePanel = $('<div class="k-dropDownTree k-pop-panel"></div>');
         this.init();
     };
@@ -52,6 +55,7 @@ define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
         this.$inputGroup = this.$elm.parent(this.options.inputGroup);
 
         this.$elm.attr('readonly', 'readonly');
+        this.$elm.attr('data-moduleId', this.identity);
 
         this.elmWidth = this.$elm.outerWidth();
 
@@ -91,7 +95,7 @@ define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
             $.get(this.options.url, { rand: Math.random() }, function (data) {
 
                 if (typeof data === 'string') {
-                    data = eval('(0,'+data+')');
+                    data = eval('(0,' + data + ')');
                 }
 
                 self.options.data = data;
@@ -112,17 +116,25 @@ define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
     DropDownTree.prototype.watch = function () {
         var self = this;
 
-        this.$elm.off('click.dropDownTree').on('click.dropDownTree', function (e) {
+        this.$elm.on('click.dropDownTree', function (e) {
             self.show();
             return false;
         });
 
-        this.$inputGroup.off('click.dropDownTree', 'button').on('click.dropDownTree', 'button', function (e) {
+        this.$inputGroup.on('click.dropDownTree', 'button', function (e) {
             self.show();
             return false;
         });
 
-        $(document).off('click.dropDownTree').on('click.dropDownTree', function (e) {
+        $(document).on('click.dropDownTree.' + this.identity, function (e) {
+
+            //if (self && self.$elm.parent().length == 0) {
+            //    $(window).off('resize.dropDownTree.' + self.identity);
+            //    $(document).off('click.dropDownTree.' + self.identity);
+            //    self = null;
+            //    return;
+            //}
+
             var $target = $(e.target);
             if ($target.hasClass('k-dropDownTree') ||
                 $target.parents('.k-dropDownTree').length > 0) {
@@ -131,8 +143,25 @@ define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
             self.hide();
         });
 
-        $(window).off('resize.dropDownTree').on('resize.dropDownTree', function () {
-            self.setPosition();
+        $(window).on('resize.dropDownTree.' + this.identity, function () {
+
+            if (self.tm) {
+                clearTimeout(self.tm);
+            }
+
+            self.tm = setTimeout(function () {
+
+                //if (self && self.$elm.parent().length == 0) {
+                //    $(window).off('resize.dropDownTree.' + self.identity);
+                //    $(document).off('click.dropDownTree.' + self.identity);
+                //    self = null;
+                //    return;
+                //}
+
+                self.setPosition();
+
+            }, 300);
+
         });
     };
 
@@ -216,6 +245,18 @@ define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
     };
 
     /**
+     * 销毁
+     * @param {int} moduleId - 模板编号
+     * @return {Void}
+     */
+    DropDownTree.Destory = function (moduleId) {
+        moduleId = moduleId || "";
+        var key = moduleId ? 'resize.dropDownTree.' + moduleId : 'resize.dropDownTree';
+        $(window).off(key);
+    }
+
+
+    /**
      * 全局调用
      * @return {Void}
      */
@@ -224,7 +265,7 @@ define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
 
         $elms.each(function () {
             var $elm = $(this),
-                options=$elm.attr('data-options'),
+                options = $elm.attr('data-options'),
                 url = $elm.attr('data-url'),
                 width = $elm.attr('data-width'),
                 height = $elm.attr('data-height'),
@@ -237,7 +278,7 @@ define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
                 bindElm = $elm.attr('data-bindelement') || null,
                 data;
 
-            data =$.data($elm[0],'dropDownTree');
+            data = $.data($elm[0], 'dropDownTree');
 
 
             if (!data) {

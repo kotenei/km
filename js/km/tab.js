@@ -5,12 +5,15 @@
  */
 define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu', 'km/loading'], function ($, ajax, contextMenu, Loading) {
 
+    var identity = 1;
+
     /**
      * tab 标签模块
      * @param {JQuery} $elm - dom
      * @param {Object} options - 参数
      */
     var Tab = function ($elm, options) {
+        this.identity = identity++;
         this.$elm = $elm;
         this.options = $.extend(true, {
             keepOne: true,
@@ -35,6 +38,7 @@ define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu', 'km/loading'], function
      * @return {Void}
      */
     Tab.prototype.init = function () {
+        this.$elm.attr('data-moduleId', this.identity);
         this.$tabHead = this.$elm.find('div.k-tab-head');
         this.$btnLeft = this.$tabHead.find('div.left');
         this.$btnRight = this.$tabHead.find('div.right');
@@ -72,7 +76,7 @@ define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu', 'km/loading'], function
     Tab.prototype.watch = function () {
         var self = this;
 
-        this.$elm.off('click.tab').on('click.tab', '[role=tab]', function () {
+        this.$elm.on('click.tab', '[role=tab]', function () {
             var $el = $(this),
                 index = $el.index();
             self.toggle(index);
@@ -92,11 +96,19 @@ define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu', 'km/loading'], function
             return false;
         });
 
-        $(window).off('resize.tab').on('resize.tab', function () {
+        $(window).on('resize.tab.' + this.identity, function () {
+
             if (self.tm) {
                 clearTimeout(self.tm);
             }
             self.tm = setTimeout(function () {
+
+                //if (self && self.$elm.parent().length == 0) {
+                //    $(window).off('resize.tab.' + self.identity);
+                //    self = null;
+                //    return;
+                //}
+
                 self.setSize();
             }, 300)
         });
@@ -115,7 +127,10 @@ define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu', 'km/loading'], function
             scrollWidth = headWidth - btnLeftWidth - btnRightWidth,
             tabsWidth = 0;
 
+
+
         this.$tabNav.children().each(function () {
+
             tabsWidth += $(this).outerWidth();
         });
 
@@ -395,6 +410,7 @@ define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu', 'km/loading'], function
             marginLeft: -left
         }, 300);
     };
+
 
     /**
      * 全局调用

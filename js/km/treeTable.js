@@ -42,7 +42,7 @@ define('km/treeTable', ['jquery', 'km/ajax'], function ($, ajax) {
     //事件监控
     TreeTable.prototype.watch = function () {
         var self = this;
-        this.$elm.off('click.treetable').on('click.treetable', '.indenter a', function () {
+        this.$elm.on('click.treetable', '.indenter a', function () {
             var id = $(this).attr('data-nodeId'),
                 $row = $('#treeRow_' + id),
                 children = self.getChildren(self.objData[id]);

@@ -435,7 +435,7 @@ define('km/autoComplete', ['jquery'], function ($) {
         var self = this;
         this.$listBox = $(this.tpl).hide().appendTo(document.body);
         this.data = this.options.data || [];
-        this.$element.off('keyup.autocomplete').on('keyup.autocomplete', function (e) {
+        this.$element.on('keyup.autocomplete', function (e) {
             var $this = $(this),
                 val = $.trim($this.val());
 
@@ -468,7 +468,7 @@ define('km/autoComplete', ['jquery'], function ($) {
             }
         });
 
-        this.$listBox.off('click.autocomplete').on('click.autocomplete', 'li', function () {
+        this.$listBox.on('click.autocomplete', 'li', function () {
             var text = $(this).text();
             self.$element.val(text).focus();
             if ($.isFunction(self.options.callback.setValue)) {
@@ -478,11 +478,11 @@ define('km/autoComplete', ['jquery'], function ($) {
         });
 
 
-        $(document).off('click.autocomplete').on('click.autocomplete', function () {
+        $(document).on('click.autocomplete', function () {
             self.hide();
         });
 
-        $(window).off('resize.autocomplete').on('resize.autocomplete', function () {
+        $(window).on('resize.autocomplete', function () {
             self.setCss();
         })
     };
@@ -878,7 +878,7 @@ define('km/clipZoom', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
     ClipZoom.prototype.eventBind = function () {
         var self = this;
 
-        this.$element.off('click.clipzoom').on('click.clipzoom', '[role="clip"]', function () {
+        this.$element.on('click.clipzoom', '[role="clip"]', function () {
             //裁剪
             self.clip();
         }).on('click.clipzoom', '[role="center"]', function () {
@@ -1147,9 +1147,11 @@ define('km/contextMenu', ['jquery'], function ($) {
 
     var items = [], $curTarget;
 
+    var identity = 1;
+
     var $contextMenu = $('<ul class="k-contextMenu"></ul>').appendTo(document.body);
 
-    $contextMenu.off('click.contextmenu').on('click.contextmenu', 'li', function () {
+    $contextMenu.on('click.contextmenu', 'li', function () {
         var $el = $(this),
             action = $el.attr('data-action'),
             item = items[action];
@@ -1169,6 +1171,7 @@ define('km/contextMenu', ['jquery'], function ($) {
      * @param {Object} options - 参数设置
      */
     var ContextMenu = function ($el, options) {
+        this.identity = identity++;
         this.$el = $el;
         this.options = $.extend(true, {
             target: '',
@@ -1201,7 +1204,7 @@ define('km/contextMenu', ['jquery'], function ($) {
     ContextMenu.prototype.watch = function () {
         var self = this;
 
-        this.$el.off('contextmenu.contextmenu').on('contextmenu.contextmenu', this.options.target, function (e) {
+        this.$el.on('contextmenu.contextmenu', this.options.target, function (e) {
 
             var left = e.pageX,
                 top = e.pageY;
@@ -1229,7 +1232,13 @@ define('km/contextMenu', ['jquery'], function ($) {
         });
 
 
-        $(document.body).off('click.contextmenu').on('click.contextmenu', function () {
+        $(document.body).on('click.contextmenu.' + this.identity, function () {
+
+            //if (self && self.$el.parent().length == 0) {
+            //    $(document.body).off('click.contextmenu.' + self.identity);
+            //    self = null;
+            //}
+
             $contextMenu.hide();
             $curTarget = null;
         });
@@ -1483,12 +1492,12 @@ define('km/datePicker', ['jquery'], function ($) {
     DatePicker.prototype.eventBind = function () {
         var self = this;
 
-        this.$groupBox.off('click.datepicker').on('click.datepicker', 'button', function () {
+        this.$groupBox.on('click.datepicker', 'button', function () {
             self.show();
             return false;
         });
 
-        this.$element.off('click.datepicker').on('click.datepicker', function () {
+        this.$element.on('click.datepicker', function () {
             if (self.options.desktop) {
                 return;
             }
@@ -1496,7 +1505,7 @@ define('km/datePicker', ['jquery'], function ($) {
             return false;
         });
 
-        this.$datepicker.off('click.datepicker').on('click.datepicker', function (e) {
+        this.$datepicker.on('click.datepicker', function (e) {
             var target = e.target,
                 $target = $(target);
 
@@ -1691,7 +1700,7 @@ define('km/datePicker', ['jquery'], function ($) {
             self.hide();
         });
 
-        $(document).off('click.datepicker').on('click.datepicker', function () {
+        $(document).on('click.datepicker', function () {
             if (self.options.desktop) {
                 return;
             }
@@ -2885,7 +2894,7 @@ define('km/dragdrop', ['jquery'], function ($) {
     DragDrop.prototype.eventBind = function () {
         var self = this;
 
-        this.$handle.off('mousedown.dragdrop').on('mousedown.dragdrop', function (e) {
+        this.$handle.on('mousedown.dragdrop', function (e) {
 
             if (self.options.zIndex.increase) {
                 zIndex++;
@@ -2913,7 +2922,7 @@ define('km/dragdrop', ['jquery'], function ($) {
             //禁止文档选择事件
             document.onselectstart = function () { return false };
             return false;
-        }).off('mousedown.dragdrop', '.k-resizable').on('mousedown.dragdrop', '.k-resizable', function () {
+        }).on('mousedown.dragdrop', '.k-resizable', function () {
             self.isResize = true;
             self.resizeParams.type = $(this).attr("data-type");
             self.resizeParams.left = parseInt(self.$layer.position().left);
@@ -3942,12 +3951,15 @@ define('km/dragdrop', ['jquery'], function ($) {
  */
 define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
 
+    var identity = 1;
+
     /**
      * 下拉树类
      * @param {JQuery} $element - dom
      * @param {Object} options - 参数
      */
     var DropDownTree = function ($elm, options) {
+        this.identity = identity++;
         this.$elm = $elm;
         this.options = $.extend(true, {
             data: [],
@@ -3966,7 +3978,7 @@ define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
                 hide: $.noop
             }
         }, options);
-
+        this.tm = null;
         this.$treePanel = $('<div class="k-dropDownTree k-pop-panel"></div>');
         this.init();
     };
@@ -3989,6 +4001,7 @@ define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
         this.$inputGroup = this.$elm.parent(this.options.inputGroup);
 
         this.$elm.attr('readonly', 'readonly');
+        this.$elm.attr('data-moduleId', this.identity);
 
         this.elmWidth = this.$elm.outerWidth();
 
@@ -4028,7 +4041,7 @@ define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
             $.get(this.options.url, { rand: Math.random() }, function (data) {
 
                 if (typeof data === 'string') {
-                    data = eval('(0,'+data+')');
+                    data = eval('(0,' + data + ')');
                 }
 
                 self.options.data = data;
@@ -4049,17 +4062,25 @@ define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
     DropDownTree.prototype.watch = function () {
         var self = this;
 
-        this.$elm.off('click.dropDownTree').on('click.dropDownTree', function (e) {
+        this.$elm.on('click.dropDownTree', function (e) {
             self.show();
             return false;
         });
 
-        this.$inputGroup.off('click.dropDownTree', 'button').on('click.dropDownTree', 'button', function (e) {
+        this.$inputGroup.on('click.dropDownTree', 'button', function (e) {
             self.show();
             return false;
         });
 
-        $(document).off('click.dropDownTree').on('click.dropDownTree', function (e) {
+        $(document).on('click.dropDownTree.' + this.identity, function (e) {
+
+            //if (self && self.$elm.parent().length == 0) {
+            //    $(window).off('resize.dropDownTree.' + self.identity);
+            //    $(document).off('click.dropDownTree.' + self.identity);
+            //    self = null;
+            //    return;
+            //}
+
             var $target = $(e.target);
             if ($target.hasClass('k-dropDownTree') ||
                 $target.parents('.k-dropDownTree').length > 0) {
@@ -4068,8 +4089,25 @@ define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
             self.hide();
         });
 
-        $(window).off('resize.dropDownTree').on('resize.dropDownTree', function () {
-            self.setPosition();
+        $(window).on('resize.dropDownTree.' + this.identity, function () {
+
+            if (self.tm) {
+                clearTimeout(self.tm);
+            }
+
+            self.tm = setTimeout(function () {
+
+                //if (self && self.$elm.parent().length == 0) {
+                //    $(window).off('resize.dropDownTree.' + self.identity);
+                //    $(document).off('click.dropDownTree.' + self.identity);
+                //    self = null;
+                //    return;
+                //}
+
+                self.setPosition();
+
+            }, 300);
+
         });
     };
 
@@ -4153,6 +4191,18 @@ define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
     };
 
     /**
+     * 销毁
+     * @param {int} moduleId - 模板编号
+     * @return {Void}
+     */
+    DropDownTree.Destory = function (moduleId) {
+        moduleId = moduleId || "";
+        var key = moduleId ? 'resize.dropDownTree.' + moduleId : 'resize.dropDownTree';
+        $(window).off(key);
+    }
+
+
+    /**
      * 全局调用
      * @return {Void}
      */
@@ -4161,7 +4211,7 @@ define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
 
         $elms.each(function () {
             var $elm = $(this),
-                options=$elm.attr('data-options'),
+                options = $elm.attr('data-options'),
                 url = $elm.attr('data-url'),
                 width = $elm.attr('data-width'),
                 height = $elm.attr('data-height'),
@@ -4174,7 +4224,7 @@ define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
                 bindElm = $elm.attr('data-bindelement') || null,
                 data;
 
-            data =$.data($elm[0],'dropDownTree');
+            data = $.data($elm[0], 'dropDownTree');
 
 
             if (!data) {
@@ -4665,8 +4715,7 @@ define('km/focusMap', ['jquery'], function ($) {
             return;
         }
         this.isWatch = true;
-        this.$el.off('mouseenter.focusmap mouseleave.focusmap click.focusmap')
-        .on('mouseenter.focusmap', function () {
+        this.$el.on('mouseenter.focusmap', function () {
             self.stop();
         }).on('mouseleave.focusmap', function () {
             self.run();
@@ -4917,20 +4966,19 @@ define('km/imgPreview', ['jquery', 'km/loading', 'km/popTips'], function ($, Loa
     ImgPreview.prototype.eventBind = function () {
         var self = this;
 
-        this.$elements.off('click.imgpreview').on('click.imgpreview', function () {
+        this.$elements.on('click.imgpreview', function () {
             var $this = $(this);
             self.index = Number($this.attr('data-index'));
             self.show();
         });
 
-        this.$backdrop.off('click.imgpreview').on('click.imgpreview', function () {
+        this.$backdrop.on('click.imgpreview', function () {
             if (self.options.backdropClose) {
                 self.hide();
             }
         });
 
-        this.$imgPreview.off('click.imgpreview mouseenter.imgpreview mouseleave.imgpreview')
-        .on('click.imgpreview', '[role=close]', function () {
+        this.$imgPreview.on('click.imgpreview', '[role=close]', function () {
             //关闭
             self.hide();
         }).on('click.imgpreview', '[role=prev]', function () {
@@ -4964,7 +5012,7 @@ define('km/imgPreview', ['jquery', 'km/loading', 'km/popTips'], function ($, Loa
             self.$next.hide();
         });
 
-        this.$win.off('resize.imgpreview').on('resize.imgpreview', function () {
+        this.$win.on('resize.imgpreview', function () {
             var width = parseInt(self.$img.attr('data-width')),
                 height = parseInt(self.$img.attr('data-height'));
 
@@ -5352,14 +5400,14 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
      */
     Layout.prototype.watch = function () {
         var self = this;
-        this.$win.off('resize.layout').on('resize.layout', function () {
+        this.$win.on('resize.layout', function () {
             self.setSize();
         });
-        this.$panels.off('click.layout', 'span[role=hide]').on('click.layout', 'span[role=hide]', function () {
+        this.$panels.on('click.layout', 'span[role=hide]', function () {
             self.hide($(this).attr('data-type'));
             return false;
         });
-        this.$layout.off('click.layout', 'span[role=show]').on('click.layout', 'span[role=show]', function () {
+        this.$layout.on('click.layout', 'span[role=show]', function () {
             self.show($(this).attr('data-type'));
             return false;
         });
@@ -5722,7 +5770,7 @@ define('km/lazyload', ['jquery'], function ($) {
      * @return {Void}
      */
     LazyLoad.prototype.eventBind = function () {
-        this.options.$container.off('scroll.lazyload').on('scroll.lazyload', $.proxy(this.load, this));
+        this.options.$container.on('scroll.lazyload', $.proxy(this.load, this));
     };
 
     /**
@@ -5932,7 +5980,7 @@ define('km/magnifier', ['jquery'], function ($) {
         var self = this;
        
 
-        this.$el.off('mousemove.magnifier mouseleave.magnifier').on('mousemove.magnifier', function (e) {
+        this.$el.on('mousemove.magnifier', function (e) {
             var src = self.$img.attr('data-big-img');
 
             self.$view.show();
@@ -6121,7 +6169,7 @@ define('km/pager', ['jquery', 'km/event'], function ($, event) {
         var self = this;
         this.$pager = $(this.template).appendTo(this.$element);
         this.build();
-        this.$pager.off('click.pager').on('click.pager', 'li', function () {
+        this.$pager.on('click.pager', 'li', function () {
             var $this = $(this),
                 page = $this.attr('data-page');
             if ($this.hasClass("disabled") || $this.hasClass("active")) { return; }
@@ -6292,8 +6340,7 @@ define('km/panel', ['jquery', 'km/resizable'], function ($, Resizable) {
      */
     Panel.prototype.watch = function () {
         var self = this;
-        this.$panel.off('click.panel')
-        .on('click.panel', 'span[role=slideup]', function () {
+        this.$panel.on('click.panel', 'span[role=slideup]', function () {
             self.slideUp($(this));
         })
         .on('click.panel', 'span[role=slidedown]', function () {
@@ -6491,9 +6538,9 @@ define('km/placeholder', ['jquery'], function ($) {
             }, this.timer.delay);
         }
 
-        this.$elm.off('focus.' + this.type).on('focus.' + this.type, function () {
+        this.$elm.on('focus.' + this.type, function () {
             self.$placeholder.hide();
-        }).off('blur.' + this.type).on('blur.' + this.type, function () {
+        }).on('blur.' + this.type, function () {
             var value = $.trim(self.$elm.val());
             if (value.length === 0 || value === self.text) {
                 self.$elm.val("");
@@ -6503,7 +6550,7 @@ define('km/placeholder', ['jquery'], function ($) {
             }
         });
 
-        this.$placeholder.off('focus.' + this.type).on('focus.' + this.type, function () {
+        this.$placeholder.on('focus.' + this.type, function () {
             self.$elm.focus();
         });
 
@@ -6916,7 +6963,7 @@ define('km/rating', ['jquery', 'km/event'], function ($, event) {
      */
     Rating.prototype.watch = function () {
         var self = this;
-        this.$el.off('mousemove.rating mouseleave.rating click.rating').on('mousemove.rating', 'img', function (e) {
+        this.$el.on('mousemove.rating', 'img', function (e) {
             var $el = $(this),
                 score = parseInt($el.attr('alt')),
                 left = $el.offset().left,
@@ -7149,7 +7196,7 @@ define('km/resizable', ['jquery'], function ($) {
     Resizable.prototype.watch = function () {
         var self = this;
 
-        this.$elm.off('mousedown.resizable', '[role=resizable]').on('mousedown.resizable', '[role=resizable]', function (e) {
+        this.$elm.on('mousedown.resizable', '[role=resizable]', function (e) {
             var $el = $(this);
             self.resizeParams.top = parseInt(self.$elm.position().top);
             self.resizeParams.left = self.$elm.position().left;
@@ -7732,13 +7779,13 @@ define('km/slider', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
         var self = this;
 
         if (type.indexOf('select') !== -1) {
-            this.$bindElement.off('change.slider').on('change.slider', function () {
+            this.$bindElement.on('change.slider', function () {
                 var $this = $(this),
                     val = $.trim(self.getFilterValue($this.val()));
                 self.setValue(val);
             });
         } else {
-            this.$bindElement.off('keyup.slider blur.slider').on('keyup.slider', function (e) {
+            this.$bindElement.on('keyup.slider', function (e) {
                 var $this = $(this),
                     val = $.trim(self.getFilterValue($this.val()));
                 if (e.keyCode === 13) {
@@ -7875,7 +7922,7 @@ define('km/switch', ['jquery'], function ($) {
         this.moveLeft = this.$switch.find('.k-switch-left').width();
         if (this.checked) { this.on(); } else { this.off(); }
         if (this.disabled) { this.$switch.addClass("disabled"); }
-        this.$switch.off('click.switch').on('click.switch', $.proxy(this.toggle, this));
+        this.$switch.on('click.switch', $.proxy(this.toggle, this));
     };
 
     /**
@@ -8001,12 +8048,15 @@ define('km/switch', ['jquery'], function ($) {
  */
 define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu', 'km/loading'], function ($, ajax, contextMenu, Loading) {
 
+    var identity = 1;
+
     /**
      * tab 标签模块
      * @param {JQuery} $elm - dom
      * @param {Object} options - 参数
      */
     var Tab = function ($elm, options) {
+        this.identity = identity++;
         this.$elm = $elm;
         this.options = $.extend(true, {
             keepOne: true,
@@ -8031,6 +8081,7 @@ define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu', 'km/loading'], function
      * @return {Void}
      */
     Tab.prototype.init = function () {
+        this.$elm.attr('data-moduleId', this.identity);
         this.$tabHead = this.$elm.find('div.k-tab-head');
         this.$btnLeft = this.$tabHead.find('div.left');
         this.$btnRight = this.$tabHead.find('div.right');
@@ -8068,7 +8119,7 @@ define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu', 'km/loading'], function
     Tab.prototype.watch = function () {
         var self = this;
 
-        this.$elm.off('click.tab').on('click.tab', '[role=tab]', function () {
+        this.$elm.on('click.tab', '[role=tab]', function () {
             var $el = $(this),
                 index = $el.index();
             self.toggle(index);
@@ -8088,11 +8139,19 @@ define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu', 'km/loading'], function
             return false;
         });
 
-        $(window).off('resize.tab').on('resize.tab', function () {
+        $(window).on('resize.tab.' + this.identity, function () {
+
             if (self.tm) {
                 clearTimeout(self.tm);
             }
             self.tm = setTimeout(function () {
+
+                //if (self && self.$elm.parent().length == 0) {
+                //    $(window).off('resize.tab.' + self.identity);
+                //    self = null;
+                //    return;
+                //}
+
                 self.setSize();
             }, 300)
         });
@@ -8111,7 +8170,10 @@ define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu', 'km/loading'], function
             scrollWidth = headWidth - btnLeftWidth - btnRightWidth,
             tabsWidth = 0;
 
+
+
         this.$tabNav.children().each(function () {
+
             tabsWidth += $(this).outerWidth();
         });
 
@@ -8392,6 +8454,7 @@ define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu', 'km/loading'], function
         }, 300);
     };
 
+
     /**
      * 全局调用
      * @param {JQuery} $elms - dom
@@ -8438,7 +8501,8 @@ define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu', 'km/loading'], function
  */
 define('km/tagSelector', ['jquery'], function ($) {
 
-    var $selector,
+    var identity = 1,
+        $selector,
         $layer,
         $left, $top, $right, $bottom;
 
@@ -8525,7 +8589,7 @@ define('km/tagSelector', ['jquery'], function ($) {
 
         var $curElm;
 
-        $elms.off('mouseover.tagSelector mouseout.tagSelector click.tagSelector').on('mouseover.tagSelector', function () {
+        $elms.on('mouseover.tagSelector', function () {
             method.setSidePosition($(this).addClass('k-tagSelector-curr'));
             return false;
         }).on('mouseout.tagSelector', function () {
@@ -8549,19 +8613,19 @@ define('km/tagSelector', ['jquery'], function ($) {
             return false;
         });
 
-        $layer.off('click.tagSelector').on('click.tagSelector', function () {
+        $layer.on('click.tagSelector', function () {
             $layer.hide();
             return false;
         });
 
-        $(window).off('resize.tagSelector').on('resize.tagSelector', function () {
+        $(window).on('resize.tagSelector', function () {
             if (!$curElm) {
                 return;
             }
             method.showLayer($curElm, $layer);
         });
 
-        $(document).off('click.tagSelector').on('click.tagSelector', function () {
+        $(document).on('click.tagSelector', function () {
             $layer.hide();
             $curElm = null;
         });
@@ -8986,12 +9050,12 @@ define('km/tooltips', ['jquery'], function ($) {
         for (var i = 0, trigger; i < triggers.length; i++) {
             trigger = triggers[i];
             if (trigger === 'click') {
-                this.$element.off(trigger + "." + this.options.type).on(trigger + "." + this.options.type, $.proxy(this.toggle, this));
+                this.$element.on(trigger + "." + this.options.type, $.proxy(this.toggle, this));
             } else if (trigger != 'manual') {
                 var eventIn = trigger === 'hover' ? 'mouseenter' : 'focus';
                 var eventOut = trigger === 'hover' ? 'mouseleave' : 'blur';
-                this.$element.off(eventIn + "." + this.options.type).on(eventIn + "." + this.options.type, $.proxy(this.show, this));
-                this.$element.off(eventOut + "." + this.options.type).on(eventOut + "." + this.options.type, $.proxy(this.hide, this));
+                this.$element.on(eventIn + "." + this.options.type, $.proxy(this.show, this));
+                this.$element.on(eventOut + "." + this.options.type, $.proxy(this.hide, this));
             }
         }
 
@@ -9007,7 +9071,7 @@ define('km/tooltips', ['jquery'], function ($) {
         //    });
         //}
 
-        $(window).off('resize.' + this.options.type).on('resize.' + this.options.type, function () {
+        $(window).on('resize.' + this.options.type, function () {
             self.setPosition();
         });
 
@@ -9436,7 +9500,7 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
     Tree.prototype.eventBind = function () {
         var self = this;
 
-        this.$element.off('click.tree').on('click.tree', "." + _consts.className.SWITCH, function () {
+        this.$element.on('click.tree', "." + _consts.className.SWITCH, function () {
             //展开或收缩
             var $this = $(this),
                 id = $this.attr('nId'),
@@ -9948,7 +10012,7 @@ define('km/treeTable', ['jquery', 'km/ajax'], function ($, ajax) {
     //事件监控
     TreeTable.prototype.watch = function () {
         var self = this;
-        this.$elm.off('click.treetable').on('click.treetable', '.indenter a', function () {
+        this.$elm.on('click.treetable', '.indenter a', function () {
             var id = $(this).attr('data-nodeId'),
                 $row = $('#treeRow_' + id),
                 children = self.getChildren(self.objData[id]);
@@ -10460,7 +10524,7 @@ define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event'], func
     Upload.prototype.watch = function () {
         var self = this;
 
-        this.$uploadBox.off('change.upload click.upload').on('change.upload', 'input', function () {
+        this.$uploadBox.on('change.upload', 'input', function () {
             self.upload();
         }).on('click.upload', '.fa-close', function () {
             var $el = $(this),
@@ -10869,7 +10933,7 @@ define('km/validate', ['jquery'], function ($) {
      */
     Validate.prototype.eventBind = function () {
         var self = this;
-        this.$form.off('submit.validate focus.validate blur.validate keyup.validate click.validate').on('submit.validate', function (e) {
+        this.$form.on('submit.validate', function (e) {
             return self.validateFrom(e);
         }).on('focus.validate blur.validate keyup.validate',
         ':text, [type="password"], [type="file"], select, textarea, ' +
@@ -11459,12 +11523,15 @@ define('km/validateTooltips', ['jquery', 'km/validate', 'km/tooltips', 'km/util'
  */
 define('km/waterfall', ['jquery', 'km/infiniteScroll', 'km/popTips'], function ($, InfiniteScroll, popTips) {
 
+    var identity = 1;
+
     /**
      * 瀑布流模块
      * @param {JQuery} $element - dom
      * @param {Object} options - 参数
      */
     var Waterfall = function ($element, options) {
+        this.identity = identity++;
         this.$element = $element;
         this.options = $.extend(true, {
             $scrollElement: $(window),
@@ -11518,7 +11585,11 @@ define('km/waterfall', ['jquery', 'km/infiniteScroll', 'km/popTips'], function (
         });
 
         if (this.options.resize) {
-            this.$panel.off('resize.waterfall').on('resize.waterfall', $.proxy(this.arrangementInit, this));
+
+            this.$panel.on('resize.waterfall.' + this.identity, function () {
+                
+                self.arrangementInit();
+            });
         }
     };
 
@@ -11786,9 +11857,10 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
             close: $.noop,
             afterClose: $.noop
         };
+        this.identity = this.options.id || ids.get();
         this.isClose = true;
         this.loading = false;
-        this.template = '<div class="k-window" id="k-window-' + (this.options.id || ids.get()) + '">' +
+        this.template = '<div class="k-window" id="k-window-' + (this.identity) + '">' +
                             '<h4 class="k-window-header"><span class="k-window-title"></span><span class="k-window-close" role="kwin_close">×</span></h4>' +
                             '<div class="k-window-container"></div>' +
                             '<div class="k-window-footer">' +
@@ -11840,32 +11912,34 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
     Window.prototype.eventBind = function () {
         var self = this;
 
-        this.$window
-            .off('resize.window')
-            .on('resize.window', function () {
+        this.$window.on('resize.window.' + this.identity, function () {
+
+            if (self.tm) {
+                clearTimeout(self.tm);
+            }
+
+            self.tm = setTimeout(function () {
                 self.layout();
-            });
+            }, 300);
+            
+        });
 
-        this.$backdrop
-            .off('click.window')
-            .on('click.window', function () {
-                if (self.options.backdropClose) {
-                    self.close();
-                }
-            });
+        this.$backdrop.on('click.window', function () {
+            if (self.options.backdropClose) {
+                self.close();
+            }
+        });
 
 
-        this.$win.off('click.window')
-                 .on('click.window', '[role=kwin_close],[role=kwin_cancel]', function () {
-                     if (self._event.close.call(self) !== false) {
-                         self.close();
-                     }
-                 })
-                 .on('click.window', '[role=kwin_ok]', function () {
-                     if (self._event.ok.call(self) !== false) {
-                         self.close();
-                     }
-                 });
+        this.$win.on('click.window', '[role=kwin_close],[role=kwin_cancel]', function () {
+            if (self._event.close.call(self) !== false) {
+                self.close();
+            }
+        }).on('click.window', '[role=kwin_ok]', function () {
+            if (self._event.ok.call(self) !== false) {
+                self.close();
+            }
+        });
 
 
         if (this.options.btns && this.options.btns.length > 0) {
@@ -12267,6 +12341,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
         return win;
     };
 
+
     /**
      * 全局调用
      * @return {void}
@@ -12331,10 +12406,9 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
                         data.open();
                     });
 
-                $elm.off('click.window')
-                    .on('click.window', function () {
-                        data.open();
-                    });
+                $elm.on('click.window', function () {
+                    data.open();
+                });
 
                 $.data($elm[0], 'window', data);
             }
@@ -12422,7 +12496,7 @@ define('km/wordLimit', ['jquery'], function ($) {
         var self = this;
         this.maxLength = parseInt(this.$element.attr('maxLength') || this.options.maxLength);
         this.$feedback = $(this.options.feedback);
-        this.$element.off('keyup.wordlimit').on('keyup.wordlimit', function () {
+        this.$element.on('keyup.wordlimit', function () {
             var val = $.trim($(this).val());
             self.update(val);
         });

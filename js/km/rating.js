@@ -139,7 +139,7 @@ define('km/rating', ['jquery', 'km/event'], function ($, event) {
      */
     Rating.prototype.watch = function () {
         var self = this;
-        this.$el.off('mousemove.rating mouseleave.rating click.rating').on('mousemove.rating', 'img', function (e) {
+        this.$el.on('mousemove.rating', 'img', function (e) {
             var $el = $(this),
                 score = parseInt($el.attr('alt')),
                 left = $el.offset().left,
