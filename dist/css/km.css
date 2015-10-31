@@ -1850,6 +1850,7 @@ table.k-treeTable tr.expanded.accept td span.indenter a {
   height: 500px;
   display: none;
   border: 1px solid #ccc;
+  background: white;
 }
 .k-magnifier .k-magnifier-view img {
   position: absolute;
