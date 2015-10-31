@@ -2930,7 +2930,7 @@ define('km/dragdrop', ['jquery'], function ($) {
             self.resizeParams.width = parseInt(self.$layer.outerWidth());
             self.resizeParams.height = parseInt(self.$layer.outerHeight());
             self.resizeParams.ratio = self.resizeParams.width >= self.resizeParams.height ? self.resizeParams.width / self.resizeParams.height : self.resizeParams.height / self.resizeParams.width;
-            return false;
+            
         });
     };
 
