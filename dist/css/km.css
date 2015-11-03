@@ -1035,6 +1035,9 @@ label.k-error {
 .k-tree li a.selected span.remove {
   display: inline-block;
 }
+.k-tree li a.disabled {
+  color: #ccc;
+}
 .k-tree li span {
   line-height: 16px;
   margin-right: 2px;

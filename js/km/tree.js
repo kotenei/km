@@ -119,7 +119,7 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
                 }
             }
 
-            className = options.check.chkType + '_' + checked + '_' + (node.chkDisabled ? 'part' : 'full');
+            className = options.check.chkType + '_' + checked + '_' + (node.checkDisabled ? 'part' : 'full');
 
             return '<span id="chk_' + node.nodeId + '" nId="' + node.nodeId + '" class="' + _consts.className.ICON + ' chk ' + className + '"></span>';
 
@@ -286,7 +286,7 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
                 return;
             }
 
-            if (node.chkDisabled) { return; }
+            if (node.checkDisabled) { return; }
 
             node.checked = checked;
             view.replaceChkClass($this, node.checked);
@@ -306,7 +306,14 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
 
         }).on('click.tree', 'a', function () {
             //选择
-            var $this = $(this);
+            var $this = $(this),
+                nodeId = $this.attr('nid'),
+                node = self.getNode(nodeId);
+
+
+            if (node.selectDisabled) {
+                return;
+            }
 
             if (self.options.callback.beforeSelect() === false) {
                 return;
@@ -585,7 +592,7 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
             node = nodes[i];
             node.checked = checked;
             $elm = this.$tree.find('#chk_' + node.nodeId);
-            if (node.chkDisabled) {
+            if (node.checkDisabled) {
                 continue;
             }
             view.replaceChkClass($elm, checked);
@@ -699,11 +706,19 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
      */
     Tree.prototype.unSelectNode = function (nodeId, callback) {
         callback = callback || $.noop;
-        var $selected = this.$tree.find('#a_' + nodeId);
+        var $selected = this.$tree.find('#a_' + nodeId),
+            nodeId = $selected.attr('nid')
+            node;
 
         if ($selected.length == 0 || !$selected.hasClass(_consts.node.SELECTED)) {
             return;
         }
+
+        node = this.getNode(nodeId);
+
+        //if (node.selectDisabled) {
+        //    return;
+        //}
 
         $selected.removeClass(_consts.node.SELECTED);
         callback(this.getNode(nodeId));
