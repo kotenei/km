@@ -717,13 +717,35 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
      */
     Tree.prototype.unCheckNode = function (nodeId) {
         var $checked = this.$tree.find('#chk_' + nodeId),
-            className=$checked.attr('class');
+            className = $checked.attr('class');
 
-        if ($checked.length == 0 || className.indexOf('true')==-1) {
+        if ($checked.length == 0 || className.indexOf('true') == -1) {
             return;
         }
         $checked.click();
-    }
+    };
+
+
+    /**
+     * 重新加载
+     * @param  {Array} data - 节点数据
+     * @return {Void}
+     */
+    Tree.prototype.reload = function (data) {
+
+        data = data || this.options.data;
+
+        var html = [];
+
+        this.initNodes(data);
+
+        this.options.data = data;
+
+        this.createNode(this.options.data, html);
+
+        this.$tree.children('li').remove().end().html(html.join(''));
+
+    };
 
     return Tree;
 });
