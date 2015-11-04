@@ -119,6 +119,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
                 self.close();
             }
         }).on('click.window', '[role=kwin_ok]', function () {
+
             if (self._event.ok.call(self) !== false) {
                 self.close();
             }

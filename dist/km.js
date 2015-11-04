@@ -10151,18 +10151,39 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
         return false;
     };
 
+    /**
+     * 选择节点
+     * @param  {Int} nodeId - 节点编号
+     * @return {Void}
+     */
+    Tree.prototype.selectNode = function (nodeId) {
+
+        if (!nodeId) {
+            return;
+        }
+
+        var node = this.getNode(nodeId);
+
+        if (!node || node.selectDisabled) {
+            return;
+        }
+
+        this.$tree.find('#a_' + nodeId).click();
+
+    };
+
 
     /**
      * 取消选择节点
      * @param  {Int} nodeId - 节点编号
      * @param  {Function} callback - 取消节点回调函数
-     * @return {Boolean}
+     * @return {Void}
      */
     Tree.prototype.unSelectNode = function (nodeId, callback) {
         callback = callback || $.noop;
         var $selected = this.$tree.find('#a_' + nodeId),
-            nodeId = $selected.attr('nid')
-        node;
+            nodeId = $selected.attr('nid'),
+            node;
 
         if ($selected.length == 0 || !$selected.hasClass(_consts.node.SELECTED)) {
             return;
@@ -10178,11 +10199,24 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
         callback(this.getNode(nodeId));
     };
 
+    /**
+     * 复选节点
+     * @param  {Int} nodeId - 节点编号
+     * @return {Void}
+     */
+    Tree.prototype.checkNode = function (nodeId) {
+        var $checked = this.$tree.find('#chk_' + nodeId),
+            className = $checked.attr('class');
+        if ($checked.length == 0 || className.indexOf('false') == -1) {
+            return;
+        }
+        $checked.click();
+    }
 
     /**
      * 反选节点
      * @param  {Int} nodeId - 节点编号
-     * @return {Boolean}
+     * @return {Void}
      */
     Tree.prototype.unCheckNode = function (nodeId) {
         var $checked = this.$tree.find('#chk_' + nodeId),
@@ -10194,6 +10228,7 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
         $checked.click();
     };
 
+    
 
     /**
      * 重新加载
@@ -12187,6 +12222,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
                 self.close();
             }
         }).on('click.window', '[role=kwin_ok]', function () {
+
             if (self._event.ok.call(self) !== false) {
                 self.close();
             }

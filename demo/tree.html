@@ -150,11 +150,17 @@ tree.getSelectedNode();
 //返回勾选的节点
 tree.getCheckedNodes();
 
+//根据编号获取节点
+tree.getNode(nodeId);
+
 //添加节点（parentNode：父级节点，nodes：新的节点，节点格式参考data参数格式）
 tree.addNodes(parentNode,nodes);
 
 //移除某个节点
 tree.removeNode(node);
+
+//选择节点
+tree.selectNode(nodeId);
 
 //取消节点选中状态
 tree.unSelectNode(nodeId);
@@ -163,7 +169,7 @@ tree.unSelectNode(nodeId);
 tree.unCheckNode(nodeId);
 
 //重新加载数据节点
-tree.reload(data)
+tree.reload(data);
                     </code>
                 </pre>
             </div>
@@ -205,7 +211,7 @@ tree.reload(data)
                 data: nodes,
                 //selectLimit:false,
                 check: {
-                    enable: false,
+                    enable: true,
                     chkType: 'checkbox',
                 },
                 callback: {
@@ -213,13 +219,9 @@ tree.reload(data)
                         console.log('ddd')
                     },
                     onSelect: function (node) {
-
                     }
                 }
             });
-
-
-
 
 
             $("#btnAdd").click(function () {
