@@ -20,7 +20,7 @@
         </div>
     </div>
     <div class="main wrap">
-        <ul class="demo-nav-list" id="navList"> 
+        <ul class="demo-nav-list" id="navList">
         </ul>
         <script type="text/javascript" src="nav.js"></script>
         <script type="text/javascript">
@@ -93,7 +93,7 @@ data: [
                             </pre>
                         </td>
                     </tr>
-                    
+
                     <tr>
                         <td>check</td>
                         <td>object</td>
@@ -176,7 +176,7 @@ tree.reload(data)
         require(['KM'], function (KM) {
             var nodes = [
             {
-                nodeId: 1, parentId: 0, rootId: 0, text: '父节点', value: 123, isParent: true,selectDisabled:true, open: true, nodes:
+                nodeId: 1, parentId: 0, rootId: 0, text: '父节点', value: 123, isParent: true, open: true, nodes:
                 [
                     {
                         nodeId: 2, parentId: 1, rootId: 1, text: '父节点', value: 456, open: true, nodes: [
@@ -198,13 +198,14 @@ tree.reload(data)
             }
             ];
 
+
             var num = 10;
 
             var tree = new KM.Tree($("#tree"), {
                 data: nodes,
                 //selectLimit:false,
                 check: {
-                    enable: true,
+                    enable: false,
                     chkType: 'checkbox',
                 },
                 callback: {
@@ -212,12 +213,12 @@ tree.reload(data)
                         console.log('ddd')
                     },
                     onSelect: function (node) {
-                        
+
                     }
                 }
             });
 
-            
+
 
 
 
@@ -250,7 +251,7 @@ tree.reload(data)
             });
         });
 
-        
+
 
     </script>
 </body>

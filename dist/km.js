@@ -9515,7 +9515,10 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
 
             var lineType = _consts.line.CENTER;
 
-            if (node.isFirst && node.parentId === 0) {
+
+            if (node.isSingle) {
+                lineType = _consts.line.ROOT;
+            } else if (node.isFirst && node.parentId === 0) {
                 lineType = _consts.line.ROOTS;
             } else if (node.isLast) {
                 lineType = _consts.line.BOTTOM;
@@ -9690,10 +9693,11 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
 
             if (i === 0 && (i + 1) < data.length) {
                 node.isFirst = true;
+            } else if (i === 0 && (i + 1) == data.length) {
+                node.isSingle = true;
             } else if ((i + 1) === data.length) {
                 node.isLast = true;
             }
-
 
             node.hasChildren = this.hasChildren(node);
             node.isParent = node.hasChildren;
@@ -10158,7 +10162,7 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
         callback = callback || $.noop;
         var $selected = this.$tree.find('#a_' + nodeId),
             nodeId = $selected.attr('nid')
-            node;
+        node;
 
         if ($selected.length == 0 || !$selected.hasClass(_consts.node.SELECTED)) {
             return;
