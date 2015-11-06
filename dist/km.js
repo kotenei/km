@@ -4004,7 +4004,6 @@ define('km/dropDownList', ['jquery'], function ($) {
         var self = this;
 
         this.$el.on('click.dropdownlist', function (e) {
-
             $('ul.k-dropDownList').hide();
             self.show();
             e.stopPropagation();
@@ -4036,9 +4035,11 @@ define('km/dropDownList', ['jquery'], function ($) {
             self._event.select.call(self, $el,data);
         });
 
-        $(window).on('click.dropdownlist', function () {
+        $(document.body).on('click.dropdownlist', function () {
             self.hide();
-        }).on('resize.dropdownlist', function () {
+        });
+
+        $(window).on('resize.dropdownlist', function () {
             self.sysPosition();
         });
     };
