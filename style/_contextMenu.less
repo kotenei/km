@@ -12,21 +12,28 @@
     box-shadow: 0px 0px 10px #cccccc;
     display: none;
     border-radius: 4px;
-    padding: 2px 0;
-    list-style:none;
+    padding: 5px 0;
+    list-style: none;
 
     li
     {
         cursor: pointer;
-        height: 28px;
-        line-height: 28px;
-        padding: 0 15px;
-        font-size:13px;
+        padding: 3px 15px;
+        font-size: 13px;
+
+       
 
         &:hover
         {
-             background: #eee;
+            background: #f5f5f5;
+        }
+
+        &.line
+        {
+            background-color: #e5e5e5;
+            height: 1px;
+            margin: 9px 0;
+            overflow: hidden;
         }
     }
 }
-

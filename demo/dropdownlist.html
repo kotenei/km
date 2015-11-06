@@ -1,0 +1,272 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+    <title>下拉列表</title>
+    <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../dist/css/km.min.css" rel="stylesheet" />
+    <link href="docs.min.css" rel="stylesheet" />
+    <link href="demo.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="header">
+        <div class="wrap">
+            <ul class="nav-list">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="###" class="active">demo</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="main wrap">
+        <ul class="demo-nav-list" id="navList">
+        </ul>
+        <script type="text/javascript" src="nav.js"></script>
+        <script type="text/javascript">
+            nav(document.getElementById('navList'), 'dropdownlist');
+        </script>
+        <div class="demo-container">
+            <h1 class="page-header">下拉列表</h1>
+
+            <div class="bs-example bs-example-padded-bottom" style="">
+
+                <div class="k-dropDown">
+                    <button type="button"
+                        class="k-btn k-btn-primary"
+                        data-module="dropdownlist"
+                        data-options="{
+                            $target:$('#txtTarget')
+                        }"
+                        data-onselect="select">
+                        下拉列表 
+                    <span class="glyphicon glyphicon-triangle-bottom" style="font-size: 12px;"></span>
+                    </button>
+                    <input type="text" id="txtTarget" class="k-input" readonly="readonly" />
+                    <ul class="k-dropDownList">
+                        <li class="" data-text="收藏" data-value="收藏">
+                            <a href="javascript:void(0);">
+                                <span class="glyphicon glyphicon-star"></span>
+                                收藏
+                            </a>
+                        </li>
+                        <li data-text="分享" data-value="分享">
+                            <a href="javascript:void(0);">
+                                <span class="glyphicon glyphicon-share"></span>
+                                分享
+                            </a>
+                        </li>
+                        <li class="line"></li>
+                        <li data-text="查看" data-value="查看">
+                            <a href="javascript:void(0);">
+                                <span class="glyphicon glyphicon-eye-open"></span>
+                                查看
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <h3>全局调用</h3>
+
+            <pre>
+                <code>
+//elms:不填会从页面上获取带有data-module="dropdownlist"属性的元素
+KM.DropDownList.Global($elms);
+                </code>
+            </pre>
+
+            <h3>HTML 结构</h3>
+            <pre>
+                <code>
+&lt;div class="k-dropDown"&gt;
+
+    &lt;button type="button"
+            class="k-btn k-btn-primary"
+            data-module="dropdownlist"
+            data-options="{
+                $target:$('#txtTarget')
+            }"
+            data-onselect="select"&gt;
+            下拉列表 
+        &lt;span class="glyphicon glyphicon-triangle-bottom" style="font-size: 12px;"&gt;&lt;/span&gt;
+    &lt;/button&gt;
+
+
+    &lt;!--下拉列表结构开始 （注：li 需设置 data-text 和 data-value 属性）--&gt;
+
+    &lt;ul class="k-dropDownList"&gt;
+        &lt;li class="" data-text="收藏" data-value="收藏"&gt;
+            &lt;a href="javascript:void(0);"&gt;
+                &lt;span class="glyphicon glyphicon-star"&gt;&lt;/span&gt;
+                收藏
+            &lt;/a&gt;
+        &lt;/li&gt;
+        &lt;li data-text="分享" data-value="分享"&gt;
+            &lt;a href="javascript:void(0);"&gt;
+                &lt;span class="glyphicon glyphicon-share"&gt;&lt;/span&gt;
+                分享
+            &lt;/a&gt;
+        &lt;/li&gt;
+        &lt;li class="line"&gt;&lt;/li&gt;
+        &lt;li data-text="查看" data-value="查看"&gt;
+            &lt;a href="javascript:void(0);"&gt;
+                &lt;span class="glyphicon glyphicon-eye-open"&gt;&lt;/span&gt;
+                查看
+            &lt;/a&gt;
+        &lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;!--下拉列表结构结束--&gt;
+
+&lt;/div&gt;
+                </code>
+            </pre>
+            <h3>HTML 参数设置</h3>
+            <table class="table table-bordered table-striped js-options-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>设置值</th>
+                        <th style="width: 60%;">描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>data-module</td>
+                        <td>dropdownlist</td>
+                        <td>告诉程序当前html元素需要初始化为dropdownlist模块
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>data-options</td>
+                        <td>"{direction:xxxx,$target:xxxx ... }"
+                        </td>
+                        <td>初始化参数，参照下表 options 说明</td>
+                    </tr>
+                    <tr>
+                        <td>data-onselect</td>
+                        <td>
+                            function name
+                        </td>
+                        <td>选中项时触发的回调函数，这里设置函数名称</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>自定义</h3>
+            <div class="bs-example bs-example-padded-bottom">
+                <div class="k-dropDown">
+                    <div class="k-input-group" id="txtCustom">
+                        <input type="text" class="k-form-control" />
+
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default">
+                                <span class="glyphicon glyphicon-triangle-bottom"></span>
+                            </button>
+                        </span>
+                    </div>
+                    <ul class="k-dropDownList">
+                        <li data-text="选项1" data-value="选项1">
+                            <a href="javascript:void(0);">
+                                选项1
+                            </a>
+                        </li>
+                        <li data-text="选项2" data-value="选项2">
+                            <a href="javascript:void(0);">
+                                选项2
+                            </a>
+                        </li>
+                        <li data-text="选项3" data-value="选项3">
+                            <a href="javascript:void(0);">
+                                选项3
+                            </a>
+                        </li>
+                        <li data-text="选项4" data-value="选项4">
+                            <a href="javascript:void(0);">
+                                选项4
+                            </a>
+                        </li>
+                        <li data-text="选项5" data-value="选项5">
+                            <a href="javascript:void(0);">
+                                选项5
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <h3>初始化</h3>
+            <pre>
+                <code>
+var dropDownList = new KM.DropDownList($el,options);
+                </code>
+            </pre>
+            <h3>参数 options</h3>
+            <table class="table table-bordered table-striped js-options-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>类型</th>
+                        <th style="width: 250px;">默认值</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>$target</td>
+                        <td>jquery</td>
+                        <td>null</td>
+                        <td>选中某项后把值赋给目标对象</td>
+                    </tr>
+                    <tr>
+                        <td>direction</td>
+                        <td>string</td>
+                        <td>left</td>
+                        <td>下拉列表显示的位置，可选值 'left'，'right'，'left up'，'right up'</td>
+                    </tr>
+                    <tr>
+                        <td>width</td>
+                        <td>string | int</td>
+                        <td>'auto'</td>
+                        <td>下拉列表宽度</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3>函数调用</h3>
+            <pre>
+                <code>
+//添加回调函数
+dropDownList.on('select',function(data){
+    //do something ...              
+                    
+    //data 包含选择项的 text 和 value属性，如果 li 没有设置 data-text 和 data-value 属性，则返回值为空。      
+});
+                </code>
+            </pre>
+        </div>
+    </div>
+
+
+
+    <script type="text/javascript" src="vendor/require/require.js"></script>
+    <script type="text/javascript" src="main.js"></script>
+    <script type="text/javascript">
+
+        function select($el,data) {
+            console.log(data)
+        }
+
+        require(['KM'], function (KM) {
+            KM.DropDownList.Global();
+
+            var dropDownList = new KM.DropDownList($('#txtCustom'), {
+                direction: 'left',
+                width:'100%'
+            });
+
+            dropDownList.on('select', function ($el, data) {
+                alert('您选中了：' + data.value);
+            });
+        });
+    </script>
+</body>
+</html>

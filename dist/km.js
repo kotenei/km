@@ -3945,6 +3945,212 @@ define('km/dragdrop', ['jquery'], function ($) {
 });
 
 /*
+ * 下拉列表模块
+ * @date:2015-11-06
+ * @author:kotenei(kotenei@qq.com)
+ */
+define('km/dropDownList', ['jquery'], function ($) {
+
+    /**
+     * 下拉列表类
+     * @param {JQuery} $el - dom
+     * @param {Object} options - 参数
+     */
+    var DropDownList = function ($el, options) {
+        this.$el = $el;
+        this.options = $.extend(true, {
+            $target: null,
+            direction: 'left',
+            width: 'auto'
+        }, options);
+        this._event = {
+            select: $.noop
+        };
+        this.init();
+    };
+
+    /**
+     * 初始化
+     * @return {Void}
+     */
+    DropDownList.prototype.init = function () {
+
+        var $dropDownList = this.$el.parent().children('.k-dropDownList');
+
+        if ($dropDownList.length == 0) {
+            return;
+        }
+
+        this.isInputGroup = this.$el.hasClass('input-group') || this.$el.hasClass('k-input-group');
+
+        this.isTextBox = this.isInputGroup ? false : this.$el[0].type.toLowerCase() == 'text';
+
+        this.$el.parent().css('position', 'relative');
+
+        this.$dropDownList = $dropDownList;
+
+        if (this.isInputGroup) {
+            this.$el.find('input').attr('readonly', 'readonly');
+        }
+
+        this.watch();
+    };
+
+    /**
+     * 事件监控
+     * @return {Void}
+     */
+    DropDownList.prototype.watch = function () {
+        var self = this;
+
+        this.$el.on('click.dropdownlist', function (e) {
+
+            $('ul.k-dropDownList').hide();
+            self.show();
+            e.stopPropagation();
+        });
+
+        this.$dropDownList.on('click.dropdownlist', 'li', function (e) {
+            var $el = $(this),
+                text = $el.attr('data-text'),
+                value = $el.attr('data-value'),
+                data = {
+                    text: text || '',
+                    value: value || ''
+                };
+
+            if (self.isTextBox) {
+                self.$el.val(data.value);
+                $el.addClass('active').siblings().removeClass('active');
+            }
+
+            if (self.isInputGroup) {
+                self.$el.find('input').val(data.value);
+                $el.addClass('active').siblings().removeClass('active');
+            }
+
+            if (self.options.$target) {
+                self.options.$target.val(data.value);
+            }
+
+            self._event.select.call(self, $el,data);
+        });
+
+        $(window).on('click.dropdownlist', function () {
+            self.hide();
+        }).on('resize.dropdownlist', function () {
+            self.sysPosition();
+        });
+    };
+
+    /**
+     * 添加回调函数
+     * @param  {String} type - 事件名称
+     * @param  {Function} callback - 回调函数
+     * @return {Void}
+     */
+    DropDownList.prototype.on = function (name, callback) {
+        this._event[name] = callback || $.noop;
+        return this;
+    }
+
+    /**
+     * 显示
+     * @return {Void}
+     */
+    DropDownList.prototype.show = function () {
+        this.$dropDownList.show();
+        this.sysPosition();
+    };
+
+    /**
+     * 隐藏
+     * @return {Void}
+     */
+    DropDownList.prototype.hide = function () {
+        this.$dropDownList.hide();
+    };
+
+    /**
+     * 同步定位
+     * @return {Void}
+     */
+    DropDownList.prototype.sysPosition = function () {
+        var position = {
+            left: 0,
+            top: 0,
+            width: this.options.width
+        };
+
+        switch (this.options.direction) {
+
+            case 'left':
+                position.left = this.$el.position().left;
+                position.top = this.$el.position().top + this.$el.outerHeight() + 2;
+                break;
+            case 'right':
+                position.left = this.$el.position().left + this.$el.outerWidth() - this.$dropDownList.outerWidth();
+                position.top = this.$el.position().top + this.$el.outerHeight() + 2;
+                break;
+            case 'left up':
+                position.left = this.$el.position().left;
+                position.top = this.$el.position().top - this.$dropDownList.outerHeight();
+                break;
+            case 'right up':
+                position.left = this.$el.position().left + this.$el.outerWidth() - this.$dropDownList.outerWidth();
+                position.top = this.$el.position().top - this.$dropDownList.outerHeight();
+                break;
+            default:
+                position.left = this.$el.position().left;
+                position.top = this.$el.position().top + this.$el.outerHeight() + 2;
+                break;
+        }
+
+        if (this.options.width == '100%') {
+            position.width = this.$el.outerWidth();
+        }
+
+        this.$dropDownList.css(position);
+    };
+
+    /**
+     * 全局调用
+     * @param  {Jquery} $elms - dom
+     * @return {Void}
+     */
+    DropDownList.Global = function ($elms) {
+        $elms = $elms || $('[data-module=dropdownlist]');
+        $elms.each(function () {
+            var $el = $(this),
+                options = $el.attr('data-options'),
+                onSelect = $el.attr('data-onselect'),
+                data = $.data($el[0], 'dropdownlist');
+
+            if (!data) {
+
+                if (options && options.length > 0) {
+                    options = eval('(0,' + options + ')');
+                }
+
+                if (onSelect && onSelect.length > 0) {
+                    onSelect = eval('(0,' + onSelect + ')');
+                }
+
+                data = new DropDownList($el, options);
+
+                data.on('select', onSelect);
+
+                $.data($el[0], 'dropdownlist', data);
+            }
+
+        });
+    };
+
+    return DropDownList;
+
+});
+
+/*
  * 下拉树模块
  * @date:2015-07-28
  * @author:kotenei(kotenei@qq.com)
@@ -4259,306 +4465,6 @@ define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
 
 });
 
-/**
- * 下拉框
- * @author vfasky (vfasky@gmail.com)
- */
-define('km/dropdown', ['jquery'], function($){
-    var $body = $('body');
-    var $win  = $(document);
-
-    var _id=0;
-
-    /**
-     * 下拉框
-     * @constructor
-     * @alias km/dropdown
-     * @param {jQuery} $el - dom
-     * @param {Object} setting - 参数设置
-     * @param {Number} setting.width - 宽度
-     * @param {Number} setting.height - 高度
-     */
-    var Dropdown = function($el, setting){
-        this.$soure  = $el;
-        this.setting = $.extend({
-            width: $el.width(),
-            height: $el.height()
-        }, setting || {});
-
-        $.data($el[0], 'widget', this);
-
-        _id++;
-
-        this.id = _id;
-        this.nameSpace = 'dropdown_' + String(this.id);
-
-        this.initDom();
-    };
-
-    /**
-     * 初始化 this.$el
-     * @return {Void}
-     */
-    Dropdown.prototype.initDom = function() {
-        var $parent = this.$soure.parent();
-        var self   = this;
-
-        this.$soure.css({
-            visibility: 'hidden'
-        });
-
-        if($parent.css('position') === 'static'){
-            $parent.css({
-                visibility: 'relative'
-            });
-        }
-
-        var zIndex = 1;
-        if(this.$soure.css('zIndex') === 'auto'){
-            this.$soure.css('zIndex', 1);
-        }
-        else{
-            zIndex = Number(this.$soure.css('zIndex'));
-        }
-       
-        this.$el = $('<div class="widget-dropbox"/>').css({
-            width: this.setting.width,
-            height: this.setting.height,
-            zIndex: zIndex + 1
-        });
-
-        //在侧内容
-        this.$label = $('<div class="label"/>').css({
-            width: this.setting.width - this.setting.height,
-            height: this.setting.height,
-            lineHeight: String(this.setting.height - 4) + 'px'
-        }).appendTo(this.$el);
-
-        //右侧icon
-        this.$icon = $('<div class="ic">&#9660;</div>').css({
-            width: this.setting.height,
-            height: this.setting.height,
-            lineHeight: String(this.setting.height) + 'px'
-            
-        }).appendTo(this.$el);
-
-        this.buildDrop();
-
-        this.$el.insertBefore(this.$soure);
-
-        this.watch();
-    };
-
-    /**
-     * 同步下拉框位置
-     * @return {Void}
-     */
-    Dropdown.prototype.syncPosition = function(){
-        this.$el.css(this.$soure.position());
-    };
-
-    /**
-     * 设置下拉框显示的值
-     * @return {Void}
-     */
-    Dropdown.prototype.setLabel = function(label){
-        this.$label.text(label).attr('title', label);
-    };
-
-    /**
-     * 取下拉框的值
-     * @return {Void}
-     */
-    Dropdown.prototype.getVal = function () {
-        return this.$soure.val();
-    };
-
-    /**
-     * 设置下拉框的值
-     * @return {Void}
-     */
-    Dropdown.prototype.setVal = function(val){
-        this.$soure.val(val).change();
-    };
-
-    /**
-     * 生成下拉框内容
-     * @return {jQuery} - dom
-     */
-    Dropdown.prototype.buildDrop = function(){
-        if(this.$drop){
-            this.$drop.remove();
-        }
-        this.$drop = $('<div class="widget-dropbox-drop"/>').css({
-            width: this.setting.width,
-        }).hide();
-
-        var html = [];
-        this.$soure.find('option').each(function(){
-            var $el = $(this);
-            html.push('<li data-val="'+ $el.val() +'">' + $el.text() + '</li>');
-        });
-        var $el = $('<ul>' + html.join('') + '</ul>');
-
-        $el.appendTo(this.$drop);
-        this.$drop.appendTo($body);
-        this.syncPosition();
-        this.sync();
-    };
-
-    /**
-     * 与原下拉框同步数据
-     * @return {Void}
-     */
-    Dropdown.prototype.sync = function(){
-        var label = this.$soure.find('option:selected').text();
-        if(!label){
-            var $option = this.$soure.find('option').eq(0);
-            label = $option.text();
-            this.setVal($option.val());
-        }
-        this.setLabel(label);
-    };
-
-    /**
-     * 显示下拉框
-     * @return {Void}
-     */
-    Dropdown.prototype.showDrop = function(){
-        var self   = this;
-        var offset = self.$el.offset();
-        self.$el.addClass('widget-dropbox-hover');
-        self.$drop.css({
-            top: offset.top + self.setting.height + 2,
-            left: offset.left
-        }).show();
-
-        $win.off('click.'+self.nameSpace).on('click.' + self.nameSpace, function(e){
-            if(e.target !== self.$label[0] &&
-               e.target !== self.$icon[0] &&
-               e.target !== self.$drop[0] &&
-               false === $.contains(self.$drop[0], e.target)){
-                self.hideDrop();
-            }
-        });
-    };
-
-    /**
-     * 隐藏下拉框
-     * @return {Void}
-     */
-    Dropdown.prototype.hideDrop = function(){
-        var self = this;
-        self.$drop.hide(); 
-        self.$el.removeClass('widget-dropbox-hover');
-        $win.off('click.' + self.nameSpace);
-    };
-
-    /**
-     * 监听事件
-     * @return {Void}
-     */
-    Dropdown.prototype.watch = function(){
-        var self = this;
-        this.$el.off('click').on('click', function(){
-            self.showDrop();
-        });
-
-        this.$drop.off('click','li').on('click', 'li', function(){
-            var $el = $(this);
-            self.setVal($el.data('val'));
-            self.sync();
-            self.hideDrop();
-            return false;
-        });
-    };
-
-    /**
-     * 重新加载数据
-     * @return {Void}
-     */
-    Dropdown.prototype.reload = function(){
-        this.buildDrop();
-    };
-
-    return Dropdown;
-});
-/**
- * 日历下拉框 
- * @module km/dropdownDatepicker 
- * @author vfasky (vfasky@gmail.com)
- */
-define('km/dropdownDatepicker',
-['jquery', 'km/dropdown', 'km/datePicker', 'km/util'],
-function ($, Dropdown, DatePicker, util) {
-
-    /**
-     * 日历下拉框
-     * @constructor
-     * @alias km/dropdownDatepicker
-     * @param {jQuery} $el - dom
-     * @param {Object} setting - 参数设置
-     */
-    var DropdownDatePicker = function ($el, setting) {
-        Dropdown.call(this, $el, setting);
-    };
-
-    DropdownDatePicker.prototype = util.createProto(Dropdown.prototype);
-
-    /**
-     * 生成下拉框内容
-     * @return {Void}
-     */
-    DropdownDatePicker.prototype.buildDrop = function () {    
-        var self = this;
-
-        this.datepicker = new DatePicker(self.$el, {
-            format: this.setting.format,
-            showTime: this.setting.showTime || false
-        });
-
-        this.datepicker.on('selected', function (date) {
-            self.$el.data('value', date);
-            self.setVal(date);
-            self.setLabel(date);
-        }).on('clean', function () {
-            var placeholder = self.$soure.attr('placeholder') || '选择日期';
-            self.setVal('');
-            self.setLabel(placeholder);
-            self.$el.data('value', null);
-        });
-
-        self.sync();
-    };
-
-    /**
-     * 同步数据
-     * @return {Void}
-     */
-    DropdownDatePicker.prototype.sync = function () {
-        var date = this.getVal();
-
-        if (date) {
-            this.$el.data('value', date);
-            this.setVal(date);
-            this.setLabel(date);
-        }
-        else {
-            var placeholder = this.$soure.attr('placeholder') || '选择日期';
-            this.setLabel(placeholder);
-        }
-    };
-
-    /**
-     * 监听事件
-     * @return {Void}
-     */
-    DropdownDatePicker.prototype.watch = function () { };
-
-
-    return DropdownDatePicker;
-
-});
 /**
  * 事件
  * @date :2014-12-01
@@ -12879,7 +12785,7 @@ define('km/wordLimit', ['jquery'], function ($) {
     return WordLimit;
 });
 ;
-define("KM", ["km/ajax", "km/app", "km/autoComplete", "km/cache", "km/clipZoom", "km/contextMenu", "km/datePicker", "km/dragdrop", "km/dropdown", "km/dropdownDatepicker", "km/dropDownTree", "km/event", "km/focusMap", "km/highlight", "km/imgPreview", "km/infiniteScroll", "km/layout", "km/lazyload", "km/loading", "km/magnifier", "km/pager", "km/panel", "km/placeholder", "km/popover", "km/popTips", "km/portlets", "km/rating", "km/resizable", "km/router", "km/slider", "km/switch", "km/tab", "km/tagSelector", "km/template", "km/tooltips", "km/tree", "km/treeTable", "km/upload", "km/util", "km/validate", "km/validateTooltips", "km/waterfall", "km/window", "km/wordLimit"], function(_ajax, _app, _autoComplete, _cache, _clipZoom, _contextMenu, _datePicker, _dragdrop, _dropdown, _dropdownDatepicker, _dropDownTree, _event, _focusMap, _highlight, _imgPreview, _infiniteScroll, _layout, _lazyload, _loading, _magnifier, _pager, _panel, _placeholder, _popover, _popTips, _portlets, _rating, _resizable, _router, _slider, _switch, _tab, _tagSelector, _template, _tooltips, _tree, _treeTable, _upload, _util, _validate, _validateTooltips, _waterfall, _window, _wordLimit){
+define("KM", ["km/ajax", "km/app", "km/autoComplete", "km/cache", "km/clipZoom", "km/contextMenu", "km/datePicker", "km/dragdrop", "km/dropDownList", "km/dropDownTree", "km/event", "km/focusMap", "km/highlight", "km/imgPreview", "km/infiniteScroll", "km/layout", "km/lazyload", "km/loading", "km/magnifier", "km/pager", "km/panel", "km/placeholder", "km/popover", "km/popTips", "km/portlets", "km/rating", "km/resizable", "km/router", "km/slider", "km/switch", "km/tab", "km/tagSelector", "km/template", "km/tooltips", "km/tree", "km/treeTable", "km/upload", "km/util", "km/validate", "km/validateTooltips", "km/waterfall", "km/window", "km/wordLimit"], function(_ajax, _app, _autoComplete, _cache, _clipZoom, _contextMenu, _datePicker, _dragdrop, _dropDownList, _dropDownTree, _event, _focusMap, _highlight, _imgPreview, _infiniteScroll, _layout, _lazyload, _loading, _magnifier, _pager, _panel, _placeholder, _popover, _popTips, _portlets, _rating, _resizable, _router, _slider, _switch, _tab, _tagSelector, _template, _tooltips, _tree, _treeTable, _upload, _util, _validate, _validateTooltips, _waterfall, _window, _wordLimit){
     return window.KM={
         "ajax" : _ajax,
         "App" : _app,
@@ -12889,8 +12795,7 @@ define("KM", ["km/ajax", "km/app", "km/autoComplete", "km/cache", "km/clipZoom",
         "contextMenu" : _contextMenu,
         "DatePicker" : _datePicker,
         "Dragdrop" : _dragdrop,
-        "Dropdown" : _dropdown,
-        "DropdownDatepicker" : _dropdownDatepicker,
+        "DropDownList" : _dropDownList,
         "DropDownTree" : _dropDownTree,
         "event" : _event,
         "focusMap" : _focusMap,

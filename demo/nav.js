@@ -25,6 +25,7 @@
         { text: '弹出框', activeCode: 'popover', link: 'popover.html' },
         { text: '标签选择', activeCode: 'tagselector', link: 'tagselector.html' },
         { text: '标签页', activeCode: 'tab', link: 'tab.html' },
+        { text: '下拉列表', activeCode: 'dropdownlist', link: 'dropdownlist.html' },
         { text: '开关', activeCode: 'switch', link: 'switch.html' },
         { text: '分页', activeCode: 'pager', link: 'pager.html' },
         { text: '加载提示', activeCode: 'loading', link: 'loading.html' },

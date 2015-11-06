@@ -1795,18 +1795,22 @@ table.k-treeTable tr.expanded.accept td span.indenter a {
   box-shadow: 0px 0px 10px #cccccc;
   display: none;
   border-radius: 4px;
-  padding: 2px 0;
+  padding: 5px 0;
   list-style: none;
 }
 .k-contextMenu li {
   cursor: pointer;
-  height: 28px;
-  line-height: 28px;
-  padding: 0 15px;
+  padding: 3px 15px;
   font-size: 13px;
 }
 .k-contextMenu li:hover {
-  background: #eee;
+  background: #f5f5f5;
+}
+.k-contextMenu li.line {
+  background-color: #e5e5e5;
+  height: 1px;
+  margin: 9px 0;
+  overflow: hidden;
 }
 .k-magnifier {
   position: relative;
@@ -2519,4 +2523,53 @@ table.k-treeTable tr.expanded.accept td span.indenter a {
   text-align: center;
   margin-top: 50px;
   margin-bottom: 50px;
+}
+.k-dropDownList {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 0 10px #ccc;
+  list-style: outside none none;
+  margin: 0;
+  padding: 5px 0;
+  position: absolute;
+  display: none;
+  top: 0;
+  width: 150px;
+  z-index: 15;
+  min-width: 180px;
+  overflow-y: auto;
+  max-height: 180px;
+}
+.k-dropDownList > li {
+  cursor: pointer;
+  font-size: 13px;
+}
+.k-dropDownList > li.line {
+  background-color: #e5e5e5;
+  height: 1px;
+  margin: 9px 0;
+  overflow: hidden;
+}
+.k-dropDownList > li > a {
+  clear: both;
+  color: #333;
+  display: block;
+  font-weight: 400;
+  line-height: 1.42857;
+  padding: 3px 15px;
+  white-space: nowrap;
+  text-decoration: none;
+}
+.k-dropDownList > li > a:hover {
+  background: #f5f5f5;
+}
+.k-dropDownList > li.active a {
+  color: white;
+  background: #337AB7;
+}
+.k-dropDown {
+  position: relative;
+  display: table;
+  clear: both;
 }
