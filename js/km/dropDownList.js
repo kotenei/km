@@ -33,15 +33,21 @@ define('km/dropDownList', ['jquery'], function ($) {
 
         if ($dropDownList.length == 0) {
             return;
-        }
+        }      
 
         this.isInputGroup = this.$el.hasClass('input-group') || this.$el.hasClass('k-input-group');
 
-        this.isTextBox = this.isInputGroup ? false : this.$el[0].type.toLowerCase() == 'text';
+        this.isTextBox = this.isInputGroup ? false : this.$el[0].type== 'text';
 
         this.$el.parent().css('position', 'relative');
 
         this.$dropDownList = $dropDownList;
+
+        if (this.options.width == '100%') {
+            this.$dropDownList.css('width', this.$el.outerWidth());
+        } else {
+            this.$dropDownList.css('width', this.options.width);
+        }
 
         if (this.isInputGroup) {
             this.$el.find('input').attr('readonly', 'readonly');
@@ -61,6 +67,7 @@ define('km/dropDownList', ['jquery'], function ($) {
             $('ul.k-dropDownList').hide();
             self.show();
             e.stopPropagation();
+            return false;
         });
 
         this.$dropDownList.on('click.dropdownlist', 'li', function (e) {
@@ -83,10 +90,11 @@ define('km/dropDownList', ['jquery'], function ($) {
             }
 
             if (self.options.$target) {
+
                 self.options.$target.val(data.value);
             }
 
-            self._event.select.call(self, $el,data);
+            self._event.select.call(self, $el, data);
         });
 
         $(document.body).on('click.dropdownlist', function () {
@@ -114,6 +122,7 @@ define('km/dropDownList', ['jquery'], function ($) {
      * @return {Void}
      */
     DropDownList.prototype.show = function () {
+        var self = this;
         this.$dropDownList.show();
         this.sysPosition();
     };
@@ -133,37 +142,34 @@ define('km/dropDownList', ['jquery'], function ($) {
     DropDownList.prototype.sysPosition = function () {
         var position = {
             left: 0,
-            top: 0,
-            width: this.options.width
+            top: 0
         };
 
         switch (this.options.direction) {
 
             case 'left':
                 position.left = this.$el.position().left;
-                position.top = this.$el.position().top + this.$el.outerHeight() + 2;
+                position.top = this.$el.position().top + this.$el.outerHeight(true) + 2;
                 break;
             case 'right':
-                position.left = this.$el.position().left + this.$el.outerWidth() - this.$dropDownList.outerWidth();
-                position.top = this.$el.position().top + this.$el.outerHeight() + 2;
+                position.left = this.$el.position().left + this.$el.outerWidth(true) - this.$dropDownList.outerWidth();
+                position.top = this.$el.position().top + this.$el.outerHeight(true) + 2;
                 break;
             case 'left up':
                 position.left = this.$el.position().left;
-                position.top = this.$el.position().top - this.$dropDownList.outerHeight();
+                position.top = this.$el.position().top - this.$dropDownList.outerHeight(true);
                 break;
             case 'right up':
-                position.left = this.$el.position().left + this.$el.outerWidth() - this.$dropDownList.outerWidth();
+                position.left = this.$el.position().left + this.$el.outerWidth(true) - this.$dropDownList.outerWidth();
                 position.top = this.$el.position().top - this.$dropDownList.outerHeight();
                 break;
             default:
                 position.left = this.$el.position().left;
-                position.top = this.$el.position().top + this.$el.outerHeight() + 2;
+                position.top = this.$el.position().top + this.$el.outerHeight(true) + 2;
                 break;
         }
 
-        if (this.options.width == '100%') {
-            position.width = this.$el.outerWidth();
-        }
+        
 
         this.$dropDownList.css(position);
     };
@@ -173,18 +179,24 @@ define('km/dropDownList', ['jquery'], function ($) {
      * @param  {Jquery} $elms - dom
      * @return {Void}
      */
-    DropDownList.Global = function ($elms) {
+    DropDownList.Global = function ($elms, options) {
         $elms = $elms || $('[data-module=dropdownlist]');
         $elms.each(function () {
             var $el = $(this),
-                options = $el.attr('data-options'),
+                settings = $el.attr('data-options'),
                 onSelect = $el.attr('data-onselect'),
                 data = $.data($el[0], 'dropdownlist');
 
             if (!data) {
 
-                if (options && options.length > 0) {
-                    options = eval('(0,' + options + ')');
+                if (settings && settings.length > 0) {
+                    settings = eval('(0,' + settings + ')');
+                }
+
+                if (options) {
+                    options = $.extend(true, options, settings || {});
+                } else {
+                    options = settings;
                 }
 
                 if (onSelect && onSelect.length > 0) {

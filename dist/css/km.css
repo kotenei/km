@@ -2537,9 +2537,9 @@ table.k-treeTable tr.expanded.accept td span.indenter a {
   top: 0;
   width: 150px;
   z-index: 15;
-  min-width: 180px;
   overflow-y: auto;
   max-height: 180px;
+  min-width: 120px;
 }
 .k-dropDownList > li {
   cursor: pointer;
@@ -2560,6 +2560,7 @@ table.k-treeTable tr.expanded.accept td span.indenter a {
   padding: 3px 15px;
   white-space: nowrap;
   text-decoration: none;
+  text-align: left;
 }
 .k-dropDownList > li > a:hover {
   background: #f5f5f5;
