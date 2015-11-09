@@ -6548,6 +6548,89 @@ define('km/placeholder', ['jquery'], function ($) {
     }
 });
 /*
+ * 弹出提示模块
+ * @date:2014-09-10
+ * @author:kotenei(kotenei@qq.com)
+ */
+define('km/popTips', ['jquery'], function ($) {
+
+    /**
+     * 弹出提示模块
+     * @return {Object} 
+     */
+    var PopTips = (function () {
+
+        var _instance;
+
+        function init() {
+
+            var $tips, tm;
+
+            function build(status, content, delay, callback) {
+
+                if (tm) { clearTimeout(tm); }
+
+                if ($.isFunction(delay)) { callback = delay; delay = 3000; }
+
+                callback = callback || $.noop;
+                delay = delay || 3000;
+
+                if ($tips) { $tips.stop().remove(); }
+
+                $tips = $(getHtml(status, content))
+                        .appendTo(document.body).hide();
+
+                $tips.css({ marginLeft: -($tips.width() / 2), marginTop: -($tips.height() / 2) }).fadeIn('fase', function () {
+                    tm = setTimeout(function () {
+                        $tips.stop().remove();
+                        callback();
+                    }, delay);
+                })
+            }
+
+            function getHtml(status, content) {
+                var html = [];
+                switch (status) {
+                    case "success":
+                        html.push('<div class="k-pop-tips success"><span class="fa fa-check"></span>&nbsp;<span>' + content + '</span></div>');
+                        break;
+                    case "error":
+                        html.push('<div class="k-pop-tips error"><span class="fa fa-close"></span>&nbsp;<span>' + content + '</span></div>');
+                        break;
+                    case "warning":
+                        html.push('<div class="k-pop-tips warning"><span class="fa fa-exclamation"></span>&nbsp;<span>' + content + '</span></div>');
+                        break;
+                }
+                return html.join('');
+            }
+
+            return {
+                success: function (content, callback, delay) {
+                    build("success", content, callback, delay);
+                },
+                error: function (content, callback, delay) {
+                    build("error", content, callback, delay);
+                },
+                warning: function (content, callback, delay) {
+                    build("warning", content, callback, delay);
+                }
+            };
+        }
+
+        return {
+            getInstance: function () {
+                if (!_instance) {
+                    _instance = init();
+                }
+                return _instance;
+            }
+        }
+    })();
+
+    return PopTips.getInstance();
+});
+
+/*
  * 弹出框模块
  * @date:2014-11-05
  * @author:kotenei(kotenei@qq.com)
@@ -6658,89 +6741,6 @@ define('km/popover', ['jquery', 'km/tooltips', 'km/util'], function ($, Tooltips
 
     return Popover;
 });
-/*
- * 弹出提示模块
- * @date:2014-09-10
- * @author:kotenei(kotenei@qq.com)
- */
-define('km/popTips', ['jquery'], function ($) {
-
-    /**
-     * 弹出提示模块
-     * @return {Object} 
-     */
-    var PopTips = (function () {
-
-        var _instance;
-
-        function init() {
-
-            var $tips, tm;
-
-            function build(status, content, delay, callback) {
-
-                if (tm) { clearTimeout(tm); }
-
-                if ($.isFunction(delay)) { callback = delay; delay = 3000; }
-
-                callback = callback || $.noop;
-                delay = delay || 3000;
-
-                if ($tips) { $tips.stop().remove(); }
-
-                $tips = $(getHtml(status, content))
-                        .appendTo(document.body).hide();
-
-                $tips.css({ marginLeft: -($tips.width() / 2), marginTop: -($tips.height() / 2) }).fadeIn('fase', function () {
-                    tm = setTimeout(function () {
-                        $tips.stop().remove();
-                        callback();
-                    }, delay);
-                })
-            }
-
-            function getHtml(status, content) {
-                var html = [];
-                switch (status) {
-                    case "success":
-                        html.push('<div class="k-pop-tips success"><span class="fa fa-check"></span>&nbsp;<span>' + content + '</span></div>');
-                        break;
-                    case "error":
-                        html.push('<div class="k-pop-tips error"><span class="fa fa-close"></span>&nbsp;<span>' + content + '</span></div>');
-                        break;
-                    case "warning":
-                        html.push('<div class="k-pop-tips warning"><span class="fa fa-exclamation"></span>&nbsp;<span>' + content + '</span></div>');
-                        break;
-                }
-                return html.join('');
-            }
-
-            return {
-                success: function (content, callback, delay) {
-                    build("success", content, callback, delay);
-                },
-                error: function (content, callback, delay) {
-                    build("error", content, callback, delay);
-                },
-                warning: function (content, callback, delay) {
-                    build("warning", content, callback, delay);
-                }
-            };
-        }
-
-        return {
-            getInstance: function () {
-                if (!_instance) {
-                    _instance = init();
-                }
-                return _instance;
-            }
-        }
-    })();
-
-    return PopTips.getInstance();
-});
-
 define('km/portlets', ['jquery', 'km/window', 'km/dragdrop'], function ($, Window, Dragdrop) {
 
     var groupSortable,
@@ -11066,7 +11066,7 @@ define('km/validate', ['jquery'], function ($) {
      * @return {Void} 
      */
     Validate.prototype.init = function () {
-        this.getValidFields();
+        this.setValidFields();
         if (this.validFields.count === 0) {
             return;
         }
@@ -11078,7 +11078,7 @@ define('km/validate', ['jquery'], function ($) {
      * 获取验证的元素
      * @return {Void} 
      */
-    Validate.prototype.getValidFields = function () {
+    Validate.prototype.setValidFields = function () {
         this.validFields = { data: {}, count: 0 };
         var self = this;
         var $elements = this.$form.find('input,select,textarea')
@@ -11198,7 +11198,6 @@ define('km/validate', ['jquery'], function ($) {
     Validate.prototype.validateFrom = function () {
         var self = this, pass = true;
         var errorList = [];
-
 
         for (var item in this.validFields.data) {
             if (!self.validate({ target: this.validFields.data[item][0] })) {
@@ -11359,6 +11358,8 @@ define('km/validate', ['jquery'], function ($) {
                 delete this.messages[element.name][ruleName];
             }
         }
+
+        this.hideError($(element));
     };
 
     /**
@@ -11370,6 +11371,7 @@ define('km/validate', ['jquery'], function ($) {
     Validate.prototype.setRules = function (element, rule) {
         if (!this.rules[element.name]) {
             this.rules[element.name] = rule.rules;
+            
         } else {
             $.extend(this.rules[element.name], rule.rules, true);
         }
@@ -11379,6 +11381,8 @@ define('km/validate', ['jquery'], function ($) {
         } else {
             $.extend(this.messages[element.name], rule.messages, true);
         }
+
+        this.validFields.data[element.name] = $(element);
     };
 
     /**

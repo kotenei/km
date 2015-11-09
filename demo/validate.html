@@ -37,7 +37,16 @@
                         <tr>
                             <td style="width: 120px;">用户名：</td>
                             <td>
-                                <input type="text" name="userName" placeholder="请输入用户名" data-rules="{rules:{required:true},messages:{required:'请输入 用户名'}}" /></td>
+                                <input  type="text" 
+                                        name="userName" 
+                                        placeholder="请输入用户名" 
+                                        data-rules="{rules:{required:true},messages:{required:'请输入 用户名'}}" />
+
+                                <!--<input  type="text" 
+                                        id="userName"
+                                        name="userName" 
+                                        placeholder="请输入用户名"  />-->
+                            </td>
                         </tr>
                         <tr>
                             <td>密码：</td>
@@ -284,6 +293,7 @@ validate.removeRule(elm,ruleName);
                     'email': { required: '请输入电子邮箱', email: '邮箱格式错误' }
                 }
             });
+
 
             var validate2 = new KM.ValidateTooltips($("#form2"), {
                 rules: {

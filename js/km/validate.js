@@ -34,7 +34,7 @@ define('km/validate', ['jquery'], function ($) {
      * @return {Void} 
      */
     Validate.prototype.init = function () {
-        this.getValidFields();
+        this.setValidFields();
         if (this.validFields.count === 0) {
             return;
         }
@@ -46,7 +46,7 @@ define('km/validate', ['jquery'], function ($) {
      * 获取验证的元素
      * @return {Void} 
      */
-    Validate.prototype.getValidFields = function () {
+    Validate.prototype.setValidFields = function () {
         this.validFields = { data: {}, count: 0 };
         var self = this;
         var $elements = this.$form.find('input,select,textarea')
@@ -166,7 +166,6 @@ define('km/validate', ['jquery'], function ($) {
     Validate.prototype.validateFrom = function () {
         var self = this, pass = true;
         var errorList = [];
-
 
         for (var item in this.validFields.data) {
             if (!self.validate({ target: this.validFields.data[item][0] })) {
@@ -327,6 +326,8 @@ define('km/validate', ['jquery'], function ($) {
                 delete this.messages[element.name][ruleName];
             }
         }
+
+        this.hideError($(element));
     };
 
     /**
@@ -338,6 +339,7 @@ define('km/validate', ['jquery'], function ($) {
     Validate.prototype.setRules = function (element, rule) {
         if (!this.rules[element.name]) {
             this.rules[element.name] = rule.rules;
+            
         } else {
             $.extend(this.rules[element.name], rule.rules, true);
         }
@@ -347,6 +349,8 @@ define('km/validate', ['jquery'], function ($) {
         } else {
             $.extend(this.messages[element.name], rule.messages, true);
         }
+
+        this.validFields.data[element.name] = $(element);
     };
 
     /**
