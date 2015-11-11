@@ -12106,7 +12106,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
             this.$container.css({
                 padding: 0,
                 overflowY: 'hidden'
-            }).append('<iframe frameborder="0" width="100%" src="' + (this.options.url || "about:blank") + '" scrolling="auto"></iframe>');
+            }).append('<iframe frameborder="0" width="100%" src="about:blank" scrolling="auto"></iframe>');
             this.$iframe = this.$container.find('iframe');
         } else {
             this.setContent(this.options.content);
@@ -12256,6 +12256,13 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
 
                 if (!self.bindIframeLoad) {
                     self.$iframe.on('load', function () {
+
+                        var url = self.$iframe.attr('src');
+
+                        if (url=='about:blank') {
+                            return;
+                        }
+
                         self.show();
                         self.bindIframeLoad = true;
                     });
@@ -12276,6 +12283,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
     Window.prototype.close = function (enforce) {
         this.isClose = true;
         this.$win.css({ left: '-900px', top: '-900px' });
+        this.$iframe.attr('src', 'about:blank');
         this.$backdrop.hide();
         zIndex.pop();
         this._event.afterClose.call(self);
