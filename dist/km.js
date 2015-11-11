@@ -12283,7 +12283,11 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
     Window.prototype.close = function (enforce) {
         this.isClose = true;
         this.$win.css({ left: '-900px', top: '-900px' });
-        this.$iframe.attr('src', 'about:blank');
+
+        if (this.options.iframe) {
+            this.$iframe.attr('src', 'about:blank');
+        }
+        
         this.$backdrop.hide();
         zIndex.pop();
         this._event.afterClose.call(self);
