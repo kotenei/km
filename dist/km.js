@@ -1232,7 +1232,7 @@ define('km/contextMenu', ['jquery'], function ($) {
         });
 
 
-        $(document.body).on('click.contextmenu.' + this.identity, function () {
+        $(document).on('click.contextmenu.' + this.identity, function () {
 
             //if (self && self.$el.parent().length == 0) {
             //    $(document.body).off('click.contextmenu.' + self.identity);
@@ -4043,7 +4043,7 @@ define('km/dropDownList', ['jquery'], function ($) {
             self._event.select.call(self, $el, data);
         });
 
-        $(document.body).on('click.dropdownlist', function () {
+        $(document).on('click.dropdownlist', function () {
             self.hide();
         });
 

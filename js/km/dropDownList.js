@@ -97,7 +97,7 @@ define('km/dropDownList', ['jquery'], function ($) {
             self._event.select.call(self, $el, data);
         });
 
-        $(document.body).on('click.dropdownlist', function () {
+        $(document).on('click.dropdownlist', function () {
             self.hide();
         });
 
