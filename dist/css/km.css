@@ -2452,7 +2452,6 @@ table.k-treeTable tr.expanded.accept td span.indenter a {
   padding-left: 15px;
 }
 .k-portlets > .group > .group-head span {
-  vertical-align: middle;
   height: 20px;
   line-height: 20px;
 }
