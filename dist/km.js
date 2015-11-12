@@ -8929,12 +8929,14 @@ define('km/template', ['jquery'], function ($) {
                         var filterStr = method.filtered(key, args);
 
                         if (filterStr) {
-                            code = "$out+=" + filterStr + ";";
+                            code = "$out+=(" + filterStr + ");";
                         } else {
-                            code = "$out+=" + key + ";";
+                            code = "$out+=(" + key + ");";
                         }
+                    } else if (code.indexOf('?') != -1 && code.indexOf(':') != -1) {
+                        code = "$out+=(" + code + ");";
                     } else {
-                        code = "$out+=" + key + ";";
+                        code = "$out+=(" + key + ");";
                     }
 
                     break;
