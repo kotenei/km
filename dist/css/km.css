@@ -5,6 +5,9 @@
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
+.clearfix {
+  clear: both;
+}
 a:focus {
   outline: none;
 }
@@ -2469,7 +2472,7 @@ table.k-treeTable tr.expanded.accept td span.indenter a {
   font-size: 14px;
 }
 .k-portlets > .group > .group-body {
-  overflow: hidden;
+  /*overflow: hidden;*/
 }
 .k-portlets > .group > .group-body > .column .webPart {
   border-radius: 4px;
