@@ -2523,8 +2523,7 @@ table.k-treeTable tr.expanded.accept td span.indenter a {
 }
 .k-portlets > .group > .group-body > .column .webPart .webPart-body .loading-box {
   text-align: center;
-  margin-top: 50px;
-  margin-bottom: 50px;
+  margin: 30px 0;
 }
 .k-dropDownList {
   background-color: #fff;
