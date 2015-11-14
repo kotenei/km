@@ -206,5 +206,10 @@
                         webPartSortable.setInfo();
                     }, 300);
                 });
+
+        return {
+            groupSortable: groupSortable,
+            webPartSortable: webPartSortable
+        };
     };
 });
