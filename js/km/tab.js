@@ -139,7 +139,7 @@ define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu', 'km/loading'], function
             this.isScroller = true;
             this.$btnLeft.show();
             this.$btnRight.show();
-            this.$tabScroller.css('width', scrollWidth);
+            this.$tabScroller.css('width', scrollWidth-30);
         } else {
             this.isScroller = false;
             this.$btnLeft.hide();
