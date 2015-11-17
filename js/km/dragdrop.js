@@ -281,7 +281,7 @@ define('km/dragdrop', ['jquery'], function ($) {
     DragDrop.prototype.eventBind = function () {
         var self = this;
 
-        this.$handle.on('mousedown.dragdrop', function (e) {
+        this.$handle.off('mousedown.dragdrop mousedown.dragdrop').on('mousedown.dragdrop', function (e) {
 
             if (self.options.zIndex.increase) {
                 zIndex++;
@@ -1084,160 +1084,154 @@ define('km/dragdrop', ['jquery'], function ($) {
             $draggable.each(function () {
 
                 var $el = $(this),
-                    $handle = $el.find(options.handle),
-                    sortable =$.data($el[0],'sortable');
+                    $handle = $el.find(options.handle);
 
 
-                if (!sortable) {
+                sortable = new DragDrop({
+                    $scrollWrap: options.$scrollWrap,
+                    $range: $container,
+                    $layer: $el,
+                    $handle: $handle.length > 0 ? $handle : null,
+                    sortable: true,
+                    boundary: options.boundary,
+                    direction: options.direction
+                });
 
-                    sortable = new DragDrop({
-                        $scrollWrap: options.$scrollWrap,
-                        $range: $container,
-                        $layer: $el,
-                        $handle: $handle.length > 0 ? $handle : null,
-                        sortable: true,
-                        boundary: options.boundary,
-                        direction: options.direction
-                    });
+                sortable.on('start', function (e) {
+                    options.callback.start.call(this, e, $el);
+                }).on('move', function (e, moveCoord, position) {
 
-                    sortable.on('start', function (e) {
-                        options.callback.start.call(this, e,$el);
-                    }).on('move', function (e, moveCoord, position) {
+                    var mouseCoord = this.getMouseCoord(e);
 
-                        var mouseCoord = this.getMouseCoord(e);
+                    for (var i = 0, group; i < groups.length; i++) {
 
-                        for (var i = 0, group; i < groups.length; i++) {
+                        group = groups[i];
 
-                            group = groups[i];
-
-                            //分组范围内
-                            if (mouseCoord.y >= group.offset.top && mouseCoord.y <= group.offset.top + group.offset.height
-                                && mouseCoord.x >= group.offset.left && mouseCoord.x <= group.offset.left + group.offset.width) {
+                        //分组范围内
+                        if (mouseCoord.y >= group.offset.top && mouseCoord.y <= group.offset.top + group.offset.height
+                            && mouseCoord.x >= group.offset.left && mouseCoord.x <= group.offset.left + group.offset.width) {
 
 
-                                //放置区域
-                                for (var j = 0, dropInfo; j < group.droppableInfo.length; j++) {
+                            //放置区域
+                            for (var j = 0, dropInfo; j < group.droppableInfo.length; j++) {
 
-                                    dropInfo = group.droppableInfo[j];
+                                dropInfo = group.droppableInfo[j];
 
-                                    if (mouseCoord.y >= dropInfo.offset.top + dropInfo.height
-                                        && mouseCoord.x >= dropInfo.offset.left && mouseCoord.x <= dropInfo.offset.left + dropInfo.width
-                                        && dropInfo.$drop.find('.k-sortable-placeholder').length == 0) {
+                                if (mouseCoord.y >= dropInfo.offset.top + dropInfo.height
+                                    && mouseCoord.x >= dropInfo.offset.left && mouseCoord.x <= dropInfo.offset.left + dropInfo.width
+                                    && dropInfo.$drop.find('.k-sortable-placeholder').length == 0) {
 
-                                        dropInfo.$drop.append(this.$placeholder);
+                                    dropInfo.$drop.append(this.$placeholder);
 
-                                        method._setGroupInfo(groups);
-                                        method._setSortableInfo();
-                                        options.callback.move.call(this, e);
-                                        return;
-                                    }
+                                    method._setGroupInfo(groups);
+                                    method._setSortableInfo();
+                                    options.callback.move.call(this, e);
+                                    return;
+                                }
+                            }
+
+
+                            //排序项
+                            for (var k = 0, tmpNum, sortable; k < sortables.length; k++) {
+
+                                sortable = sortables[k];
+
+                                if (sortable == this) {
+                                    continue;
                                 }
 
 
-                                //排序项
-                                for (var k = 0, tmpNum, sortable; k < sortables.length; k++) {
 
-                                    sortable = sortables[k];
-
-                                    if (sortable == this) {
-                                        continue;
-                                    }
+                                if (mouseCoord.x >= sortable.info.offset.left
+                                    && mouseCoord.x <= sortable.info.offset.left + sortable.info.width
+                                    && mouseCoord.y >= sortable.info.offset.top
+                                    && mouseCoord.y <= sortable.info.offset.top + sortable.info.height) {
 
 
+                                    if (this.dragParms.height < sortable.info.height) {
 
-                                    if (mouseCoord.x >= sortable.info.offset.left
-                                        && mouseCoord.x <= sortable.info.offset.left + sortable.info.width
-                                        && mouseCoord.y >= sortable.info.offset.top
-                                        && mouseCoord.y <= sortable.info.offset.top + sortable.info.height) {
+                                        if (mouseCoord.y >= sortable.info.offset.top
+                                            && mouseCoord.y <= sortable.info.v_half) {
 
+                                            hasSwap = this.$placeholder.next()[0] == sortable.$layer[0];
 
-                                        if (this.dragParms.height < sortable.info.height) {
+                                            this.$placeholder.insertBefore(sortable.$layer);
 
-                                            if (mouseCoord.y >= sortable.info.offset.top
-                                                && mouseCoord.y <= sortable.info.v_half) {
-
-                                                hasSwap = this.$placeholder.next()[0] == sortable.$layer[0];
-
-                                                this.$placeholder.insertBefore(sortable.$layer);
-
-                                                if (hasSwap) {
-                                                    return;
-                                                }
-
-                                            } else {
-
-                                                hasSwap = this.$placeholder.prev()[0] == sortable.$layer[0];
-
-                                                this.$placeholder.insertAfter(sortable.$layer);
-
-                                                if (hasSwap) {
-                                                    return;
-                                                }
-                                            }
-
-
-                                        } else if (this.dragParms.width < sortable.info.width && options.mode == 'float') {
-
-                                            if (mouseCoord.x >= sortable.info.offset.left
-                                                && mouseCoord.x <= sortable.info.h_half) {
-
-                                                hasSwap = this.$placeholder.next()[0] == sortable.$layer[0];
-
-                                                this.$placeholder.insertBefore(sortable.$layer);
-
-                                                if (hasSwap) {
-                                                    return;
-                                                }
-
-                                            } else {
-                                                hasSwap = this.$placeholder.prev()[0] == sortable.$layer[0];
-
-                                                this.$placeholder.insertAfter(sortable.$layer);
-
-                                                if (hasSwap) {
-                                                    return;
-                                                }
+                                            if (hasSwap) {
+                                                return;
                                             }
 
                                         } else {
 
-                                            if (this.sortNum > sortable.sortNum) {
-                                                this.$placeholder.insertBefore(sortable.$layer);
-                                            } else {
-                                                this.$placeholder.insertAfter(sortable.$layer);
-                                            }
+                                            hasSwap = this.$placeholder.prev()[0] == sortable.$layer[0];
 
-                                            tmpNum = this.sortNum;
-                                            this.sortNum = sortable.sortNum;
-                                            sortable.sortNum = tmpNum;
+                                            this.$placeholder.insertAfter(sortable.$layer);
+
+                                            if (hasSwap) {
+                                                return;
+                                            }
                                         }
 
-                                        method._setGroupInfo(groups);
-                                        method._setSortableInfo();
-                                        options.callback.move.call(this, e);
-                                        return;
+
+                                    } else if (this.dragParms.width < sortable.info.width && options.mode == 'float') {
+
+                                        if (mouseCoord.x >= sortable.info.offset.left
+                                            && mouseCoord.x <= sortable.info.h_half) {
+
+                                            hasSwap = this.$placeholder.next()[0] == sortable.$layer[0];
+
+                                            this.$placeholder.insertBefore(sortable.$layer);
+
+                                            if (hasSwap) {
+                                                return;
+                                            }
+
+                                        } else {
+                                            hasSwap = this.$placeholder.prev()[0] == sortable.$layer[0];
+
+                                            this.$placeholder.insertAfter(sortable.$layer);
+
+                                            if (hasSwap) {
+                                                return;
+                                            }
+                                        }
+
+                                    } else {
+
+                                        if (this.sortNum > sortable.sortNum) {
+                                            this.$placeholder.insertBefore(sortable.$layer);
+                                        } else {
+                                            this.$placeholder.insertAfter(sortable.$layer);
+                                        }
+
+                                        tmpNum = this.sortNum;
+                                        this.sortNum = sortable.sortNum;
+                                        sortable.sortNum = tmpNum;
                                     }
+
+                                    method._setGroupInfo(groups);
+                                    method._setSortableInfo();
+                                    options.callback.move.call(this, e);
+                                    return;
                                 }
-
-                                options.callback.move.call(this, e);
-
-                                return;
                             }
 
+                            options.callback.move.call(this, e);
+
+                            return;
                         }
 
-                    }).on('stop', function (e) {
-                        this.$layer.css('width', 'auto');
-                        hasSwap = false;
-                        method._setGroupInfo(groups);
-                        method._setSortableInfo(true);
-                        options.callback.stop.call(this, e, $el);
-                    });
+                    }
 
-                    sortables.push(sortable);
+                }).on('stop', function (e) {
+                    this.$layer.css('width', 'auto');
+                    hasSwap = false;
+                    method._setGroupInfo(groups);
+                    method._setSortableInfo(true);
+                    options.callback.stop.call(this, e, $el);
+                });
 
-                    $.data($el[0], 'sortable', sortable);
-                }
+                sortables.push(sortable);
 
                 options.callback.init.call(this, sortable);
             });
