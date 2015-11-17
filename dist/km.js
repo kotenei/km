@@ -8895,6 +8895,8 @@ define('km/template', ['jquery'], function ($) {
             var key = split.shift();
             var args = split.join(' ');
 
+
+
             switch (key) {
                 case 'each':
                     var arr = split[2];
@@ -9036,6 +9038,19 @@ define('km/template', ['jquery'], function ($) {
 
             });
 
+        },
+        partial: function (source, partial, count) {
+            var slef = this;
+            var reg;
+            if (source.indexOf('partial') == -1 || !partial || count >= 5) {
+                return source;
+            }
+            for (var key in partial) {
+                reg = new RegExp(tags.open + '\\s*partial\\s*(\'|\")' + key + '(\'|\")\\s*' + tags.close, 'ig');
+                source = source.replace(reg, partial[key]);
+            }
+            count++;
+            return this.partial(source, partial, count);
         }
     };
 
@@ -9044,7 +9059,8 @@ define('km/template', ['jquery'], function ($) {
         this.$el = $el;
         this.options = $.extend(true, {
             tpl: '',
-            data: {}
+            data: {},
+            partial: null
         }, options);
         this.data = this.options.data;
         this.tpl = this.options.tpl;
@@ -9063,6 +9079,8 @@ define('km/template', ['jquery'], function ($) {
         var mainCode = "$out='';";
         var footerCode = 'return new String($out);';
         var variable = [];
+
+        this.tpl = method.partial(this.tpl, this.options.partial, 0);
 
         utils.each(this.tpl.split(tags.open), function (index, item) {
 
@@ -9104,6 +9122,9 @@ define('km/template', ['jquery'], function ($) {
 
         this.$el[0].innerHTML = this.Render(utils, filters, this.data);
     };
+
+    //更新子模板
+    Template.prototype.updatePartial = function () { };
 
     //加载模板
     Template.load = function (tplName, callback) {

@@ -44,6 +44,9 @@ var tpl = new KM.Template($('#content'), {
             { id: 1, name: 'Tom', birthday: '/Date(1444320000000)/' },
             { id: 2, name: 'Rose', birthday: '/Date(1391141532000)/' }
         ]
+    },
+    partial: {
+        view:&lt;h4&gt;&lt;code&gt;这是子模板&lt;/code&gt;&lt;/h4&gt;'
     }
 });
 
@@ -78,6 +81,8 @@ tpl.render();
             {{/each}}
         &lt;/tbody&gt;
     &lt;/table&gt;
+
+    {{partial 'view'}}
 &lt;/script&gt;
                 </code>
             </pre>
@@ -107,6 +112,10 @@ tpl.render();
 {{else}}
 
 {{/if}}
+
+
+//子模板
+{{partial: 'view'}}
                 </code>
             </pre>
 
@@ -189,7 +198,10 @@ Template.addFilter('filterName',function(str,parm1,parm2){
             </tbody>
         </table>
 
+        {{partial 'view'}}
     </script>
+
+
 
     <script type="text/javascript" src="vendor/require/require.js"></script>
     <script type="text/javascript" src="main.js"></script>
@@ -204,6 +216,9 @@ Template.addFilter('filterName',function(str,parm1,parm2){
                         { id: 1, name: 'Tom', birthday: '/Date(1444320000000)/' },
                         { id: 2, name: 'Rose', birthday: '/Date(1391141532000)/' }
                     ]
+                },
+                partial: {
+                    view:'<h4><code>这是子模板</code></h4>'
                 }
             });
 
