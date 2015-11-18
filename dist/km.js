@@ -2774,7 +2774,7 @@ define('km/dragdrop', ['jquery'], function ($) {
             $layer: null,
             $handle: null,
             $range: null,
-            $scrollWrap:null,
+            $scrollWrap: null,
             direction: '',          // h:水平  v:垂直
             resizable: false,       //是否可拖放
             scale: false,           //是否按比例缩放
@@ -2930,7 +2930,7 @@ define('km/dragdrop', ['jquery'], function ($) {
             self.resizeParams.width = parseInt(self.$layer.outerWidth());
             self.resizeParams.height = parseInt(self.$layer.outerHeight());
             self.resizeParams.ratio = self.resizeParams.width >= self.resizeParams.height ? self.resizeParams.width / self.resizeParams.height : self.resizeParams.height / self.resizeParams.width;
-            
+
         });
     };
 
@@ -3555,7 +3555,7 @@ define('km/dragdrop', ['jquery'], function ($) {
 
         $elms.each(function () {
             var $el = $(this),
-                data = $.data($el[0], 'droppable'); 
+                data = $.data($el[0], 'droppable');
 
             if (!data) {
                 data = new Droppable($el, options);
@@ -3606,6 +3606,7 @@ define('km/dragdrop', ['jquery'], function ($) {
                     return;
                 }
 
+
                 var draggableInfo,
                     droppableInfo;
 
@@ -3623,6 +3624,7 @@ define('km/dragdrop', ['jquery'], function ($) {
                         height: group.$group.outerHeight() + util.getNum(group.$group.css('borderTopWidth')) + util.getNum(group.$group.css('borderBottomWidth'))
                     };
 
+                    
 
                     group.$draggable = group.$group.find(options.draggable).each(function () {
                         var $drag = $(this),
@@ -3666,7 +3668,7 @@ define('km/dragdrop', ['jquery'], function ($) {
         };
 
         options = $.extend(true, {
-            $scrollWrap:null,
+            $scrollWrap: null,
             draggable: '.k-draggable',
             droppable: '.k-droppable',
             group: '.k-sortable-group',
@@ -3738,7 +3740,7 @@ define('km/dragdrop', ['jquery'], function ($) {
 
                                     method._setGroupInfo(groups);
                                     method._setSortableInfo();
-                                    options.callback.move.call(this, e);
+                                    options.callback.move.call(this, e, $el);
                                     return;
                                 }
                             }
@@ -3824,12 +3826,12 @@ define('km/dragdrop', ['jquery'], function ($) {
 
                                     method._setGroupInfo(groups);
                                     method._setSortableInfo();
-                                    options.callback.move.call(this, e);
+                                    options.callback.move.call(this, e, $el);
                                     return;
                                 }
                             }
 
-                            options.callback.move.call(this, e);
+                            options.callback.move.call(this, e, $el);
 
                             return;
                         }
