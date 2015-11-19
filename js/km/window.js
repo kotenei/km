@@ -104,7 +104,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
             self.tm = setTimeout(function () {
                 self.layout();
             }, 300);
-            
+
         });
 
         this.$backdrop.on('click.window', function () {
@@ -233,11 +233,18 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
 
                         var url = self.$iframe.attr('src');
 
-                        if (url=='about:blank') {
+                        if (url == 'about:blank') {
                             return;
                         }
 
-                        self.show();
+                        if (self.iframeTm) {
+                            clearTimeout(self.iframeTm);
+                        }
+
+                        self.iframeTm = setTimeout(function () {
+                            self.show();
+                        }, 1000);
+
                         self.bindIframeLoad = true;
                     });
                 }
@@ -261,7 +268,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
         if (this.options.iframe) {
             this.$iframe.attr('src', 'about:blank');
         }
-        
+
         this.$backdrop.hide();
         zIndex.pop();
         this._event.afterClose.call(self);

@@ -351,7 +351,14 @@ define('km/template', ['jquery'], function ($) {
             return;
         }
 
-        this.$el[0].innerHTML = this.Render(utils, filters, this.data);
+        var html = this.Render(utils, filters, this.data);
+
+        this.$el.html(html);
+
+        //不能使用，IE8出现未指定错误
+        //this.$el[0].innerHTML = html;
+
+        return html;
     };
 
     //更新子模板

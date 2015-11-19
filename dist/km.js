@@ -9116,7 +9116,14 @@ define('km/template', ['jquery'], function ($) {
             return;
         }
 
-        this.$el[0].innerHTML = this.Render(utils, filters, this.data);
+        var html = this.Render(utils, filters, this.data);
+
+        this.$el.html(html);
+
+        //不能使用，IE8出现未指定错误
+        //this.$el[0].innerHTML = html;
+
+        return html;
     };
 
     //更新子模板
@@ -12154,7 +12161,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
             self.tm = setTimeout(function () {
                 self.layout();
             }, 300);
-            
+
         });
 
         this.$backdrop.on('click.window', function () {
@@ -12283,11 +12290,18 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
 
                         var url = self.$iframe.attr('src');
 
-                        if (url=='about:blank') {
+                        if (url == 'about:blank') {
                             return;
                         }
 
-                        self.show();
+                        if (self.iframeTm) {
+                            clearTimeout(self.iframeTm);
+                        }
+
+                        self.iframeTm = setTimeout(function () {
+                            self.show();
+                        }, 1000);
+
                         self.bindIframeLoad = true;
                     });
                 }
@@ -12311,7 +12325,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
         if (this.options.iframe) {
             this.$iframe.attr('src', 'about:blank');
         }
-        
+
         this.$backdrop.hide();
         zIndex.pop();
         this._event.afterClose.call(self);
