@@ -18,7 +18,7 @@ define('km/switch', ['jquery'], function ($) {
                 off: { text: '否', value: false, className: '' }
             },
             callback: {
-                onclick: $.noop
+                onClick: $.noop
             }
         }, options);
         this.template = '<div class="k-switch"></div>';
@@ -69,7 +69,7 @@ define('km/switch', ['jquery'], function ($) {
             this.checked = true;
             this.on();
         }
-        this.options.callback.onclick(this.get());
+        this.options.callback.onClick(this.get());
     };
 
     /**
@@ -99,9 +99,9 @@ define('km/switch', ['jquery'], function ($) {
     Switch.prototype.get = function () {
         var values = this.options.values;
         if (this.checked) {
-            return values['on'].value || values['on'].text;
+            return values['on'].value;
         } else {
-            return values['off'].value || values['off'].text;
+            return values['off'].value;
         }
     };
 
@@ -141,7 +141,7 @@ define('km/switch', ['jquery'], function ($) {
                     options = {
                         values: values && values.length > 0 ? eval('(0,' + values + ')') : undefined,
                         callback: {
-                            onclick: funcName && funcName.length > 0 ? eval('(0,' + funcName + ')') : $.noop
+                            onClick: funcName && funcName.length > 0 ? eval('(0,' + funcName + ')') : $.noop
                         }
                     };
                 }

@@ -35,7 +35,7 @@
                         data-options="{
                             values:{on:{text:'是',value:'1'},off:{text:'否',value:'0'}},
                             callback:{
-                                onclick:test
+                                onClick:test
                             }
                         }" />
                 </p>
@@ -88,7 +88,7 @@ KM.Switch.Global($elms);
         data-options="{
             values:{on:{text:'是',value:'1'},off:{text:'否',value:'0'}},
             callback:{
-                onclick:test
+                onClick:test
             }            
         }" /&gt;
 
@@ -147,7 +147,7 @@ var chkSwitch=new KM.Switch($elm,options);
                             <pre>
                                 <code>
 {
-    onclick: $.noop
+    onClick: $.noop
 }
                                 </code>
                             </pre>
@@ -178,7 +178,7 @@ var chkSwitch=new KM.Switch($elm,options);
                     off: { text: '错误', value: 'wrong' }
                 },
                 callback: {
-                    onclick: function (value) {
+                    onClick: function (value) {
                         alert('值：' + value + '');
                     }
                 }
