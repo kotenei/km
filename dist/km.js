@@ -4022,18 +4022,17 @@ define('km/dropDownList', ['jquery'], function ($) {
                 };
 
             if (self.isTextBox) {
-                self.$el.val(data.value);
+                self.$el.val(data.text);
                 $el.addClass('active').siblings().removeClass('active');
             }
 
             if (self.isInputGroup) {
-                self.$el.find('input').val(data.value);
+                self.$el.find('input').val(data.text);
                 $el.addClass('active').siblings().removeClass('active');
             }
 
             if (self.options.$target) {
-
-                self.options.$target.val(data.value);
+                self.options.$target.val(data.text);
             }
 
             self._event.select.call(self, $el, data);
@@ -8082,7 +8081,7 @@ define('km/switch', ['jquery'], function ($) {
             this.checked = true;
             this.on();
         }
-        this.options.callback.onClick(this.get());
+        this.options.callback.onClick(this.getVal());
     };
 
     /**
@@ -8109,7 +8108,7 @@ define('km/switch', ['jquery'], function ($) {
      * 获取当前状态值
      * @return {String}
      */
-    Switch.prototype.get = function () {
+    Switch.prototype.getVal = function () {
         var values = this.options.values;
         if (this.checked) {
             return values['on'].value;
@@ -8851,6 +8850,11 @@ define('km/template', ['jquery'], function ($) {
             return str;
         },
         jsonDateFormat: function (str, format) {
+
+            if (!str) {
+                return '';
+            }
+
             if (str.indexOf('/Date') != -1) {
                 var date = new Date(parseInt(str.replace("/Date(", "").replace(")/", ""), 10));
                 return utils.dateFormat(date, format);

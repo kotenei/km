@@ -86,6 +86,11 @@ define('km/template', ['jquery'], function ($) {
             return str;
         },
         jsonDateFormat: function (str, format) {
+
+            if (!str) {
+                return '';
+            }
+
             if (str.indexOf('/Date') != -1) {
                 var date = new Date(parseInt(str.replace("/Date(", "").replace(")/", ""), 10));
                 return utils.dateFormat(date, format);

@@ -69,7 +69,7 @@ define('km/switch', ['jquery'], function ($) {
             this.checked = true;
             this.on();
         }
-        this.options.callback.onClick(this.get());
+        this.options.callback.onClick(this.getVal());
     };
 
     /**
@@ -96,7 +96,7 @@ define('km/switch', ['jquery'], function ($) {
      * 获取当前状态值
      * @return {String}
      */
-    Switch.prototype.get = function () {
+    Switch.prototype.getVal = function () {
         var values = this.options.values;
         if (this.checked) {
             return values['on'].value;

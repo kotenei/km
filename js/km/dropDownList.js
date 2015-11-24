@@ -80,18 +80,17 @@ define('km/dropDownList', ['jquery'], function ($) {
                 };
 
             if (self.isTextBox) {
-                self.$el.val(data.value);
+                self.$el.val(data.text);
                 $el.addClass('active').siblings().removeClass('active');
             }
 
             if (self.isInputGroup) {
-                self.$el.find('input').val(data.value);
+                self.$el.find('input').val(data.text);
                 $el.addClass('active').siblings().removeClass('active');
             }
 
             if (self.options.$target) {
-
-                self.options.$target.val(data.value);
+                self.options.$target.val(data.text);
             }
 
             self._event.select.call(self, $el, data);
