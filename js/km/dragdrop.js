@@ -866,6 +866,20 @@ define('km/dragdrop', ['jquery'], function ($) {
     };
 
     /**
+    * 销毁
+    * @return {Void} 
+    */
+    DragDrop.prototype.destory = function () {
+        this._event = {
+            start: $.noop,
+            move: $.noop,
+            stop: $.noop,
+            resize: $.noop
+        };
+        this.$handle.off('mousedown.dragdrop mousedown.dragdrop');
+    };
+
+    /**
      * droppable
      * @param {Dom} $elms - jquery对象
      * @param {Object} options - 设置
@@ -1319,6 +1333,11 @@ define('km/dragdrop', ['jquery'], function ($) {
                     return;
                 }
                 groups.splice(index, 1);
+            },
+            destory: function () {
+                for (var i = 0; i < sortables.length; i++) {
+                    sortables[i].destory();
+                }
             }
         };
 

@@ -209,7 +209,10 @@
 
         return {
             groupSortable: groupSortable,
-            webPartSortable: webPartSortable
+            webPartSortable: webPartSortable,
+            destory: function () {
+
+            }
         };
     };
 });
