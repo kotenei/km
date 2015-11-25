@@ -432,11 +432,15 @@ callback: {
                 }
             });
 
+           
+
             var dragdrop2 = new KM.Dragdrop({
                 $range: $('#panel2'),
                 $layer: $('#layer2')
             });
 
+
+            
 
             KM.Dragdrop.droppable($('div[data-module=droppable]'), {
                 callback: {
@@ -457,7 +461,7 @@ callback: {
             //    draggable:'.layer'
             //});
 
-            KM.Dragdrop.sortable($container, {
+            var sortable=KM.Dragdrop.sortable($container, {
                 draggable: '.item',
                 droppable: '.layer',
                 //mode: 'float',
@@ -468,6 +472,7 @@ callback: {
                     }
                 }
             });
+
         });
     </script>
 </body>

@@ -179,7 +179,6 @@
             return false;
         }).on('click.portlets', '[data-role=wtoggle]', function () {
             //部件显示隐藏
-            console.log('asdf')
             method.webpart.toggle($(this), options.webpart);
             return false;
         }).on('click.portlets', '[data-role=wrefresh]', function () {
@@ -211,7 +210,8 @@
             groupSortable: groupSortable,
             webPartSortable: webPartSortable,
             destory: function () {
-
+                groupSortable.destory();
+                webPartSortable.destory();
             }
         };
     };

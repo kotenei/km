@@ -281,7 +281,7 @@ define('km/dragdrop', ['jquery'], function ($) {
     DragDrop.prototype.eventBind = function () {
         var self = this;
 
-        this.$handle.off('mousedown.dragdrop mousedown.dragdrop').on('mousedown.dragdrop', function (e) {
+        this.$handle.off('mousedown.dragdrop').on('mousedown.dragdrop', function (e) {
 
             if (self.options.zIndex.increase) {
                 zIndex++;
@@ -876,7 +876,8 @@ define('km/dragdrop', ['jquery'], function ($) {
             stop: $.noop,
             resize: $.noop
         };
-        this.$handle.off('mousedown.dragdrop mousedown.dragdrop');
+        this.$handle.css('cursor', 'default').off('mousedown.dragdrop');
+        this.$layer.css('cursor', 'default').find('.k-resizable').remove();
     };
 
     /**
