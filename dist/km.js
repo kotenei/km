@@ -10704,7 +10704,7 @@ define('km/treeTable', ['jquery', 'km/ajax'], function ($, ajax) {
  * @date :2015-07-30
  * @author kotenei (kotenei@qq.com)
  */
-define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event'], function ($, Spinner, Window, ajax, event) {
+define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event','km/popTips','jqueryForm'], function ($, Spinner, Window, ajax, event,popTips) {
 
     var method = {
         showLoading: function () {
@@ -10892,30 +10892,25 @@ define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event'], func
 
         this.isLoading = true;
         method.showLoading.call(this);
-        ajax.ajaxForm(this.$form, {
-            loadingEnable: false,
-            redirectEnable: false,
-            popTips: {
-                enable: this.options.popTips.enable,
-                delay: this.options.delay,
-                inCallback: false
+
+        this.$form.ajaxSubmit({
+            url: this.$form.attr('action'),
+            cache: false,
+            success: function (ret) {
+                if (self.isButton && ret.Url && ret.Url.length > 0) {
+                    self.uploadedUrls.push(ret.Url);
+                }
+                self.showResult(ret.Url || '');
+
+                self._event.success(ret);
+            },
+            error: function () {
+                self._event.error();
+            },
+            complete: function () {
+                self.isLoading = false;
+                method.hideLoading.call(self);
             }
-        }).done(function (ret) {
-
-            if (self.isButton && ret.Url && ret.Url.length > 0) {
-                self.uploadedUrls.push(ret.Url);
-            }
-            self.showResult(ret.Url || '');
-
-            self._event.success(ret);
-
-        }).fail(function () {
-
-            self._event.error();
-
-        }).always(function () {
-            self.isLoading = false;
-            method.hideLoading.call(self);
         });
     };
 
