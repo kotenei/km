@@ -19,9 +19,8 @@
             font-size: 14px;
             border: 1px solid #ccc;
             background: #F2F2F2;
-            display:none;
+            display: none;
         }
-
         /*>div.left
         {
             border-right:none;
@@ -31,12 +30,10 @@
         {
             border-left:none;
         }*/
-
-
         >.k-tab-scroller
         {
             overflow: hidden;
-            height:40px;
+            height: 40px;
             float: left;
 
             >.k-tab-nav
@@ -58,8 +55,43 @@
                     height: 40px;
                     line-height: 40px;
                     max-width: 200px;
-                    min-width:100px;
+                    min-width: 100px;
                     background: #F2F2F2;
+
+                    &.tab-add
+                    {
+                        border: 1px dashed #ccc;
+                        background: white;
+                        color: #ccc;
+                        padding: 0;
+
+                        &:hover
+                        {
+                            color: #666;
+                            border-color: #666;
+
+                            >a
+                            {
+                                color: #666;
+                            }
+                        }
+
+                        >a
+                        {
+                            cursor: pointer;
+                            text-align: center;
+                            color: #ccc;
+                            padding: 0;
+
+                            >span
+                            {
+                                &.fa
+                                {
+                                    position: static;
+                                }
+                            }
+                        }
+                    }
 
                     &:first-child
                     {

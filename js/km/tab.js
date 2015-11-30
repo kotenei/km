@@ -130,7 +130,6 @@ define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu', 'km/loading'], function
 
 
         this.$tabNav.children().each(function () {
-
             tabsWidth += $(this).outerWidth();
         });
 
@@ -150,7 +149,7 @@ define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu', 'km/loading'], function
 
         this.$tabNav.css('width', tabsWidth);
 
-        this.maxLeft = tabsWidth - scrollWidth;
+        this.maxLeft =( tabsWidth - scrollWidth)+30;
 
         this.scrollTo();
     };
