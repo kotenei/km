@@ -2514,6 +2514,7 @@ table.k-treeTable tr.expanded.accept td span.indenter a {
   background: #fbfbfb;
   border-bottom: 1px solid #ddd;
   position: relative;
+  border-radius: 4px 4px 0 0;
 }
 .k-portlets > .group > .group-body > .column .webPart .webPart-head > .webPart-head-icon {
   position: absolute;
