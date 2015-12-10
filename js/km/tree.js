@@ -372,7 +372,7 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
         if (parentNode) {
 
 
-            if (parentNode.isLast) {
+            if (parentNode.isLast || parentNode.isSingle) {
                 line = '';
             }
 
