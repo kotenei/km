@@ -36,7 +36,7 @@
                         class="k-btn k-btn-primary"
                         data-module="dropdownlist"
                         data-options="{
-                            $target:$('#txtTarget')
+                            bindElement:'#txtTarget'
                         }"
                         data-onselect="select">
                         下拉列表 
@@ -84,7 +84,7 @@ KM.DropDownList.Global($elms);
             class="k-btn k-btn-primary"
             data-module="dropdownlist"
             data-options="{
-                $target:$('#txtTarget')
+                bindElement:'#txtTarget'
             }"
             data-onselect="select"&gt;
             下拉列表 
@@ -139,14 +139,13 @@ KM.DropDownList.Global($elms);
                     </tr>
                     <tr>
                         <td>data-options</td>
-                        <td>"{direction:xxxx,$target:xxxx ... }"
+                        <td>"{direction:xxxx,bindElement:xxxx ... }"
                         </td>
                         <td>初始化参数，参照下表 options 说明</td>
                     </tr>
                     <tr>
                         <td>data-onselect</td>
-                        <td>
-                            function name
+                        <td>function name
                         </td>
                         <td>选中项时触发的回调函数，这里设置函数名称</td>
                     </tr>
@@ -155,44 +154,38 @@ KM.DropDownList.Global($elms);
 
             <h3>自定义</h3>
             <div class="bs-example bs-example-padded-bottom">
-                <div class="k-dropDown">
-                    <div class="k-input-group" id="txtCustom">
-                        <input type="text" class="k-form-control" />
 
-                        <span class="input-group-btn">
-                            <button type="button" class="btn btn-default">
-                                <span class="glyphicon glyphicon-triangle-bottom"></span>
-                            </button>
-                        </span>
-                    </div>
-                    <ul class="k-dropDownList">
-                        <li data-text="选项1" data-value="选项1">
-                            <a href="javascript:void(0);">
-                                选项1
-                            </a>
-                        </li>
-                        <li data-text="选项2" data-value="选项2">
-                            <a href="javascript:void(0);">
-                                选项2
-                            </a>
-                        </li>
-                        <li data-text="选项3" data-value="选项3">
-                            <a href="javascript:void(0);">
-                                选项3
-                            </a>
-                        </li>
-                        <li data-text="选项4" data-value="选项4">
-                            <a href="javascript:void(0);">
-                                选项4
-                            </a>
-                        </li>
-                        <li data-text="选项5" data-value="选项5">
-                            <a href="javascript:void(0);">
-                                选项5
-                            </a>
-                        </li>
-                    </ul>
+                <div class="k-input-group" id="txtCustom" style="width:200px;">
+                    <input type="text" class="k-form-control" />
+                    <span class="k-input-group-btn">
+                        <button class="k-btn k-btn-default" type="button">
+                            <span class="fa fa-chevron-down"></span>
+                        </button>
+                    </span>
                 </div>
+
+                <ul class="k-dropDownList">
+                    <li data-text="选项1" data-value="选项1">
+                        <a href="javascript:void(0);">选项1
+                        </a>
+                    </li>
+                    <li data-text="选项2" data-value="选项2">
+                        <a href="javascript:void(0);">选项2
+                        </a>
+                    </li>
+                    <li data-text="选项3" data-value="选项3">
+                        <a href="javascript:void(0);">选项3
+                        </a>
+                    </li>
+                    <li data-text="选项4" data-value="选项4">
+                        <a href="javascript:void(0);">选项4
+                        </a>
+                    </li>
+                    <li data-text="选项5" data-value="选项5">
+                        <a href="javascript:void(0);">选项5
+                        </a>
+                    </li>
+                </ul>
             </div>
             <h3>初始化</h3>
             <pre>
@@ -212,10 +205,10 @@ var dropDownList = new KM.DropDownList($el,options);
                 </thead>
                 <tbody>
                     <tr>
-                        <td>$target</td>
-                        <td>jquery</td>
+                        <td>bindElement</td>
+                        <td>jquery selector</td>
                         <td>null</td>
-                        <td>选中某项后把值赋给目标对象</td>
+                        <td>选中某项后把值赋给目标对象的jquery选择器</td>
                     </tr>
                     <tr>
                         <td>direction</td>
@@ -251,7 +244,7 @@ dropDownList.on('select',function(data){
     <script type="text/javascript" src="main.js"></script>
     <script type="text/javascript">
 
-        function select($el,data) {
+        function select($el, data) {
             console.log(data)
         }
 
@@ -260,7 +253,7 @@ dropDownList.on('select',function(data){
 
             var dropDownList = new KM.DropDownList($('#txtCustom'), {
                 direction: 'left',
-                width:'100%'
+                width: '100%'
             });
 
             dropDownList.on('select', function ($el, data) {

@@ -3976,6 +3976,7 @@ define('km/dropDownList', ['jquery'], function ($) {
         this.$el = $el;
         this.options = $.extend(true, {
             $target: null,
+            bindElement:null,
             direction: 'left',
             width: 'auto'
         }, options);
@@ -4004,6 +4005,10 @@ define('km/dropDownList', ['jquery'], function ($) {
         this.$el.parent().css('position', 'relative');
 
         this.$dropDownList = $dropDownList;
+
+        this.$bindElement = $(this.options.bindElement);
+
+        this.$hidden = this.$dropDownList.next('input:hidden');
 
         if (this.options.width == '100%') {
             this.$dropDownList.css('width', this.$el.outerWidth());
@@ -4042,17 +4047,21 @@ define('km/dropDownList', ['jquery'], function ($) {
                 };
 
             if (self.isTextBox) {
-                self.$el.val(data.text);
+                self.$el.val(data.text).focus().blur();
                 $el.addClass('active').siblings().removeClass('active');
             }
 
             if (self.isInputGroup) {
-                self.$el.find('input').val(data.text);
+                self.$el.find('input').val(data.text).focus().blur();
                 $el.addClass('active').siblings().removeClass('active');
             }
 
-            if (self.options.$target) {
-                self.options.$target.val(data.text);
+            if (self.$bindElement) {
+                self.$bindElement.val(data.text).focus().blur();
+            }
+
+            if (self.$hidden.length>0) {
+                self.$hidden.val(data.value);
             }
 
             self._event.select.call(self, $el, data);
