@@ -4230,7 +4230,7 @@ define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
             return;
         }
 
-        this.options.bindElement = $(this.options.bindElement);
+        this.$bindElement = $(this.options.bindElement);
 
         this.$inputGroup = this.$elm.parent(this.options.inputGroup);
 
@@ -4270,9 +4270,11 @@ define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
             self.select(node);
         };
 
-
         if (this.options.url) {
-            $.get(this.options.url, { rand: Math.random() }, function (data) {
+            $.get(this.options.url, {
+                value: this.$bindElement && this.$bindElement.length > 0 ? this.$bindElement.val() : this.$elm.val(),
+                rand: Math.random()
+            }, function (data) {
 
                 if (typeof data === 'string') {
                     data = eval('(0,' + data + ')');
@@ -4355,8 +4357,8 @@ define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
             return;
         }
 
-        if (this.options.bindElement) {
-            this.options.bindElement.val(node.value || node.nodeId || node.text);
+        if (this.$bindElement) {
+            this.$bindElement.val(node.value || node.nodeId || node.text);
         }
 
         this.$elm.val(node.text).attr('title', node.text).focus().blur();
@@ -4364,6 +4366,7 @@ define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
         this.options.callback.select(node);
 
     };
+
 
     /**
      * 复选操作
@@ -4380,8 +4383,8 @@ define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
             arrValue.push(nodes[i].value || nodes[i].nodeId || nodes[i].text);
         }
 
-        if (this.options.bindElement) {
-            this.options.bindElement.val(arrValue.join(','));
+        if (this.$bindElement) {
+            this.$bindElement.val(arrValue.join(','));
         }
 
         this.$elm.val(arrText.join(',')).attr('title', arrText.join(',')).focus().blur();
@@ -4395,7 +4398,8 @@ define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
     DropDownTree.prototype.setPosition = function () {
         this.$treePanel.css({
             left: this.$elm.offset().left,
-            top: this.$elm.offset().top + this.$elm.outerHeight() + 2
+            top: this.$elm.offset().top + this.$elm.outerHeight() + 2,
+            width: this.options.width || this.$inputGroup.outerWidth() || this.elmWidth
         });
     };
 
@@ -4475,7 +4479,7 @@ define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
                         appendTo: $(appendTo || document.body),
                         isTree: isTree && isTree == 'false' ? false : true,
                         multiple: multiple && multiple == 'true' ? true : false,
-                        bindElement: bindElm,
+                        $bindElement: $(bindElm),
                         callback: callback && callback.length > 0 ? eval('(0,' + callback + ')') : {}
                     };
                 }
@@ -9537,7 +9541,7 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
                 return '';
             }
 
-            var checked = String(node.checked === true);
+            var checked = String(node.isChecked === true );
             var className;
 
             if (options.check.chkType === 'radio') {
@@ -9718,15 +9722,15 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
 
             if (node.checkDisabled) { return; }
 
-            node.checked = checked;
-            view.replaceChkClass($this, node.checked);
+            node.isChecked  = checked;
+            view.replaceChkClass($this, node.isChecked);
 
             if (self.options.check.chkType === "checkbox") {
                 self.check(node);
             } else {
                 for (var i = 0; i < checkedNodes.length; i++) {
                     if (checkedNodes[i] != node) {
-                        checkedNodes[i].checked = false;
+                        checkedNodes[i].isChecked = false;
                         view.replaceChkClass(self.$tree.find('#chk_' + checkedNodes[i].nodeId), false);
                     }
                 }
@@ -9961,30 +9965,30 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
             parentNode = this.getNode(node.parentId),
             options = this.options;
 
-        if (node.checked) {
+        if (node.isChecked) {
             switch (options.check.chkBoxType.Y.toLowerCase()) {
                 case "p":
-                    this.checkAction(parentNodes, node.checked);
+                    this.checkAction(parentNodes, node.isChecked);
                     break;
                 case "s":
-                    this.checkAction(childNodes, node.checked);
+                    this.checkAction(childNodes, node.isChecked);
                     break;
                 case "ps":
-                    this.checkAction(parentNodes, node.checked);
-                    this.checkAction(childNodes, node.checked);
+                    this.checkAction(parentNodes, node.isChecked);
+                    this.checkAction(childNodes, node.isChecked);
                     break;
             }
         } else {
             switch (options.check.chkBoxType.N.toLowerCase()) {
                 case "p":
-                    uncheckParent.call(this, parentNode, node.checked);
+                    uncheckParent.call(this, parentNode, node.isChecked);
                     break;
                 case "s":
-                    this.checkAction(childNodes, node.checked);
+                    this.checkAction(childNodes, node.isChecked);
                     break;
                 case "ps":
-                    uncheckParent.call(this, parentNode, node.checked);
-                    this.checkAction(childNodes, node.checked);
+                    uncheckParent.call(this, parentNode, node.isChecked);
+                    this.checkAction(childNodes, node.isChecked);
                     break;
             }
         }
@@ -9995,7 +9999,7 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
             while (parentNode && utils.isArray(parentNode.nodes)) {
                 for (var i = 0, siblingNode; i < parentNode.nodes.length; i++) {
                     siblingNode = parentNode.nodes[i];
-                    if (siblingNode.checked) {
+                    if (siblingNode.isChecked) {
                         unchecked = false;
                         break;
                     }
@@ -10020,7 +10024,7 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
     Tree.prototype.checkAction = function (nodes, checked) {
         for (var i = 0, node, $elm; i < nodes.length; i++) {
             node = nodes[i];
-            node.checked = checked;
+            node.isChecked= checked;
             $elm = this.$tree.find('#chk_' + node.nodeId);
             if (node.checkDisabled) {
                 continue;
@@ -10100,7 +10104,7 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
         var nodes = [];
 
         for (var key in this.nodes) {
-            if (this.nodes[key].checked) {
+            if (this.nodes[key].isChecked) {
                 nodes.push(this.nodes[key]);
             }
         }
@@ -10204,7 +10208,7 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
         $checked.click();
     };
 
-    
+
 
     /**
      * 重新加载

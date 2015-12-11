@@ -50,7 +50,7 @@ define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
             return;
         }
 
-        this.options.bindElement = $(this.options.bindElement);
+        this.$bindElement = $(this.options.bindElement);
 
         this.$inputGroup = this.$elm.parent(this.options.inputGroup);
 
@@ -90,9 +90,11 @@ define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
             self.select(node);
         };
 
-
         if (this.options.url) {
-            $.get(this.options.url, { rand: Math.random() }, function (data) {
+            $.get(this.options.url, {
+                value: this.$bindElement && this.$bindElement.length > 0 ? this.$bindElement.val() : this.$elm.val(),
+                rand: Math.random()
+            }, function (data) {
 
                 if (typeof data === 'string') {
                     data = eval('(0,' + data + ')');
@@ -175,8 +177,8 @@ define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
             return;
         }
 
-        if (this.options.bindElement) {
-            this.options.bindElement.val(node.value || node.nodeId || node.text);
+        if (this.$bindElement) {
+            this.$bindElement.val(node.value || node.nodeId || node.text);
         }
 
         this.$elm.val(node.text).attr('title', node.text).focus().blur();
@@ -184,6 +186,7 @@ define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
         this.options.callback.select(node);
 
     };
+
 
     /**
      * 复选操作
@@ -200,8 +203,8 @@ define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
             arrValue.push(nodes[i].value || nodes[i].nodeId || nodes[i].text);
         }
 
-        if (this.options.bindElement) {
-            this.options.bindElement.val(arrValue.join(','));
+        if (this.$bindElement) {
+            this.$bindElement.val(arrValue.join(','));
         }
 
         this.$elm.val(arrText.join(',')).attr('title', arrText.join(',')).focus().blur();
@@ -215,7 +218,8 @@ define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
     DropDownTree.prototype.setPosition = function () {
         this.$treePanel.css({
             left: this.$elm.offset().left,
-            top: this.$elm.offset().top + this.$elm.outerHeight() + 2
+            top: this.$elm.offset().top + this.$elm.outerHeight() + 2,
+            width: this.options.width || this.$inputGroup.outerWidth() || this.elmWidth
         });
     };
 
@@ -295,7 +299,7 @@ define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
                         appendTo: $(appendTo || document.body),
                         isTree: isTree && isTree == 'false' ? false : true,
                         multiple: multiple && multiple == 'true' ? true : false,
-                        bindElement: bindElm,
+                        $bindElement: $(bindElm),
                         callback: callback && callback.length > 0 ? eval('(0,' + callback + ')') : {}
                     };
                 }

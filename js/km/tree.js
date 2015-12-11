@@ -111,7 +111,7 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
                 return '';
             }
 
-            var checked = String(node.checked === true);
+            var checked = String(node.isChecked === true );
             var className;
 
             if (options.check.chkType === 'radio') {
@@ -292,15 +292,15 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
 
             if (node.checkDisabled) { return; }
 
-            node.checked = checked;
-            view.replaceChkClass($this, node.checked);
+            node.isChecked  = checked;
+            view.replaceChkClass($this, node.isChecked);
 
             if (self.options.check.chkType === "checkbox") {
                 self.check(node);
             } else {
                 for (var i = 0; i < checkedNodes.length; i++) {
                     if (checkedNodes[i] != node) {
-                        checkedNodes[i].checked = false;
+                        checkedNodes[i].isChecked = false;
                         view.replaceChkClass(self.$tree.find('#chk_' + checkedNodes[i].nodeId), false);
                     }
                 }
@@ -535,30 +535,30 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
             parentNode = this.getNode(node.parentId),
             options = this.options;
 
-        if (node.checked) {
+        if (node.isChecked) {
             switch (options.check.chkBoxType.Y.toLowerCase()) {
                 case "p":
-                    this.checkAction(parentNodes, node.checked);
+                    this.checkAction(parentNodes, node.isChecked);
                     break;
                 case "s":
-                    this.checkAction(childNodes, node.checked);
+                    this.checkAction(childNodes, node.isChecked);
                     break;
                 case "ps":
-                    this.checkAction(parentNodes, node.checked);
-                    this.checkAction(childNodes, node.checked);
+                    this.checkAction(parentNodes, node.isChecked);
+                    this.checkAction(childNodes, node.isChecked);
                     break;
             }
         } else {
             switch (options.check.chkBoxType.N.toLowerCase()) {
                 case "p":
-                    uncheckParent.call(this, parentNode, node.checked);
+                    uncheckParent.call(this, parentNode, node.isChecked);
                     break;
                 case "s":
-                    this.checkAction(childNodes, node.checked);
+                    this.checkAction(childNodes, node.isChecked);
                     break;
                 case "ps":
-                    uncheckParent.call(this, parentNode, node.checked);
-                    this.checkAction(childNodes, node.checked);
+                    uncheckParent.call(this, parentNode, node.isChecked);
+                    this.checkAction(childNodes, node.isChecked);
                     break;
             }
         }
@@ -569,7 +569,7 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
             while (parentNode && utils.isArray(parentNode.nodes)) {
                 for (var i = 0, siblingNode; i < parentNode.nodes.length; i++) {
                     siblingNode = parentNode.nodes[i];
-                    if (siblingNode.checked) {
+                    if (siblingNode.isChecked) {
                         unchecked = false;
                         break;
                     }
@@ -594,7 +594,7 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
     Tree.prototype.checkAction = function (nodes, checked) {
         for (var i = 0, node, $elm; i < nodes.length; i++) {
             node = nodes[i];
-            node.checked = checked;
+            node.isChecked= checked;
             $elm = this.$tree.find('#chk_' + node.nodeId);
             if (node.checkDisabled) {
                 continue;
@@ -674,7 +674,7 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
         var nodes = [];
 
         for (var key in this.nodes) {
-            if (this.nodes[key].checked) {
+            if (this.nodes[key].isChecked) {
                 nodes.push(this.nodes[key]);
             }
         }
@@ -778,7 +778,7 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
         $checked.click();
     };
 
-    
+
 
     /**
      * 重新加载

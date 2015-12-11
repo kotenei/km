@@ -75,6 +75,9 @@ data: [
         rootId: 0,                          //顶级节点编号
         text: '父节点',                     //节点名称
         value: 123,                         //节点值
+        checkDisabled:false,                //是否允许复选节点
+        selectDisabled:false,               //是否允许选择节点
+        isChecked:false,                    //是否已复选节点
         isParent: true,                     //是否父级
         open: true,                         //是否打开子级
         nodes:[                             //子级数据
@@ -216,7 +219,7 @@ tree.reload(data);
                 },
                 callback: {
                     onCheck: function () {
-                        console.log('ddd')
+                        
                     },
                     onSelect: function (node) {
                     }
