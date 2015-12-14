@@ -232,8 +232,8 @@ define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
         if (this.$treePanel[0].style.display == 'block') {
             return;
         }
-        $('div.k-pop-panel').hide();
-        this.$treePanel.slideDown();
+        $('div.k-pop-panel,ul.k-pop-panel').hide();
+        this.$treePanel.show();
         this.setPosition();
     };
 
@@ -245,7 +245,7 @@ define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
         if (this.$treePanel[0].style.display == 'block') {
             this.options.callback.hide();
         }
-        this.$treePanel.slideUp();
+        this.$treePanel.hide();
     };
 
     /**

@@ -75,8 +75,21 @@ define('km/validateTooltips', ['jquery', 'km/validate', 'km/tooltips', 'km/util'
         } else {
             tooltips.setContent(message);
         }
-        tooltips.show();
-        $target.addClass(this.options.errorClass);
+
+        if (placement.checkParents) {
+
+            var $parents = $target.parents(placement.checkParents+":eq(0)");
+
+            if ($parents.length > 0 && $parents[0].style.display != 'none') {
+                tooltips.show();
+                $target.addClass(this.options.errorClass);
+            }
+
+        } else {
+            tooltips.show();
+            $target.addClass(this.options.errorClass);
+        }
+        
     };
 
     /**
@@ -85,14 +98,14 @@ define('km/validateTooltips', ['jquery', 'km/validate', 'km/tooltips', 'km/util'
 	 * @return {Void}  
 	 */
     ValidateTooltips.prototype.hideError = function ($element, isRemoveClass) {
-        if (typeof isRemoveClass==='undefined') {
+        if (typeof isRemoveClass === 'undefined') {
             isRemoveClass = true;
         }
         if (this.checkable($element[0])) {
             $element = this.validFields.data[$element[0].name];
         }
 
-        var $target =$.data($element[0],'$target');
+        var $target = $.data($element[0], '$target');
         if ($target) {
             $element = $target;
         }

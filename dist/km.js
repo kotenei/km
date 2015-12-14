@@ -2353,7 +2353,7 @@ define('km/datePicker', ['jquery'], function ($) {
      */
     DatePicker.prototype.show = function () {
 
-        $('div.k-pop-panel').each(function () {
+        $('div.k-pop-panel,ul.k-pop-panel').each(function () {
             var desktop = this.getAttribute("data-desktop");
             if (!desktop || desktop != 'true') {
                 $(this).hide();
@@ -3973,6 +3973,9 @@ define('km/dropDownList', ['jquery'], function ($) {
      * @param {Object} options - 参数
      */
     var DropDownList = function ($el, options) {
+
+        
+
         this.$el = $el;
         this.options = $.extend(true, {
             $target: null,
@@ -3983,6 +3986,7 @@ define('km/dropDownList', ['jquery'], function ($) {
         this._event = {
             select: $.noop
         };
+
         this.init();
     };
 
@@ -4010,11 +4014,7 @@ define('km/dropDownList', ['jquery'], function ($) {
 
         this.$hidden = this.$dropDownList.next('input:hidden');
 
-        if (this.options.width == '100%') {
-            this.$dropDownList.css('width', this.$el.outerWidth());
-        } else {
-            this.$dropDownList.css('width', this.options.width);
-        }
+        
 
         if (this.isInputGroup) {
             this.$el.find('input').attr('readonly', 'readonly');
@@ -4093,6 +4093,7 @@ define('km/dropDownList', ['jquery'], function ($) {
      */
     DropDownList.prototype.show = function () {
         var self = this;
+        $('div.k-pop-panel,ul.k-pop-panel').hide();
         this.$dropDownList.show();
         this.sysPosition();
     };
@@ -4110,9 +4111,11 @@ define('km/dropDownList', ['jquery'], function ($) {
      * @return {Void}
      */
     DropDownList.prototype.sysPosition = function () {
+
         var position = {
             left: 0,
-            top: 0
+            top: 0,
+            width: this.options.width == '100%' ? this.$el.outerWidth() : this.options.width
         };
 
         switch (this.options.direction) {
@@ -4151,6 +4154,9 @@ define('km/dropDownList', ['jquery'], function ($) {
      */
     DropDownList.Global = function ($elms, options) {
         $elms = $elms || $('[data-module=dropdownlist]');
+
+
+
         $elms.each(function () {
             var $el = $(this),
                 settings = $el.attr('data-options'),
@@ -4421,8 +4427,8 @@ define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
         if (this.$treePanel[0].style.display == 'block') {
             return;
         }
-        $('div.k-pop-panel').hide();
-        this.$treePanel.slideDown();
+        $('div.k-pop-panel,ul.k-pop-panel').hide();
+        this.$treePanel.show();
         this.setPosition();
     };
 
@@ -4434,7 +4440,7 @@ define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
         if (this.$treePanel[0].style.display == 'block') {
             this.options.callback.hide();
         }
-        this.$treePanel.slideUp();
+        this.$treePanel.hide();
     };
 
     /**
@@ -11757,8 +11763,21 @@ define('km/validateTooltips', ['jquery', 'km/validate', 'km/tooltips', 'km/util'
         } else {
             tooltips.setContent(message);
         }
-        tooltips.show();
-        $target.addClass(this.options.errorClass);
+
+        if (placement.checkParents) {
+
+            var $parents = $target.parents(placement.checkParents+":eq(0)");
+
+            if ($parents.length > 0 && $parents[0].style.display != 'none') {
+                tooltips.show();
+                $target.addClass(this.options.errorClass);
+            }
+
+        } else {
+            tooltips.show();
+            $target.addClass(this.options.errorClass);
+        }
+        
     };
 
     /**
@@ -11767,14 +11786,14 @@ define('km/validateTooltips', ['jquery', 'km/validate', 'km/tooltips', 'km/util'
 	 * @return {Void}  
 	 */
     ValidateTooltips.prototype.hideError = function ($element, isRemoveClass) {
-        if (typeof isRemoveClass==='undefined') {
+        if (typeof isRemoveClass === 'undefined') {
             isRemoveClass = true;
         }
         if (this.checkable($element[0])) {
             $element = this.validFields.data[$element[0].name];
         }
 
-        var $target =$.data($element[0],'$target');
+        var $target = $.data($element[0], '$target');
         if ($target) {
             $element = $target;
         }

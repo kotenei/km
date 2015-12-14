@@ -11,6 +11,9 @@ define('km/dropDownList', ['jquery'], function ($) {
      * @param {Object} options - 参数
      */
     var DropDownList = function ($el, options) {
+
+        
+
         this.$el = $el;
         this.options = $.extend(true, {
             $target: null,
@@ -21,6 +24,7 @@ define('km/dropDownList', ['jquery'], function ($) {
         this._event = {
             select: $.noop
         };
+
         this.init();
     };
 
@@ -48,11 +52,7 @@ define('km/dropDownList', ['jquery'], function ($) {
 
         this.$hidden = this.$dropDownList.next('input:hidden');
 
-        if (this.options.width == '100%') {
-            this.$dropDownList.css('width', this.$el.outerWidth());
-        } else {
-            this.$dropDownList.css('width', this.options.width);
-        }
+        
 
         if (this.isInputGroup) {
             this.$el.find('input').attr('readonly', 'readonly');
@@ -131,6 +131,7 @@ define('km/dropDownList', ['jquery'], function ($) {
      */
     DropDownList.prototype.show = function () {
         var self = this;
+        $('div.k-pop-panel,ul.k-pop-panel').hide();
         this.$dropDownList.show();
         this.sysPosition();
     };
@@ -148,9 +149,11 @@ define('km/dropDownList', ['jquery'], function ($) {
      * @return {Void}
      */
     DropDownList.prototype.sysPosition = function () {
+
         var position = {
             left: 0,
-            top: 0
+            top: 0,
+            width: this.options.width == '100%' ? this.$el.outerWidth() : this.options.width
         };
 
         switch (this.options.direction) {
@@ -189,6 +192,9 @@ define('km/dropDownList', ['jquery'], function ($) {
      */
     DropDownList.Global = function ($elms, options) {
         $elms = $elms || $('[data-module=dropdownlist]');
+
+
+
         $elms.each(function () {
             var $el = $(this),
                 settings = $el.attr('data-options'),

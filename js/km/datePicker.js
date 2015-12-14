@@ -1039,7 +1039,7 @@ define('km/datePicker', ['jquery'], function ($) {
      */
     DatePicker.prototype.show = function () {
 
-        $('div.k-pop-panel').each(function () {
+        $('div.k-pop-panel,ul.k-pop-panel').each(function () {
             var desktop = this.getAttribute("data-desktop");
             if (!desktop || desktop != 'true') {
                 $(this).hide();
