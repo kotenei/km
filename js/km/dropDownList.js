@@ -38,7 +38,9 @@ define('km/dropDownList', ['jquery'], function ($) {
 
         if ($dropDownList.length == 0) {
             return;
-        }      
+        }
+
+        
 
         this.isInputGroup = this.$el.hasClass('input-group') || this.$el.hasClass('k-input-group');
 
@@ -46,7 +48,7 @@ define('km/dropDownList', ['jquery'], function ($) {
 
         this.$el.parent().css('position', 'relative');
 
-        this.$dropDownList = $dropDownList;
+        this.$dropDownList = $dropDownList.addClass('k-pop-panel');
 
         this.$bindElement = $(this.options.bindElement);
 
