@@ -24,6 +24,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
             appendTo: document.body,
             showFooter: true,
             borderRadius: '6px',
+            space:50,
             btns: []
         }, options);
 
@@ -303,7 +304,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
         //屏幕高度
         var screenHeight = this.$window.height();
         //最大弹窗高度
-        var maxWinHeight = screenHeight - 100;
+        var maxWinHeight = screenHeight - this.options.space;
         //头部高度
         var headerHeight = this.$header.height();
         //底部高度
