@@ -19,7 +19,8 @@ define('km/dropDownList', ['jquery'], function ($) {
             $target: null,
             bindElement:null,
             direction: 'left',
-            width: 'auto'
+            width: 'auto',
+            zIndex:20
         }, options);
         this._event = {
             select: $.noop
@@ -48,7 +49,7 @@ define('km/dropDownList', ['jquery'], function ($) {
 
         this.$el.parent().css('position', 'relative');
 
-        this.$dropDownList = $dropDownList.addClass('k-pop-panel');
+        this.$dropDownList = $dropDownList.addClass('k-pop-panel').css('z-index',this.options.zIndex);
 
         this.$bindElement = $(this.options.bindElement);
 
