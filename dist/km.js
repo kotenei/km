@@ -4121,6 +4121,8 @@ define('km/dropDownList', ['jquery'], function ($) {
             width: this.options.width == '100%' ? this.$el.outerWidth() : this.options.width
         };
 
+        this.$dropDownList.css('width', position.width);
+
         switch (this.options.direction) {
 
             case 'left':
@@ -4144,8 +4146,6 @@ define('km/dropDownList', ['jquery'], function ($) {
                 position.top = this.$el.position().top + this.$el.outerHeight(true) + 2;
                 break;
         }
-
-        
 
         this.$dropDownList.css(position);
     };
