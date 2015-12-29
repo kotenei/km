@@ -30,14 +30,11 @@ define('km/treeTable', ['jquery', 'km/ajax'], function ($, ajax) {
             this.build();
             this.watch();
         } else if (this.options.url && this.options.url.length > 0) {
-            ajax.get(this.options.url, this.options.params).done(function (ret) {
-                self.data = ret.Data;
-                self.dataInit();
-                self.build();
-                self.watch();
-            });
+            self.reload();
         }
     };
+
+    
 
     //事件监控
     TreeTable.prototype.watch = function () {
@@ -140,6 +137,8 @@ define('km/treeTable', ['jquery', 'km/ajax'], function ($, ajax) {
             };
             getChild(0, data, null, 1);
         }
+
+        
 
         setTreeData(this.data, data);
 
@@ -455,12 +454,52 @@ define('km/treeTable', ['jquery', 'km/ajax'], function ($, ajax) {
 
     //重新加载
     TreeTable.prototype.reload = function () {
+        var self = this;
 
+        ajax.get(this.options.url, this.options.params).done(function (ret) {
+
+            if (!ret.Data || ret.Data.length == 0) {
+                return;
+            }
+
+            for (var i = 0,item; i < ret.Data.length; i++) {
+                item = ret.Data[i];
+                if (item.Checked) {
+                    item.checked = item.Checked;
+                }
+                if (item.EnableCheck) {
+                    item.enableCheck = item.EnableCheck;
+                }
+            }
+
+            self.data = ret.Data;
+            self.dataInit();
+            self.build();
+            self.watch();
+        });
     };
 
     //加载数据
     TreeTable.prototype.loadData = function () {
 
+    };
+
+    //取选择的数据
+    TreeTable.prototype.getSelectRows = function () {
+        var items = [];
+
+        if (!this.data) {
+            return items;
+        }
+
+        for (var i = 0, item; i < this.data.length; i++) {
+            item = this.data[i];
+            if (item.checked) {
+                items.push(item);
+            }
+        }
+
+        return items;
     };
 
     return TreeTable;
