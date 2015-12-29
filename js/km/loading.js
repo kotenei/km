@@ -7,6 +7,7 @@ define('km/loading', ['jquery', 'spin'], function ($, Spinner) {
 
     var global;
 
+
     var Loading = function (options) {
         this.options = $.extend(true, {
             lines: 12, // 花瓣数目
@@ -62,13 +63,17 @@ define('km/loading', ['jquery', 'spin'], function ($, Spinner) {
 
     Loading.show = function (isFull) {
         if (!global) {
-            global = new KM.Loading();
+            try {
+                global = new top.KM.Loading();
+            } catch (e) {
+                global = new Loading();
+            }
         }
         global.show(isFull);
     };
 
     Loading.hide = function () {
-        if (!global) { return;}
+        if (!global) { return; }
         global.hide();
     };
 

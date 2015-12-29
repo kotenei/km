@@ -185,6 +185,7 @@ define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
 
         this.options.callback.select(node);
 
+        this.hide();
     };
 
 
