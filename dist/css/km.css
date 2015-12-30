@@ -194,6 +194,22 @@ label.k-error {
   padding: 0;
   box-sizing: border-box;
 }
+::-webkit-input-placeholder {
+  /* WebKit browsers */
+  color: #999;
+}
+:-moz-placeholder {
+  /* Mozilla Firefox 4 to 18 */
+  color: #999;
+}
+::-moz-placeholder {
+  /* Mozilla Firefox 19+ */
+  color: #999;
+}
+:-ms-input-placeholder {
+  /* Internet Explorer 10+ */
+  color: #999;
+}
 .k-btn {
   display: inline-block;
   padding: 6px 12px;
