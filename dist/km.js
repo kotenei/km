@@ -10716,23 +10716,27 @@ define('km/treeTable', ['jquery', 'km/ajax'], function ($, ajax) {
     TreeTable.prototype.reload = function () {
         var self = this;
 
-        ajax.get(this.options.url, this.options.params).done(function (ret) {
+        ajax.get(this.options.url, this.options.params).done(function (data) {
 
-            if (!ret.Data || ret.Data.length == 0) {
+            if (!data || data.length == 0) {
                 return;
             }
 
-            for (var i = 0,item; i < ret.Data.length; i++) {
-                item = ret.Data[i];
+
+            for (var i = 0,item; i < data.length; i++) {
+                item = data[i];
                 if (item.Checked) {
                     item.checked = item.Checked;
                 }
                 if (item.EnableCheck) {
                     item.enableCheck = item.EnableCheck;
                 }
+                if (item.Level) {
+                    item.level = item.Level;
+                }
             }
 
-            self.data = ret.Data;
+            self.data = data;
             self.dataInit();
             self.build();
             self.watch();
