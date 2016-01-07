@@ -46,8 +46,11 @@ define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu', 'km/loading'], function
         this.$tabNav = this.$tabScroller.find('ul.k-tab-nav');
         this.$tabContainer = this.$elm.find('div.k-tab-container');
         this.tabCount = this.$tabNav.find('li').length;
+
         this.contextMenuInit();
+        
         this.setSize();
+
         this.watch();
         this.toggle(0);
     };
@@ -239,6 +242,10 @@ define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu', 'km/loading'], function
     Tab.prototype.toggle = function (index) {
 
         if (this.curIndex == index) {
+            return;
+        }
+
+        if (this.$tabContainer.children().length==0) {
             return;
         }
 
