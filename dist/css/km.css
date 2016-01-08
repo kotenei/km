@@ -2352,6 +2352,12 @@ table.k-treeTable tr.expanded.accept td span.indenter a {
   color: #ccc;
   padding: 0;
 }
+.k-tab > .k-tab-head > .k-tab-scroller > .k-tab-nav > li.tab-add:first-child {
+  border-left: 1px dashed #ccc;
+}
+.k-tab > .k-tab-head > .k-tab-scroller > .k-tab-nav > li.tab-add:first-child:hover {
+  border-color: #666;
+}
 .k-tab > .k-tab-head > .k-tab-scroller > .k-tab-nav > li.tab-add:hover {
   color: #666;
   border-color: #666;
