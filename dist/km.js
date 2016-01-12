@@ -3974,15 +3974,15 @@ define('km/dropDownList', ['jquery'], function ($) {
      */
     var DropDownList = function ($el, options) {
 
-        
+
 
         this.$el = $el;
         this.options = $.extend(true, {
             $target: null,
-            bindElement:null,
+            bindElement: null,
             direction: 'left',
             width: 'auto',
-            zIndex:20
+            zIndex: 20
         }, options);
         this._event = {
             select: $.noop
@@ -4003,21 +4003,21 @@ define('km/dropDownList', ['jquery'], function ($) {
             return;
         }
 
-        
+
 
         this.isInputGroup = this.$el.hasClass('input-group') || this.$el.hasClass('k-input-group');
 
-        this.isTextBox = this.isInputGroup ? false : this.$el[0].type== 'text';
+        this.isTextBox = this.isInputGroup ? false : this.$el[0].type == 'text';
 
         this.$el.parent().css('position', 'relative');
 
-        this.$dropDownList = $dropDownList.addClass('k-pop-panel').css('z-index',this.options.zIndex);
+        this.$dropDownList = $dropDownList.addClass('k-pop-panel').css('z-index', this.options.zIndex);
 
         this.$bindElement = $(this.options.bindElement);
 
         this.$hidden = this.$dropDownList.next('input:hidden');
 
-        
+        this.$body = $(document.body);
 
         if (this.isInputGroup) {
             this.$el.find('input').attr('readonly', 'readonly');
@@ -4035,7 +4035,7 @@ define('km/dropDownList', ['jquery'], function ($) {
 
         this.$el.on('click.dropdownlist', function (e) {
             $('ul.k-dropDownList').hide();
-            self.show();
+            self.show(e);
             e.stopPropagation();
             return false;
         });
@@ -4063,7 +4063,7 @@ define('km/dropDownList', ['jquery'], function ($) {
                 self.$bindElement.val(data.text).focus().blur();
             }
 
-            if (self.$hidden.length>0) {
+            if (self.$hidden.length > 0) {
                 self.$hidden.val(data.value);
             }
 
@@ -4094,11 +4094,11 @@ define('km/dropDownList', ['jquery'], function ($) {
      * 显示
      * @return {Void}
      */
-    DropDownList.prototype.show = function () {
+    DropDownList.prototype.show = function (e) {
         var self = this;
         $('div.k-pop-panel,ul.k-pop-panel').hide();
         this.$dropDownList.show();
-        this.sysPosition();
+        this.sysPosition(e);
     };
 
     /**
@@ -4113,7 +4113,7 @@ define('km/dropDownList', ['jquery'], function ($) {
      * 同步定位
      * @return {Void}
      */
-    DropDownList.prototype.sysPosition = function () {
+    DropDownList.prototype.sysPosition = function (e, $el) {
 
         var position = {
             left: 0,
@@ -4141,6 +4141,15 @@ define('km/dropDownList', ['jquery'], function ($) {
                 position.left = this.$el.position().left + this.$el.outerWidth(true) - this.$dropDownList.outerWidth();
                 position.top = this.$el.position().top - this.$dropDownList.outerHeight();
                 break;
+            case 'mouse':
+                if (e) {
+                    var info = this.getElmPosition();
+                    position.left = e.pageX-info.left,
+                    position.top = e.pageY-info.top;
+                } else {
+                    position.display = 'none';
+                }
+                break;
             default:
                 position.left = this.$el.position().left;
                 position.top = this.$el.position().top + this.$el.outerHeight(true) + 2;
@@ -4148,6 +4157,34 @@ define('km/dropDownList', ['jquery'], function ($) {
         }
 
         this.$dropDownList.css(position);
+    };
+
+    //取鼠标定位
+    DropDownList.prototype.getElmPosition = function () {
+        var info = {
+            left: 0,
+            top: 0,
+            pLeft: 0,
+            pTop: 0
+        },
+        $target = this.$body,
+        $cur = this.$el,
+        $parent = $cur.parent(),
+        position;
+
+        
+
+        while ($parent[0] != $target[0]) {
+            position = $parent.css('position');
+            if (position == 'relative' || position == 'absolute') {
+                info.left = $parent.offset().left;
+                info.top = $parent.offset().top;
+                return info;
+            }
+            $parent = $parent.parent();
+        }
+
+        return info;
     };
 
     /**
