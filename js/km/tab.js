@@ -133,7 +133,7 @@ define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu', 'km/loading'], function
 
 
         this.$tabNav.children().each(function () {
-            tabsWidth += $(this).outerWidth();
+            tabsWidth += $(this).outerWidth(true);
         });
 
 
