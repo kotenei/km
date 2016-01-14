@@ -836,6 +836,13 @@ label.k-error {
   padding: 0 15px;
   position: relative;
 }
+.k-window-header .k-window-loading {
+  width: 32px;
+  height: 32px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 10px;
+}
 .k-window-close {
   color: #CDCCCC;
   cursor: pointer;
@@ -851,6 +858,9 @@ label.k-error {
   overflow-y: auto;
   padding: 15px;
   position: relative;
+}
+.k-window-loading {
+  background: url(../images/common/loading.gif) center center no-repeat;
 }
 .k-window-footer {
   border-radius: 0 0 6px 6px;

@@ -5,6 +5,7 @@
  */
 define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], function ($, DragDrop, popTips, Loading) {
 
+
     /**
      * 窗体模块
      * @param {Object} options - 参数
@@ -215,7 +216,11 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
      */
     Window.prototype.open = function () {
         var self = this;
-        Loading.show();
+
+        this.show();
+        this.$footer.hide();
+
+        this.loadingShow();
         $.when(
             this.remote()
         ).done(function () {
@@ -242,18 +247,27 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
                             clearTimeout(self.iframeTm);
                         }
 
-                        self.iframeTm = setTimeout(function () {
-                            self.show();
-                        }, 1000);
-
                         self.bindIframeLoad = true;
+
+                        if (self.options.showFooter) {
+                            self.$footer.show();
+                        }
+
+                        self.loadingHide();
                     });
                 }
 
             } else {
-                self.show();
+                if (self.options.showFooter) {
+                    self.$footer.show();
+                }
+                self.loadingHide();
             }
 
+        }).fail(function () {
+            self.loadingHide();
+        }).always(function () {
+            
         });
     };
 
@@ -273,6 +287,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
         this.$backdrop.hide();
         zIndex.pop();
         this._event.afterClose.call(self);
+        this.loadingHide();
     };
 
     /**
@@ -288,7 +303,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
         var z = zIndex.get();
         this.$win.css('zIndex', z);
         this.$backdrop.css('zIndex', --z);
-        Loading.hide();
+        //Loading.hide();
     };
 
     /**
@@ -465,6 +480,16 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
 
         return html.join('');
     };
+
+    //显示加载
+    Window.prototype.loadingShow = function () {
+        this.$container.addClass('k-window-loading');
+    };
+
+    //隐藏加载
+    Window.prototype.loadingHide = function () {
+        this.$container.removeClass('k-window-loading');
+    }
 
 
     /**

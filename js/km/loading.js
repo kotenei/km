@@ -63,11 +63,12 @@ define('km/loading', ['jquery', 'spin'], function ($, Spinner) {
 
     Loading.show = function (isFull) {
         if (!global) {
-            try {
-                global = new top.KM.Loading();
-            } catch (e) {
-                global = new Loading();
-            }
+            //try {
+            //    global = new top.KM.Loading();
+            //} catch (e) {
+            //    global = new Loading();
+            //}
+            global = new Loading();
         }
         global.show(isFull);
     };

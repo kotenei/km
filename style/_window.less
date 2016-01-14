@@ -10,6 +10,7 @@
     top: 50%;
     z-index: 1000;
 }
+
 .k-window-header
 {
     border-bottom: 1px solid #e5e5e5;
@@ -21,7 +22,17 @@
     margin: 0;
     padding: 0 15px;
     position: relative;
+
+    .k-window-loading
+    {
+        width: 32px;
+        height: 32px;
+        display:inline-block;
+        vertical-align:middle;
+        margin-left:10px;
+    }
 }
+
 .k-window-close
 {
     color: #CDCCCC;
@@ -30,17 +41,26 @@
     position: absolute;
     right: 15px;
 }
+
 .k-window-close:hover
 {
     color: #605E5E;
 }
+
 .k-window-container
 {
     overflow-x: hidden;
     overflow-y: auto;
     padding: 15px;
-    position:relative;
+    position: relative;
 }
+
+.k-window-loading
+{
+    background: url(../images/common/loading.gif) center center no-repeat;
+  
+}
+
 .k-window-footer
 {
     border-radius: 0 0 6px 6px;
@@ -52,9 +72,10 @@
 
     >.append-btn-box
     {
-        display:inline;
+        display: inline;
     }
 }
+
 .k-window-backdrop
 {
     background: black;
