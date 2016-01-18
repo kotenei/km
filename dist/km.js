@@ -10763,9 +10763,11 @@ define('km/treeTable', ['jquery', 'km/ajax'], function ($, ajax) {
 
         ajax.get(this.options.url, this.options.params).done(function (data) {
 
-            if (!data || data.length == 0) {
+            if (!data) {
+                data = [];
                 return;
             }
+
 
 
             for (var i = 0,item; i < data.length; i++) {
