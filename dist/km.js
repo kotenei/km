@@ -11587,7 +11587,8 @@ define('km/validate', ['jquery'], function ($) {
         max: '请输入一个小于或等于{0}的值',
         range: '请输入一个介于{0}到{1}之间的数值',
         equalTo: '请再输入一个相同的值',
-        remote: '远程验证失败'
+        remote: '远程验证失败',
+        reg:'格式错误'
     };
 
 
@@ -11690,6 +11691,10 @@ define('km/validate', ['jquery'], function ($) {
             .error(function () { return false; });
 
             return true;
+        },
+        reg: function (value, $element, param) {
+            var reg = new RegExp(param, "igm");
+            return this.optional($element) || reg.test(value);
         }
     };
 
