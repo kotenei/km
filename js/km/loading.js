@@ -40,16 +40,24 @@ define('km/loading', ['jquery', 'spin'], function ($, Spinner) {
         this.spinner = new Spinner(this.options);
     };
 
-    Loading.prototype.show = function (isFull) {
+    Loading.prototype.show = function (isImg,isFull) {
         if (isShow) { return; }
         isShow = true;
+
         if (isFull) {
             this.$loading.addClass('k-loading-full');
         } else {
             this.$loading.removeClass('k-loading-full');
         }
 
-        this.spinner.spin(this.$loading.get(0));
+        isImg = typeof isImg == 'undefined' ? true : isImg;
+
+        if (isImg) {
+            this.$loading.addClass('k-loading-img');
+        }else{
+            this.spinner.spin(this.$loading.get(0));
+            this.$loading.removeClass('k-loading-img');
+        }
         this.$loading.fadeIn('fast');
 
     };
@@ -61,16 +69,11 @@ define('km/loading', ['jquery', 'spin'], function ($, Spinner) {
         isShow = false;
     };
 
-    Loading.show = function (isFull) {
+    Loading.show = function (isPic, isFull) {
         if (!global) {
-            //try {
-            //    global = new top.KM.Loading();
-            //} catch (e) {
-            //    global = new Loading();
-            //}
             global = new Loading();
         }
-        global.show(isFull);
+        global.show(isPic,isFull);
     };
 
     Loading.hide = function () {
