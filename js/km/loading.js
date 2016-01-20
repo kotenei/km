@@ -54,11 +54,13 @@ define('km/loading', ['jquery', 'spin'], function ($, Spinner) {
 
         if (isImg) {
             this.$loading.addClass('k-loading-img');
+            this.$loading.show();
         }else{
             this.spinner.spin(this.$loading.get(0));
             this.$loading.removeClass('k-loading-img');
+            this.$loading.fadeIn('fast');
         }
-        this.$loading.fadeIn('fast');
+        
 
     };
 
