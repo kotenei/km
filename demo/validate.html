@@ -20,7 +20,7 @@
         </div>
     </div>
     <div class="main wrap">
-        <ul class="demo-nav-list" id="navList"> 
+        <ul class="demo-nav-list" id="navList">
         </ul>
         <script type="text/javascript" src="nav.js"></script>
         <script type="text/javascript">
@@ -37,10 +37,10 @@
                         <tr>
                             <td style="width: 120px;">用户名：</td>
                             <td>
-                                <input  type="text" 
-                                        name="userName" 
-                                        placeholder="请输入用户名" 
-                                        data-rules="{rules:{required:true},messages:{required:'请输入 用户名'}}" />
+                                <input type="text"
+                                    name="userName"
+                                    placeholder="请输入用户名"
+                                    data-rules="{rules:{required:true},messages:{required:'请输入 用户名'}}" />
 
                                 <!--<input  type="text" 
                                         id="userName"
@@ -184,8 +184,7 @@ var validate=new KM.ValidateTooltips($form,options);
                         <td>errorPlacement</td>
                         <td>function</td>
                         <td>null</td>
-                        <td>
-                            自定义验证显示方法
+                        <td>自定义验证显示方法
                             <pre>
                                 <code>
 errorPlacement:function($elm,$error){
@@ -198,13 +197,94 @@ errorPlacement:function($elm,$error){
                     </tr>
                 </tbody>
             </table>
+
+            <h3>自带验证</h3>
+            <table class="table table-bordered table-striped js-options-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th style="width: 80%;">描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>required</td>
+                        <td>必填，required:true|false</td>
+                    </tr>
+                    <tr>
+                        <td>email</td>
+                        <td>电子邮件，email:true|false</td>
+                    </tr>
+                    <tr>
+                        <td>url</td>
+                        <td>url地址，url:true|false</td>
+                    </tr>
+                    <tr>
+                        <td>date</td>
+                        <td>日期，date:true|false</td>
+                    </tr>
+                    <tr>
+                        <td>phone</td>
+                        <td>电话号码，phone:true|false</td>
+                    </tr>
+                    <tr>
+                        <td>mobile</td>
+                        <td>手机号，mobile:true|false</td>
+                    </tr>
+                    <tr>
+                        <td>number</td>
+                        <td>数字，number:true|false</td>
+                    </tr>
+                    <tr>
+                        <td>digits</td>
+                        <td>正整数，digits:true|false</td>
+                    </tr>
+                    <tr>
+                        <td>minLength</td>
+                        <td>最小长度，minLength:1~N</td>
+                    </tr>
+                    <tr>
+                        <td>maxLength</td>
+                        <td>最大长度，maxLength:1~N</td>
+                    </tr>
+                    <tr>
+                        <td>rangeLength</td>
+                        <td>长度区间，rangeLength: [2,5]</td>
+                    </tr>
+                    <tr>
+                        <td>min</td>
+                        <td>最小值，min:1~N</td>
+                    </tr>
+                    <tr>
+                        <td>max</td>
+                        <td>最大值，max:1~N</td>
+                    </tr>
+                    <tr>
+                        <td>range</td>
+                        <td>数值区间，range:[1,5]</td>
+                    </tr>
+                    <tr>
+                        <td>equalTo</td>
+                        <td>匹配相同值，equalTo:'#id'</td>
+                    </tr>
+                    <tr>
+                        <td>remote</td>
+                        <td>远程，remote:'url地址'</td>
+                    </tr>
+                    <tr>
+                        <td>reg</td>
+                        <td>正则验证，reg:'^\\d+$'</td>
+                    </tr>
+                </tbody>
+            </table>
+
             <h3>meta规则设置</h3>
             <table class="table table-bordered table-striped js-options-table">
                 <thead>
                     <tr>
                         <th>名称</th>
                         <th>设置值</th>
-                        <th style="width:60%;">描述</th>
+                        <th style="width: 60%;">描述</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -219,8 +299,7 @@ errorPlacement:function($elm,$error){
                                 </code>
                             </pre>
                         </td>
-                        <td>
-                            验证规则，值为json字符串，相关参数说明请参考上表
+                        <td>验证规则，值为json字符串，相关参数说明请参考上表
                             <p><code>这里的target参数为jQuery的选择器，如'#id','.className'等,不填target则为当前html元素</code></p>
                         </td>
                     </tr>
@@ -315,7 +394,7 @@ validate.removeRule(elm,ruleName);
             });
         });
 
-        
+
     </script>
 </body>
 </html>
