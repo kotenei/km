@@ -39,12 +39,12 @@ define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu', 'km/loading'], function
      */
     Tab.prototype.init = function () {
         this.$elm.attr('data-moduleId', this.identity);
-        this.$tabHead = this.$elm.find('div.k-tab-head');
+        this.$tabHead = this.$elm.children('div.k-tab-head');
         this.$btnLeft = this.$tabHead.find('div.left');
         this.$btnRight = this.$tabHead.find('div.right');
         this.$tabScroller = this.$tabHead.find('div.k-tab-scroller');
         this.$tabNav = this.$tabScroller.find('ul.k-tab-nav');
-        this.$tabContainer = this.$elm.find('div.k-tab-container');
+        this.$tabContainer = this.$elm.children('div.k-tab-container');
         this.tabCount = this.$tabNav.find('li').length;
 
         this.contextMenuInit();
@@ -84,6 +84,7 @@ define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu', 'km/loading'], function
                 index = $el.index();
             self.toggle(index);
             self._event.click.call(this, $el);
+            self.childResize();
             return false;
         }).on('click.tab', '[role=refresh]', function () {
             self.refresh($(this).parents('li:eq(0)').index());
@@ -417,6 +418,19 @@ define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu', 'km/loading'], function
         }, 300);
     };
 
+    /**
+     * 子级tab重置尺寸
+     * @return {Void}
+     */
+    Tab.prototype.childResize = function () {
+        var $tabs = this.$tabContainer.find('div.k-tab');
+        $tabs.each(function () {
+            var tab = $.data(this, 'tab');
+            if (tab) {
+                tab.setSize();
+            }
+        });
+    }
 
     /**
      * 全局调用
