@@ -11033,6 +11033,11 @@ define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event','km/po
             url: this.$form.attr('action'),
             cache: false,
             success: function (ret) {
+
+                if (typeof ret==='string') {
+                    ret=JSON.parse(ret);
+                }
+
                 if (self.isButton && ret.Url && ret.Url.length > 0) {
                     self.uploadedUrls.push(ret.Url);
                 }
@@ -11089,7 +11094,7 @@ define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event','km/po
     Upload.prototype.showResult = function (url) {
         this.url = url;
         if (this.isButton) {
-            this.$resultBox.append('<div class="k-upload-result" data-url="' + url + '"><span title="' + url + '">"' + url + '"</span><i class="fa fa-close" style="display:' + (this.options.removeUrl ? "block" : "none") + ';"></i></div>');
+            this.$resultBox.append('<div class="k-upload-result" data-url="' + url + '"><span title="' + url + '">' + url + '</span><i class="fa fa-close" style="display:' + (this.options.removeUrl ? "block" : "none") + ';"></i></div>');
 
             if (this.options.$target) {
                 this.options.$target.val(this.uploadedUrls.join(','));
