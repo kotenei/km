@@ -2548,7 +2548,7 @@ table.k-treeTable tr.expanded.accept td span.indenter a {
   margin-bottom: 10px;
   background: #fff;
   border: 1px solid #ddd;
-  overflow: hidden;
+  /*overflow: hidden;*/
 }
 .k-portlets > .group > .group-body > .column .webPart.webPart-hide .webPart-body {
   display: none;
