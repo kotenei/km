@@ -2152,7 +2152,8 @@ table.k-treeTable tr.expanded.accept td span.indenter a {
 }
 .k-panel .k-panel-body {
   padding: 10px;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 .k-resizable-container {
   position: relative;
