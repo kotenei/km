@@ -166,8 +166,7 @@ define('km/template', ['jquery'], function ($) {
                     code = '}';
                     break;
                 default:
-
-                    if (/[\w]+\s*\|\s*[a-z]+\s*:?/.test(code)) {
+                    if (/^[^\s]+\s*\|\s*[a-z]+\s*:?/.test(code)) {
 
                         var filterStr = method.filtered(key, args);
 
