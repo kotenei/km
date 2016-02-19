@@ -46,6 +46,12 @@ define('km/template', ['jquery'], function ($) {
             }
 
             return format;
+        },
+        output: function (val) {
+            if (!val) {
+                return '';
+            }
+            return val;
         }
     };
 
@@ -97,6 +103,7 @@ define('km/template', ['jquery'], function ($) {
             }
             return str;
         }
+        
     };
 
     var variable = {};
@@ -171,14 +178,14 @@ define('km/template', ['jquery'], function ($) {
                         var filterStr = method.filtered(key, args);
 
                         if (filterStr) {
-                            code = "$out+=(" + filterStr + ");";
+                            code = "$out+=$output(" + filterStr + ");";
                         } else {
-                            code = "$out+=(" + key + ");";
+                            code = "$out+=$output(" + key + ");";
                         }
                     } else if (code.indexOf('?') != -1 && code.indexOf(':') != -1) {
-                        code = "$out+=(" + code + ");";
+                        code = "$out+=$output(" + code + ");";
                     } else {
-                        code = "$out+=(" + key + ");";
+                        code = "$out+=$output(" + key + ");";
                     }
 
                     break;
@@ -310,7 +317,7 @@ define('km/template', ['jquery'], function ($) {
             return;
         }
 
-        var headerCode = "'use strict';var $each=$utils.each,";
+        var headerCode = "'use strict';var $each=$utils.each,$output=$utils.output,";
         var mainCode = "$out='';";
         var footerCode = 'return new String($out);';
         var variable = [];
