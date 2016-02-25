@@ -2645,3 +2645,11 @@ table.k-treeTable tr.expanded.accept td span.indenter a {
   display: table;
   clear: both;
 }
+.k-areaSelector {
+  border: dotted 2px #6A6A6A;
+  background-color: #EFEFEF;
+  filter: alpha(opacity=50);
+  opacity: 0.5;
+  position: absolute;
+  z-index: 9999;
+}
