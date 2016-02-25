@@ -388,7 +388,7 @@ define('km/app', ['jquery', 'km/router', 'km/util', 'km/popTips', 'km/loading', 
  */
 define('km/areaSelector', ['jquery'], function ($) {
     return function (options) {
-        var options = $.extend(true, {
+        options = $.extend(true, {
             $container: $(document.body),
             zIndex: 9999,
             autoScroll: true,
@@ -400,15 +400,21 @@ define('km/areaSelector', ['jquery'], function ($) {
                 onStop: $.noop
             }
         }, options);
+        var $container = options.$container;
         var doc = document;
         var $doc = $(doc);
-        var $win = $(window);
+        var $scrollWrap = $container[0].tagName.toLowerCase() == 'body' ? $(window) : $container;
         var coord = { bx: 0, by: 0, mx: 0, my: 0, ex: 0, ey: 0 };
-        var moving = false;
+        var containerInfo = {
+            left: $container.offset().left,
+            top: $container.offset().top,
+            width: $container.outerWidth(),
+            height: $container.outerHeight()
+        };
         var autoScrollActive = false;
         var $range, w_h, d_h;
 
-        options.$container.off('mousedown.rangeSelector').on('mousedown.rangeSelector', function (e) {
+        $container.off('mousedown.rangeSelector').on('mousedown.rangeSelector', function (e) {
             if (!$range) {
                 $range = $('<div class="k-areaSelector"></div>').css('zIndex', options.zIndex).appendTo(doc.body);
             }
@@ -428,7 +434,7 @@ define('km/areaSelector', ['jquery'], function ($) {
                 coord.bx = parseInt(mouseCoord.x);
                 coord.by = parseInt(mouseCoord.y);
 
-                w_h = $win.height();
+                w_h = $scrollWrap.height();
                 d_h = $doc.height();
 
                 $doc.on('mousemove.rangeSelector', function (e) {
@@ -444,9 +450,9 @@ define('km/areaSelector', ['jquery'], function ($) {
                 var mouseCoord = this.getMouseCoord(e);
                 coord.mx = parseInt(mouseCoord.x);
                 coord.my = parseInt(mouseCoord.y);
-                
+
                 if (options.isDraw) {
-                    this.draw();
+                    this.draw(coord);
                 }
 
                 if (options.autoScroll) {
@@ -482,18 +488,18 @@ define('km/areaSelector', ['jquery'], function ($) {
             },
             scroll: function (direction, yPos) {
                 var self = this;
-                var scrollTop = $win.scrollTop();
+                var scrollTop = $scrollWrap.scrollTop();
                 if (direction < 0) {
                     if (scrollTop > 0) {
                         scrollTop -= 5;
-                        $win.scrollTop(scrollTop);
+                        $scrollWrap.scrollTop(scrollTop);
                     } else {
                         autoScrollActive = false;
                     }
                 } else {
                     if (yPos >= (w_h - 10)) {
                         scrollTop += 5;
-                        $win.scrollTop(scrollTop);
+                        $scrollWrap.scrollTop(scrollTop);
                     } else {
                         autoScrollActive = false;
                     }
@@ -509,14 +515,39 @@ define('km/areaSelector', ['jquery'], function ($) {
                     }
                 }
             },
-            draw: function () {
-                $range.css({
-                    display:'block',
+            draw: function (cord) {
+                var css = {
+                    display: 'block',
                     top: coord.by < coord.my ? coord.by : coord.my,
                     left: coord.bx < coord.mx ? coord.bx : coord.mx,
                     width: Math.abs(coord.mx - coord.bx),
                     height: Math.abs(coord.my - coord.by)
-                });
+                };
+
+                var a_h = css.top + css.height,
+                    a_w = css.left + css.width,
+                    c_h = containerInfo.top + containerInfo.height,
+                    c_w = containerInfo.left + containerInfo.width;
+
+                if (a_h >= c_h) {
+                    css.height = c_h - css.top;
+                }
+
+                if (a_w >= c_w) {
+                    css.width = c_w - css.left;
+                }
+
+                if (css.left <= containerInfo.left) {
+                    css.width = css.width - (containerInfo.left - css.left);
+                    css.left = containerInfo.left;
+                }
+
+                if (css.top <= containerInfo.top) {
+                    css.height = css.height - (containerInfo.top - css.top);
+                    css.top = containerInfo.top;
+                }
+
+                $range.css(css);
             }
         };
     };
@@ -6775,89 +6806,6 @@ define('km/placeholder', ['jquery'], function ($) {
     }
 });
 /*
- * 弹出提示模块
- * @date:2014-09-10
- * @author:kotenei(kotenei@qq.com)
- */
-define('km/popTips', ['jquery'], function ($) {
-
-    /**
-     * 弹出提示模块
-     * @return {Object} 
-     */
-    var PopTips = (function () {
-
-        var _instance;
-
-        function init() {
-
-            var $tips, tm;
-
-            function build(status, content, delay, callback) {
-
-                if (tm) { clearTimeout(tm); }
-
-                if ($.isFunction(delay)) { callback = delay; delay = 3000; }
-
-                callback = callback || $.noop;
-                delay = delay || 3000;
-
-                if ($tips) { $tips.stop().remove(); }
-
-                $tips = $(getHtml(status, content))
-                        .appendTo(document.body).hide();
-
-                $tips.css({ marginLeft: -($tips.width() / 2), marginTop: -($tips.height() / 2) }).fadeIn('fase', function () {
-                    tm = setTimeout(function () {
-                        $tips.stop().remove();
-                        callback();
-                    }, delay);
-                })
-            }
-
-            function getHtml(status, content) {
-                var html = [];
-                switch (status) {
-                    case "success":
-                        html.push('<div class="k-pop-tips success"><span class="fa fa-check"></span>&nbsp;<span>' + content + '</span></div>');
-                        break;
-                    case "error":
-                        html.push('<div class="k-pop-tips error"><span class="fa fa-close"></span>&nbsp;<span>' + content + '</span></div>');
-                        break;
-                    case "warning":
-                        html.push('<div class="k-pop-tips warning"><span class="fa fa-exclamation"></span>&nbsp;<span>' + content + '</span></div>');
-                        break;
-                }
-                return html.join('');
-            }
-
-            return {
-                success: function (content, callback, delay) {
-                    build("success", content, callback, delay);
-                },
-                error: function (content, callback, delay) {
-                    build("error", content, callback, delay);
-                },
-                warning: function (content, callback, delay) {
-                    build("warning", content, callback, delay);
-                }
-            };
-        }
-
-        return {
-            getInstance: function () {
-                if (!_instance) {
-                    _instance = init();
-                }
-                return _instance;
-            }
-        }
-    })();
-
-    return PopTips.getInstance();
-});
-
-/*
  * 弹出框模块
  * @date:2014-11-05
  * @author:kotenei(kotenei@qq.com)
@@ -6968,6 +6916,89 @@ define('km/popover', ['jquery', 'km/tooltips', 'km/util'], function ($, Tooltips
 
     return Popover;
 });
+/*
+ * 弹出提示模块
+ * @date:2014-09-10
+ * @author:kotenei(kotenei@qq.com)
+ */
+define('km/popTips', ['jquery'], function ($) {
+
+    /**
+     * 弹出提示模块
+     * @return {Object} 
+     */
+    var PopTips = (function () {
+
+        var _instance;
+
+        function init() {
+
+            var $tips, tm;
+
+            function build(status, content, delay, callback) {
+
+                if (tm) { clearTimeout(tm); }
+
+                if ($.isFunction(delay)) { callback = delay; delay = 3000; }
+
+                callback = callback || $.noop;
+                delay = delay || 3000;
+
+                if ($tips) { $tips.stop().remove(); }
+
+                $tips = $(getHtml(status, content))
+                        .appendTo(document.body).hide();
+
+                $tips.css({ marginLeft: -($tips.width() / 2), marginTop: -($tips.height() / 2) }).fadeIn('fase', function () {
+                    tm = setTimeout(function () {
+                        $tips.stop().remove();
+                        callback();
+                    }, delay);
+                })
+            }
+
+            function getHtml(status, content) {
+                var html = [];
+                switch (status) {
+                    case "success":
+                        html.push('<div class="k-pop-tips success"><span class="fa fa-check"></span>&nbsp;<span>' + content + '</span></div>');
+                        break;
+                    case "error":
+                        html.push('<div class="k-pop-tips error"><span class="fa fa-close"></span>&nbsp;<span>' + content + '</span></div>');
+                        break;
+                    case "warning":
+                        html.push('<div class="k-pop-tips warning"><span class="fa fa-exclamation"></span>&nbsp;<span>' + content + '</span></div>');
+                        break;
+                }
+                return html.join('');
+            }
+
+            return {
+                success: function (content, callback, delay) {
+                    build("success", content, callback, delay);
+                },
+                error: function (content, callback, delay) {
+                    build("error", content, callback, delay);
+                },
+                warning: function (content, callback, delay) {
+                    build("warning", content, callback, delay);
+                }
+            };
+        }
+
+        return {
+            getInstance: function () {
+                if (!_instance) {
+                    _instance = init();
+                }
+                return _instance;
+            }
+        }
+    })();
+
+    return PopTips.getInstance();
+});
+
 define('km/portlets', ['jquery', 'km/window', 'km/dragdrop'], function ($, Window, Dragdrop) {
 
     var groupSortable,

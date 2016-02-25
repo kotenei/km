@@ -13,6 +13,7 @@
         { text: '放大镜', activeCode: 'magnifier', link: 'magnifier.html' },
 	    { text: '拖放', activeCode: 'dragdrop', link: 'dragdrop.html' },
         { text: '调整大小', activeCode: 'resizable', link: 'resizable.html' },
+        { text: '区域选择', activeCode: 'areaselector', link: 'areaselector.html' },
         { text: '面板', activeCode: 'panel', link: 'panel.html' },
         { text: '布局', activeCode: 'layout', link: 'layout.html' },
         { text: '门户组件', activeCode: 'porlets', link: 'portlets.html' },

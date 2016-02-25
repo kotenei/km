@@ -1,0 +1,114 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+    <title>区域选择</title>
+    <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../dist/css/km.min.css" rel="stylesheet" />
+    <link href="docs.min.css" rel="stylesheet" />
+    <link href="demo.css" rel="stylesheet" />
+</head>
+
+<body>
+    <div class="header">
+        <div class="wrap">
+            <ul class="nav-list">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="###" class="active">demo</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="main wrap">
+        <ul class="demo-nav-list" id="navList">
+        </ul>
+        <script type="text/javascript" src="nav.js"></script>
+        <script type="text/javascript">
+            nav(document.getElementById('navList'), 'areaselector');
+        </script>
+        <div class="demo-container">
+            <h1 class="page-header">区域选择</h1>
+            <div class="bs-example bs-example-padded-bottom">
+                <div id="container" style="margin:0 auto;border:1px solid red;width:600px;height:300px;text-align:center;padding-top:40px;">
+                    尝试在该区域用鼠标进行拖拽
+                </div>
+            </div>
+            <h3>调用</h3>
+            <div class="highlight">
+                <pre>
+                    <code data-lang="js" class="language-js">
+KM.areaSelector(options)
+                    </code>
+                </pre>
+            </div>
+
+            <h1>参数 options</h1>
+            <table class="table table-bordered table-striped js-options-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>类型</th>
+                        <th style="width: 100px;">默认值</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>$container</td>
+                        <td>jquery</td>
+                        <td>$("body")</td>
+                        <td>容器，默认整个页面</td>
+                    </tr>
+                    <tr>
+                        <td>zIndex</td>
+                        <td>int</td>
+                        <td>9999</td>
+                        <td>层叠</td>
+                    </tr>
+                    <tr>
+                        <td>autoScroll</td>
+                        <td>boolean</td>
+                        <td>true</td>
+                        <td>拖动时是否自动滚动窗体</td>
+                    </tr>
+                    <tr>
+                        <td>isDraw</td>
+                        <td>boolean</td>
+                        <td>true</td>
+                        <td>拖动时是否呈现范围</td>
+                    </tr>
+                    <tr>
+                        <td>callback</td>
+                        <td>object</td>
+                        <td>
+                            <pre>                            
+                                <code>
+{
+    onStart:$.noop,
+    onMove:$.noop,
+    onStop:$.noop                        
+}
+                            </code>
+                        </pre>
+                        </td>
+                        <td>拖动开始，移动和停止的回调函数</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+    <script type="text/javascript" src="vendor/require/require.js"></script>
+    <script type="text/javascript" src="main.js"></script>
+    <script type="text/javascript">
+        require(['KM'], function (KM) {
+            KM.areaSelector({
+                $container:$('#container')
+            })
+        });
+    </script>
+</body>
+
+</html>

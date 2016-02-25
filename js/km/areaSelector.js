@@ -5,7 +5,7 @@
  */
 define('km/areaSelector', ['jquery'], function ($) {
     return function (options) {
-        var options = $.extend(true, {
+        options = $.extend(true, {
             $container: $(document.body),
             zIndex: 9999,
             autoScroll: true,
@@ -17,15 +17,21 @@ define('km/areaSelector', ['jquery'], function ($) {
                 onStop: $.noop
             }
         }, options);
+        var $container = options.$container;
         var doc = document;
         var $doc = $(doc);
-        var $win = $(window);
+        var $scrollWrap = $container[0].tagName.toLowerCase() == 'body' ? $(window) : $container;
         var coord = { bx: 0, by: 0, mx: 0, my: 0, ex: 0, ey: 0 };
-        var moving = false;
+        var containerInfo = {
+            left: $container.offset().left,
+            top: $container.offset().top,
+            width: $container.outerWidth(),
+            height: $container.outerHeight()
+        };
         var autoScrollActive = false;
         var $range, w_h, d_h;
 
-        options.$container.off('mousedown.rangeSelector').on('mousedown.rangeSelector', function (e) {
+        $container.off('mousedown.rangeSelector').on('mousedown.rangeSelector', function (e) {
             if (!$range) {
                 $range = $('<div class="k-areaSelector"></div>').css('zIndex', options.zIndex).appendTo(doc.body);
             }
@@ -45,7 +51,7 @@ define('km/areaSelector', ['jquery'], function ($) {
                 coord.bx = parseInt(mouseCoord.x);
                 coord.by = parseInt(mouseCoord.y);
 
-                w_h = $win.height();
+                w_h = $scrollWrap.height();
                 d_h = $doc.height();
 
                 $doc.on('mousemove.rangeSelector', function (e) {
@@ -61,9 +67,9 @@ define('km/areaSelector', ['jquery'], function ($) {
                 var mouseCoord = this.getMouseCoord(e);
                 coord.mx = parseInt(mouseCoord.x);
                 coord.my = parseInt(mouseCoord.y);
-                
+
                 if (options.isDraw) {
-                    this.draw();
+                    this.draw(coord);
                 }
 
                 if (options.autoScroll) {
@@ -99,18 +105,18 @@ define('km/areaSelector', ['jquery'], function ($) {
             },
             scroll: function (direction, yPos) {
                 var self = this;
-                var scrollTop = $win.scrollTop();
+                var scrollTop = $scrollWrap.scrollTop();
                 if (direction < 0) {
                     if (scrollTop > 0) {
                         scrollTop -= 5;
-                        $win.scrollTop(scrollTop);
+                        $scrollWrap.scrollTop(scrollTop);
                     } else {
                         autoScrollActive = false;
                     }
                 } else {
                     if (yPos >= (w_h - 10)) {
                         scrollTop += 5;
-                        $win.scrollTop(scrollTop);
+                        $scrollWrap.scrollTop(scrollTop);
                     } else {
                         autoScrollActive = false;
                     }
@@ -126,14 +132,39 @@ define('km/areaSelector', ['jquery'], function ($) {
                     }
                 }
             },
-            draw: function () {
-                $range.css({
-                    display:'block',
+            draw: function (cord) {
+                var css = {
+                    display: 'block',
                     top: coord.by < coord.my ? coord.by : coord.my,
                     left: coord.bx < coord.mx ? coord.bx : coord.mx,
                     width: Math.abs(coord.mx - coord.bx),
                     height: Math.abs(coord.my - coord.by)
-                });
+                };
+
+                var a_h = css.top + css.height,
+                    a_w = css.left + css.width,
+                    c_h = containerInfo.top + containerInfo.height,
+                    c_w = containerInfo.left + containerInfo.width;
+
+                if (a_h >= c_h) {
+                    css.height = c_h - css.top;
+                }
+
+                if (a_w >= c_w) {
+                    css.width = c_w - css.left;
+                }
+
+                if (css.left <= containerInfo.left) {
+                    css.width = css.width - (containerInfo.left - css.left);
+                    css.left = containerInfo.left;
+                }
+
+                if (css.top <= containerInfo.top) {
+                    css.height = css.height - (containerInfo.top - css.top);
+                    css.top = containerInfo.top;
+                }
+
+                $range.css(css);
             }
         };
     };
