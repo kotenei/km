@@ -389,8 +389,11 @@ define('km/app', ['jquery', 'km/router', 'km/util', 'km/popTips', 'km/loading', 
 define('km/areaSelector', ['jquery'], function ($) {
     return function (options) {
         var options = $.extend(true, {
+            $container: $(document.body),
             zIndex: 9999,
-            autoScrollDealy:5,
+            autoScroll: true,
+            autoScrollDealy: 5,
+            isDraw: true,
             callback: {
                 onStart: $.noop,
                 onMove: $.noop,
@@ -405,7 +408,7 @@ define('km/areaSelector', ['jquery'], function ($) {
         var autoScrollActive = false;
         var $range, w_h, d_h;
 
-        $(doc.body).off('mousedown.rangeSelector').on('mousedown.rangeSelector', function (e) {
+        options.$container.off('mousedown.rangeSelector').on('mousedown.rangeSelector', function (e) {
             if (!$range) {
                 $range = $('<div class="k-areaSelector"></div>').css('zIndex', options.zIndex).appendTo(doc.body);
             }
@@ -441,20 +444,26 @@ define('km/areaSelector', ['jquery'], function ($) {
                 var mouseCoord = this.getMouseCoord(e);
                 coord.mx = parseInt(mouseCoord.x);
                 coord.my = parseInt(mouseCoord.y);
-                this.draw();
-                $range.show();
-                if (e.clientY <= 10 || e.clientY >= w_h - 10) {
-                    if (e.clientY <= 10 && !autoScrollActive) {
-                        autoScrollActive = true;
-                        this.scroll(-1, e.clientY);
-                    }
-                    if (e.clientY >= (w_h - 10) && mouseCoord.y < (d_h + 100) && !autoScrollActive) {
-                        autoScrollActive = true;
-                        this.scroll(1, e.clientY);
-                    }
-                } else {
-                    autoScrollActive = false;
+                
+                if (options.isDraw) {
+                    this.draw();
                 }
+
+                if (options.autoScroll) {
+                    if (e.clientY <= 10 || e.clientY >= w_h - 10) {
+                        if (e.clientY <= 10 && !autoScrollActive) {
+                            autoScrollActive = true;
+                            this.scroll(-1, e.clientY);
+                        }
+                        if (e.clientY >= (w_h - 10) && mouseCoord.y < (d_h + 100) && !autoScrollActive) {
+                            autoScrollActive = true;
+                            this.scroll(1, e.clientY);
+                        }
+                    } else {
+                        autoScrollActive = false;
+                    }
+                }
+
                 options.callback.onMove(e, coord);
             },
             stop: function (e) {
@@ -502,6 +511,7 @@ define('km/areaSelector', ['jquery'], function ($) {
             },
             draw: function () {
                 $range.css({
+                    display:'block',
                     top: coord.by < coord.my ? coord.by : coord.my,
                     left: coord.bx < coord.mx ? coord.bx : coord.mx,
                     width: Math.abs(coord.mx - coord.bx),

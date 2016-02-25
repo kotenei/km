@@ -2652,4 +2652,5 @@ table.k-treeTable tr.expanded.accept td span.indenter a {
   opacity: 0.5;
   position: absolute;
   z-index: 9999;
+  display: none;
 }
