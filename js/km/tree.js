@@ -183,7 +183,7 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
 
 
         this.options = $.extend(true, {
-            selectLimit: true,
+            selectLimit: false,
             data: [],
             edit: {
                 enable: false
@@ -390,7 +390,7 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
                 html.push('<li id="li_' + node.nodeId + '" nId="' + node.nodeId + '">');
                 html.push(view.getLineHtml(node, this.options));
                 html.push(view.getChkHtml(node, this.options));
-                html.push('<a href="javascript:void(0);" id="a_' + node.nodeId + '" nId="' + node.nodeId + '">');
+                html.push('<a href="javascript:void(0);" id="a_' + node.nodeId + '" nId="' + node.nodeId + '" class="' + (node.selected ? _consts.node.SELECTED : "") + '" >');
                 html.push(view.getIconHtml(node, this.options));
                 html.push('<span>' + node.text + '</span>');
                 //html.push(view.getOperateHtml(node, this.options));
@@ -786,19 +786,12 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
      * @return {Void}
      */
     Tree.prototype.reload = function (data) {
-
         data = data || this.options.data;
-
         var html = [];
-
         this.initNodes(data);
-
         this.options.data = data;
-
         this.createNode(this.options.data, html);
-
         this.$tree.children('li').remove().end().html(html.join(''));
-
     };
 
     return Tree;
