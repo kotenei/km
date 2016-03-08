@@ -10103,7 +10103,7 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
                 html.push('<li id="li_' + node.nodeId + '" nId="' + node.nodeId + '">');
                 html.push(view.getLineHtml(node, this.options));
                 html.push(view.getChkHtml(node, this.options));
-                html.push('<a href="javascript:void(0);" id="a_' + node.nodeId + '" nId="' + node.nodeId + '" class="' + (node.selected ? _consts.node.SELECTED : "") + '" >');
+                html.push('<a href="javascript:void(0);" id="a_' + node.nodeId + '" nId="' + node.nodeId + '" class="' + (node.selected ? _consts.node.SELECTED : "") + ' ' + (node.selectDisabled ? "disabled" : "") + '" >');
                 html.push(view.getIconHtml(node, this.options));
                 html.push('<span>' + node.text + '</span>');
                 //html.push(view.getOperateHtml(node, this.options));
