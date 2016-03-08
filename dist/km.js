@@ -1523,7 +1523,8 @@ define('km/datePicker', ['jquery'], function ($) {
             maxDate: null,
             zIndex: 2000
         }, options);
-        this.isInput = this.$element.is('input');
+
+        this.isInput = this.$element[0].tagName.toLowerCase() == 'input';
         this.year = date.getFullYear();
         this.month = date.getMonth() + 1;
         this.day = date.getDate();
@@ -2557,6 +2558,22 @@ define('km/datePicker', ['jquery'], function ($) {
         this.monthBoxToggle(false);
         this.timePanelHide();
     };
+
+    /**
+     * 设置日期
+     * @return {Void}
+     */
+    DatePicker.prototype.setValue = function (dateText) {
+        if (!dateText) {
+            return;
+        }
+        if (this.isInput) {
+            this.$element.val(dateText);
+        }
+        else {
+            $.data(this.$element[0], 'value', dateText);
+        }
+    }
 
     /**
      * 设置时分秒选择框显示的位置
