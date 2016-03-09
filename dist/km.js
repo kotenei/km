@@ -2573,7 +2573,20 @@ define('km/datePicker', ['jquery'], function ($) {
         else {
             $.data(this.$element[0], 'value', dateText);
         }
-    }
+    };
+
+    /**
+     * 获取日期
+     * @return {Void}
+     */
+    DatePicker.prototype.getValue = function () {
+        if (this.isInput) {
+            return this.$element.val();
+        }
+        else {
+            return $.data(this.$element[0], 'value');
+        }
+    };
 
     /**
      * 设置时分秒选择框显示的位置
