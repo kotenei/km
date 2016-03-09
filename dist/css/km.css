@@ -1218,7 +1218,7 @@ label.k-error {
   position: absolute;
   display: none;
   border: 1px solid #cccccc;
-  min-width: 230px;
+  min-width: 250px;
   border-radius: 4px;
   font-size: 14px;
   color: #333;
@@ -1239,6 +1239,11 @@ label.k-error {
   vertical-align: middle;
   line-height: 25px;
   position: relative;
+}
+.k-datepicker table td {
+  width: 25px;
+  height: 25px;
+  padding: 2px;
 }
 .k-datepicker table td.old,
 .k-datepicker table td.new,
