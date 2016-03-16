@@ -86,11 +86,14 @@ define('km/autoComplete', ['jquery'], function ($) {
         });
 
         this.$listBox.on('click.autocomplete', 'li', function () {
-            var text = $(this).text();
+            var $el = $(this),
+                text = $el.text(),
+                index = $el.attr('data-index');
+
             self.$element.val(text).focus();
             if ($.isFunction(self.options.callback.setValue)) {
-                var item = self.getItem(text);
-                self.options.callback.setValue(item);
+                var item = self.getItem(text, index);
+                self.options.callback.setValue.call(this, item);
             }
         });
 
@@ -175,7 +178,7 @@ define('km/autoComplete', ['jquery'], function ($) {
         if (data.length === 0) { return; }
         var html = '<ul>';
         for (var i = 0; i < data.length; i++) {
-            html += '<li class="' + (i == 0 ? "active" : "") + '">' + this.highlight(value, data[i]) + '</li>';
+            html += '<li class="' + (i == 0 ? "active" : "") + '"  data-index="' + i + '">' + this.highlight(value, data[i]) + '</li>';
         }
         html += '</ul>';
         this.$listBox.append(html);
@@ -308,20 +311,27 @@ define('km/autoComplete', ['jquery'], function ($) {
      * @return {Void} 
      */
     AutoComplete.prototype.select = function () {
-        var $item = this.$listBox.find('li.active');
-        var text = $item.text();
+        var $item = this.$listBox.find('li.active'),
+            index = $item.attr('data-index'),
+            text = $item.text();
+
         this.$element.val(text);
         this.hide();
         if ($.isFunction(this.options.callback.setValue)) {
-            var item = this.getItem(text);
-            this.options.callback.setValue(item);
+            var item = this.getItem(text, index);
+            this.options.callback.setValue.call(this, item);
         }
     };
 
     //根据值获取数据项
-    AutoComplete.prototype.getItem = function (value) {
+    AutoComplete.prototype.getItem = function (value, index) {
         var data = this.cacheData;
         if (!data || data.length === 0) { return; }
+
+        if (index) {
+            return data[index];
+        }
+
         for (var i = 0, formatted; i < data.length; i++) {
             formatted = this.options.formatItem(data[i]);
             if (value === formatted) {
