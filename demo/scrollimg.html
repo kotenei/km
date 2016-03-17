@@ -1,0 +1,173 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+    <title>轮播图</title>
+    <link href="../style/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../dist/css/km.min.css" rel="stylesheet" />
+    <link href="docs.min.css" rel="stylesheet" />
+    <link href="demo.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="header">
+        <div class="wrap">
+            <ul class="nav-list">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="###" class="active">demo</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="main wrap">
+        <ul class="demo-nav-list" id="navList">
+        </ul>
+        <script type="text/javascript" src="nav.js"></script>
+        <script type="text/javascript">
+            nav(document.getElementById('navList'), 'scrollImg');
+        </script>
+        <div class="demo-container">
+            <h1 class="page-header">轮播图</h1>
+            <div class="bs-example bs-example-padded-bottom">
+
+                <div class="k-scrollImg">
+                    <div class="k-scrollImg-prev">
+                        <span class="fa fa-chevron-left"></span>
+                    </div>
+                    <div class="k-scrollImg-container">
+                        <ul>
+                            <li>
+                                <a href="###">
+                                    <img src="../dist/images/focusmap/1.jpg" alt="测试1" title="测试1" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="###">
+                                    <img src="../dist/images/focusmap/2.jpg" alt="测试2" title="测试2" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="###">
+                                    <img src="../dist/images/focusmap/3.jpg" alt="测试3" title="测试3" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="###">
+                                    <img src="../dist/images/focusmap/4.jpg" alt="测试4" title="测试4" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="###">
+                                    <img src="../dist/images/focusmap/5.jpg" alt="测试5" title="测试5" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="###">
+                                    <img src="../dist/images/focusmap/6.jpg" alt="测试6" title="测试6" />
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="k-scrollImg-next">
+                        <span class="fa fa-chevron-right"></span>
+                    </div>
+                </div>
+
+            </div>
+            <h3>HTML结构</h3>
+            <pre>
+                <code>
+&lt;div class="k-scrollImg"&gt;
+    &lt;div class="k-scrollImg-prev"&gt;
+        &lt;span class="fa fa-chevron-left"&gt;&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class="k-scrollImg-container"&gt;
+        &lt;ul&gt;
+            &lt;li&gt;
+                &lt;a href="###"&gt;
+                    &lt;img src="../dist/images/focusmap/1.jpg" alt="测试1" title="测试1" /&gt;
+                &lt;/a&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+                &lt;a href="###"&gt;
+                    &lt;img src="../dist/images/focusmap/2.jpg" alt="测试2" title="测试2" /&gt;
+                &lt;/a&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+                &lt;a href="###"&gt;
+                    &lt;img src="../dist/images/focusmap/3.jpg" alt="测试3" title="测试3" /&gt;
+                &lt;/a&gt;
+            &lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/div&gt;
+    &lt;div class="k-scrollImg-next"&gt;
+        &lt;span class="fa fa-chevron-right"&gt;&lt;/span&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+                </code>
+            </pre>
+            <h3>初始化</h3>
+            <div class="highlight">
+                <pre>
+                    <code data-lang="js" class="language-js">
+KM.scrollImg($('.k-scrollImg'), options);
+                    </code>
+                </pre>
+            </div>
+            <h3>参数 options</h3>
+            <table class="table table-bordered table-striped js-options-table">
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>类型</th>
+                        <th style="width: 100px;">默认值</th>
+                        <th>描述</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>padding</td>
+                        <td>int</td>
+                        <td>30</td>
+                        <td>左右内边距</td>
+                    </tr>
+                    <tr>
+                        <td>width</td>
+                        <td>int/string</td>
+                        <td>'auto'</td>
+                        <td>容器宽度</td>
+                    </tr>
+                    <tr>
+                        <td>height</td>
+                        <td>int</td>
+                        <td>150</td>
+                        <td>容器高度</td>
+                    </tr>
+                    <tr>
+                        <td>delay</td>
+                        <td>int</td>
+                        <td>3000</td>
+                        <td>自动切换的时间间隔</td>
+                    </tr>
+                    <tr>
+                        <td>toggleDealy</td>
+                        <td>int</td>
+                        <td>700</td>
+                        <td>切换时的速度间隔</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script type="text/javascript" src="vendor/require/require.js"></script>
+    <script type="text/javascript" src="main.js"></script>
+    <script type="text/javascript">
+        require(['KM'], function (KM) {
+            KM.scrollImg($('.k-scrollImg'), {
+                showNum: 4
+            });
+        });
+
+    </script>
+</body>
+</html>

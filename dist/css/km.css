@@ -2659,3 +2659,40 @@ table.k-treeTable tr.expanded.accept td span.indenter a {
   z-index: 9999;
   display: none;
 }
+.k-scrollImg {
+  position: relative;
+  padding-left: 30px;
+  padding-right: 30px;
+}
+.k-scrollImg .k-scrollImg-prev {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  margin-top: -7px;
+  cursor: pointer;
+}
+.k-scrollImg .k-scrollImg-next {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  margin-top: -7px;
+  cursor: pointer;
+}
+.k-scrollImg .k-scrollImg-container {
+  overflow: hidden;
+  height: 150px;
+}
+.k-scrollImg .k-scrollImg-container ul {
+  float: left;
+  width: 100%;
+}
+.k-scrollImg .k-scrollImg-container ul li {
+  float: left;
+  width: 200px;
+  height: 150px;
+  margin: 0 5px;
+}
+.k-scrollImg .k-scrollImg-container ul li img {
+  width: 100%;
+  height: 150px;
+}

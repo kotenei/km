@@ -19,6 +19,7 @@
         { text: '门户组件', activeCode: 'porlets', link: 'portlets.html' },
         { text: '上传', activeCode: 'upload', link: 'upload.html' },
         { text: '焦点图', activeCode: 'focusmap', link: 'focusmap.html' },
+        { text: '轮播图', activeCode: 'scrollImg', link: 'scrollImg.html' },
         { text: '文字高亮', activeCode: 'highlight', link: 'highlight.html' },
         { text: '评级打分', activeCode: 'rating', link: 'rating.html' },
         { text: '弹出提示', activeCode: 'popTips', link: 'popTips.html' },
