@@ -172,7 +172,7 @@ define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event','km/po
         } else {
             this.$elm.attr({
                 'class': 'k-form-control',
-                'readonly': 'readonly'
+                //'readonly': 'readonly'
             }).prependTo(this.$uploadBox);
             this.$close.css('right', this.$button.outerWidth() + 10);
         }
