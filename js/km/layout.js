@@ -1,16 +1,16 @@
 /*
- * ²¼¾ÖÄ£¿é
+ * ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½
  * @date:2015-08-23
  * @author:kotenei(kotenei@qq.com)
  */
-define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cache) {
+define('km/layout', ['jquery', 'km/panel', 'km/cache'], function($, Panel, cache) {
 
     /**
-     * ²¼¾ÖÀà
+     * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
      * @param {JQuery} $elm - dom
-     * @param {Object} options - ²ÎÊý
+     * @param {Object} options - ï¿½ï¿½ï¿½ï¿½
      */
-    var Layout = function ($elm, options) {
+    var Layout = function($elm, options) {
         this.$layout = $elm;
         this.options = $.extend(true, {
             cache: false,
@@ -31,10 +31,10 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
     };
 
     /**
-     * ³õÊ¼»¯
+     * ï¿½ï¿½Ê¼ï¿½ï¿½
      * @return {Void}
      */
-    Layout.prototype.init = function () {
+    Layout.prototype.init = function() {
         var self = this;
         this.$win = $(window);
         this.$panels = this.$layout.children('.k-panel');
@@ -43,7 +43,7 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
         this.$rightPanel = this.$panels.filter('.k-panel-right');
         this.$bottomPanel = this.$panels.filter('.k-panel-bottom');
         this.$centerPanel = this.$panels.filter('.k-panel-center');
-        this.$panels.each(function () {
+        this.$panels.each(function() {
             var $panel = $(this),
                 type = $panel.attr('data-type'),
                 $expand = $(self.getExpandHtml(type)).appendTo(self.$layout);
@@ -56,19 +56,20 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
     };
 
     /**
-     * Ãæ°å³õÊ¼»¯
+     * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½
      * @return {Void}
      */
-    Layout.prototype.panelInit = function () {
+    Layout.prototype.panelInit = function() {
         var self = this;
-        this.$panels.each(function () {
+        this.$panels.each(function() {
 
             var $panel = $(this).show(),
                 type = $panel.attr('data-type'),
+                resizable = $panel.attr('data-resizable'),
                 min = self.options.resizeMin,
                 options = {
                     resizable: {
-                        enabled: true,
+                        enabled: !resizable || resizable == 'true' ? true : false,
                         cover: true,
                         border: {
                             left: false,
@@ -77,7 +78,7 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
                             bottom: false
                         },
                         callback: {
-                            stop: function () {
+                            stop: function() {
                                 if (self.$centerPanel.length > 0) {
                                     self.$centerPanel.resize();
                                 } else {
@@ -115,39 +116,39 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
     };
 
     /**
-     * ÊÂ¼þ¼à¿Ø
+     * ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½
      * @return {Void}
      */
-    Layout.prototype.watch = function () {
+    Layout.prototype.watch = function() {
         var self = this;
-        this.$win.on('resize.layout', function () {
+        this.$win.on('resize.layout', function() {
             self.setSize();
         });
-        this.$panels.on('click.layout', 'span[role=hide]', function () {
+        this.$panels.on('click.layout', 'span[role=hide]', function() {
             self.hide($(this).attr('data-type'));
             return false;
         });
-        this.$layout.on('click.layout', 'span[role=show]', function () {
+        this.$layout.on('click.layout', 'span[role=show]', function() {
             self.show($(this).attr('data-type'));
             return false;
         });
     };
 
     /**
-     * Ìí¼Ó×Ô¶¨ÒåÊÂ¼þ
+     * ï¿½ï¿½ï¿½ï¿½ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½Â¼ï¿½
      * @return {Void}
      */
-    Layout.prototype.on = function (type, callback) {
+    Layout.prototype.on = function(type, callback) {
         this._event[type] = callback || $.noop;
         return this;
     };
 
     /**
-     * ÏÔÊ¾Ãæ°å
-     * @param {String} type - Ãæ°åÀà±ð
+     * ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½
+     * @param {String} type - ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
      * @return {Void}
      */
-    Layout.prototype.show = function (type) {
+    Layout.prototype.show = function(type) {
         var self = this,
             panelsInfo = this.getPanelsInfo(),
             info = panelsInfo[type],
@@ -173,7 +174,7 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
                 break;
         }
 
-        $panel.stop().animate(css, function () {
+        $panel.stop().animate(css, function() {
             self.setSize();
             if (self.$centerPanel) {
                 self.$centerPanel.resize();
@@ -184,11 +185,11 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
     };
 
     /**
-     * Òþ²ØÃæ°å
-     * @param {String} type - Ãæ°åÀà±ð
+     * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+     * @param {String} type - ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
      * @return {Void}
      */
-    Layout.prototype.hide = function (type) {
+    Layout.prototype.hide = function(type) {
 
         var self = this,
             panelsInfo = this.getPanelsInfo(),
@@ -219,7 +220,7 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
                 break;
         }
 
-        info.$panel.stop().animate(css, function () {
+        info.$panel.stop().animate(css, function() {
             info.$panel.hide();
             info.$expand.show();
             self._event.hide.call(self, info);
@@ -227,11 +228,11 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
     };
 
     /**
-     * »ñÈ¡Ãæ°åÒþ²ØºóÕ¼Î»Í¼²ãHTML
-     * @param {String} type - Ãæ°åÀà±ð
+     * ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Øºï¿½Õ¼Î»Í¼ï¿½ï¿½HTML
+     * @param {String} type - ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
      * @return {String}
      */
-    Layout.prototype.getExpandHtml = function (type) {
+    Layout.prototype.getExpandHtml = function(type) {
         var ret = '',
             className = '',
             faClassName = '';
@@ -258,10 +259,10 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
     };
 
     /**
-     * ÉèÖÃËùÓÐÃæ°å³ß´ç
+     * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß´ï¿½
      * @return {Void}
      */
-    Layout.prototype.setSize = function () {
+    Layout.prototype.setSize = function() {
         var $parent = this.$parent,
             width = $parent.width(),
             height = $parent.height(),
@@ -294,7 +295,7 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
         }
 
 
-        //¼ÆËãÖÐ¼äÃæ°å¾àÀë¶¥²¿¾àÀë
+        //ï¿½ï¿½ï¿½ï¿½ï¿½Ð¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ë¶¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         t += h;
 
         if (info.bottom) {
@@ -310,7 +311,7 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
             }
         }
 
-        //¼ÆËãÖÐ¼äÃæ°åµÄ¸ß¶È
+        //ï¿½ï¿½ï¿½ï¿½ï¿½Ð¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¸ß¶ï¿½
         h = height - h;
 
         if (info.left) {
@@ -353,16 +354,16 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
     };
 
     /**
-    * »ñÈ¡ËùÓÐÃæ°åÏà¹ØÐÅÏ¢
-    * @param {String} type - Ãæ°åÀà±ð
+    * ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
+    * @param {String} type - ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     * @return {Object}
     */
-    Layout.prototype.getPanelsInfo = function (type) {
+    Layout.prototype.getPanelsInfo = function(type) {
         var ret = {};
 
-        this.$panels.each(function () {
+        this.$panels.each(function() {
             var $panel = $(this),
-                $expand = $.data($panel[0],'expand'),
+                $expand = $.data($panel[0], 'expand'),
                 panel = $.data($panel[0], 'panel'),
                 type = $panel.attr('data-type');
 
@@ -377,7 +378,7 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
                 panel: panel,
                 expandWidth: $expand.outerWidth(),
                 expandHeight: $expand.outerHeight(),
-                setBodyHeight: function () {
+                setBodyHeight: function() {
                     if (panel) {
                         panel.setBodyHeight();
                     }
@@ -394,19 +395,19 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
     };
 
     /**
-     * È«¾Ö³õÊ¼»¯µ÷ÓÃ
+     * È«ï¿½Ö³ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
      * @return {Void}
      */
-    Layout.Global = function ($elms) {
+    Layout.Global = function($elms) {
         $elms = $elms || $('div[data-module=layout]');
-        $elms.each(function () {
+        $elms.each(function() {
             var $el = $(this),
                 options = $el.attr('data-options'),
                 onShow = $el.attr('data-onshow'),
                 onHide = $el.attr('data-onhide'),
-                data =$.data($el[0],'layout');
+                data = $.data($el[0], 'layout');
 
-            
+
 
             if (!data) {
 
@@ -418,13 +419,13 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
                 onHide = onHide && onHide.length > 0 ? eval('(0,' + onHide + ')') : $.noop;
 
                 data = new Layout($el, options);
-                data.on('show', function (info) {
+                data.on('show', function(info) {
                     onShow.call(this, info);
-                }).on('hide', function (info) {
+                }).on('hide', function(info) {
                     onHide.call(this, info);
                 });
 
-                
+
                 $.data($el[0], 'layout', data);
             }
 

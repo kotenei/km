@@ -5489,14 +5489,14 @@ define('km/infiniteScroll', ['jquery'], function ($) {
  * @date:2015-08-23
  * @author:kotenei(kotenei@qq.com)
  */
-define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cache) {
+define('km/layout', ['jquery', 'km/panel', 'km/cache'], function($, Panel, cache) {
 
     /**
      * ������
      * @param {JQuery} $elm - dom
      * @param {Object} options - ����
      */
-    var Layout = function ($elm, options) {
+    var Layout = function($elm, options) {
         this.$layout = $elm;
         this.options = $.extend(true, {
             cache: false,
@@ -5520,7 +5520,7 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
      * ��ʼ��
      * @return {Void}
      */
-    Layout.prototype.init = function () {
+    Layout.prototype.init = function() {
         var self = this;
         this.$win = $(window);
         this.$panels = this.$layout.children('.k-panel');
@@ -5529,7 +5529,7 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
         this.$rightPanel = this.$panels.filter('.k-panel-right');
         this.$bottomPanel = this.$panels.filter('.k-panel-bottom');
         this.$centerPanel = this.$panels.filter('.k-panel-center');
-        this.$panels.each(function () {
+        this.$panels.each(function() {
             var $panel = $(this),
                 type = $panel.attr('data-type'),
                 $expand = $(self.getExpandHtml(type)).appendTo(self.$layout);
@@ -5545,16 +5545,17 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
      * ������ʼ��
      * @return {Void}
      */
-    Layout.prototype.panelInit = function () {
+    Layout.prototype.panelInit = function() {
         var self = this;
-        this.$panels.each(function () {
+        this.$panels.each(function() {
 
             var $panel = $(this).show(),
                 type = $panel.attr('data-type'),
+                resizable = $panel.attr('data-resizable'),
                 min = self.options.resizeMin,
                 options = {
                     resizable: {
-                        enabled: true,
+                        enabled: !resizable || resizable == 'true' ? true : false,
                         cover: true,
                         border: {
                             left: false,
@@ -5563,7 +5564,7 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
                             bottom: false
                         },
                         callback: {
-                            stop: function () {
+                            stop: function() {
                                 if (self.$centerPanel.length > 0) {
                                     self.$centerPanel.resize();
                                 } else {
@@ -5604,16 +5605,16 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
      * �¼�����
      * @return {Void}
      */
-    Layout.prototype.watch = function () {
+    Layout.prototype.watch = function() {
         var self = this;
-        this.$win.on('resize.layout', function () {
+        this.$win.on('resize.layout', function() {
             self.setSize();
         });
-        this.$panels.on('click.layout', 'span[role=hide]', function () {
+        this.$panels.on('click.layout', 'span[role=hide]', function() {
             self.hide($(this).attr('data-type'));
             return false;
         });
-        this.$layout.on('click.layout', 'span[role=show]', function () {
+        this.$layout.on('click.layout', 'span[role=show]', function() {
             self.show($(this).attr('data-type'));
             return false;
         });
@@ -5623,7 +5624,7 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
      * �����Զ����¼�
      * @return {Void}
      */
-    Layout.prototype.on = function (type, callback) {
+    Layout.prototype.on = function(type, callback) {
         this._event[type] = callback || $.noop;
         return this;
     };
@@ -5633,7 +5634,7 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
      * @param {String} type - ��������
      * @return {Void}
      */
-    Layout.prototype.show = function (type) {
+    Layout.prototype.show = function(type) {
         var self = this,
             panelsInfo = this.getPanelsInfo(),
             info = panelsInfo[type],
@@ -5659,7 +5660,7 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
                 break;
         }
 
-        $panel.stop().animate(css, function () {
+        $panel.stop().animate(css, function() {
             self.setSize();
             if (self.$centerPanel) {
                 self.$centerPanel.resize();
@@ -5674,7 +5675,7 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
      * @param {String} type - ��������
      * @return {Void}
      */
-    Layout.prototype.hide = function (type) {
+    Layout.prototype.hide = function(type) {
 
         var self = this,
             panelsInfo = this.getPanelsInfo(),
@@ -5705,7 +5706,7 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
                 break;
         }
 
-        info.$panel.stop().animate(css, function () {
+        info.$panel.stop().animate(css, function() {
             info.$panel.hide();
             info.$expand.show();
             self._event.hide.call(self, info);
@@ -5717,7 +5718,7 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
      * @param {String} type - ��������
      * @return {String}
      */
-    Layout.prototype.getExpandHtml = function (type) {
+    Layout.prototype.getExpandHtml = function(type) {
         var ret = '',
             className = '',
             faClassName = '';
@@ -5747,7 +5748,7 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
      * �������������ߴ�
      * @return {Void}
      */
-    Layout.prototype.setSize = function () {
+    Layout.prototype.setSize = function() {
         var $parent = this.$parent,
             width = $parent.width(),
             height = $parent.height(),
@@ -5843,12 +5844,12 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
     * @param {String} type - ��������
     * @return {Object}
     */
-    Layout.prototype.getPanelsInfo = function (type) {
+    Layout.prototype.getPanelsInfo = function(type) {
         var ret = {};
 
-        this.$panels.each(function () {
+        this.$panels.each(function() {
             var $panel = $(this),
-                $expand = $.data($panel[0],'expand'),
+                $expand = $.data($panel[0], 'expand'),
                 panel = $.data($panel[0], 'panel'),
                 type = $panel.attr('data-type');
 
@@ -5863,7 +5864,7 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
                 panel: panel,
                 expandWidth: $expand.outerWidth(),
                 expandHeight: $expand.outerHeight(),
-                setBodyHeight: function () {
+                setBodyHeight: function() {
                     if (panel) {
                         panel.setBodyHeight();
                     }
@@ -5883,16 +5884,16 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
      * ȫ�ֳ�ʼ������
      * @return {Void}
      */
-    Layout.Global = function ($elms) {
+    Layout.Global = function($elms) {
         $elms = $elms || $('div[data-module=layout]');
-        $elms.each(function () {
+        $elms.each(function() {
             var $el = $(this),
                 options = $el.attr('data-options'),
                 onShow = $el.attr('data-onshow'),
                 onHide = $el.attr('data-onhide'),
-                data =$.data($el[0],'layout');
+                data = $.data($el[0], 'layout');
 
-            
+
 
             if (!data) {
 
@@ -5904,13 +5905,13 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function ($, Panel, cach
                 onHide = onHide && onHide.length > 0 ? eval('(0,' + onHide + ')') : $.noop;
 
                 data = new Layout($el, options);
-                data.on('show', function (info) {
+                data.on('show', function(info) {
                     onShow.call(this, info);
-                }).on('hide', function (info) {
+                }).on('hide', function(info) {
                     onHide.call(this, info);
                 });
 
-                
+
                 $.data($el[0], 'layout', data);
             }
 
@@ -6846,89 +6847,6 @@ define('km/placeholder', ['jquery'], function ($) {
     }
 });
 /*
- * 弹出提示模块
- * @date:2014-09-10
- * @author:kotenei(kotenei@qq.com)
- */
-define('km/popTips', ['jquery'], function ($) {
-
-    /**
-     * 弹出提示模块
-     * @return {Object} 
-     */
-    var PopTips = (function () {
-
-        var _instance;
-
-        function init() {
-
-            var $tips, tm;
-
-            function build(status, content, delay, callback) {
-
-                if (tm) { clearTimeout(tm); }
-
-                if ($.isFunction(delay)) { callback = delay; delay = 3000; }
-
-                callback = callback || $.noop;
-                delay = delay || 3000;
-
-                if ($tips) { $tips.stop().remove(); }
-
-                $tips = $(getHtml(status, content))
-                        .appendTo(document.body).hide();
-
-                $tips.css({ marginLeft: -($tips.width() / 2), marginTop: -($tips.height() / 2) }).fadeIn('fase', function () {
-                    tm = setTimeout(function () {
-                        $tips.stop().remove();
-                        callback();
-                    }, delay);
-                })
-            }
-
-            function getHtml(status, content) {
-                var html = [];
-                switch (status) {
-                    case "success":
-                        html.push('<div class="k-pop-tips success"><span class="fa fa-check"></span>&nbsp;<span>' + content + '</span></div>');
-                        break;
-                    case "error":
-                        html.push('<div class="k-pop-tips error"><span class="fa fa-close"></span>&nbsp;<span>' + content + '</span></div>');
-                        break;
-                    case "warning":
-                        html.push('<div class="k-pop-tips warning"><span class="fa fa-exclamation"></span>&nbsp;<span>' + content + '</span></div>');
-                        break;
-                }
-                return html.join('');
-            }
-
-            return {
-                success: function (content, callback, delay) {
-                    build("success", content, callback, delay);
-                },
-                error: function (content, callback, delay) {
-                    build("error", content, callback, delay);
-                },
-                warning: function (content, callback, delay) {
-                    build("warning", content, callback, delay);
-                }
-            };
-        }
-
-        return {
-            getInstance: function () {
-                if (!_instance) {
-                    _instance = init();
-                }
-                return _instance;
-            }
-        }
-    })();
-
-    return PopTips.getInstance();
-});
-
-/*
  * 弹出框模块
  * @date:2014-11-05
  * @author:kotenei(kotenei@qq.com)
@@ -7039,6 +6957,89 @@ define('km/popover', ['jquery', 'km/tooltips', 'km/util'], function ($, Tooltips
 
     return Popover;
 });
+/*
+ * 弹出提示模块
+ * @date:2014-09-10
+ * @author:kotenei(kotenei@qq.com)
+ */
+define('km/popTips', ['jquery'], function ($) {
+
+    /**
+     * 弹出提示模块
+     * @return {Object} 
+     */
+    var PopTips = (function () {
+
+        var _instance;
+
+        function init() {
+
+            var $tips, tm;
+
+            function build(status, content, delay, callback) {
+
+                if (tm) { clearTimeout(tm); }
+
+                if ($.isFunction(delay)) { callback = delay; delay = 3000; }
+
+                callback = callback || $.noop;
+                delay = delay || 3000;
+
+                if ($tips) { $tips.stop().remove(); }
+
+                $tips = $(getHtml(status, content))
+                        .appendTo(document.body).hide();
+
+                $tips.css({ marginLeft: -($tips.width() / 2), marginTop: -($tips.height() / 2) }).fadeIn('fase', function () {
+                    tm = setTimeout(function () {
+                        $tips.stop().remove();
+                        callback();
+                    }, delay);
+                })
+            }
+
+            function getHtml(status, content) {
+                var html = [];
+                switch (status) {
+                    case "success":
+                        html.push('<div class="k-pop-tips success"><span class="fa fa-check"></span>&nbsp;<span>' + content + '</span></div>');
+                        break;
+                    case "error":
+                        html.push('<div class="k-pop-tips error"><span class="fa fa-close"></span>&nbsp;<span>' + content + '</span></div>');
+                        break;
+                    case "warning":
+                        html.push('<div class="k-pop-tips warning"><span class="fa fa-exclamation"></span>&nbsp;<span>' + content + '</span></div>');
+                        break;
+                }
+                return html.join('');
+            }
+
+            return {
+                success: function (content, callback, delay) {
+                    build("success", content, callback, delay);
+                },
+                error: function (content, callback, delay) {
+                    build("error", content, callback, delay);
+                },
+                warning: function (content, callback, delay) {
+                    build("warning", content, callback, delay);
+                }
+            };
+        }
+
+        return {
+            getInstance: function () {
+                if (!_instance) {
+                    _instance = init();
+                }
+                return _instance;
+            }
+        }
+    })();
+
+    return PopTips.getInstance();
+});
+
 define('km/portlets', ['jquery', 'km/window', 'km/dragdrop'], function ($, Window, Dragdrop) {
 
     var groupSortable,
