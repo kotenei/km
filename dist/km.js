@@ -5485,7 +5485,7 @@ define('km/infiniteScroll', ['jquery'], function ($) {
 });
 
 /*
- * ����ģ��
+ * 布局模块
  * @date:2015-08-23
  * @author:kotenei(kotenei@qq.com)
  */
