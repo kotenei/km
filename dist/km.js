@@ -5492,9 +5492,9 @@ define('km/infiniteScroll', ['jquery'], function ($) {
 define('km/layout', ['jquery', 'km/panel', 'km/cache'], function($, Panel, cache) {
 
     /**
-     * ������
+     * 布局模块
      * @param {JQuery} $elm - dom
-     * @param {Object} options - ����
+     * @param {Object} options - 参数
      */
     var Layout = function($elm, options) {
         this.$layout = $elm;
@@ -5517,7 +5517,7 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function($, Panel, cache
     };
 
     /**
-     * ��ʼ��
+     * 初始化
      * @return {Void}
      */
     Layout.prototype.init = function() {
@@ -5542,7 +5542,7 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function($, Panel, cache
     };
 
     /**
-     * ������ʼ��
+     * 面板初始化
      * @return {Void}
      */
     Layout.prototype.panelInit = function() {
@@ -5602,7 +5602,7 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function($, Panel, cache
     };
 
     /**
-     * �¼�����
+     * 事件监控
      * @return {Void}
      */
     Layout.prototype.watch = function() {
@@ -5621,7 +5621,7 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function($, Panel, cache
     };
 
     /**
-     * �����Զ����¼�
+     * 事件添加
      * @return {Void}
      */
     Layout.prototype.on = function(type, callback) {
@@ -5630,8 +5630,8 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function($, Panel, cache
     };
 
     /**
-     * ��ʾ����
-     * @param {String} type - ��������
+     * 展开
+     * @param {String} type - 面板类型
      * @return {Void}
      */
     Layout.prototype.show = function(type) {
@@ -5671,8 +5671,8 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function($, Panel, cache
     };
 
     /**
-     * ��������
-     * @param {String} type - ��������
+     * 隐藏
+     * @param {String} type - 面板类型
      * @return {Void}
      */
     Layout.prototype.hide = function(type) {
@@ -5714,8 +5714,8 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function($, Panel, cache
     };
 
     /**
-     * ��ȡ�������غ�ռλͼ��HTML
-     * @param {String} type - ��������
+     * 获取面板隐藏后占位图层HTML
+     * @param {String} type - 面板类别
      * @return {String}
      */
     Layout.prototype.getExpandHtml = function(type) {
@@ -5745,7 +5745,7 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function($, Panel, cache
     };
 
     /**
-     * �������������ߴ�
+     * 设置所有面板尺寸
      * @return {Void}
      */
     Layout.prototype.setSize = function() {
@@ -5781,7 +5781,7 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function($, Panel, cache
         }
 
 
-        //�����м��������붥������
+        //计算中间面板距离顶部距离
         t += h;
 
         if (info.bottom) {
@@ -5797,7 +5797,7 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function($, Panel, cache
             }
         }
 
-        //�����м������ĸ߶�
+        //计算中间面板的高度
         h = height - h;
 
         if (info.left) {
@@ -5840,8 +5840,8 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function($, Panel, cache
     };
 
     /**
-    * ��ȡ��������������Ϣ
-    * @param {String} type - ��������
+    * 获取所有面板相关信息
+    * @param {String} type - 面板类别
     * @return {Object}
     */
     Layout.prototype.getPanelsInfo = function(type) {
@@ -5881,7 +5881,7 @@ define('km/layout', ['jquery', 'km/panel', 'km/cache'], function($, Panel, cache
     };
 
     /**
-     * ȫ�ֳ�ʼ������
+     * 全局初始化
      * @return {Void}
      */
     Layout.Global = function($elms) {
