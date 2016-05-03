@@ -236,6 +236,9 @@ define('km/autoComplete', ['jquery'], function ($) {
      * @return {Void}
      */
     AutoComplete.prototype.setCss = function () {
+        if (!this.$list) {
+            return;
+        }
         this.$list.css('max-height', this.options.height || "auto");
         var css = this.getCss();
         this.$listBox.css(css);
