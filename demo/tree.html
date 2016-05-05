@@ -159,6 +159,8 @@ tree.getNode(nodeId);
 tree.addNodes(parentNode,nodes);
 //移除某个节点
 tree.removeNode(node);
+//复选节点
+tree.checkNode(nodeId);
 //选择节点
 tree.selectNode(nodeId);
 //取消节点选中状态
@@ -204,7 +206,7 @@ tree.reload(data);
             ];
 
             //var nodes = [{
-            //    nodeId: 1, text: '父节点', open: true, nodes: [
+            //    nodeId: 1, text: '分类栏目一', open: true, nodes: [
             //        {
             //            nodeId: 2, text: '子节点', open: true, nodes: [
             //                { nodeId: 3, text: '子孙节点1' },
@@ -213,7 +215,14 @@ tree.reload(data);
             //            ]
             //        }
             //    ]
-            //}];
+            //},
+            //    {
+            //        nodeId: 6, text: '分类栏目四', open: true, nodes: [
+            //               { nodeId: 7, text: '分类一' },
+            //               { nodeId: 8, text: '分类二' }
+            //        ]
+            //    }
+            //];
 
 
             var num = 10;

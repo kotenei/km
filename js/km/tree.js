@@ -477,9 +477,7 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
      * @return {Void}
      */
     Tree.prototype.removeNode = function (node) {
-
         if (!node) { return; }
-
         var parentNode = this.getNode(node.parentId);
         var childNodes = this.getChildNodes(node);
         var $parent = this.$tree.find('#li_' + node.parentId);
@@ -501,7 +499,6 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
             if (index >= 0) {
                 parentNode.nodes.splice(index, 1);
             }
-
             if (parentNode.nodes.length === 0) {
                 $current.parent().remove();
                 parentNode.isParent = false;
@@ -514,9 +511,7 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
         if (prevNode) {
             if (node.isLast) {
                 prevNode.isLast = true;
-
                 $prev.children('ul').removeClass('line');
-
                 if (prevNode.isFirst && prevNode.parentId === 0) {
                     view.replaceSwitchClass($prev.find('#' + _consts.className.SWITCH + '_' + prevNode.nodeId), _consts.line.ROOT);
                 } else {
@@ -524,7 +519,6 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
                 }
             }
         }
-
 
         if (node.isFirst && node.parentId === 0) {
             if (nextNode) {
@@ -801,9 +795,9 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
             return;
         }
         var self = this;
-        var tmpData = this.options.data;
+        var tmpData = [];
         var html = [];
-        initData(tmpData, text,this.options)
+        initData(this.options.data, text,this.options)
         function initData(data, text,options) {
             var setParent = function (parent) {
                 if (!parent || parent.canBuild) {
@@ -813,32 +807,33 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
                     setParent(parent.parent);
                 }
             }
-            var set = function (data, parent, text, index, options) {
+            var set = function (data, text, options) {
                 if (!utils.isArray(data) || data.length === 0) {
-                    if (!text) {
-                        parent.canBuild = true;
-                        setParent(parent.parent);
-                    } else {
-                        if (parent && parent.text.indexOf(text) == -1) {
-                            parent.canBuild = false;
-                        } else {
-                            parent.canBuild = true;
-                            setParent(parent.parent);
-                        }
-                    }
                     return;
                 }
                 for (var i = 0, node; i < data.length; i++) {
                     node = data[i];
+                    node.canBuild = false;
                     if (!options.check.keepSearch) {
                         node.isChecked = false;
                     }
-                    set(node.nodes, node, text, i,options);
+
+                    if (!text) {
+                        node.canBuild = true;
+                    } else {
+                        if (node.text.indexOf(text)==-1) {
+                            node.canBuild = false;
+                        } else {
+                            node.canBuild = true;
+                            setParent(node.parent);
+                        }
+                    }
+                    set(node.nodes, text,options);
                 }
             }
-            set(data, null, text, 0, options);
+            set(data, text, options);
         }
-        this.createNode(tmpData, html);
+        this.createNode(this.options.data, html);
         this.$tree.children('li').remove().end().html(html.join(''));
     }
 
