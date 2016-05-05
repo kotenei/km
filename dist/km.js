@@ -9957,7 +9957,6 @@ define('km/tooltips', ['jquery'], function ($) {
  */
 define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
 
-
     /**
      * 常量
      * @type {Object}
@@ -10063,7 +10062,7 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
                 return '';
             }
 
-            var checked = String(node.isChecked === true );
+            var checked = String(node.isChecked === true);
             var className;
 
             if (options.check.chkType === 'radio') {
@@ -10121,6 +10120,11 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
             $element.attr('class', tmpList.join('_'));
         },
         replaceChkClass: function ($element, checked) {
+
+            if (!$element || $element.length == 0) {
+                return;
+            }
+
             $element.attr('class', $element.attr('class').replace(checked ? 'false' : 'true', checked ? 'true' : 'false'));
         }
     };
@@ -10146,7 +10150,8 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
             check: {
                 enable: false,                          // 是否启用
                 chkType: 'checkbox',                    // 单选框还是复选框，默认复选
-                chkBoxType: { Y: "ps", N: "ps" }        // Y：选中时对父与子级的关联关系，N：取消选中时对父与子级的关联关系，p:父级,s:子级
+                chkBoxType: { Y: "ps", N: "ps" },       // Y：选中时对父与子级的关联关系，N：取消选中时对父与子级的关联关系，p:父级,s:子级
+                keepSearch: false
             },
             callback: {
                 beforeCheck: $.noop,
@@ -10185,7 +10190,7 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
      * @param  {Array} data - 数组节点
      * @return {Void}
      */
-    Tree.prototype.initNodes = function (data) {
+    Tree.prototype.initNodes = function (data, parent) {
         if (!utils.isArray(data) || data.length === 0) {
             return;
         }
@@ -10201,11 +10206,16 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
                 node.isLast = true;
             }
 
+            if (!node.parentId && parent) {
+                node.parentId = parent.nodeId;
+            }
+
             node.hasChildren = this.hasChildren(node);
             node.isParent = node.hasChildren;
+            node.parent = parent;
 
             this.nodes[this.prefix + node.nodeId] = node;
-            this.initNodes(node.nodes);
+            this.initNodes(node.nodes, node);
         }
     };
 
@@ -10244,7 +10254,7 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
 
             if (node.checkDisabled) { return; }
 
-            node.isChecked  = checked;
+            node.isChecked = checked;
             view.replaceChkClass($this, node.isChecked);
 
             if (self.options.check.chkType === "checkbox") {
@@ -10323,6 +10333,9 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
 
         if (parentNode) {
 
+            if (parentNode.canBuild == false) {
+                return;
+            }
 
             if (parentNode.isLast || parentNode.isSingle) {
                 line = '';
@@ -10338,7 +10351,7 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
 
         for (var i = 0, node; i < data.length; i++) {
             node = this.getNode(data[i].nodeId);
-            if (node) {
+            if (node && node.canBuild != false) {
                 html.push('<li id="li_' + node.nodeId + '" nId="' + node.nodeId + '">');
                 html.push(view.getLineHtml(node, this.options));
                 html.push(view.getChkHtml(node, this.options));
@@ -10546,7 +10559,7 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
     Tree.prototype.checkAction = function (nodes, checked) {
         for (var i = 0, node, $elm; i < nodes.length; i++) {
             node = nodes[i];
-            node.isChecked= checked;
+            node.isChecked = checked;
             $elm = this.$tree.find('#chk_' + node.nodeId);
             if (node.checkDisabled) {
                 continue;
@@ -10729,6 +10742,57 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
         }
         $checked.click();
     };
+
+    /**
+     * 查找
+     * @param  {String} text - 查找文本
+     * @return {Void}
+     */
+    Tree.prototype.search = function (text) {
+        if (!this.options.data) {
+            return;
+        }
+        var self = this;
+        var tmpData = this.options.data;
+        var html = [];
+        initData(tmpData, text,this.options)
+        function initData(data, text,options) {
+            var setParent = function (parent) {
+                if (!parent || parent.canBuild) {
+                    return;
+                } else {
+                    parent.canBuild = true;
+                    setParent(parent.parent);
+                }
+            }
+            var set = function (data, parent, text, index, options) {
+                if (!utils.isArray(data) || data.length === 0) {
+                    if (!text) {
+                        parent.canBuild = true;
+                        setParent(parent.parent);
+                    } else {
+                        if (parent && parent.text.indexOf(text) == -1) {
+                            parent.canBuild = false;
+                        } else {
+                            parent.canBuild = true;
+                            setParent(parent.parent);
+                        }
+                    }
+                    return;
+                }
+                for (var i = 0, node; i < data.length; i++) {
+                    node = data[i];
+                    if (!options.check.keepSearch) {
+                        node.isChecked = false;
+                    }
+                    set(node.nodes, node, text, i,options);
+                }
+            }
+            set(data, null, text, 0, options);
+        }
+        this.createNode(tmpData, html);
+        this.$tree.children('li').remove().end().html(html.join(''));
+    }
 
 
 

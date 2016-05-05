@@ -20,8 +20,7 @@
         </div>
     </div>
     <div class="main wrap">
-        <ul class="demo-nav-list" id="navList">
-        </ul>
+        <ul class="demo-nav-list" id="navList"></ul>
         <script type="text/javascript" src="nav.js"></script>
         <script type="text/javascript">
             nav(document.getElementById('navList'), 'tree');
@@ -38,7 +37,7 @@
             <h3>初始化</h3>
             <div class="highlight">
                 <pre>
-                    <code data-lang="js" class="language-js">
+                <code data-lang="js" class="language-js">
 //创建tree对象
 var tree = new KM.Tree($elm,options);
                     </code>
@@ -65,9 +64,10 @@ var tree = new KM.Tree($elm,options);
                         <td>data</td>
                         <td>array</td>
                         <td style="width: 100px;">[]</td>
-                        <td>节点数据
+                        <td>
+                            节点数据
                             <pre>
-                                <code>
+                            <code>
 data: [
     {
         nodeId: 1,                          //节点编号
@@ -102,11 +102,12 @@ data: [
                         <td>object</td>
                         <td>
                             <pre>
-                                <code>
+                            <code>
 check: {
     enable: false,
     chkType: 'checkbox',
-    chkBoxType: { Y: "ps", N: "ps" }        
+    chkBoxType: { Y: "ps", N: "ps" },
+    keepSearch:false
 },
                                 </code>
                             </pre>
@@ -116,6 +117,7 @@ check: {
                             <p><b>enable：</b>是否启用</p>
                             <p><b>chkType：</b>'checkbox'或者'radio'</p>
                             <p><b>chkBoxType：</b>关联操作。Y：表示选中，N：表示反选，p:关联父节点,s:关联子节点<code>当前参数只能作用在'checkbox'</code></p>
+                            <p><b>keepSearch:</b>搜索时，是否保留勾选状态，默认为否</p>
                         </td>
                     </tr>
                     <tr>
@@ -123,7 +125,7 @@ check: {
                         <td>object</td>
                         <td>
                             <pre>
-                                <code>
+                            <code>
 callback: {
     beforeCheck: $.noop,
     beforeSelect:$.noop,
@@ -146,31 +148,25 @@ callback: {
             <h3>函数调用</h3>
             <div class="highlight">
                 <pre>
-                    <code data-lang="js" class="language-js">
+                <code data-lang="js" class="language-js">
 //返回选中的节点
 tree.getSelectedNode();
-
 //返回勾选的节点
 tree.getCheckedNodes();
-
 //根据编号获取节点
 tree.getNode(nodeId);
-
 //添加节点（parentNode：父级节点，nodes：新的节点，节点格式参考data参数格式）
 tree.addNodes(parentNode,nodes);
-
 //移除某个节点
 tree.removeNode(node);
-
 //选择节点
 tree.selectNode(nodeId);
-
 //取消节点选中状态
 tree.unSelectNode(nodeId);
-
 //取消复选框选中状态
 tree.unCheckNode(nodeId);
-
+//搜索关键字
+tree.search('搜索关键字');
 //重新加载数据节点
 tree.reload(data);
                     </code>
@@ -183,29 +179,41 @@ tree.reload(data);
     <script type="text/javascript">
 
         require(['KM'], function (KM) {
-            var nodes = [
-            {
-                nodeId: 1, parentId: 0, rootId: 0, text: '父节点', value: 123, isParent: true, open: true, nodes:
-                [
+            //var nodes = [
+            //{
+            //    nodeId: 1, parentId: 0, rootId: 0, text: '父节点', value: 123, isParent: true, open: true, nodes:
+            //    [
+            //        {
+            //            nodeId: 2, parentId: 1, rootId: 1, text: '父节点', value: 456, open: true, nodes: [
+            //                { nodeId: 5, parentId: 2, rootId: 1, text: '子节点', value: 456 },
+            //                { nodeId: 6, parentId: 2, rootId: 1, text: '子节点', value: 789 },
+            //                { nodeId: 7, parentId: 2, rootId: 1, text: '子节点', value: 789 }
+            //            ]
+            //        },
+            //        {
+            //            nodeId: 3, parentId: 1, rootId: 1, text: '子节点', value: 456
+            //        }
+            //    ]
+            //},
+            //{
+            //    nodeId: 4, parentId: 0, rootId: 0, text: "父节点", value: 5486, open: true, nodes: [
+            //        { nodeId: 8, parentId: 4, rootId: 4, text: '子节点', value: 456 },
+            //        { nodeId: 9, parentId: 4, rootId: 4, text: '子节点', value: 789 }
+            //    ]
+            //}
+            //];
+
+            var nodes = [{
+                nodeId: 1, text: '父节点', open: true, nodes: [
                     {
-                        nodeId: 2, parentId: 1, rootId: 1, text: '父节点', value: 456, open: true, nodes: [
-                            { nodeId: 5, parentId: 2, rootId: 1, text: '子节点', value: 456 },
-                            { nodeId: 6, parentId: 2, rootId: 1, text: '子节点', value: 789 },
-                            { nodeId: 7, parentId: 2, rootId: 1, text: '子节点', value: 789 }
+                        nodeId: 2, text: '子节点', open: true, nodes: [
+                            { nodeId: 3, text: '子孙节点1' },
+                            { nodeId: 4, text: '子孙节点2' },
+                            { nodeId: 5, text: '子孙节点3' }
                         ]
-                    },
-                    {
-                        nodeId: 3, parentId: 1, rootId: 1, text: '子节点', value: 456
                     }
                 ]
-            },
-            {
-                nodeId: 4, parentId: 0, rootId: 0, text: "父节点", value: 5486, open: true, nodes: [
-                    { nodeId: 8, parentId: 4, rootId: 4, text: '子节点', value: 456 },
-                    { nodeId: 9, parentId: 4, rootId: 4, text: '子节点', value: 789 }
-                ]
-            }
-            ];
+            }];
 
 
             var num = 10;
@@ -215,17 +223,16 @@ tree.reload(data);
                 //selectLimit:false,
                 check: {
                     enable: true,
-                    chkType: 'checkbox',
+                    chkType: 'checkbox'
                 },
                 callback: {
                     onCheck: function () {
-                        
+
                     },
                     onSelect: function (node) {
                     }
                 }
             });
-
 
             $("#btnAdd").click(function () {
                 var selectedNode = tree.getSelectedNode();
@@ -246,7 +253,6 @@ tree.reload(data);
 
 
             $('#btnRemove').click(function () {
-
                 var selectedNode = tree.getSelectedNode();
                 if (!selectedNode) {
                     alert('请选择节点');
