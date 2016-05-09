@@ -2696,3 +2696,15 @@ table.k-treeTable tr.expanded.accept td span.indenter a {
   width: 100%;
   height: 150px;
 }
+.k-mask {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: black;
+  opacity: 0.5;
+  filter: opacity(50);
+  z-index: 99999;
+  display: none;
+}
