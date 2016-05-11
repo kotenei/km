@@ -312,18 +312,14 @@ define('km/template', ['jquery'], function ($) {
 
     //初始化
     Template.prototype.init = function () {
-
         if (!this.tpl) {
             return;
         }
-
         var headerCode = "'use strict';var $each=$utils.each,$output=$utils.output,";
         var mainCode = "$out='';";
         var footerCode = 'return new String($out);';
         var variable = [];
-
         this.tpl = method.partial(this.tpl, this.options.partial, 0);
-
         utils.each(this.tpl.split(tags.open), function (index, item) {
 
             var code = item.split(tags.close);
@@ -346,9 +342,7 @@ define('km/template', ['jquery'], function ($) {
             }
 
         });
-
         this.code = headerCode + variable.join('') + mainCode + footerCode;
-
         try {
             this.Render = new Function('$utils', '$filter', '$data', this.code);
         } catch (e) {
@@ -361,14 +355,12 @@ define('km/template', ['jquery'], function ($) {
         if (!this.tpl) {
             return;
         }
-
         var html = this.Render(utils, filters, this.data);
-
-        this.$el.html(html);
-
+        if (this.$el) {
+            this.$el.html(html);
+        }
         //不能使用，IE8出现未指定错误
         //this.$el[0].innerHTML = html;
-
         return html;
     };
 
@@ -402,6 +394,7 @@ define('km/template', ['jquery'], function ($) {
     Template.addFilter = function (name, callback) {
         filters[name] = callback;
     };
+
 
     return Template;
 
