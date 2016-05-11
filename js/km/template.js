@@ -315,36 +315,10 @@ define('km/template', ['jquery'], function ($) {
         if (!this.tpl) {
             return;
         }
-        var headerCode = "'use strict';var $each=$utils.each,$output=$utils.output,";
-        var mainCode = "$out='';";
-        var footerCode = 'return new String($out);';
-        var variable = [];
-        this.tpl = method.partial(this.tpl, this.options.partial, 0);
-        utils.each(this.tpl.split(tags.open), function (index, item) {
 
-            var code = item.split(tags.close);
-
-            var script = code[0];
-
-            var html = code[1];
-
-            if (code.length == 1) {
-
-                mainCode += method.html(code[0]);
-
-            } else {
-
-                mainCode += method.script(variable, script);
-
-                if (html) {
-                    mainCode += method.html(html);
-                }
-            }
-
-        });
-        this.code = headerCode + variable.join('') + mainCode + footerCode;
         try {
-            this.Render = new Function('$utils', '$filter', '$data', this.code);
+
+            this.Render = compile(this.tpl, this.options.partial);
         } catch (e) {
             throw e;
         }
@@ -363,9 +337,6 @@ define('km/template', ['jquery'], function ($) {
         //this.$el[0].innerHTML = html;
         return html;
     };
-
-    //更新子模板
-    Template.prototype.updatePartial = function () { };
 
     //加载模板
     Template.load = function (tplName, callback) {
@@ -395,6 +366,43 @@ define('km/template', ['jquery'], function ($) {
         filters[name] = callback;
     };
 
+    //编译
+    Template.compile = function (tpl, data, partial) {
+        return compile(tpl, partial)(utils, filters, data);
+    }
+
+    function compile(tpl,partial) {
+        var headerCode = "'use strict';var $each=$utils.each,$output=$utils.output,";
+        var mainCode = "$out='';";
+        var footerCode = 'return new String($out);';
+        var variable = [];
+        var tmpTpl = method.partial(tpl, partial, 0);
+        utils.each(tmpTpl.split(tags.open), function (index, item) {
+
+            var code = item.split(tags.close);
+
+            var script = code[0];
+
+            var html = code[1];
+
+            if (code.length == 1) {
+
+                mainCode += method.html(code[0]);
+
+            } else {
+
+                mainCode += method.script(variable, script);
+
+                if (html) {
+                    mainCode += method.html(html);
+                }
+            }
+
+        });
+        var code = headerCode + variable.join('') + mainCode + footerCode;
+        var render = new Function('$utils', '$filter', '$data', code);
+        return render;
+    }
 
     return Template;
 
