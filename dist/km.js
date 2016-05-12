@@ -9375,7 +9375,7 @@ define('km/template', ['jquery'], function ($) {
             return format;
         },
         output: function (val) {
-            if (!val) {
+            if (typeof val==='undefined') {
                 return '';
             }
             return val;
