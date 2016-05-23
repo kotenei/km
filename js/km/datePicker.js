@@ -1212,9 +1212,9 @@ define('km/datePicker', ['jquery'], function ($) {
         var year = isToday ? today.getFullYear() : this.year,
             month = isToday ? today.getMonth() : this.month - 1,
             day = isToday ? today.getDate() : this.day,
-            hours = isToday || !this.options.showTime ? today.getHours() : (this.hours || today.getHours()),
-            minutes = isToday || !this.options.showTime ? today.getMinutes() : (this.minutes || today.getMinutes()),
-            seconds = isToday || !this.options.showTime ? today.getSeconds() : (this.seconds || today.getSeconds());
+            hours = isToday || !this.options.showTime ? today.getHours() : (typeof this.hours == 'undefined' ? today.getHours() : this.hours),
+            minutes = isToday || !this.options.showTime ? today.getMinutes() : (typeof this.minutes=='undefined'?  today.getMinutes():this.minutes),
+            seconds = isToday || !this.options.showTime ? today.getSeconds() : (typeof this.seconds=='undefined'? today.getSeconds():this.seconds);
 
         var now = new Date(year, month, day, hours, minutes, seconds);
         var value = this.format(now);
