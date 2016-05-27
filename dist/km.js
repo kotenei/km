@@ -9343,6 +9343,9 @@ define('km/template', ['jquery'], function ($) {
 
     var utils = {
         each: function (arr, callback) {
+            if (!arr) {
+                arr = [];
+            }
             for (var i = 0, item; i < arr.length; i++) {
                 item = arr[i];
                 if (callback(i, item) == false) {
