@@ -16,7 +16,7 @@ define('km/pager', ['jquery', 'km/event'], function ($, event) {
             curPage: 1,
             totalCount: 0,
             pageSize: 20,
-            className: 'k-pagination',
+            className: '',
         }, options);
         this.canBuild = true;
         this.curPage = this.options.curPage;
@@ -70,10 +70,10 @@ define('km/pager', ['jquery', 'km/event'], function ($, event) {
         var info = this.getInfo(),
             html = [], className;
 
-        html.push('<ul class="' + this.options.className + '">');
+        html.push('<ul class="k-pagination ' + this.options.className + '">');
 
         className = this.curPage > 1 ? '' : 'disabled';
-        html.push('<li class="' + className + '" data-page="' + info.pre + '" ><a href="javascript:void(0);"><<</a></li>');
+        html.push('<li class="' + className + '" data-page="' + info.pre + '" ><a href="javascript:void(0);">«</a></li>');
 
         for (var i = info.start; i <= info.end; i++) {
             className = (i === this.curPage) ? 'active' : '';
@@ -81,7 +81,7 @@ define('km/pager', ['jquery', 'km/event'], function ($, event) {
         }
 
         className = this.curPage !== info.allPage ? '' : 'disabled';
-        html.push('<li class="' + className + '" data-page="' + info.next + '" ><a href="javascript:void(0);">>></a></li>');
+        html.push('<li class="' + className + '" data-page="' + info.next + '" ><a href="javascript:void(0);">»</a></li>');
 
         html.push('</ul>');
 

@@ -288,6 +288,36 @@ label.k-error {
   margin: 20px 0;
   border-radius: 4px;
 }
+.k-pagination.danger > li.disabled > a,
+.k-pagination.danger > li.disabled > span {
+  color: #999;
+}
+.k-pagination.danger > li > a,
+.k-pagination.danger > li > span {
+  color: #d9534f;
+}
+.k-pagination.danger > .active > a,
+.k-pagination.danger > .active > span,
+.k-pagination.danger > .active > a:hover {
+  color: white;
+  background-color: #d9534f;
+  border-color: #d9534f;
+}
+.k-pagination.success > li.disabled > a,
+.k-pagination.success > li.disabled > span {
+  color: #999;
+}
+.k-pagination.success > li > a,
+.k-pagination.success > li > span {
+  color: #5cb85c;
+}
+.k-pagination.success > .active > a,
+.k-pagination.success > .active > span,
+.k-pagination.success > .active > a:hover {
+  color: white;
+  background-color: #5cb85c;
+  border-color: #5cb85c;
+}
 .k-pagination > li {
   display: inline;
 }
@@ -322,9 +352,7 @@ label.k-error {
 .k-pagination > .active > a,
 .k-pagination > .active > span,
 .k-pagination > .active > a:hover,
-.k-pagination > .active > span:hover,
-.k-pagination > .active > a:focus,
-.k-pagination > .active > span:focus {
+.k-pagination > .active > span:hover {
   z-index: 2;
   color: #ffffff;
   background-color: #428bca;
