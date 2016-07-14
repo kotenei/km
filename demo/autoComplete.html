@@ -38,7 +38,9 @@
             <div class="highlight">
                 <pre>
                     <code data-lang="js" class="language-js">
-KM.autoComplete($elm,options);
+//$elms可以是带有data-module=autocomplete属性的元素，可不填
+//options可以不填，可以在html元素中设置data-options属性
+KM.autoComplete($elms,options);
                     </code>
                 </pre>
             </div>
