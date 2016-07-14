@@ -590,6 +590,7 @@ define('km/autoComplete', ['jquery'], function ($) {
             isBottom: true,
             highlight: false,
             formatItem: function (item) { return item; },
+            bindElement:null,
             callback: {
                 setValue: null
             }
@@ -605,6 +606,7 @@ define('km/autoComplete', ['jquery'], function ($) {
      */
     AutoComplete.prototype.init = function () {
         var self = this;
+        this.$bindElement = $(this.options.bindElement);
         this.$listBox = $(this.tpl).hide().appendTo(document.body);
         this.data = this.options.data || [];
         this.$element.on('keyup.autocomplete', function (e) {
@@ -639,7 +641,6 @@ define('km/autoComplete', ['jquery'], function ($) {
                     break;
             }
         });
-
         this.$listBox.on('click.autocomplete', 'li', function () {
             var $el = $(this),
                 text = $el.text(),
@@ -651,12 +652,9 @@ define('km/autoComplete', ['jquery'], function ($) {
                 self.options.callback.setValue.call(this, item);
             }
         });
-
-
         $(document).on('click.autocomplete', function () {
             self.hide();
         });
-
         $(window).on('resize.autocomplete', function () {
             self.setCss();
         })
@@ -677,6 +675,9 @@ define('km/autoComplete', ['jquery'], function ($) {
                 cache: false,
                 data: { keyword: value }
             }).done(function (ret) {
+                if (typeof ret === 'string') {
+                    ret = eval('(0,' + ret + ')');
+                }
                 if (ret && ret instanceof Array) {
                     var data;
                     self.data = ret;
@@ -708,9 +709,14 @@ define('km/autoComplete', ['jquery'], function ($) {
         this.cacheData = [];
         var data = [], flag = 0;
         if (value.length === 0) { return data; }
-        for (var i = 0, formatted; i < this.data.length; i++) {
+        for (var i = 0, formatted,text; i < this.data.length; i++) {
             formatted = this.options.formatItem(this.data[i]);
-            if (formatted.toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+            if (typeof formatted==='string') {
+                text = formatted.toLowerCase();
+            } else {
+                text = formatted.text.toLowerCase();
+            }
+            if (text.indexOf(value.toLowerCase()) >= 0) {
                 this.cacheData.push(this.data[i]);
                 data.push(formatted);
                 if (flag === (this.options.max - 1)) {
@@ -731,9 +737,21 @@ define('km/autoComplete', ['jquery'], function ($) {
         this.$listBox.find('ul').remove();
         this.$listItem = null;
         if (data.length === 0) { return; }
+        var text = '', value = '';
         var html = '<ul>';
-        for (var i = 0; i < data.length; i++) {
-            html += '<li class="' + (i == 0 ? "active" : "") + '"  data-index="' + i + '">' + this.highlight(value, data[i]) + '</li>';
+        for (var i = 0,item; i < data.length; i++) {
+            item = data[i];
+
+            if (typeof item=='string') {
+                text = item;
+                value = item;
+            } else {
+                text = item.text;
+                value = item.value;
+            }
+
+            html += '<li class="' + (i == 0 ? "active" : "") + '"  data-index="' + i + '" data-text="'+text+'" data-value="'+value+'">' + this.highlight(value, text) + '</li>';
+
         }
         html += '</ul>';
         this.$listBox.append(html);
@@ -871,9 +889,11 @@ define('km/autoComplete', ['jquery'], function ($) {
     AutoComplete.prototype.select = function () {
         var $item = this.$listBox.find('li.active'),
             index = $item.attr('data-index'),
-            text = $item.text();
+            text = $item.attr('data-text'),
+            value = $item.attr('data-value');
 
         this.$element.val(text);
+        this.$bindElement.val(value);
         this.hide();
         if ($.isFunction(this.options.callback.setValue)) {
             var item = this.getItem(text, index);
@@ -890,18 +910,36 @@ define('km/autoComplete', ['jquery'], function ($) {
             return data[index];
         }
 
-        for (var i = 0, formatted; i < data.length; i++) {
+        for (var i = 0, formatted,text; i < data.length; i++) {
             formatted = this.options.formatItem(data[i]);
-            if (value === formatted) {
+            if (typeof formatted==='string') {
+                text = formatted;
+            } else {
+                text = formatted.text;
+            }
+            if (value === text) {
                 return data[i];
             }
         }
         return null;
-    }
+    };
 
-    return function ($elm, options) {
-        var autoComplete = new AutoComplete($elm, options);
-        return autoComplete;
+ 
+    return function ($elms, options) {
+        $elms = $elms || $('input[data-module="autocomplete"]');
+        $elms.each(function () {
+            var $el = $(this),
+                settings = $el.attr('data-options'),
+                obj = $.data($el[0], 'autocomplete');
+
+            if (!obj) {
+                if (!options && settings && settings.length > 0) {
+                    options = eval('(0,' + settings + ')');
+                }
+                obj = new AutoComplete($el, options);
+                $.data($el[0], 'autocomplete', obj);
+            }
+        });
     };
 
 });

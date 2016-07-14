@@ -31,8 +31,8 @@
 
             <div class="bs-example bs-example-padded-bottom">
                 <input type="text" id="txtAutoComplete" placeholder="请输入a-z测试" class="form-control" style="width: 300px;" />
+  
             </div>
-
 
             <h3>初始化</h3>
             <div class="highlight">
@@ -57,7 +57,7 @@ KM.autoComplete($elm,options);
                         <td>data</td>
                         <td>array</td>
                         <td>[]</td>
-                        <td>数据集合</td>
+                        <td>数据集合，格式可以是字符串数组，也可以是键值对象数据，如[{text:'',value:''}]，设置了bindElement属性时，把选中项的value赋值到绑定元素中</td>
                     </tr>
                     <tr>
                         <td>url</td>
@@ -102,6 +102,12 @@ KM.autoComplete($elm,options);
                         <td>是否高亮搜索值</td>
                     </tr>
                     <tr>
+                        <td>bindElement</td>
+                        <td>string</td>
+                        <td>null</td>
+                        <td>jquery选择器，选中项时给绑定元素赋值</td>
+                    </tr>
+                    <tr>
                         <td>formatItem</td>
                         <td>function</td>
                         <td></td>
@@ -128,8 +134,8 @@ callback: {
     <script type="text/javascript" src="vendor/require/require.js"></script>
     <script type="text/javascript" src="main.js"></script>
     <script type="text/javascript">
-        require(['KM'], function (KM) {
-            var data = [
+
+        var data = [
 	        "Aberdeen", "Ada", "Adamsville", "Addyston", "Adelphi", "Adena", "Adrian", "Akron",
 	        "Albany", "Alexandria", "Alger", "Alledonia", "Alliance", "Alpha", "Alvada",
 	        "Alvordton", "Amanda", "Amelia", "Amesville", "Amherst", "Amlin", "Amsden",
@@ -331,8 +337,9 @@ callback: {
 	        "Woodstock", "Woodville", "Wooster", "Wren", "Xenia", "Yellow Springs",
 	        "Yorkshire", "Yorkville", "Youngstown", "Zaleski", "Zanesfield", "Zanesville",
 	        "Zoar"
-            ];
-            
+        ];
+
+        require(['KM'], function (KM) { 
             KM.autoComplete($("#txtAutoComplete"), {
                 data: data,
                 callback: {
