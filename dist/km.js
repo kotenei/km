@@ -10258,6 +10258,8 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
             return;
         }
 
+        
+
         for (var i = 0, node; i < data.length; i++) {
             node = data[i];
 
@@ -10812,8 +10814,8 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
         var self = this;
         var tmpData = [];
         var html = [];
-        initData(this.options.data, text,this.options)
-        function initData(data, text,options) {
+        initData(this.options.data, text, this.options)
+        function initData(data, text, options) {
             var setParent = function (parent) {
                 if (!parent || parent.canBuild) {
                     return;
@@ -10836,14 +10838,14 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
                     if (!text) {
                         node.canBuild = true;
                     } else {
-                        if (node.text.indexOf(text)==-1) {
+                        if (node.text.indexOf(text) == -1) {
                             node.canBuild = false;
                         } else {
                             node.canBuild = true;
                             setParent(node.parent);
                         }
                     }
-                    set(node.nodes, text,options);
+                    set(node.nodes, text, options);
                 }
             }
             set(data, text, options);
@@ -10852,7 +10854,70 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
         this.$tree.children('li').remove().end().html(html.join(''));
     }
 
+    /**
+     * 获取节点
+     * @param  {String} text - 文本
+     * @return {Void}
+     */
+    Tree.prototype.getNodesByText = function (text) {
+        var ret = [];
 
+        if (this.nodes) {
+            for (var key in this.nodes) {
+                if (this.nodes[key].text.toLowerCase() == text.toLowerCase()) {
+                    ret.push(this.nodes[key]);
+                }
+            }
+        }
+        return ret;
+    }
+
+    /**
+     * 获取节点
+     * @param  {String} value - 值
+     * @return {Void}
+     */
+    Tree.prototype.getNodesByValue = function (value) {
+        var ret = [];
+
+        if (this.nodes) {
+            for (var key in this.nodes) {
+                if (this.nodes[key].value.toLowerCase() == value.toLowerCase()) {
+                    ret.push(this.nodes[key]);
+                }
+            }
+        }
+        return ret;
+    }
+
+
+    /**
+     * 禁用节点
+     * @param  {int} nodeId - 节点编号
+     * @param  {boolean} disabled - 是否禁用
+     * @return {Void}
+     */
+    Tree.prototype.setDisabled = function (nodeId,isDisabled) {
+        var node = this.getNode(nodeId);
+        if (!node) { return; }
+        if (typeof isDisabled==='undefined') {
+            isDisabled = true;
+        }
+
+        if (isDisabled) {
+            this.unCheckNode(nodeId);
+            this.unSelectNode(nodeId);
+            node.checkDisabled = true;
+            node.selectDisabled = true;
+            this.$tree.find('#a_' + nodeId).addClass('disabled');
+            this.$tree.find('#chk_' + nodeId).addClass(this.options.check.chkType + '_false_part');
+        } else {
+            node.checkDisabled = false;
+            node.selectDisabled = false;
+            this.$tree.find('#a_' + nodeId).removeClass('disabled');
+            this.$tree.find('#chk_' + nodeId).removeClass(this.options.check.chkType + '_false_part');
+        }
+    }
 
     /**
      * 重新加载
@@ -10862,6 +10927,7 @@ define('km/tree', ['jquery', 'km/dragdrop'], function ($, DragDrop) {
     Tree.prototype.reload = function (data) {
         data = data || this.options.data;
         var html = [];
+        this.nodes = {};
         this.initNodes(data);
         this.options.data = data;
         this.createNode(this.options.data, html);
