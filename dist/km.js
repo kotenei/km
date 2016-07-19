@@ -667,14 +667,22 @@ define('km/autoComplete', ['jquery'], function ($) {
      */
     AutoComplete.prototype.search = function (value) {
         var self = this;
+
+        if (value.length == 0) {
+            if (this.ajax) {
+                this.ajax.abort();
+                this.ajax = null;
+            }
+            this.hide();
+            return;
+        }
+
         if (this.options.url) {
-            $.ajax({
-                mode: "abort",
-                type: 'GET',
-                url: this.options.url,
-                cache: false,
-                data: { keyword: value }
-            }).done(function (ret) {
+            if (this.ajax) {
+                this.ajax.abort();
+                this.ajax = null;
+            }
+            this.ajax = $.get(this.options.url, { keyword: value }).done(function (ret) {
                 if (typeof ret === 'string') {
                     ret = eval('(0,' + ret + ')');
                 }
