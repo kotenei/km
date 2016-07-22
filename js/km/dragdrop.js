@@ -1338,7 +1338,9 @@ define('km/dragdrop', ['jquery'], function ($) {
             destory: function () {
                 for (var i = 0; i < sortables.length; i++) {
                     sortables[i].destory();
+                    sortables[i] = null;
                 }
+                sortables = [];
             }
         };
 

@@ -4212,7 +4212,9 @@ define('km/dragdrop', ['jquery'], function ($) {
             destory: function () {
                 for (var i = 0; i < sortables.length; i++) {
                     sortables[i].destory();
+                    sortables[i] = null;
                 }
+                sortables = [];
             }
         };
 
@@ -7269,13 +7271,8 @@ define('km/portlets', ['jquery', 'km/window', 'km/dragdrop'], function ($, Windo
                 }
             }
         }, options);
-
-
         method.group.init($container, options.group);
-
         method.webpart.init($container, options.webpart);
-
-
         //事件监控
         $container.off('click.portlets').on('click.portlets', '[data-role=gtoggle]', function () {
             //组显示隐藏
