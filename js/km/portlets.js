@@ -157,13 +157,8 @@
                 }
             }
         }, options);
-
-
         method.group.init($container, options.group);
-
         method.webpart.init($container, options.webpart);
-
-
         //事件监控
         $container.off('click.portlets').on('click.portlets', '[data-role=gtoggle]', function () {
             //组显示隐藏
