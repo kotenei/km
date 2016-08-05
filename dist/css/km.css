@@ -210,6 +210,10 @@ label.k-error {
   /* Internet Explorer 10+ */
   color: #999;
 }
+.k-content-empty:after,
+.k-content-empty:before {
+  content: "" !important;
+}
 .k-btn {
   display: inline-block;
   padding: 6px 12px;

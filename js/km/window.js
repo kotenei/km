@@ -3,7 +3,7 @@
  * @date:2014-09-17
  * @author:kotenei(kotenei@qq.com)
  */
-define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], function ($, DragDrop, popTips, Loading) {
+define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading', 'km/util'], function ($, DragDrop, popTips, Loading,util) {
 
 
     /**
@@ -25,7 +25,9 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
             appendTo: document.body,
             showFooter: true,
             borderRadius: '6px',
-            space:50,
+            space: 50,
+            fontClass: '.fa,.glyphicon,.e-icon',
+            fontRedrawDelay:500,
             btns: []
         }, options);
 
@@ -226,36 +228,44 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
         ).done(function () {
 
             if (self.options.iframe) {
+                self.$iframe.attr('src', 'about:blank');
                 var url = self.options.url;
                 if (url.indexOf('?') != -1) {
                     url += '&rand=' + Math.random();
                 } else {
                     url += '?rand=' + Math.random();
                 }
-                self.$iframe.attr('src', url);
 
-                if (!self.bindIframeLoad) {
-                    self.$iframe.on('load', function () {
+                setTimeout(function () {
+                    self.$iframe.attr('src', url).show();
 
-                        var url = self.$iframe.attr('src');
+                    if (!self.bindIframeLoad) {
+                        self.$iframe.on('load', function () {
 
-                        if (url == 'about:blank') {
-                            return;
-                        }
+                            var url = self.$iframe.attr('src');
 
-                        if (self.iframeTm) {
-                            clearTimeout(self.iframeTm);
-                        }
+                            if (url == 'about:blank') {
+                                return;
+                            }
 
-                        self.bindIframeLoad = true;
+                            if (self.iframeTm) {
+                                clearTimeout(self.iframeTm);
+                            }
 
-                        if (self.options.showFooter) {
-                            self.$footer.show();
-                        }
+                            self.bindIframeLoad = true;
 
-                        self.loadingHide();
-                    });
-                }
+                            if (self.options.showFooter) {
+                                self.$footer.show();
+                            }
+
+                            self.loadingHide();
+                        });
+                    }
+
+
+                },50);
+
+                
 
             } else {
                 if (self.options.showFooter) {
@@ -277,17 +287,25 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading'], funct
      * @return {Void}  
      */
     Window.prototype.close = function (enforce) {
+        var self = this;
         this.isClose = true;
-        this.$win.css({ left: '-900px', top: '-900px' });
-
-        if (this.options.iframe) {
-            this.$iframe.attr('src', 'about:blank');
-        }
-
+        this.$win.css({ left: '-900px', top: '-900px' });    
         this.$backdrop.hide();
         zIndex.pop();
         this._event.afterClose.call(self);
         this.loadingHide();
+        if (this.options.iframe) {
+            setTimeout(function () {
+                self.$iframe.hide();
+            }, 500);
+        }
+        //if (util.isIE8) {
+        //    var $els = $(this.options.fontClass);
+        //    $els.addClass('k-content-empty');
+        //    setTimeout(function () {
+        //        $els.removeClass('k-content-empty');
+        //    }, this.options.fontRedrawDelay);
+        //}
     };
 
     /**
