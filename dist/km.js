@@ -13121,12 +13121,13 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading', 'km/ut
 
                 setTimeout(function () {
                     self.$iframe.attr('src', url).show();
-                    if (util.isIE8) {
+                    if (util.isIE8()) {
                         $('head').append('<style id="iconfontfix" type="text/css">:before,:after{content:none!important}</style>');
                         setTimeout(function () {
                             $('#iconfontfix').remove();
                         });
                     }
+                  
                     if (!self.bindIframeLoad) {
                         self.$iframe.on('load', function () {
                             var url = self.$iframe.attr('src');
