@@ -378,6 +378,12 @@ callback: {
             KM.autoComplete($("#txtAutoComplete"), {
                 bindElement:'#txtValue',
                 data: data,
+                //formatItem: function (item) {
+                //    return item.ChsName
+                //},
+                //formatResult: function (item) {
+                //    return {text:item.ChsName,value:item.UserId}
+                //},
                 callback: {
                     setValue: function (item) {
                         //console.log(item)

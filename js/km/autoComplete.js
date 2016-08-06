@@ -200,16 +200,21 @@ define('km/autoComplete', ['jquery'], function ($) {
         var html = '<ul>';
 
         for (var i = 0, item, resultItem; i < data.length; i++) {
-            item = data[i];
-            resultItem = this.options.formatResult(item);
+            item = this.options.formatItem(data[i]);
+            resultItem = this.options.formatResult(data[i]);
             if (typeof item !== 'object') {
                 text = value = item.toString();
             } else {
                 text = item.text;
                 value = item.value;
             }
+
             if (typeof resultItem !== 'object') {
                 resultItem = { text: resultItem, value: resultItem };
+            }
+
+            if (!resultItem.text) {
+                resultItem = { text: text, value: value };
             }
 
             html += '<li class="' + (i == 0 ? "active" : "") + '"  data-index="' + i + '" data-text="' + resultItem.text + '" data-value="' + resultItem.value + '">' + this.highlight(value, text) + '</li>';
