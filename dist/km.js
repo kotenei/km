@@ -590,7 +590,13 @@ define('km/autoComplete', ['jquery'], function ($) {
             isBottom: true,
             highlight: false,
             formatItem: function (item) { return item; },
-            bindElement:null,
+            formatResult: function (item) {
+                if (typeof item === 'object') {
+                    return { text: item.text, value: item.value };
+                }
+                return item;
+            },
+            bindElement: null,
             callback: {
                 setValue: null
             }
@@ -717,16 +723,16 @@ define('km/autoComplete', ['jquery'], function ($) {
         this.cacheData = [];
         var data = [], flag = 0;
         if (value.length === 0) { return data; }
-        for (var i = 0, formatted,text; i < this.data.length; i++) {
+        for (var i = 0, formatted, text; i < this.data.length; i++) {
             formatted = this.options.formatItem(this.data[i]);
-            if (typeof formatted==='string') {
-                text = formatted.toLowerCase();
+            if (typeof formatted !== 'object') {
+                text = formatted.toString().toLowerCase();
             } else {
                 text = formatted.text.toLowerCase();
             }
             if (text.indexOf(value.toLowerCase()) >= 0) {
                 this.cacheData.push(this.data[i]);
-                data.push(formatted);
+                data.push(this.data[i]);
                 if (flag === (this.options.max - 1)) {
                     break;
                 }
@@ -747,18 +753,21 @@ define('km/autoComplete', ['jquery'], function ($) {
         if (data.length === 0) { return; }
         var text = '', value = '';
         var html = '<ul>';
-        for (var i = 0,item; i < data.length; i++) {
-            item = data[i];
 
-            if (typeof item=='string') {
-                text = item;
-                value = item;
+        for (var i = 0, item, resultItem; i < data.length; i++) {
+            item = data[i];
+            resultItem = this.options.formatResult(item);
+            if (typeof item !== 'object') {
+                text = value = item.toString();
             } else {
                 text = item.text;
                 value = item.value;
             }
+            if (typeof resultItem !== 'object') {
+                resultItem = { text: resultItem, value: resultItem };
+            }
 
-            html += '<li class="' + (i == 0 ? "active" : "") + '"  data-index="' + i + '" data-text="'+text+'" data-value="'+value+'">' + this.highlight(value, text) + '</li>';
+            html += '<li class="' + (i == 0 ? "active" : "") + '"  data-index="' + i + '" data-text="' + resultItem.text + '" data-value="' + resultItem.value + '">' + this.highlight(value, text) + '</li>';
 
         }
         html += '</ul>';
@@ -918,21 +927,21 @@ define('km/autoComplete', ['jquery'], function ($) {
             return data[index];
         }
 
-        for (var i = 0, formatted,text; i < data.length; i++) {
+        for (var i = 0, formatted, text; i < data.length; i++) {
             formatted = this.options.formatItem(data[i]);
-            if (typeof formatted==='string') {
-                text = formatted;
+            if (typeof formatted !== 'object') {
+                text = formatted.toString();
             } else {
                 text = formatted.text;
             }
-            if (value === text) {
+            if (value == text) {
                 return data[i];
             }
         }
         return null;
     };
 
- 
+
     return function ($elms, options) {
         $elms = $elms || $('input[data-module="autocomplete"]');
         $elms.each(function () {

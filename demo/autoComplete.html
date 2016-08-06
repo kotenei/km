@@ -31,7 +31,8 @@
 
             <div class="bs-example bs-example-padded-bottom">
                 <input type="text" id="txtAutoComplete" placeholder="请输入a-z测试" class="form-control" style="width: 300px;" />
-  
+                <br />
+                <input type="text" id="txtValue" class="form-control" readonly="readonly" style="width: 300px;" />
             </div>
 
             <h3>初始化</h3>
@@ -112,8 +113,40 @@ KM.autoComplete($elms,options);
                     <tr>
                         <td>formatItem</td>
                         <td>function</td>
-                        <td></td>
-                        <td>自定义为每个要显示的项目使用高级标签</td>
+                        <td>
+<pre>
+                            <code>
+formatItem:function(item){
+    return item;
+}
+    </code>
+</pre>
+                        </td>
+                        <td>
+                            自定义为显示项
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>formatResult</td>
+                        <td>function</td>
+                        <td style="width:300px;">
+<pre>
+                            <code>
+formatResult:function(item){
+    if (typeof item === 'object') {
+        return { 
+            text: item.text, 
+            value: item.value 
+        };
+    }
+    return item;
+}
+    </code>
+</pre>
+                        </td>
+                        <td>
+                            自定义为赋值结果
+                        </td>
                     </tr>
                     <tr>
                         <td>callback</td>
@@ -343,10 +376,11 @@ callback: {
 
         require(['KM'], function (KM) { 
             KM.autoComplete($("#txtAutoComplete"), {
+                bindElement:'#txtValue',
                 data: data,
                 callback: {
                     setValue: function (item) {
-                        console.log(item)
+                        //console.log(item)
                     }
                 }
             });
