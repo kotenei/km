@@ -42,21 +42,18 @@ define('km/imgPreview', ['jquery', 'km/loading', 'km/popTips'], function ($, Loa
      */
     ImgPreview.prototype.init = function () {
         if (this.$elements.length === 0) { return; }
-
         this.$imgPreview = $(this.options.tpl).appendTo(document.body);
         this.$container = this.$imgPreview.find('.k-container');
         this.$img = this.$container.find('img');
         this.$prev = this.$container.find('.prev');
         this.$next = this.$container.find('.next');
         this.$backdrop = $('<div/>').addClass('k-imgPreview-backdrop').appendTo(document.body);
-
         this.$elements.css('cursor', 'pointer').each(function (i) {
             var $this = $(this),
                 id = 'imgPreview_' + i;
             this.id = id;
             $this.attr('data-index', i);
         });
-
         this.eventBind();
     };
 
@@ -310,8 +307,21 @@ define('km/imgPreview', ['jquery', 'km/loading', 'km/popTips'], function ($, Loa
 
     };
 
+    /**
+     * 销毁
+     * @return {Void}   
+     */
+    ImgPreview.prototype.destory = function () {
+        this.$elements.off();
+        this.$backdrop.off().remove();
+        this.$imgPreview.off().remove();
+    }
+
     return function ($elms, options) {
         $elms = $elms || $('img');
+        if ($elms.length==0) {
+            return null;
+        }
         var imgPreview = new ImgPreview($elms, options);
         return imgPreview;
     }
