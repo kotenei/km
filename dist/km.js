@@ -9445,7 +9445,7 @@ define('km/template', ['jquery'], function ($) {
             return format;
         },
         output: function (val) {
-            if (typeof val==='undefined') {
+            if (typeof val === 'undefined' || typeof val === 'null' || val == 'null') {
                 return '';
             }
             return val;
@@ -9500,7 +9500,7 @@ define('km/template', ['jquery'], function ($) {
             }
             return str;
         }
-        
+
     };
 
     var variable = {};
@@ -9768,7 +9768,7 @@ define('km/template', ['jquery'], function ($) {
         return compile(tpl, partial)(utils, filters, data);
     }
 
-    function compile(tpl,partial) {
+    function compile(tpl, partial) {
         var headerCode = "'use strict';var $each=$utils.each,$output=$utils.output,";
         var mainCode = "$out='';";
         var footerCode = 'return new String($out);';
