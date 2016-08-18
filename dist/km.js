@@ -9445,7 +9445,7 @@ define('km/template', ['jquery'], function ($) {
             return format;
         },
         output: function (val) {
-            if (typeof val === 'undefined' || typeof val === 'null' || val == 'null') {
+            if (typeof val === 'undefined' || val == null || val == 'null') {
                 return '';
             }
             return val;
