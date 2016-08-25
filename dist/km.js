@@ -1675,7 +1675,7 @@ define('km/datePicker', ['jquery'], function ($) {
             this.createPanel();
             this.eventBind();
         } else {
-            //console.log('最大日期必须大于最小日期');
+            console.log('最大日期必须大于最小日期');
         }
     };
 
