@@ -1969,6 +1969,11 @@ table.k-treeTable tr.expanded.accept td span.indenter a {
   float: left;
   display: inline;
   overflow: hidden;
+  position: relative;
+  display: none;
+}
+.k-focusmap .k-focusmap-list li:first-child {
+  display: list-item;
 }
 .k-focusmap .k-focusmap-list li img {
   display: block;

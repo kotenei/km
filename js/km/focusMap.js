@@ -55,6 +55,7 @@ define('km/focusMap', ['jquery'], function ($) {
         this.total = this.$lis.length;
         this.max = this.total - 2;
         this.$ul.width(this.total * this.options.width).css("marginLeft", -(this.index + 1) * this.options.width);
+        this.$lis.show();
         this.create();
         this.watch();
         if (this.max > 1) {

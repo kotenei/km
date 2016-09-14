@@ -40,6 +40,10 @@ define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event','km/po
                 delay: 600
             }
         }, options);
+        if (this.options.removeUrl && this.options.removeUrl.length==0) {
+            this.options.removeUrl = null;
+        }
+
         this.isLoading = false;
         this.isButton = this.$elm[0].type.toLowerCase() == 'text' ? false : true;
         this._event = {
@@ -87,7 +91,7 @@ define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event','km/po
     Upload.prototype.watch = function () {
         var self = this;
 
-        this.$uploadBox.on('change.upload', 'input', function () {
+        this.$uploadBox.on('change.upload', '[data-role=upfile]', function () {
             self.upload();
         }).on('click.upload', '.fa-close', function () {
             var $el = $(this),
@@ -139,7 +143,7 @@ define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event','km/po
         html.push(this.options.text);
         html.push('</button>');
         html.push('<form action="' + this.options.uploadUrl + '" enctype="multipart/form-data" method="post">');
-        html.push('<input type="file" name="' + this.options.name + '" />');
+        html.push('<input type="file" data-role="upfile" name="' + this.options.name + '" />');
         html.push('</form>');
         html.push('</div>');
         html.push('</div>');
@@ -338,20 +342,23 @@ define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event','km/po
                 error = $el.attr('data-error'),
                 data = $.data($el[0], 'upload');
 
+
             if (!data) {
 
                 if (options && options.length > 0) {
                     options = eval('(0,' + options + ')');
                 } else {
                     options = {
-                        uploadUrl: uploadUrl && uploadUrl.length > 0 ? uploadUrl : '',
-                        removeUrl: removeUrl && removeUrl.length > 0 ? removeUrl : '',
+                        uploadUrl: uploadUrl && uploadUrl.length > 0 ? uploadUrl : null,
+                        removeUrl: removeUrl && removeUrl.length > 0 ? removeUrl : null,
                         name: name && name.length > 0 ? name : 'file',
                         text: text && text.length > 0 ? text : '上传',
                         loadingEnable: loadingEnable && loadingEnable == 'false' ? false : true,
                         popTips: popTips && popTips.length > 0 ? eval('(0,' + popTips + ')') : {}
                     };
                 }
+
+                
 
                 data = new Upload($el, options);
 
