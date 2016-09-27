@@ -261,7 +261,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading', 'km/ut
                             self.loadingHide();
                         });
                     }
-                },50); 
+                },100); 
 
             } else {
                 if (self.options.showFooter) {
@@ -293,7 +293,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading', 'km/ut
         if (this.options.iframe) {
             setTimeout(function () {
                 self.$iframe.hide();
-            }, 500);
+            }, 300);
         }
         //if (util.isIE8) {
         //    var $els = $(this.options.fontClass);
