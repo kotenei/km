@@ -203,7 +203,7 @@ define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event','km/po
             success: function (ret) {
 
                 if (typeof ret==='string') {
-                    ret=JSON.parse(ret);
+                    ret = eval('(0,' + ret + ')');
                 }
 
                 if (self.isButton && ret.Url && ret.Url.length > 0) {
