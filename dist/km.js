@@ -1403,9 +1403,9 @@ define('km/contextMenu', ['jquery'], function ($) {
             action = $el.attr('data-action'),
             item = items[action];
 
-
         if (item && typeof item.func === 'function') {
-            item.func($curTarget);
+            $contextMenu.hide();
+            return item.func($curTarget);
         }
     });
 
@@ -1452,29 +1452,18 @@ define('km/contextMenu', ['jquery'], function ($) {
         var self = this;
 
         this.$el.on('contextmenu.contextmenu', this.options.target, function (e) {
-
             var left = e.pageX,
                 top = e.pageY;
 
-            $contextMenu.hide();
-
             $curTarget = $(this);
-
             self.build();
-
             items = self.items;
-
-            self.tm = setTimeout(function () {
-                $contextMenu.css({
-                    left: left,
-                    top: top,
-                    display: 'block'
-                });
-
-                self.options.callback.onShow.call(self);
-
-            }, 100);
-
+            $contextMenu.css({
+                left: left,
+                top: top,
+                display: 'block'
+            });
+            self.options.callback.onShow.call(self);
             return false;
         });
 
@@ -1503,7 +1492,7 @@ define('km/contextMenu', ['jquery'], function ($) {
 
             action = "contextMenu_" + i;
 
-            html.push('<li data-action="'+action+'">' + this.options.items[i].text + '</li>');
+            html.push('<li data-action="' + action + '">' + this.options.items[i].text + '</li>');
             //this.items[this.filterHtml(this.options.items[i].text)] = this.options.items[i];
             this.items[action] = this.options.items[i];
         }
@@ -1529,15 +1518,24 @@ define('km/contextMenu', ['jquery'], function ($) {
         $contextMenu.remove();
     }
 
+    /**
+     * 隐藏
+     * @return {Void}   
+     */
+    ContextMenu.hide = function () {
+        $('ul.k-contextMenu').hide();
+    }
 
-    return function ($elms, settings) {
-
+    /**
+     * 全局调用
+     * @return {Void}   
+     */
+    ContextMenu.Global = function ($elms, settings) {
         $elms = $elms || $('[data-module=contextmenu]');
-
         $elms.each(function () {
             var $el = $(this),
                 options = $el.attr('data-options'),
-                data =$.data($el[0], 'contextMenu');
+                data = $.data($el[0], 'contextMenu');
 
             if (!data) {
 
@@ -1554,6 +1552,7 @@ define('km/contextMenu', ['jquery'], function ($) {
 
         });
     };
+
 
     return ContextMenu;
 
@@ -13746,7 +13745,7 @@ define("KM", ["km/ajax", "km/app", "km/areaSelector", "km/autoComplete", "km/cac
         "autoComplete" : _autoComplete,
         "cache" : _cache,
         "ClipZoom" : _clipZoom,
-        "contextMenu" : _contextMenu,
+        "ContextMenu" : _contextMenu,
         "DatePicker" : _datePicker,
         "Dragdrop" : _dragdrop,
         "DropDownList" : _dropDownList,
