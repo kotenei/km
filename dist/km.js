@@ -1458,12 +1458,14 @@ define('km/contextMenu', ['jquery'], function ($) {
             $curTarget = $(this);
             self.build();
             items = self.items;
-            $contextMenu.css({
-                left: left,
-                top: top,
-                display: 'block'
+            setTimeout(function () {
+                $contextMenu.css({
+                    left: left,
+                    top: top,
+                    display: 'block'
+                });
+                self.options.callback.onShow.call(self);
             });
-            self.options.callback.onShow.call(self);
             return false;
         });
 
@@ -8851,7 +8853,7 @@ define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu', 'km/loading'], function
 
         var self = this;
 
-        contextMenu(this.$tabNav.children(), {
+        contextMenu.Global(this.$tabNav.children(), {
             items: this.options.contextMenu.items
         });
     };

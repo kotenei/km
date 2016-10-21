@@ -67,7 +67,7 @@ define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu', 'km/loading'], function
 
         var self = this;
 
-        contextMenu(this.$tabNav.children(), {
+        contextMenu.Global(this.$tabNav.children(), {
             items: this.options.contextMenu.items
         });
     };

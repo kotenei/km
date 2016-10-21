@@ -71,12 +71,14 @@ define('km/contextMenu', ['jquery'], function ($) {
             $curTarget = $(this);
             self.build();
             items = self.items;
-            $contextMenu.css({
-                left: left,
-                top: top,
-                display: 'block'
+            setTimeout(function () {
+                $contextMenu.css({
+                    left: left,
+                    top: top,
+                    display: 'block'
+                });
+                self.options.callback.onShow.call(self);
             });
-            self.options.callback.onShow.call(self);
             return false;
         });
 
