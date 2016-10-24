@@ -19,6 +19,9 @@ define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu', 'km/loading'], function
             keepOne: true,
             contextMenu: {
                 items: []
+            },
+            callback: {
+                click: $.noop
             }
         }, options);
         this.tabCount = 0;
@@ -38,6 +41,7 @@ define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu', 'km/loading'], function
      * @return {Void}
      */
     Tab.prototype.init = function () {
+        var index = 0,$activeItem;
         this.$elm.attr('data-moduleId', this.identity);
         this.$tabHead = this.$elm.children('div.k-tab-head');
         this.$btnLeft = this.$tabHead.find('div.left');
@@ -46,13 +50,12 @@ define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu', 'km/loading'], function
         this.$tabNav = this.$tabScroller.find('ul.k-tab-nav');
         this.$tabContainer = this.$elm.children('div.k-tab-container');
         this.tabCount = this.$tabNav.find('li').length;
-
         this.contextMenuInit();
-        
         this.setSize();
-
         this.watch();
-        this.toggle(0);
+        index = this.$elm.find('.k-tab-head li.active').index();
+        index < 0 ? index = 0 : index;
+        this.toggle(index);
     };
 
     /**
@@ -83,9 +86,11 @@ define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu', 'km/loading'], function
             var $el = $(this),
                 index = $el.index();
             self.toggle(index);
-            self._event.click.call(this, $el);
             self.childResize();
-            return false;
+            if (typeof self.options.callback.click) {
+                self.options.callback.click.call(this, $el);
+            }
+            return self._event.click.call(this, $el);
         }).on('click.tab', '[role=refresh]', function () {
             self.refresh($(this).parents('li:eq(0)').index());
             return false;
@@ -101,18 +106,10 @@ define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu', 'km/loading'], function
         });
 
         $(window).on('resize.tab.' + this.identity, function () {
-
             if (self.tm) {
                 clearTimeout(self.tm);
             }
             self.tm = setTimeout(function () {
-
-                //if (self && self.$elm.parent().length == 0) {
-                //    $(window).off('resize.tab.' + self.identity);
-                //    self = null;
-                //    return;
-                //}
-
                 self.setSize();
             }, 300)
         });
@@ -124,14 +121,11 @@ define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu', 'km/loading'], function
      * @return {Void}
      */
     Tab.prototype.setSize = function () {
-
         var headWidth = this.$tabHead.outerWidth(),
             btnLeftWidth = this.$btnLeft.outerWidth(),
             btnRightWidth = this.$btnRight.outerWidth(),
             scrollWidth = headWidth - btnLeftWidth - btnRightWidth,
             tabsWidth = 0;
-
-
 
         this.$tabNav.children().each(function () {
             tabsWidth += $(this).outerWidth(true);
@@ -142,7 +136,7 @@ define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu', 'km/loading'], function
             this.isScroller = true;
             this.$btnLeft.show();
             this.$btnRight.show();
-            this.$tabScroller.css('width', scrollWidth-30);
+            this.$tabScroller.css('width', scrollWidth - 30);
         } else {
             this.isScroller = false;
             this.$btnLeft.hide();
@@ -150,11 +144,8 @@ define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu', 'km/loading'], function
             this.$tabScroller.css('width', 'auto');
             this.$tabNav.css('margin-left', '0');
         }
-
         this.$tabNav.css('width', tabsWidth);
-
-        this.maxLeft =( tabsWidth - scrollWidth)+30;
-
+        this.maxLeft = (tabsWidth - scrollWidth) + 30;
         this.scrollTo();
     };
 
@@ -213,23 +204,18 @@ define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu', 'km/loading'], function
         contentHtml.push('</div>');
 
         var $content = contentHtml.join('');
-
         this.$tabNav.append(tabHtml.join(''));
         this.$tabContainer.append($content);
 
         if (this.tabCount == 1 && data.url && !this.isLoading) {
-
             this.isLoading = true;
-
             Loading.show();
-
             $.get(data.url, { rand: new Date().getTime() }).success(function (ret) {
                 $content.html(ret);
             }).complete(function () {
                 self.isLoading = false;
                 Loading.hide();
             });
-
         }
 
         this.setSize();
@@ -241,19 +227,14 @@ define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu', 'km/loading'], function
      * @return {Void}
      */
     Tab.prototype.toggle = function (index) {
-
         if (this.curIndex == index) {
             return;
         }
-
-        if (this.$tabContainer.children().length==0) {
+        if (this.$tabContainer.children().length == 0) {
             return;
         }
-
         var self = this;
-
         this.curIndex = index;
-
         var $el = this.$tabNav.children().removeClass('active').eq(index).addClass('active');
         var url = $el.attr('data-url');
         var $content = this.$tabContainer.children().hide().eq(index).show();
@@ -264,11 +245,8 @@ define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu', 'km/loading'], function
             if (this.isLoading) {
                 return;
             }
-
             this.isLoading = true;
-
             Loading.show();
-
             $.get(url, { rand: new Date().getTime() }).success(function (ret) {
                 $content.html(ret);
             }).complete(function () {
@@ -276,9 +254,7 @@ define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu', 'km/loading'], function
                 Loading.hide();
             });
         }
-
         this.scrollTo(index);
-
     };
 
     /**
@@ -287,15 +263,12 @@ define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu', 'km/loading'], function
      * @return {Void}
      */
     Tab.prototype.close = function (index) {
-
         if (this.tabCount == 1 && this.options.keepOne) {
             return;
         }
-
         this.tabCount--;
         var $el = this.$tabNav.children().eq(index).remove();
         this.$tabContainer.children().eq(index).remove();
-
         if (this.curIndex == index) {
 
             if (index != 0) {
@@ -310,7 +283,6 @@ define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu', 'km/loading'], function
         } else if (this.curIndex != index && index < this.curIndex) {
             this.curIndex--;
         }
-
         this._event.close.call(this, $el);
         this.setSize();
     };
@@ -325,20 +297,13 @@ define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu', 'km/loading'], function
         var $el = this.$tabNav.children().eq(index);
         var url = $el.attr('data-url');
         var $content = this.$tabContainer.children().eq(index);
-
-
         if (url) {
-
             if (this.isLoading) {
                 return;
             }
-
             $content.html('');
-
             this.isLoading = true;
-
             Loading.show();
-
             $.get(url, { rand: new Date().getTime() }).success(function (ret) {
                 $content.html(ret);
             }).complete(function () {
@@ -347,8 +312,6 @@ define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu', 'km/loading'], function
                 self._event.refresh.call(this, $el);
             });
         }
-
-
     };
 
     /**
@@ -361,20 +324,15 @@ define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu', 'km/loading'], function
 
         if (position == 'left') {
             left += 70;
-
             if (left > 0) {
                 left = 0;
             }
-
         } else {
-
             left -= 70;
-
             if (left < -this.maxLeft) {
                 left = -this.maxLeft;
             }
         }
-
         this.$tabNav.stop().animate({
             marginLeft: left
         }, 300);
@@ -387,32 +345,25 @@ define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu', 'km/loading'], function
      */
     Tab.prototype.scrollTo = function (index) {
         index = index || this.curIndex;
-
         if (index < 0) {
             index = 0;
         }
-
         if (index > this.tabCount - 1) {
             index = this.tabCount - 1;
         }
-
         var left = 0;
-
         this.$tabNav.children().each(function (i) {
             if (i == index) {
                 return false;
             }
             left += $(this).outerWidth();
         });
-
         if (left >= Math.abs(this.maxLeft)) {
             left = this.maxLeft;
         }
-
         if (!this.isScroller) {
             left = 0;
         }
-
         this.$tabNav.stop().animate({
             marginLeft: -left
         }, 300);
@@ -439,9 +390,7 @@ define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu', 'km/loading'], function
      * @return {Void}
      */
     Tab.Global = function ($elms, options) {
-
         $elms = $elms || $('div.k-tab');
-
         $elms.each(function () {
             var $el = $(this),
                 setting = $el.attr('data-options'),
@@ -451,20 +400,15 @@ define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu', 'km/loading'], function
                 data = $.data($el[0], 'tab');
 
             if (!data) {
-
                 if (setting && setting.length > 0) {
                     options = eval('(0,' + setting + ')');
                 }
-
                 data = new Tab($el, options);
-
                 data.on('click', onClick && onClick.length > 0 ? eval('(0,' + onClick + ')') : $.noop)
                         .on('close', onClose && onClose.length > 0 ? eval('(0,' + onClose + ')') : $.noop)
                         .on('refresh', onRefresh && onRefresh.length > 0 ? eval('(0,' + onRefresh + ')') : $.noop);
-
                 $.data($el[0], 'tab', data);
             }
-
         });
     };
 
