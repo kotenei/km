@@ -75,7 +75,7 @@ define('km/ajax', ['jquery', 'km/loading', 'km/popTips', 'km/validate', 'km/vali
                     type: type,
                     data: data,
                     dataType: 'json',
-                    traditional: true,
+                    traditional: false,
                     cache: false
                 }, config.ajaxConfig);
 
@@ -169,6 +169,7 @@ define('km/ajax', ['jquery', 'km/loading', 'km/popTips', 'km/validate', 'km/vali
                     return ajax("GET", url, data, config);
                 },
                 ajaxForm: function ($form, config) {
+                    
                     var validate, url, type, data;
 
                     if (!$form.valid) {

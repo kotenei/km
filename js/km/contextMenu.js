@@ -67,7 +67,6 @@ define('km/contextMenu', ['jquery'], function ($) {
         this.$el.on('contextmenu.contextmenu', this.options.target, function (e) {
             var left = e.pageX,
                 top = e.pageY;
-
             $curTarget = $(this);
             self.build();
             items = self.items;
