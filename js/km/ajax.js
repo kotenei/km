@@ -75,7 +75,7 @@ define('km/ajax', ['jquery', 'km/loading', 'km/popTips', 'km/validate', 'km/vali
                     type: type,
                     data: data,
                     dataType: 'json',
-                    traditional: false,
+                    traditional: true,
                     cache: false
                 }, config.ajaxConfig);
 
