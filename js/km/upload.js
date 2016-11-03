@@ -3,7 +3,7 @@
  * @date :2015-07-30
  * @author kotenei (kotenei@qq.com)
  */
-define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event','km/popTips','jqueryForm'], function ($, Spinner, Window, ajax, event,popTips) {
+define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event', 'km/popTips', 'jqueryForm'], function ($, Spinner, Window, ajax, event, popTips) {
 
     var method = {
         showLoading: function () {
@@ -34,19 +34,20 @@ define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event','km/po
             name: 'file',
             uploadedUrls: [],
             //loadingEnable: true,
-            showResult:true,
+            showResult: true,
             popTips: {
                 enable: true,
                 delay: 600
             }
         }, options);
-        if (this.options.removeUrl && this.options.removeUrl.length==0) {
+        if (this.options.removeUrl && this.options.removeUrl.length == 0) {
             this.options.removeUrl = null;
         }
 
         this.isLoading = false;
         this.isButton = this.$elm[0].type.toLowerCase() == 'text' ? false : true;
         this._event = {
+            beforeSubmit: $.noop,
             success: $.noop,
             error: $.noop
         };
@@ -118,7 +119,7 @@ define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event','km/po
 
         html.push('<div class="k-upload-box">');
 
-        if (this.isButton&&this.options.showResult) {
+        if (this.isButton && this.options.showResult) {
 
             html.push('<div class="k-upload-result-box">');
 
@@ -200,17 +201,21 @@ define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event','km/po
         this.$form.ajaxSubmit({
             url: this.$form.attr('action'),
             cache: false,
+            beforeSubmit: function () {
+                var result = self._event.beforeSubmit();
+                if (result == false) {
+                    method.hideLoading.call(self);
+                }
+                return result;
+            },
             success: function (ret) {
-
-                if (typeof ret==='string') {
+                if (typeof ret === 'string') {
                     ret = eval('(0,' + ret + ')');
                 }
-
                 if (self.isButton && ret.Url && ret.Url.length > 0) {
                     self.uploadedUrls.push(ret.Url);
                 }
                 self.showResult(ret.Url || '');
-
                 self._event.success(ret);
             },
             error: function () {
@@ -323,6 +328,16 @@ define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event','km/po
         return this;
     };
 
+
+    /**
+     * 更改链接
+     * @return {Void}
+     */
+    Upload.prototype.changeUrl = function (url) {
+        this.options.uploadUrl = url;
+        this.$form.attr('action', url);
+    };
+
     /**
      * 全局调用
      * @return {Void}
@@ -338,6 +353,7 @@ define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event','km/po
                 text = $el.attr('data-text'),
                 loadingEnable = $el.attr('data-loadingEnable'),
                 popTips = $el.attr('data-popTips'),
+                beforeSubmit=$el.attr('data-beforeSubmit'),
                 success = $el.attr('data-success'),
                 error = $el.attr('data-error'),
                 data = $.data($el[0], 'upload');
@@ -358,13 +374,10 @@ define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event','km/po
                     };
                 }
 
-                
-
                 data = new Upload($el, options);
-
-                data.on('success', success && success.length > 0 ? eval('(0,' + success + ')') : $.noop)
+                data.on('beforeSubmit', beforeSubmit && beforeSubmit.length > 0 ? eval('(0,' + beforeSubmit + ')') : $.noop)
+                    .on('success', success && success.length > 0 ? eval('(0,' + success + ')') : $.noop)
                     .on('error', error && error.length > 0 ? eval('(0,' + error + ')') : $.noop);
-
                 $.data($el[0], 'upload', data);
             }
         });

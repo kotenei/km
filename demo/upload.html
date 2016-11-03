@@ -94,6 +94,13 @@ KM.Upload.Global($elms);
                         </td>
                     </tr>
                     <tr>
+                        <td>data-beforeSubmit</td>
+                        <td>data-beforeSubmit="function(){}或者funcName"</td>
+                        <td>
+                            上传前的回调函数，
+                        </td>
+                    </tr>
+                    <tr>
                         <td>data-success</td>
                         <td>data-success="function(ret){}或者funcName"</td>
                         <td>上传成功后的回调函数，带返回参数
@@ -208,10 +215,18 @@ var upload = new KM.Upload($elm,options);
             <h3>函数调用</h3>
             <pre>
                 <code>
+//上传前回调函数
+upload.on('beforeSubmit',function(ret){
+    return true;
+});
+
 //添加回调函数
 upload.on('success',function(ret){
                     
 });
+
+//更改上传地址
+upload.changeUrl(url);
                 </code>
             </pre>
         </div>

@@ -144,7 +144,7 @@ define('km/tab', ['jquery', 'km/ajax', 'km/contextMenu', 'km/loading'], function
             this.$tabScroller.css('width', 'auto');
             this.$tabNav.css('margin-left', '0');
         }
-        this.$tabNav.css('width', tabsWidth);
+        this.$tabNav.css('width', tabsWidth+1);
         this.maxLeft = (tabsWidth - scrollWidth) + 30;
         this.scrollTo();
     };
