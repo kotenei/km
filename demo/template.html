@@ -46,7 +46,7 @@ var tpl = new KM.Template($('#content'), {
         ]
     },
     partial: {
-        view:&lt;h4&gt;&lt;code&gt;这是子模板&lt;/code&gt;&lt;/h4&gt;'
+        view:'&lt;h4&gt;&lt;code&gt;这是子模板&lt;/code&gt;&lt;/h4&gt;'
     }
 });
 
@@ -61,7 +61,7 @@ tpl.render();
             </p>
             <pre>
                 <code>
-&lt;script type="text/template" id="tpl"&gt;
+&lt;script type="text/template" id="template"&gt;
     &lt;h3&gt;{{title}}&lt;/h3&gt;
     &lt;table class="k-table k-table-bordered k-table-hover"&gt;
         &lt;thead&gt;
@@ -175,7 +175,8 @@ Template.addFilter('filterName',function(str,parm1,parm2){
     return value;                 
 });
 
-
+//返回编译字符串,无法实例化对象
+Template.compile(tpl, data, partial).toString();
 
                 </code>
             </pre>

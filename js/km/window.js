@@ -3,7 +3,7 @@
  * @date:2014-09-17
  * @author:kotenei(kotenei@qq.com)
  */
-define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading', 'km/util'], function ($, DragDrop, popTips, Loading,util) {
+define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading', 'km/util'], function ($, DragDrop, popTips, Loading, util) {
 
 
     /**
@@ -27,7 +27,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading', 'km/ut
             borderRadius: '6px',
             space: 50,
             fontClass: '.fa,.glyphicon,.e-icon',
-            fontRedrawDelay:500,
+            fontRedrawDelay: 500,
             btns: []
         }, options);
 
@@ -41,6 +41,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading', 'km/ut
         this._event = {
             open: $.noop,
             ok: $.noop,
+            beforeClose: $.noop,
             close: $.noop,
             afterClose: $.noop
         };
@@ -244,7 +245,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading', 'km/ut
                             $('#iconfontfix').remove();
                         });
                     }
-                  
+
                     if (!self.bindIframeLoad) {
                         self.$iframe.on('load', function () {
                             var url = self.$iframe.attr('src');
@@ -261,7 +262,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading', 'km/ut
                             self.loadingHide();
                         });
                     }
-                },100); 
+                }, 100);
 
             } else {
                 if (self.options.showFooter) {
@@ -273,7 +274,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading', 'km/ut
         }).fail(function () {
             self.loadingHide();
         }).always(function () {
-            
+
         });
     };
 
@@ -285,7 +286,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading', 'km/ut
     Window.prototype.close = function (enforce) {
         var self = this;
         this.isClose = true;
-        this.$win.css({ left: '-900px', top: '-900px' });    
+        this.$win.css({ left: '-900px', top: '-900px' });
         this.$backdrop.hide();
         zIndex.pop();
         this._event.afterClose.call(self);
@@ -311,7 +312,7 @@ define('km/window', ['jquery', 'km/dragdrop', 'km/popTips', 'km/loading', 'km/ut
     Window.prototype.show = function () {
         this.isClose = false;
         this.$win.show();
-        if (this.options.backdrop) { this.$backdrop.show(); }      
+        if (this.options.backdrop) { this.$backdrop.show(); }
         this._event.open(this.$win);
         var z = zIndex.get();
         this.$win.css('zIndex', z);

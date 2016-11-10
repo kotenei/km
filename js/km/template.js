@@ -346,10 +346,12 @@ define('km/template', ['jquery'], function ($) {
         var dtd = $.Deferred();
         var info = tplName.split('/');
 
-        if (info.length === 2) {
-            require(["tpl/" + info[0]], function (tpl) {
+        if (info.length >= 2) {
+            var fileName = info.pop();
+            var root = info.join('/');
+            require(["tpl/" + root], function (tpl) {
                 var html;
-                html = tpl[info[1]];
+                html = tpl[fileName];
                 if (html) {
                     html = $.trim(html);
                     if (callback) {
