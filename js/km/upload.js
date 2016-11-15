@@ -204,8 +204,9 @@ define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event', 'km/p
             beforeSubmit: function () {
                 var result = self._event.beforeSubmit();
                 if (result == false) {
-                    method.hideLoading.call(self);
+                    method.hideLoading.call(self);   
                 }
+                self.isLoading = false;
                 return result;
             },
             success: function (ret) {
