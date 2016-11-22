@@ -207,6 +207,9 @@ define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event', 'km/p
                     method.hideLoading.call(self);   
                 }
                 self.isLoading = false;
+                self.$file.remove();
+                self.$file = $('<input type="file" data-role="upfile" name="' + self.options.name + '" />');
+                self.$form.append(self.$file);
                 return result;
             },
             success: function (ret) {
