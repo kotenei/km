@@ -9693,15 +9693,12 @@ define('km/template', ['jquery'], function ($) {
             var root = info.join('/');
             require(["tpl/" + root], function (tpl) {
                 var html;
-                html = tpl[fileName];
-                if (html) {
-                    html = $.trim(html);
-                    if (callback) {
-                        callback(html);
-                    }
-                    else {
-                        dtd.resolve(html);
-                    }
+                html = tpl[fileName] ? $.trim(tpl[fileName]) : '';
+                if (callback) {
+                    callback(html);
+                }
+                else {
+                    dtd.resolve(html);
                 }
             });
         }
