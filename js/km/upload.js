@@ -204,12 +204,16 @@ define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event', 'km/p
             beforeSubmit: function () {
                 var result = self._event.beforeSubmit();
                 if (result == false) {
-                    method.hideLoading.call(self);   
+                    method.hideLoading.call(self);
                 }
                 self.isLoading = false;
-                self.$file.remove();
-                self.$file = $('<input type="file" data-role="upfile" name="' + self.options.name + '" />');
-                self.$form.append(self.$file);
+
+                setTimeout(function () {
+                    self.$file.remove();
+                    self.$file = $('<input type="file" data-role="upfile" name="' + self.options.name + '" />');
+                    self.$form.append(self.$file);
+                }, 100);
+
                 return result;
             },
             success: function (ret) {
@@ -228,9 +232,11 @@ define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event', 'km/p
             complete: function () {
                 self.isLoading = false;
                 method.hideLoading.call(self);
-                self.$file.remove();
-                self.$file = $('<input type="file" data-role="upfile" name="' + self.options.name + '" />');
-                self.$form.append(self.$file);
+                setTimeout(function () {
+                    self.$file.remove();
+                    self.$file = $('<input type="file" data-role="upfile" name="' + self.options.name + '" />');
+                    self.$form.append(self.$file);
+                },100); 
             }
         });
     };
@@ -360,7 +366,7 @@ define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event', 'km/p
                 text = $el.attr('data-text'),
                 loadingEnable = $el.attr('data-loadingEnable'),
                 popTips = $el.attr('data-popTips'),
-                beforeSubmit=$el.attr('data-beforeSubmit'),
+                beforeSubmit = $el.attr('data-beforeSubmit'),
                 success = $el.attr('data-success'),
                 error = $el.attr('data-error'),
                 data = $.data($el[0], 'upload');
