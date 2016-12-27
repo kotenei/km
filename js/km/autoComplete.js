@@ -93,15 +93,8 @@ define('km/autoComplete', ['jquery'], function ($) {
             }
         });
         this.$listBox.on('click.autocomplete', 'li', function () {
-            var $el = $(this),
-                text = $el.text(),
-                index = $el.attr('data-index');
-
-            self.$element.val(text).focus();
-            if ($.isFunction(self.options.callback.setValue)) {
-                var item = self.getItem(text, index);
-                self.options.callback.setValue.call(this, item);
-            }
+            $(this).addClass('active').siblings().removeClass('active');
+            self.select();
         });
         $(document).on('click.autocomplete', function () {
             self.hide();
