@@ -3,7 +3,7 @@
  * @date:2014-09-14
  * @author:kotenei(kotenei@qq.com)
  */
-define('km/pager', ['jquery', 'km/event'], function ($, event) {
+define('km/pager', ['jquery', 'km/event'], function ($, Event) {
 
     /**
      * 分页模块
@@ -23,7 +23,7 @@ define('km/pager', ['jquery', 'km/event'], function ($, event) {
         this.totalCount = this.options.totalCount;
         this.pageSize = this.options.pageSize;
         this.template = '<div class="pager-box"></div>';
-        this.event = event;
+        this.event = new Event();
         this.init();
 
     }
@@ -36,11 +36,11 @@ define('km/pager', ['jquery', 'km/event'], function ($, event) {
         var self = this;
         this.$pager = $(this.template).appendTo(this.$element);
         this.build();
-        this.$pager.on('click.pager', 'li', function () {
+        this.$pager.off().on('click.pager', 'li', function () {
             var $this = $(this),
                 page = $this.attr('data-page');
             if ($this.hasClass("disabled") || $this.hasClass("active")) { return; }
-            self.curPage = parseInt(page);
+            self.curPage = parseInt(page,10);
 
             self.event.trigger('click.pager', [page]);
 
@@ -57,9 +57,10 @@ define('km/pager', ['jquery', 'km/event'], function ($, event) {
      */
     Pager.prototype.on = function (name, callback) {
         var self = this;
-        this.event.on(name + '.pager', function (args) {
+        this.event.off(name + '.pager').on(name + '.pager', function (args) {
             callback.apply(self, args);
         });
+        return this;
     }
 
     /**

@@ -2,63 +2,67 @@
  * 事件
  * @date :2014-12-01
  * @author kotenei (kotenei@qq.com)
- */ 
+ */
 define('km/event', [], function () {
 
-    var exports = {},
-        topics = {},
-        subId = -1;
+    var Event = function () {
+        this.topics = {};
+        this.subId = -1;
+    }
 
-    exports.on = function (topic, func) {
-        if (!topics[topic]) {
-            topics[topic] = [];
+    Event.prototype.on = function (topic, func) {
+        if (!this.topics[topic]) {
+            this.topics[topic] = [];
         }
-        var token = (++subId).toString();
+        var token = (++this.subId).toString();
 
-        topics[topic].push({
+        this.topics[topic].push({
             token: token,
             func: func
         });
 
-        return token;
-    };
+        return this;
+    }
 
-    exports.off = function (topic) {
+    Event.prototype.off = function (topic) {
         if (!topic) {
-            subId = -1;
-            topics = {};
-            return;
+            this.subId = -1;
+            this.topics = {};
+            return this;
         }
         if (/^\d+$/.test(topic)) {
-            for (var m in topics) {
-                if (topics[m]) {
-                    for (var i = 0, j = topics[m].length; i < j; i++) {
-                        if (topics[m][i].token === topic) {
-                            topics[m].splice(i, 1);
-                            return topic;
+            for (var m in this.topics) {
+                if (this.topics[m]) {
+                    for (var i = 0, j = this.topics[m].length; i < j; i++) {
+                        if (this.topics[m][i].token === topic) {
+                            this.topics[m].splice(i, 1);
+                            return this;
                         }
                     }
                 }
             }
         } else {
-            if (topics[topic]) {
-                delete topics[topic];
+            if (this.topics[topic]) {
+                delete this.topics[topic];
             }
         }
+        return this;
+    }
+
+    Event.prototype.trigger = function (topic, args) {
+        if (!this.topics[topic]) {
+            return;
+        }
+        var arr = this.topics[topic],
+            len = arr ? arr.length : 0,
+            flag = 0;
+
+        while (flag < len && arr[flag]) {
+            arr[flag].func(args);
+            flag++;
+        }
     };
 
-    exports.trigger = function (topic, args) {
-        if (!topics[topic]) {
-            return false;
-        }
-        var arr = topics[topic],
-            len = arr ? arr.length : 0;
-
-        while (len--) {
-            arr[len].func(args);
-        }
-    };
-
-    return exports;
+    return Event;
 
 });

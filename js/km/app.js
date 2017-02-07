@@ -3,7 +3,7 @@
  * @author kotenei (kotenei@qq.com)
  * @author vfasky (vfasky@gmail.com)
  */
-define('km/app', ['jquery', 'km/router', 'km/util', 'km/popTips', 'km/loading', 'km/event'], function ($, Router, util, popTips, loading, event) {
+define('km/app', ['jquery', 'km/router', 'km/util', 'km/popTips', 'km/loading', 'km/event'], function ($, Router, util, popTips, loading, Event) {
 
     var App = function ($el, config) {
         this.$el = $el;

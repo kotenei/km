@@ -3,7 +3,7 @@
  * @date:2015-07-17
  * @author:kotenei(kotenei@qq.com)
  */
-define('km/rating', ['jquery', 'km/event'], function ($, event) {
+define('km/rating', ['jquery', 'km/event'], function ($, Event) {
 
     /**
      * 私有方法
@@ -106,7 +106,7 @@ define('km/rating', ['jquery', 'km/event'], function ($, event) {
             size: 24,
             space: 4
         }, options);
-        this.event = event;
+        this.event = new Event();
         this._tmpScore = 0;
         this.init();
     };

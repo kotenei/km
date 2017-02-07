@@ -240,7 +240,7 @@ define('km/ajax', ['jquery', 'km/loading', 'km/popTips', 'km/validate', 'km/vali
  * @author kotenei (kotenei@qq.com)
  * @author vfasky (vfasky@gmail.com)
  */
-define('km/app', ['jquery', 'km/router', 'km/util', 'km/popTips', 'km/loading', 'km/event'], function ($, Router, util, popTips, loading, event) {
+define('km/app', ['jquery', 'km/router', 'km/util', 'km/popTips', 'km/loading', 'km/event'], function ($, Router, util, popTips, loading, Event) {
 
     var App = function ($el, config) {
         this.$el = $el;
@@ -4830,64 +4830,68 @@ define('km/dropDownTree', ['jquery', 'km/tree'], function ($, Tree) {
  * 事件
  * @date :2014-12-01
  * @author kotenei (kotenei@qq.com)
- */ 
+ */
 define('km/event', [], function () {
 
-    var exports = {},
-        topics = {},
-        subId = -1;
+    var Event = function () {
+        this.topics = {};
+        this.subId = -1;
+    }
 
-    exports.on = function (topic, func) {
-        if (!topics[topic]) {
-            topics[topic] = [];
+    Event.prototype.on = function (topic, func) {
+        if (!this.topics[topic]) {
+            this.topics[topic] = [];
         }
-        var token = (++subId).toString();
+        var token = (++this.subId).toString();
 
-        topics[topic].push({
+        this.topics[topic].push({
             token: token,
             func: func
         });
 
-        return token;
-    };
+        return this;
+    }
 
-    exports.off = function (topic) {
+    Event.prototype.off = function (topic) {
         if (!topic) {
-            subId = -1;
-            topics = {};
-            return;
+            this.subId = -1;
+            this.topics = {};
+            return this;
         }
         if (/^\d+$/.test(topic)) {
-            for (var m in topics) {
-                if (topics[m]) {
-                    for (var i = 0, j = topics[m].length; i < j; i++) {
-                        if (topics[m][i].token === topic) {
-                            topics[m].splice(i, 1);
-                            return topic;
+            for (var m in this.topics) {
+                if (this.topics[m]) {
+                    for (var i = 0, j = this.topics[m].length; i < j; i++) {
+                        if (this.topics[m][i].token === topic) {
+                            this.topics[m].splice(i, 1);
+                            return this;
                         }
                     }
                 }
             }
         } else {
-            if (topics[topic]) {
-                delete topics[topic];
+            if (this.topics[topic]) {
+                delete this.topics[topic];
             }
         }
+        return this;
+    }
+
+    Event.prototype.trigger = function (topic, args) {
+        if (!this.topics[topic]) {
+            return;
+        }
+        var arr = this.topics[topic],
+            len = arr ? arr.length : 0,
+            flag = 0;
+
+        while (flag < len && arr[flag]) {
+            arr[flag].func(args);
+            flag++;
+        }
     };
 
-    exports.trigger = function (topic, args) {
-        if (!topics[topic]) {
-            return false;
-        }
-        var arr = topics[topic],
-            len = arr ? arr.length : 0;
-
-        while (len--) {
-            arr[len].func(args);
-        }
-    };
-
-    return exports;
+    return Event;
 
 });
 
@@ -6447,7 +6451,7 @@ define('km/mask', ['jquery'], function ($) {
  * @date:2014-09-14
  * @author:kotenei(kotenei@qq.com)
  */
-define('km/pager', ['jquery', 'km/event'], function ($, event) {
+define('km/pager', ['jquery', 'km/event'], function ($, Event) {
 
     /**
      * 分页模块
@@ -6467,7 +6471,7 @@ define('km/pager', ['jquery', 'km/event'], function ($, event) {
         this.totalCount = this.options.totalCount;
         this.pageSize = this.options.pageSize;
         this.template = '<div class="pager-box"></div>';
-        this.event = event;
+        this.event = new Event();
         this.init();
 
     }
@@ -6480,11 +6484,11 @@ define('km/pager', ['jquery', 'km/event'], function ($, event) {
         var self = this;
         this.$pager = $(this.template).appendTo(this.$element);
         this.build();
-        this.$pager.on('click.pager', 'li', function () {
+        this.$pager.off().on('click.pager', 'li', function () {
             var $this = $(this),
                 page = $this.attr('data-page');
             if ($this.hasClass("disabled") || $this.hasClass("active")) { return; }
-            self.curPage = parseInt(page);
+            self.curPage = parseInt(page,10);
 
             self.event.trigger('click.pager', [page]);
 
@@ -6501,9 +6505,10 @@ define('km/pager', ['jquery', 'km/event'], function ($, event) {
      */
     Pager.prototype.on = function (name, callback) {
         var self = this;
-        this.event.on(name + '.pager', function (args) {
+        this.event.off(name + '.pager').on(name + '.pager', function (args) {
             callback.apply(self, args);
         });
+        return this;
     }
 
     /**
@@ -7351,7 +7356,7 @@ define('km/portlets', ['jquery', 'km/window', 'km/dragdrop'], function ($, Windo
  * @date:2015-07-17
  * @author:kotenei(kotenei@qq.com)
  */
-define('km/rating', ['jquery', 'km/event'], function ($, event) {
+define('km/rating', ['jquery', 'km/event'], function ($, Event) {
 
     /**
      * 私有方法
@@ -7454,7 +7459,7 @@ define('km/rating', ['jquery', 'km/event'], function ($, event) {
             size: 24,
             space: 4
         }, options);
-        this.event = event;
+        this.event = new Event();
         this._tmpScore = 0;
         this.init();
     };
@@ -11424,7 +11429,7 @@ define('km/treeTable', ['jquery', 'km/ajax'], function ($, ajax) {
  * @date :2015-07-30
  * @author kotenei (kotenei@qq.com)
  */
-define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event', 'km/popTips', 'jqueryForm'], function ($, Spinner, Window, ajax, event, popTips) {
+define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event', 'km/popTips', 'jqueryForm'], function ($, Spinner, Window, ajax, Event, popTips) {
 
     var method = {
         showLoading: function () {

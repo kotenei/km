@@ -3,7 +3,7 @@
  * @date :2015-07-30
  * @author kotenei (kotenei@qq.com)
  */
-define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event', 'km/popTips', 'jqueryForm'], function ($, Spinner, Window, ajax, event, popTips) {
+define('km/upload', ['jquery', 'spin', 'km/window', 'km/ajax', 'km/event', 'km/popTips', 'jqueryForm'], function ($, Spinner, Window, ajax, Event, popTips) {
 
     var method = {
         showLoading: function () {
